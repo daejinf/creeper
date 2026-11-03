@@ -1,0 +1,168 @@
+{
+  "request": {
+    "action": "COACH",
+    "state": null,
+    "conversation": [
+      {
+        "message_id": "g1",
+        "speaker_id": "design",
+        "role": "user",
+        "text": "10/29부터 동아리 소개 웹사이트를 만들자. 소개와 가입 안내를 모바일에서 시연하자. 11/4 중간 목표, 11/8 개발 완료, 11/11 최종 제출이야.",
+        "created_at": "2026-10-29T10:00:00+09:00"
+      },
+      {
+        "message_id": "g2",
+        "speaker_id": "coding",
+        "role": "user",
+        "text": "민지는 디자인, 도윤은 프론트 담당이야. 금요일 스크린샷으로 확인하고 완료 여부와 달성률만 공개하자.",
+        "created_at": "2026-10-29T10:00:00+09:00"
+      },
+      {
+        "message_id": "1880e7f1-fce7-4419-8d51-55be57905b35",
+        "speaker_id": null,
+        "role": "assistant",
+        "text": "11/8 개발 완료와 11/11 제출을 나누어 진행하세요. UI 시안을 먼저 공유한 뒤 화면을 연결하는 순서를 추천합니다.",
+        "created_at": "2026-11-03T10:49:39.816343Z"
+      }
+    ],
+    "members": [
+      {
+        "member_id": "design",
+        "nickname": "민지"
+      },
+      {
+        "member_id": "coding",
+        "nickname": "도윤"
+      }
+    ],
+    "reference_date": "2026-10-29",
+    "timezone": null,
+    "actor_member_id": null,
+    "response": null
+  },
+  "response": {
+    "status": "OK",
+    "data": {
+      "state": {
+        "schema_version": "1.0",
+        "revision": 1,
+        "conversation": [
+          {
+            "message_id": "g1",
+            "speaker_id": "design",
+            "role": "user",
+            "text": "10/29부터 동아리 소개 웹사이트를 만들자. 소개와 가입 안내를 모바일에서 시연하자. 11/4 중간 목표, 11/8 개발 완료, 11/11 최종 제출이야.",
+            "created_at": "2026-10-29T10:00:00+09:00"
+          },
+          {
+            "message_id": "g2",
+            "speaker_id": "coding",
+            "role": "user",
+            "text": "민지는 디자인, 도윤은 프론트 담당이야. 금요일 스크린샷으로 확인하고 완료 여부와 달성률만 공개하자.",
+            "created_at": "2026-10-29T10:00:00+09:00"
+          },
+          {
+            "message_id": "1880e7f1-fce7-4419-8d51-55be57905b35",
+            "speaker_id": null,
+            "role": "assistant",
+            "text": "11/8 개발 완료와 11/11 제출을 나누어 진행하세요. UI 시안을 먼저 공유한 뒤 화면을 연결하는 순서를 추천합니다.",
+            "created_at": "2026-11-03T10:49:39.816343Z"
+          }
+        ],
+        "members": [
+          {
+            "member_id": "design",
+            "nickname": "민지"
+          },
+          {
+            "member_id": "coding",
+            "nickname": "도윤"
+          }
+        ],
+        "reference_date": "2026-10-29",
+        "timezone": "Asia/Seoul",
+        "coach_state": {
+          "consecutive_questions": 0,
+          "last_question_topic": null,
+          "answered_topics": []
+        },
+        "analysis": null,
+        "draft": null,
+        "source_fingerprint": "",
+        "draft_source_fingerprint": "",
+        "last_coach_input": "794474be50f6b8aa93f481537bc2b9128a9aa04daed883052530c7152625219d",
+        "last_coach_reply": "11/8 개발 완료와 11/11 제출을 나누어 진행하세요. UI 시안을 먼저 공유한 뒤 화면을 연결하는 순서를 추천합니다.",
+        "review_history": [],
+        "group_spec": null
+      },
+      "reply": "11/8 개발 완료와 11/11 제출을 나누어 진행하세요. UI 시안을 먼저 공유한 뒤 화면을 연결하는 순서를 추천합니다.",
+      "review_items": [],
+      "needed_inputs": [],
+      "allowed_actions": [
+        "COACH",
+        "REVIEW"
+      ],
+      "can_generate_group_plan": false,
+      "group_spec": null,
+      "runs": [
+        {
+          "run_id": "efbd3cde-8bf9-4bef-b833-35f1ddd63abe",
+          "task": "coach-dialogue",
+          "prompt_version": "m1-dialogue-v2",
+          "model": "AUTHORED_FIXTURE_NOT_LIVE",
+          "usage": {
+            "prompt_tokens": 0,
+            "completion_tokens": 0,
+            "total_tokens": 0
+          },
+          "latency_ms": 1,
+          "transport_attempts": 0,
+          "repair_attempts": 0,
+          "plan_repair_attempts": 0,
+          "provider_request_ids": [],
+          "trace_id": "a7551e87-dad3-4b88-9751-58e7e8e879a6",
+          "parent_run_id": "0f01eac8-020f-4a77-9683-f4d3ac79b3c8",
+          "prompt_variant": null,
+          "reference_case_ids": [],
+          "reference_data_version": null,
+          "execution_source": "REPLAY",
+          "source_run_id": null,
+          "cache_hit": false,
+          "cached_usage": null,
+          "source_execution_source": null,
+          "validator_version": "contracts-2026-10-v10.2-assisted-calendar"
+        }
+      ]
+    },
+    "questions": [],
+    "warnings": [],
+    "error": null,
+    "meta": {
+      "run_id": "0f01eac8-020f-4a77-9683-f4d3ac79b3c8",
+      "task": "goal-setup",
+      "prompt_version": "m1-goal-setup-v1",
+      "model": "AUTHORED_FIXTURE_NOT_LIVE",
+      "usage": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "latency_ms": 28,
+      "transport_attempts": 0,
+      "repair_attempts": 0,
+      "plan_repair_attempts": 0,
+      "provider_request_ids": [],
+      "trace_id": "a7551e87-dad3-4b88-9751-58e7e8e879a6",
+      "parent_run_id": null,
+      "prompt_variant": null,
+      "reference_case_ids": [],
+      "reference_data_version": null,
+      "execution_source": "REPLAY",
+      "source_run_id": null,
+      "cache_hit": false,
+      "cached_usage": null,
+      "source_execution_source": null,
+      "validator_version": "contracts-2026-10-v10.2-assisted-calendar"
+    }
+  }
+}

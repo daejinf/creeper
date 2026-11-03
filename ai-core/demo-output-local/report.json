@@ -1,0 +1,22 @@
+{
+  "source": "AUTHORED_FIXTURE / REPLAY",
+  "actual_http_requests": 0,
+  "actual_tokens": 0,
+  "human_confirmation": "SIMULATED_TUTORIAL_ONLY",
+  "validation_passed": true,
+  "m2_reference_valid": true,
+  "state_restored": true,
+  "duplicate_confirmation_stable": true,
+  "retry_member_ids": [
+    "coding"
+  ],
+  "successful_member_plan_preserved": true,
+  "public_private_separation": true,
+  "fixture_calls": 16,
+  "status_examples": {
+    "NEEDS_INPUT": "group/03-needs-review.json",
+    "FAILED": "group/07-group-timeout.json"
+  },
+  "steps": 21,
+  "service_activation": false
+}

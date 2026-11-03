@@ -1,0 +1,17 @@
+{
+  "coding": {
+    "profile": {
+      "member_id": "coding",
+      "current_level": "혼자 구현할 수 있어요",
+      "weekly_available_minutes": 300,
+      "preferred_times": [],
+      "constraints": [
+        "목요일 개인 병원 방문"
+      ],
+      "planning_context": {}
+    },
+    "private_notes": [
+      "본인에게만 전달하는 작업 조절 안내입니다."
+    ]
+  }
+}

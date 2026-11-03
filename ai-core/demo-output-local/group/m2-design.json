@@ -1,0 +1,123 @@
+{
+  "baseline": {
+    "schema_version": "2.0",
+    "baseline_id": "c5628ac2-893f-4398-be9a-747ad66420cc",
+    "scope": "PERSONAL",
+    "owner_member_id": "design",
+    "plan_version_id": "99721af8-b147-4f7b-b380-349798e9f47c",
+    "group_plan_version_id": "5ead9ef6-b7fa-4aac-a933-9d1a2823c246",
+    "confirmed_by": "design",
+    "confirmed_at": "2026-11-03T10:49:39.977411+00:00",
+    "previous_version_id": null,
+    "activation": "LOCAL_EVALUATION_REFERENCE_ONLY",
+    "public_payload": {
+      "goal_spec_id": "fbe93549-5fa1-48fa-80dd-e039e8b77eb7",
+      "group_goal": "동아리 소개 웹사이트",
+      "group_plan_version_id": "5ead9ef6-b7fa-4aac-a933-9d1a2823c246",
+      "personal_goal": {
+        "owner_member_id": "design",
+        "group_plan_id": "5ead9ef6-b7fa-4aac-a933-9d1a2823c246",
+        "title": "UI 시안 완성",
+        "deliverable": "UI 시안 결과물",
+        "completion_criteria": [
+          "소개와 가입 안내가 연결된다."
+        ],
+        "public_rationale": "공동 소개 웹사이트 시연에 기여합니다.",
+        "evidence_refs": [
+          "confirmation:4b62c423f5187242",
+          "g1",
+          "g2"
+        ],
+        "review_status": "ACCEPTED"
+      },
+      "period": {
+        "start_date": "2026-10-29",
+        "end_date": "2026-11-11"
+      },
+      "metric": null,
+      "completion_criteria": [
+        "소개와 가입 안내를 모바일 화면에서 시연한다."
+      ],
+      "verification_method": "이미지 첨부",
+      "privacy_scope": "OBJECTIVE_ONLY",
+      "milestones": [
+        {
+          "title": "중간 목표",
+          "due_date": "2026-11-04",
+          "completion_criteria": "중간 목표 결과물 확인",
+          "evidence_refs": [
+            "confirmation:4b62c423f5187242",
+            "g1",
+            "g2"
+          ]
+        },
+        {
+          "title": "개발 완료",
+          "due_date": "2026-11-08",
+          "completion_criteria": "개발 완료 결과물 확인",
+          "evidence_refs": [
+            "confirmation:4b62c423f5187242",
+            "g1",
+            "g2"
+          ]
+        },
+        {
+          "title": "최종 제출",
+          "due_date": "2026-11-11",
+          "completion_criteria": "최종 제출 결과물 확인",
+          "evidence_refs": [
+            "confirmation:4b62c423f5187242",
+            "g1",
+            "g2"
+          ]
+        }
+      ],
+      "tasks": [
+        {
+          "task_id": "b6487ffe-ea3a-4b05-ae67-64daa8d0cacc",
+          "scheduled_date": "2026-10-29",
+          "action": "UI 시안 1단계",
+          "amount_or_deliverable": "UI 시안 검토본",
+          "estimated_minutes": 25,
+          "difficulty": "EASY",
+          "completion_criteria": "모바일 화면에서 소개와 가입 안내를 확인한다.",
+          "origin": "AI_SUGGESTION",
+          "evidence_refs": [
+            "confirmation:4b62c423f5187242",
+            "g1",
+            "g2"
+          ],
+          "dependencies": [],
+          "owner_member_id": "design",
+          "plan_version_id": "99721af8-b147-4f7b-b380-349798e9f47c",
+          "verification_method": "이미지 첨부"
+        },
+        {
+          "task_id": "2b70a522-fc32-4021-9786-73e9c73065a6",
+          "scheduled_date": "2026-10-30",
+          "action": "UI 시안 2단계",
+          "amount_or_deliverable": "UI 시안 검토본",
+          "estimated_minutes": 25,
+          "difficulty": "EASY",
+          "completion_criteria": "모바일 화면에서 소개와 가입 안내를 확인한다.",
+          "origin": "AI_SUGGESTION",
+          "evidence_refs": [
+            "confirmation:4b62c423f5187242",
+            "g1",
+            "g2"
+          ],
+          "dependencies": [],
+          "owner_member_id": "design",
+          "plan_version_id": "99721af8-b147-4f7b-b380-349798e9f47c",
+          "verification_method": "이미지 첨부"
+        }
+      ]
+    }
+  },
+  "activity": {
+    "plan_version_id": "99721af8-b147-4f7b-b380-349798e9f47c",
+    "task_id": "b6487ffe-ea3a-4b05-ae67-64daa8d0cacc",
+    "recorded_at": "2026-10-29T10:00:00+09:00",
+    "text": "공동 목표에 맞춘 담당 작업 기록"
+  }
+}

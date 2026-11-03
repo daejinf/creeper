@@ -1,0 +1,93 @@
+{
+  "request": {
+    "spec_id": "fbe93549-5fa1-48fa-80dd-e039e8b77eb7",
+    "goal": "동아리 소개 웹사이트",
+    "expected_outcome": "소개와 가입 안내가 연결된 시연",
+    "completion_criteria": [
+      "소개와 가입 안내를 모바일 화면에서 시연한다."
+    ],
+    "start_date": "2026-10-29",
+    "end_date": "2026-11-11",
+    "execution_method": "UI 시안 공유 후 화면 구현 및 연결 점검",
+    "verification_method": "이미지 첨부",
+    "privacy_scope": "OBJECTIVE_ONLY",
+    "custom_privacy_fields": [],
+    "frequency_per_week": null,
+    "metric": null,
+    "checkins": [
+      "금요일 · 이미지 확인"
+    ],
+    "milestones": [
+      {
+        "title": "중간 목표",
+        "due_date": "2026-11-04"
+      },
+      {
+        "title": "개발 완료",
+        "due_date": "2026-11-08"
+      },
+      {
+        "title": "최종 제출",
+        "due_date": "2026-11-11"
+      }
+    ],
+    "roles": {
+      "design": "디자인",
+      "coding": "프론트"
+    },
+    "members": [
+      {
+        "member_id": "design",
+        "nickname": "민지"
+      },
+      {
+        "member_id": "coding",
+        "nickname": "도윤"
+      }
+    ],
+    "evidence_ids": [
+      "confirmation:4b62c423f5187242",
+      "g1",
+      "g2"
+    ],
+    "confirmed": true
+  },
+  "response": {
+    "status": "FAILED",
+    "data": null,
+    "questions": [],
+    "warnings": [],
+    "error": {
+      "code": "TIMEOUT",
+      "message": "작성된 장애 예제: 공동 계획 응답 지연",
+      "retryable": true
+    },
+    "meta": {
+      "run_id": "6be873f6-384d-435f-b191-1efd54390a21",
+      "task": "group-plan",
+      "prompt_version": "m1-group-plan-v1",
+      "model": "AUTHORED_FIXTURE_NOT_LIVE",
+      "usage": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "latency_ms": 0,
+      "transport_attempts": 0,
+      "repair_attempts": 0,
+      "plan_repair_attempts": 0,
+      "provider_request_ids": [],
+      "trace_id": "598b4c11-9aee-4c58-9f72-44832f6a4218",
+      "parent_run_id": null,
+      "prompt_variant": null,
+      "reference_case_ids": [],
+      "reference_data_version": null,
+      "execution_source": "REPLAY",
+      "source_run_id": null,
+      "cache_hit": false,
+      "cached_usage": null,
+      "source_execution_source": null,
+      "validator_version": "contracts-2026-10-v10.2-assisted-calendar"
+    }
+  }
+}

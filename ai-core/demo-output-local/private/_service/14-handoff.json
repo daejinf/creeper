@@ -1,0 +1,1420 @@
+{
+  "request": {
+    "baseline_refs": [
+      {
+        "baseline_id": "c5628ac2-893f-4398-be9a-747ad66420cc",
+        "scope": "PERSONAL",
+        "owner_member_id": "design",
+        "plan_version_id": "99721af8-b147-4f7b-b380-349798e9f47c",
+        "group_plan_version_id": "5ead9ef6-b7fa-4aac-a933-9d1a2823c246",
+        "task_ids": [
+          "b6487ffe-ea3a-4b05-ae67-64daa8d0cacc",
+          "2b70a522-fc32-4021-9786-73e9c73065a6"
+        ],
+        "confirmed_by": "design",
+        "confirmed_at": "2026-11-03T10:49:39.977411+00:00"
+      },
+      {
+        "baseline_id": "f24ef5bd-808c-4ff3-970a-cd3fafbc3c45",
+        "scope": "PERSONAL",
+        "owner_member_id": "coding",
+        "plan_version_id": "e6c088d4-4791-44cb-8aa0-6d494e999e1c",
+        "group_plan_version_id": "5ead9ef6-b7fa-4aac-a933-9d1a2823c246",
+        "task_ids": [
+          "5582fa6f-f29e-4b8d-a78b-d0324f406210",
+          "d9f58a7d-1ae0-4bc4-8189-7b8a7780104b"
+        ],
+        "confirmed_by": "coding",
+        "confirmed_at": "2026-11-03T10:49:39.983418+00:00"
+      }
+    ],
+    "goal_spec": {
+      "spec_id": "fbe93549-5fa1-48fa-80dd-e039e8b77eb7",
+      "goal": "동아리 소개 웹사이트",
+      "expected_outcome": "소개와 가입 안내가 연결된 시연",
+      "completion_criteria": [
+        "소개와 가입 안내를 모바일 화면에서 시연한다."
+      ],
+      "start_date": "2026-10-29",
+      "end_date": "2026-11-11",
+      "execution_method": "UI 시안 공유 후 화면 구현 및 연결 점검",
+      "verification_method": "이미지 첨부",
+      "privacy_scope": "OBJECTIVE_ONLY",
+      "custom_privacy_fields": [],
+      "frequency_per_week": null,
+      "metric": null,
+      "checkins": [
+        "금요일 · 이미지 확인"
+      ],
+      "milestones": [
+        {
+          "title": "중간 목표",
+          "due_date": "2026-11-04"
+        },
+        {
+          "title": "개발 완료",
+          "due_date": "2026-11-08"
+        },
+        {
+          "title": "최종 제출",
+          "due_date": "2026-11-11"
+        }
+      ],
+      "roles": {
+        "design": "디자인",
+        "coding": "프론트"
+      },
+      "members": [
+        {
+          "member_id": "design",
+          "nickname": "민지"
+        },
+        {
+          "member_id": "coding",
+          "nickname": "도윤"
+        }
+      ],
+      "evidence_ids": [
+        "confirmation:4b62c423f5187242",
+        "g1",
+        "g2"
+      ],
+      "confirmed": true
+    },
+    "member_profiles": [
+      {
+        "member_id": "design",
+        "current_level": "처음이에요",
+        "weekly_available_minutes": 120,
+        "preferred_times": [],
+        "constraints": [
+          "화요일 가족 돌봄 일정"
+        ],
+        "planning_context": {}
+      },
+      {
+        "member_id": "coding",
+        "current_level": "혼자 구현할 수 있어요",
+        "weekly_available_minutes": 300,
+        "preferred_times": [],
+        "constraints": [
+          "목요일 개인 병원 방문"
+        ],
+        "planning_context": {}
+      }
+    ],
+    "group_plan": {
+      "plan_id": "5ead9ef6-b7fa-4aac-a933-9d1a2823c246",
+      "spec_id": "fbe93549-5fa1-48fa-80dd-e039e8b77eb7",
+      "revision": 1,
+      "previous_plan_id": null,
+      "status": "DRAFT",
+      "goal": "동아리 소개 웹사이트",
+      "expected_outcome": "소개와 가입 안내가 연결된 시연",
+      "completion_criteria": [
+        "소개와 가입 안내를 모바일 화면에서 시연한다."
+      ],
+      "start_date": "2026-10-29",
+      "end_date": "2026-11-11",
+      "frequency_per_week": null,
+      "metric": null,
+      "milestones": [
+        {
+          "title": "중간 목표",
+          "due_date": "2026-11-04",
+          "completion_criteria": "중간 목표 결과물 확인",
+          "evidence_refs": [
+            "confirmation:4b62c423f5187242",
+            "g1",
+            "g2"
+          ]
+        },
+        {
+          "title": "개발 완료",
+          "due_date": "2026-11-08",
+          "completion_criteria": "개발 완료 결과물 확인",
+          "evidence_refs": [
+            "confirmation:4b62c423f5187242",
+            "g1",
+            "g2"
+          ]
+        },
+        {
+          "title": "최종 제출",
+          "due_date": "2026-11-11",
+          "completion_criteria": "최종 제출 결과물 확인",
+          "evidence_refs": [
+            "confirmation:4b62c423f5187242",
+            "g1",
+            "g2"
+          ]
+        }
+      ],
+      "weekly_outline": [
+        {
+          "week": 1,
+          "outcome": "UI 시안 공유",
+          "tasks": [
+            "민지: UI 시안 전달",
+            "도윤: 화면 연결 및 점검"
+          ]
+        },
+        {
+          "week": 2,
+          "outcome": "연결 시연 완성",
+          "tasks": [
+            "민지: UI 시안 전달",
+            "도윤: 화면 연결 및 점검"
+          ]
+        }
+      ],
+      "suggested_checkins": [],
+      "assumptions": [],
+      "evidence_refs": [
+        "confirmation:4b62c423f5187242",
+        "g1",
+        "g2"
+      ]
+    },
+    "member_plans": [
+      {
+        "public_plan": {
+          "plan_id": "99721af8-b147-4f7b-b380-349798e9f47c",
+          "group_plan_id": "5ead9ef6-b7fa-4aac-a933-9d1a2823c246",
+          "member_id": "design",
+          "revision": 1,
+          "previous_plan_id": null,
+          "weekly_targets": [
+            {
+              "week": 1,
+              "outcome": "UI 시안 단계 완성",
+              "estimated_minutes": 50,
+              "target_amount": null
+            },
+            {
+              "week": 2,
+              "outcome": "UI 시안 단계 완성",
+              "estimated_minutes": 50,
+              "target_amount": null
+            }
+          ],
+          "first_week_todos": [
+            {
+              "task_id": "b6487ffe-ea3a-4b05-ae67-64daa8d0cacc",
+              "scheduled_date": "2026-10-29",
+              "action": "UI 시안 1단계",
+              "amount_or_deliverable": "UI 시안 검토본",
+              "estimated_minutes": 25,
+              "difficulty": "EASY",
+              "completion_criteria": "모바일 화면에서 소개와 가입 안내를 확인한다.",
+              "origin": "AI_SUGGESTION",
+              "evidence_refs": [
+                "confirmation:4b62c423f5187242",
+                "g1",
+                "g2"
+              ],
+              "dependencies": []
+            },
+            {
+              "task_id": "2b70a522-fc32-4021-9786-73e9c73065a6",
+              "scheduled_date": "2026-10-30",
+              "action": "UI 시안 2단계",
+              "amount_or_deliverable": "UI 시안 검토본",
+              "estimated_minutes": 25,
+              "difficulty": "EASY",
+              "completion_criteria": "모바일 화면에서 소개와 가입 안내를 확인한다.",
+              "origin": "AI_SUGGESTION",
+              "evidence_refs": [
+                "confirmation:4b62c423f5187242",
+                "g1",
+                "g2"
+              ],
+              "dependencies": []
+            }
+          ],
+          "adaptation_rules": [
+            "지연되면 남은 작업을 우선순위에 따라 다음 버전에서 조정한다."
+          ],
+          "public_rationale": "담당 결과물을 공동 시연에 연결합니다.",
+          "evidence_refs": [
+            "confirmation:4b62c423f5187242",
+            "g1",
+            "g2"
+          ]
+        },
+        "private_notes": [
+          "본인에게만 전달하는 작업 조절 안내입니다."
+        ],
+        "contribution_goal": {
+          "owner_member_id": "design",
+          "group_plan_id": "5ead9ef6-b7fa-4aac-a933-9d1a2823c246",
+          "title": "UI 시안 완성",
+          "deliverable": "UI 시안 결과물",
+          "completion_criteria": [
+            "소개와 가입 안내가 연결된다."
+          ],
+          "public_rationale": "공동 소개 웹사이트 시연에 기여합니다.",
+          "evidence_refs": [
+            "confirmation:4b62c423f5187242",
+            "g1",
+            "g2"
+          ],
+          "review_status": "ACCEPTED"
+        }
+      },
+      {
+        "public_plan": {
+          "plan_id": "e6c088d4-4791-44cb-8aa0-6d494e999e1c",
+          "group_plan_id": "5ead9ef6-b7fa-4aac-a933-9d1a2823c246",
+          "member_id": "coding",
+          "revision": 1,
+          "previous_plan_id": null,
+          "weekly_targets": [
+            {
+              "week": 1,
+              "outcome": "화면 구현 단계 완성",
+              "estimated_minutes": 120,
+              "target_amount": null
+            },
+            {
+              "week": 2,
+              "outcome": "화면 구현 단계 완성",
+              "estimated_minutes": 120,
+              "target_amount": null
+            }
+          ],
+          "first_week_todos": [
+            {
+              "task_id": "5582fa6f-f29e-4b8d-a78b-d0324f406210",
+              "scheduled_date": "2026-10-29",
+              "action": "화면 구현 1단계",
+              "amount_or_deliverable": "화면 구현 검토본",
+              "estimated_minutes": 60,
+              "difficulty": "MEDIUM",
+              "completion_criteria": "모바일 화면에서 소개와 가입 안내를 확인한다.",
+              "origin": "AI_SUGGESTION",
+              "evidence_refs": [
+                "confirmation:4b62c423f5187242",
+                "g1",
+                "g2"
+              ],
+              "dependencies": []
+            },
+            {
+              "task_id": "d9f58a7d-1ae0-4bc4-8189-7b8a7780104b",
+              "scheduled_date": "2026-10-30",
+              "action": "화면 구현 2단계",
+              "amount_or_deliverable": "화면 구현 검토본",
+              "estimated_minutes": 60,
+              "difficulty": "MEDIUM",
+              "completion_criteria": "모바일 화면에서 소개와 가입 안내를 확인한다.",
+              "origin": "AI_SUGGESTION",
+              "evidence_refs": [
+                "confirmation:4b62c423f5187242",
+                "g1",
+                "g2"
+              ],
+              "dependencies": []
+            }
+          ],
+          "adaptation_rules": [
+            "지연되면 남은 작업을 우선순위에 따라 다음 버전에서 조정한다."
+          ],
+          "public_rationale": "담당 결과물을 공동 시연에 연결합니다.",
+          "evidence_refs": [
+            "confirmation:4b62c423f5187242",
+            "g1",
+            "g2"
+          ]
+        },
+        "private_notes": [
+          "본인에게만 전달하는 작업 조절 안내입니다."
+        ],
+        "contribution_goal": {
+          "owner_member_id": "coding",
+          "group_plan_id": "5ead9ef6-b7fa-4aac-a933-9d1a2823c246",
+          "title": "화면 구현 완성",
+          "deliverable": "화면 구현 결과물",
+          "completion_criteria": [
+            "소개와 가입 안내가 연결된다."
+          ],
+          "public_rationale": "공동 소개 웹사이트 시연에 기여합니다.",
+          "evidence_refs": [
+            "confirmation:4b62c423f5187242",
+            "g1",
+            "g2"
+          ],
+          "review_status": "ACCEPTED"
+        }
+      }
+    ],
+    "private_intakes": {},
+    "personal_drafts": {
+      "design": {
+        "draft_id": "797ca2aa-6599-4820-8e39-49d592a5f1f0",
+        "owner_member_id": "design",
+        "group_plan_id": "5ead9ef6-b7fa-4aac-a933-9d1a2823c246",
+        "contribution": {
+          "owner_member_id": "design",
+          "group_plan_id": "5ead9ef6-b7fa-4aac-a933-9d1a2823c246",
+          "title": "UI 시안 완성",
+          "deliverable": "UI 시안 결과물",
+          "completion_criteria": [
+            "소개와 가입 안내가 연결된다."
+          ],
+          "public_rationale": "공동 소개 웹사이트 시연에 기여합니다.",
+          "evidence_refs": [
+            "confirmation:4b62c423f5187242",
+            "g1",
+            "g2"
+          ],
+          "review_status": "ACCEPTED"
+        },
+        "profile_fields": {
+          "tools": {
+            "value": null,
+            "origin": "UNRESOLVED",
+            "evidence_refs": [],
+            "reason": "아직 대화에서 확인하지 않았습니다.",
+            "review_status": "ACCEPTED",
+            "validation_errors": []
+          },
+          "support_needed": {
+            "value": null,
+            "origin": "UNRESOLVED",
+            "evidence_refs": [],
+            "reason": "아직 대화에서 확인하지 않았습니다.",
+            "review_status": "ACCEPTED",
+            "validation_errors": []
+          },
+          "current_progress": {
+            "value": null,
+            "origin": "UNRESOLVED",
+            "evidence_refs": [],
+            "reason": "아직 대화에서 확인하지 않았습니다.",
+            "review_status": "ACCEPTED",
+            "validation_errors": []
+          },
+          "preferred_times": {
+            "value": null,
+            "origin": "UNRESOLVED",
+            "evidence_refs": [],
+            "reason": "아직 대화에서 확인하지 않았습니다.",
+            "review_status": "ACCEPTED",
+            "validation_errors": []
+          },
+          "scope": {
+            "value": null,
+            "origin": "UNRESOLVED",
+            "evidence_refs": [],
+            "reason": "아직 대화에서 확인하지 않았습니다.",
+            "review_status": "ACCEPTED",
+            "validation_errors": []
+          },
+          "constraints": {
+            "value": [
+              "화요일 가족 돌봄 일정"
+            ],
+            "origin": "EXTRACTED",
+            "evidence_refs": [
+              "design-private"
+            ],
+            "reason": "",
+            "review_status": "ACCEPTED",
+            "validation_errors": []
+          },
+          "weekly_available_minutes": {
+            "value": 120,
+            "origin": "EXTRACTED",
+            "evidence_refs": [
+              "design-answer-1"
+            ],
+            "reason": "사용자가 선택한 답변",
+            "review_status": "ACCEPTED",
+            "validation_errors": []
+          },
+          "current_level": {
+            "value": "처음이에요",
+            "origin": "EXTRACTED",
+            "evidence_refs": [
+              "design-answer-0"
+            ],
+            "reason": "사용자가 선택한 답변",
+            "review_status": "ACCEPTED",
+            "validation_errors": []
+          }
+        },
+        "missing_fields": [],
+        "assumptions": [
+          "담당 결과물 정보를 확인하지 않아 관련 세부 조건은 후속 확인이 필요합니다.",
+          "현재 진척 정보를 확인하지 않아 관련 세부 조건은 후속 확인이 필요합니다."
+        ]
+      },
+      "coding": {
+        "draft_id": "323d5b21-2986-4b61-a301-6020b9f0c4a0",
+        "owner_member_id": "coding",
+        "group_plan_id": "5ead9ef6-b7fa-4aac-a933-9d1a2823c246",
+        "contribution": {
+          "owner_member_id": "coding",
+          "group_plan_id": "5ead9ef6-b7fa-4aac-a933-9d1a2823c246",
+          "title": "화면 구현 완성",
+          "deliverable": "화면 구현 결과물",
+          "completion_criteria": [
+            "소개와 가입 안내가 연결된다."
+          ],
+          "public_rationale": "공동 소개 웹사이트 시연에 기여합니다.",
+          "evidence_refs": [
+            "confirmation:4b62c423f5187242",
+            "g1",
+            "g2"
+          ],
+          "review_status": "ACCEPTED"
+        },
+        "profile_fields": {
+          "tools": {
+            "value": null,
+            "origin": "UNRESOLVED",
+            "evidence_refs": [],
+            "reason": "아직 대화에서 확인하지 않았습니다.",
+            "review_status": "ACCEPTED",
+            "validation_errors": []
+          },
+          "support_needed": {
+            "value": null,
+            "origin": "UNRESOLVED",
+            "evidence_refs": [],
+            "reason": "아직 대화에서 확인하지 않았습니다.",
+            "review_status": "ACCEPTED",
+            "validation_errors": []
+          },
+          "current_progress": {
+            "value": null,
+            "origin": "UNRESOLVED",
+            "evidence_refs": [],
+            "reason": "아직 대화에서 확인하지 않았습니다.",
+            "review_status": "ACCEPTED",
+            "validation_errors": []
+          },
+          "preferred_times": {
+            "value": null,
+            "origin": "UNRESOLVED",
+            "evidence_refs": [],
+            "reason": "아직 대화에서 확인하지 않았습니다.",
+            "review_status": "ACCEPTED",
+            "validation_errors": []
+          },
+          "scope": {
+            "value": null,
+            "origin": "UNRESOLVED",
+            "evidence_refs": [],
+            "reason": "아직 대화에서 확인하지 않았습니다.",
+            "review_status": "ACCEPTED",
+            "validation_errors": []
+          },
+          "constraints": {
+            "value": [
+              "목요일 개인 병원 방문"
+            ],
+            "origin": "EXTRACTED",
+            "evidence_refs": [
+              "coding-private"
+            ],
+            "reason": "",
+            "review_status": "ACCEPTED",
+            "validation_errors": []
+          },
+          "weekly_available_minutes": {
+            "value": 300,
+            "origin": "EXTRACTED",
+            "evidence_refs": [
+              "coding-answer-1"
+            ],
+            "reason": "사용자가 선택한 답변",
+            "review_status": "ACCEPTED",
+            "validation_errors": []
+          },
+          "current_level": {
+            "value": "혼자 구현할 수 있어요",
+            "origin": "EXTRACTED",
+            "evidence_refs": [
+              "coding-answer-0"
+            ],
+            "reason": "사용자가 선택한 답변",
+            "review_status": "ACCEPTED",
+            "validation_errors": []
+          }
+        },
+        "missing_fields": [],
+        "assumptions": [
+          "담당 결과물 정보를 확인하지 않아 관련 세부 조건은 후속 확인이 필요합니다.",
+          "현재 진척 정보를 확인하지 않아 관련 세부 조건은 후속 확인이 필요합니다."
+        ]
+      }
+    },
+    "personal_conversations": {
+      "design": [
+        {
+          "message_id": "design-private",
+          "speaker_id": "design",
+          "role": "user",
+          "text": "내 담당 결과물을 나누고 싶어요. 화요일 가족 돌봄 일정이 있어요.",
+          "created_at": "2026-10-29T10:00:00+09:00"
+        },
+        {
+          "message_id": "design-answer-0",
+          "speaker_id": "design",
+          "role": "user",
+          "text": "처음이에요",
+          "created_at": "2026-10-29T10:00:00+09:00"
+        },
+        {
+          "message_id": "design-answer-1",
+          "speaker_id": "design",
+          "role": "user",
+          "text": "2시간",
+          "created_at": "2026-10-29T10:00:00+09:00"
+        }
+      ],
+      "coding": [
+        {
+          "message_id": "coding-private",
+          "speaker_id": "coding",
+          "role": "user",
+          "text": "내 담당 결과물을 나누고 싶어요. 목요일 개인 병원 방문이 있어요.",
+          "created_at": "2026-10-29T10:00:00+09:00"
+        },
+        {
+          "message_id": "coding-answer-0",
+          "speaker_id": "coding",
+          "role": "user",
+          "text": "혼자 구현할 수 있어요",
+          "created_at": "2026-10-29T10:00:00+09:00"
+        },
+        {
+          "message_id": "coding-answer-1",
+          "speaker_id": "coding",
+          "role": "user",
+          "text": "5시간",
+          "created_at": "2026-10-29T10:00:00+09:00"
+        }
+      ]
+    },
+    "reviewed_draft": {
+      "draft_id": "eb08e3ac-ea6f-429e-8d92-cfac02d9faca",
+      "summary": "검토 전 추천 초안",
+      "fields": {
+        "goal": {
+          "value": "동아리 소개 웹사이트",
+          "origin": "EXTRACTED",
+          "evidence_refs": [
+            "g1"
+          ],
+          "reason": "사용자 대화에서 확인된 값입니다.",
+          "review_status": "ACCEPTED",
+          "validation_errors": []
+        },
+        "expected_outcome": {
+          "value": "소개와 가입 안내가 연결된 시연",
+          "origin": "EXTRACTED",
+          "evidence_refs": [
+            "g1"
+          ],
+          "reason": "사용자 대화에서 확인된 값입니다.",
+          "review_status": "ACCEPTED",
+          "validation_errors": []
+        },
+        "completion_criteria": {
+          "value": [
+            "소개와 가입 안내를 모바일 화면에서 시연한다."
+          ],
+          "origin": "AI_SUGGESTED",
+          "evidence_refs": [],
+          "reason": "대화에서 정하지 않아 AI가 추천한 내용입니다. 작성된 튜토리얼 추천안",
+          "review_status": "ACCEPTED",
+          "validation_errors": []
+        },
+        "start_date": {
+          "value": "2026-10-29",
+          "origin": "EXTRACTED",
+          "evidence_refs": [
+            "g1"
+          ],
+          "reason": "사용자 대화에서 확인된 값입니다.",
+          "review_status": "ACCEPTED",
+          "validation_errors": []
+        },
+        "end_date": {
+          "value": "2026-11-11",
+          "origin": "EXTRACTED",
+          "evidence_refs": [
+            "g1"
+          ],
+          "reason": "사용자 대화에서 확인된 값입니다.",
+          "review_status": "ACCEPTED",
+          "validation_errors": []
+        },
+        "execution_method": {
+          "value": "UI 시안 공유 후 화면 구현 및 연결 점검",
+          "origin": "EXTRACTED",
+          "evidence_refs": [
+            "g1"
+          ],
+          "reason": "사용자 대화에서 확인된 값입니다.",
+          "review_status": "ACCEPTED",
+          "validation_errors": []
+        },
+        "verification_method": {
+          "value": "이미지 첨부",
+          "origin": "EXTRACTED",
+          "evidence_refs": [
+            "g2"
+          ],
+          "reason": "사용자 대화에서 확인된 값입니다.",
+          "review_status": "ACCEPTED",
+          "validation_errors": []
+        },
+        "privacy_scope": {
+          "value": "OBJECTIVE_ONLY",
+          "origin": "EXTRACTED",
+          "evidence_refs": [
+            "g2"
+          ],
+          "reason": "사용자 대화에서 확인된 값입니다.",
+          "review_status": "ACCEPTED",
+          "validation_errors": []
+        },
+        "checkins": {
+          "value": [
+            "금요일 · 이미지 확인"
+          ],
+          "origin": "AI_SUGGESTED",
+          "evidence_refs": [],
+          "reason": "대화에서 정하지 않아 AI가 추천한 내용입니다. 작성된 튜토리얼 추천안",
+          "review_status": "ACCEPTED",
+          "validation_errors": []
+        },
+        "roles": {
+          "value": {
+            "design": "디자인",
+            "coding": "프론트"
+          },
+          "origin": "EXTRACTED",
+          "evidence_refs": [
+            "g2"
+          ],
+          "reason": "사용자 대화에서 확인된 값입니다.",
+          "review_status": "ACCEPTED",
+          "validation_errors": []
+        },
+        "frequency_per_week": {
+          "value": null,
+          "origin": "UNRESOLVED",
+          "evidence_refs": [],
+          "reason": "이 항목이 필요하면 직접 입력하거나 AI 추천을 요청할 수 있습니다.",
+          "review_status": "PENDING",
+          "validation_errors": []
+        },
+        "metric": {
+          "value": null,
+          "origin": "UNRESOLVED",
+          "evidence_refs": [],
+          "reason": "이 항목이 필요하면 직접 입력하거나 AI 추천을 요청할 수 있습니다.",
+          "review_status": "PENDING",
+          "validation_errors": []
+        },
+        "custom_privacy_fields": {
+          "value": null,
+          "origin": "UNRESOLVED",
+          "evidence_refs": [],
+          "reason": "이 항목이 필요하면 직접 입력하거나 AI 추천을 요청할 수 있습니다.",
+          "review_status": "PENDING",
+          "validation_errors": []
+        },
+        "milestones": {
+          "value": [
+            {
+              "title": "중간 목표",
+              "due_date": "2026-11-04"
+            },
+            {
+              "title": "개발 완료",
+              "due_date": "2026-11-08"
+            },
+            {
+              "title": "최종 제출",
+              "due_date": "2026-11-11"
+            }
+          ],
+          "origin": "EXTRACTED",
+          "evidence_refs": [
+            "g1"
+          ],
+          "reason": "사용자 대화에서 확인된 값입니다.",
+          "review_status": "ACCEPTED",
+          "validation_errors": []
+        }
+      }
+    },
+    "run_manifest": [],
+    "source_fingerprint": "tutorial-v1",
+    "current_source_fingerprint": "tutorial-v1"
+  },
+  "response": {
+    "status": "OK",
+    "data": {
+      "group_file": {
+        "schema_version": "1.1",
+        "trace_id": "06d72896-0df5-4e6c-9fa2-3ca63163fce0",
+        "integration_ready": true,
+        "group_payload": {
+          "goal_spec": {
+            "spec_id": "fbe93549-5fa1-48fa-80dd-e039e8b77eb7",
+            "goal": "동아리 소개 웹사이트",
+            "expected_outcome": "소개와 가입 안내가 연결된 시연",
+            "completion_criteria": [
+              "소개와 가입 안내를 모바일 화면에서 시연한다."
+            ],
+            "start_date": "2026-10-29",
+            "end_date": "2026-11-11",
+            "execution_method": "UI 시안 공유 후 화면 구현 및 연결 점검",
+            "verification_method": "이미지 첨부",
+            "privacy_scope": "OBJECTIVE_ONLY",
+            "custom_privacy_fields": [],
+            "frequency_per_week": null,
+            "metric": null,
+            "checkins": [
+              "금요일 · 이미지 확인"
+            ],
+            "milestones": [
+              {
+                "title": "중간 목표",
+                "due_date": "2026-11-04"
+              },
+              {
+                "title": "개발 완료",
+                "due_date": "2026-11-08"
+              },
+              {
+                "title": "최종 제출",
+                "due_date": "2026-11-11"
+              }
+            ],
+            "roles": {
+              "design": "디자인",
+              "coding": "프론트"
+            },
+            "members": [
+              {
+                "member_id": "design",
+                "nickname": "민지"
+              },
+              {
+                "member_id": "coding",
+                "nickname": "도윤"
+              }
+            ],
+            "evidence_ids": [
+              "confirmation:4b62c423f5187242",
+              "g1",
+              "g2"
+            ],
+            "confirmed": true
+          },
+          "group_plan": {
+            "plan_id": "5ead9ef6-b7fa-4aac-a933-9d1a2823c246",
+            "spec_id": "fbe93549-5fa1-48fa-80dd-e039e8b77eb7",
+            "revision": 1,
+            "previous_plan_id": null,
+            "status": "DRAFT",
+            "goal": "동아리 소개 웹사이트",
+            "expected_outcome": "소개와 가입 안내가 연결된 시연",
+            "completion_criteria": [
+              "소개와 가입 안내를 모바일 화면에서 시연한다."
+            ],
+            "start_date": "2026-10-29",
+            "end_date": "2026-11-11",
+            "frequency_per_week": null,
+            "metric": null,
+            "milestones": [
+              {
+                "title": "중간 목표",
+                "due_date": "2026-11-04",
+                "completion_criteria": "중간 목표 결과물 확인",
+                "evidence_refs": [
+                  "confirmation:4b62c423f5187242",
+                  "g1",
+                  "g2"
+                ]
+              },
+              {
+                "title": "개발 완료",
+                "due_date": "2026-11-08",
+                "completion_criteria": "개발 완료 결과물 확인",
+                "evidence_refs": [
+                  "confirmation:4b62c423f5187242",
+                  "g1",
+                  "g2"
+                ]
+              },
+              {
+                "title": "최종 제출",
+                "due_date": "2026-11-11",
+                "completion_criteria": "최종 제출 결과물 확인",
+                "evidence_refs": [
+                  "confirmation:4b62c423f5187242",
+                  "g1",
+                  "g2"
+                ]
+              }
+            ],
+            "weekly_outline": [
+              {
+                "week": 1,
+                "outcome": "UI 시안 공유",
+                "tasks": [
+                  "민지: UI 시안 전달",
+                  "도윤: 화면 연결 및 점검"
+                ]
+              },
+              {
+                "week": 2,
+                "outcome": "연결 시연 완성",
+                "tasks": [
+                  "민지: UI 시안 전달",
+                  "도윤: 화면 연결 및 점검"
+                ]
+              }
+            ],
+            "suggested_checkins": [],
+            "assumptions": [],
+            "evidence_refs": [
+              "confirmation:4b62c423f5187242",
+              "g1",
+              "g2"
+            ]
+          },
+          "member_plans": [
+            {
+              "plan_id": "99721af8-b147-4f7b-b380-349798e9f47c",
+              "group_plan_id": "5ead9ef6-b7fa-4aac-a933-9d1a2823c246",
+              "member_id": "design",
+              "revision": 1,
+              "previous_plan_id": null,
+              "weekly_targets": [
+                {
+                  "week": 1,
+                  "outcome": "UI 시안 단계 완성",
+                  "estimated_minutes": 50,
+                  "target_amount": null
+                },
+                {
+                  "week": 2,
+                  "outcome": "UI 시안 단계 완성",
+                  "estimated_minutes": 50,
+                  "target_amount": null
+                }
+              ],
+              "first_week_todos": [
+                {
+                  "task_id": "b6487ffe-ea3a-4b05-ae67-64daa8d0cacc",
+                  "scheduled_date": "2026-10-29",
+                  "action": "UI 시안 1단계",
+                  "amount_or_deliverable": "UI 시안 검토본",
+                  "estimated_minutes": 25,
+                  "difficulty": "EASY",
+                  "completion_criteria": "모바일 화면에서 소개와 가입 안내를 확인한다.",
+                  "origin": "AI_SUGGESTION",
+                  "evidence_refs": [
+                    "confirmation:4b62c423f5187242",
+                    "g1",
+                    "g2"
+                  ],
+                  "dependencies": []
+                },
+                {
+                  "task_id": "2b70a522-fc32-4021-9786-73e9c73065a6",
+                  "scheduled_date": "2026-10-30",
+                  "action": "UI 시안 2단계",
+                  "amount_or_deliverable": "UI 시안 검토본",
+                  "estimated_minutes": 25,
+                  "difficulty": "EASY",
+                  "completion_criteria": "모바일 화면에서 소개와 가입 안내를 확인한다.",
+                  "origin": "AI_SUGGESTION",
+                  "evidence_refs": [
+                    "confirmation:4b62c423f5187242",
+                    "g1",
+                    "g2"
+                  ],
+                  "dependencies": []
+                }
+              ],
+              "adaptation_rules": [
+                "지연되면 남은 작업을 우선순위에 따라 다음 버전에서 조정한다."
+              ],
+              "public_rationale": "담당 결과물을 공동 시연에 연결합니다.",
+              "evidence_refs": [
+                "confirmation:4b62c423f5187242",
+                "g1",
+                "g2"
+              ]
+            },
+            {
+              "plan_id": "e6c088d4-4791-44cb-8aa0-6d494e999e1c",
+              "group_plan_id": "5ead9ef6-b7fa-4aac-a933-9d1a2823c246",
+              "member_id": "coding",
+              "revision": 1,
+              "previous_plan_id": null,
+              "weekly_targets": [
+                {
+                  "week": 1,
+                  "outcome": "화면 구현 단계 완성",
+                  "estimated_minutes": 120,
+                  "target_amount": null
+                },
+                {
+                  "week": 2,
+                  "outcome": "화면 구현 단계 완성",
+                  "estimated_minutes": 120,
+                  "target_amount": null
+                }
+              ],
+              "first_week_todos": [
+                {
+                  "task_id": "5582fa6f-f29e-4b8d-a78b-d0324f406210",
+                  "scheduled_date": "2026-10-29",
+                  "action": "화면 구현 1단계",
+                  "amount_or_deliverable": "화면 구현 검토본",
+                  "estimated_minutes": 60,
+                  "difficulty": "MEDIUM",
+                  "completion_criteria": "모바일 화면에서 소개와 가입 안내를 확인한다.",
+                  "origin": "AI_SUGGESTION",
+                  "evidence_refs": [
+                    "confirmation:4b62c423f5187242",
+                    "g1",
+                    "g2"
+                  ],
+                  "dependencies": []
+                },
+                {
+                  "task_id": "d9f58a7d-1ae0-4bc4-8189-7b8a7780104b",
+                  "scheduled_date": "2026-10-30",
+                  "action": "화면 구현 2단계",
+                  "amount_or_deliverable": "화면 구현 검토본",
+                  "estimated_minutes": 60,
+                  "difficulty": "MEDIUM",
+                  "completion_criteria": "모바일 화면에서 소개와 가입 안내를 확인한다.",
+                  "origin": "AI_SUGGESTION",
+                  "evidence_refs": [
+                    "confirmation:4b62c423f5187242",
+                    "g1",
+                    "g2"
+                  ],
+                  "dependencies": []
+                }
+              ],
+              "adaptation_rules": [
+                "지연되면 남은 작업을 우선순위에 따라 다음 버전에서 조정한다."
+              ],
+              "public_rationale": "담당 결과물을 공동 시연에 연결합니다.",
+              "evidence_refs": [
+                "confirmation:4b62c423f5187242",
+                "g1",
+                "g2"
+              ]
+            }
+          ],
+          "contribution_goals": [
+            {
+              "owner_member_id": "design",
+              "group_plan_id": "5ead9ef6-b7fa-4aac-a933-9d1a2823c246",
+              "title": "UI 시안 완성",
+              "deliverable": "UI 시안 결과물",
+              "completion_criteria": [
+                "소개와 가입 안내가 연결된다."
+              ],
+              "public_rationale": "공동 소개 웹사이트 시연에 기여합니다.",
+              "evidence_refs": [
+                "confirmation:4b62c423f5187242",
+                "g1",
+                "g2"
+              ],
+              "review_status": "ACCEPTED"
+            },
+            {
+              "owner_member_id": "coding",
+              "group_plan_id": "5ead9ef6-b7fa-4aac-a933-9d1a2823c246",
+              "title": "화면 구현 완성",
+              "deliverable": "화면 구현 결과물",
+              "completion_criteria": [
+                "소개와 가입 안내가 연결된다."
+              ],
+              "public_rationale": "공동 소개 웹사이트 시연에 기여합니다.",
+              "evidence_refs": [
+                "confirmation:4b62c423f5187242",
+                "g1",
+                "g2"
+              ],
+              "review_status": "ACCEPTED"
+            }
+          ]
+        },
+        "validation": {
+          "valid": true,
+          "issues": []
+        },
+        "run_manifest": [],
+        "evaluation_baselines": [
+          {
+            "baseline_id": "c5628ac2-893f-4398-be9a-747ad66420cc",
+            "scope": "PERSONAL",
+            "owner_member_id": "design",
+            "plan_version_id": "99721af8-b147-4f7b-b380-349798e9f47c",
+            "group_plan_version_id": "5ead9ef6-b7fa-4aac-a933-9d1a2823c246",
+            "task_ids": [
+              "b6487ffe-ea3a-4b05-ae67-64daa8d0cacc",
+              "2b70a522-fc32-4021-9786-73e9c73065a6"
+            ],
+            "confirmed_by": "design",
+            "confirmed_at": "2026-11-03T10:49:39.977411+00:00"
+          },
+          {
+            "baseline_id": "f24ef5bd-808c-4ff3-970a-cd3fafbc3c45",
+            "scope": "PERSONAL",
+            "owner_member_id": "coding",
+            "plan_version_id": "e6c088d4-4791-44cb-8aa0-6d494e999e1c",
+            "group_plan_version_id": "5ead9ef6-b7fa-4aac-a933-9d1a2823c246",
+            "task_ids": [
+              "5582fa6f-f29e-4b8d-a78b-d0324f406210",
+              "d9f58a7d-1ae0-4bc4-8189-7b8a7780104b"
+            ],
+            "confirmed_by": "coding",
+            "confirmed_at": "2026-11-03T10:49:39.983418+00:00"
+          }
+        ],
+        "activation": "REQUIRES_SW_APPROVAL"
+      },
+      "private_files": {
+        "design": {
+          "schema_version": "1.1",
+          "trace_id": "06d72896-0df5-4e6c-9fa2-3ca63163fce0",
+          "owner_member_id": "design",
+          "integration_ready": true,
+          "private_payload": {
+            "profile": {
+              "member_id": "design",
+              "current_level": "처음이에요",
+              "weekly_available_minutes": 120,
+              "preferred_times": [],
+              "constraints": [
+                "화요일 가족 돌봄 일정"
+              ],
+              "planning_context": {}
+            },
+            "intake": null,
+            "private_notes": [
+              "본인에게만 전달하는 작업 조절 안내입니다."
+            ],
+            "personal_draft": {
+              "draft_id": "797ca2aa-6599-4820-8e39-49d592a5f1f0",
+              "owner_member_id": "design",
+              "group_plan_id": "5ead9ef6-b7fa-4aac-a933-9d1a2823c246",
+              "contribution": {
+                "owner_member_id": "design",
+                "group_plan_id": "5ead9ef6-b7fa-4aac-a933-9d1a2823c246",
+                "title": "UI 시안 완성",
+                "deliverable": "UI 시안 결과물",
+                "completion_criteria": [
+                  "소개와 가입 안내가 연결된다."
+                ],
+                "public_rationale": "공동 소개 웹사이트 시연에 기여합니다.",
+                "evidence_refs": [
+                  "confirmation:4b62c423f5187242",
+                  "g1",
+                  "g2"
+                ],
+                "review_status": "ACCEPTED"
+              },
+              "profile_fields": {
+                "tools": {
+                  "value": null,
+                  "origin": "UNRESOLVED",
+                  "evidence_refs": [],
+                  "reason": "아직 대화에서 확인하지 않았습니다.",
+                  "review_status": "ACCEPTED",
+                  "validation_errors": []
+                },
+                "support_needed": {
+                  "value": null,
+                  "origin": "UNRESOLVED",
+                  "evidence_refs": [],
+                  "reason": "아직 대화에서 확인하지 않았습니다.",
+                  "review_status": "ACCEPTED",
+                  "validation_errors": []
+                },
+                "current_progress": {
+                  "value": null,
+                  "origin": "UNRESOLVED",
+                  "evidence_refs": [],
+                  "reason": "아직 대화에서 확인하지 않았습니다.",
+                  "review_status": "ACCEPTED",
+                  "validation_errors": []
+                },
+                "preferred_times": {
+                  "value": null,
+                  "origin": "UNRESOLVED",
+                  "evidence_refs": [],
+                  "reason": "아직 대화에서 확인하지 않았습니다.",
+                  "review_status": "ACCEPTED",
+                  "validation_errors": []
+                },
+                "scope": {
+                  "value": null,
+                  "origin": "UNRESOLVED",
+                  "evidence_refs": [],
+                  "reason": "아직 대화에서 확인하지 않았습니다.",
+                  "review_status": "ACCEPTED",
+                  "validation_errors": []
+                },
+                "constraints": {
+                  "value": [
+                    "화요일 가족 돌봄 일정"
+                  ],
+                  "origin": "EXTRACTED",
+                  "evidence_refs": [
+                    "design-private"
+                  ],
+                  "reason": "",
+                  "review_status": "ACCEPTED",
+                  "validation_errors": []
+                },
+                "weekly_available_minutes": {
+                  "value": 120,
+                  "origin": "EXTRACTED",
+                  "evidence_refs": [
+                    "design-answer-1"
+                  ],
+                  "reason": "사용자가 선택한 답변",
+                  "review_status": "ACCEPTED",
+                  "validation_errors": []
+                },
+                "current_level": {
+                  "value": "처음이에요",
+                  "origin": "EXTRACTED",
+                  "evidence_refs": [
+                    "design-answer-0"
+                  ],
+                  "reason": "사용자가 선택한 답변",
+                  "review_status": "ACCEPTED",
+                  "validation_errors": []
+                }
+              },
+              "missing_fields": [],
+              "assumptions": [
+                "담당 결과물 정보를 확인하지 않아 관련 세부 조건은 후속 확인이 필요합니다.",
+                "현재 진척 정보를 확인하지 않아 관련 세부 조건은 후속 확인이 필요합니다."
+              ]
+            },
+            "conversation": [
+              {
+                "message_id": "design-private",
+                "speaker_id": "design",
+                "role": "user",
+                "text": "내 담당 결과물을 나누고 싶어요. 화요일 가족 돌봄 일정이 있어요.",
+                "created_at": "2026-10-29T10:00:00+09:00"
+              },
+              {
+                "message_id": "design-answer-0",
+                "speaker_id": "design",
+                "role": "user",
+                "text": "처음이에요",
+                "created_at": "2026-10-29T10:00:00+09:00"
+              },
+              {
+                "message_id": "design-answer-1",
+                "speaker_id": "design",
+                "role": "user",
+                "text": "2시간",
+                "created_at": "2026-10-29T10:00:00+09:00"
+              }
+            ]
+          }
+        },
+        "coding": {
+          "schema_version": "1.1",
+          "trace_id": "06d72896-0df5-4e6c-9fa2-3ca63163fce0",
+          "owner_member_id": "coding",
+          "integration_ready": true,
+          "private_payload": {
+            "profile": {
+              "member_id": "coding",
+              "current_level": "혼자 구현할 수 있어요",
+              "weekly_available_minutes": 300,
+              "preferred_times": [],
+              "constraints": [
+                "목요일 개인 병원 방문"
+              ],
+              "planning_context": {}
+            },
+            "intake": null,
+            "private_notes": [
+              "본인에게만 전달하는 작업 조절 안내입니다."
+            ],
+            "personal_draft": {
+              "draft_id": "323d5b21-2986-4b61-a301-6020b9f0c4a0",
+              "owner_member_id": "coding",
+              "group_plan_id": "5ead9ef6-b7fa-4aac-a933-9d1a2823c246",
+              "contribution": {
+                "owner_member_id": "coding",
+                "group_plan_id": "5ead9ef6-b7fa-4aac-a933-9d1a2823c246",
+                "title": "화면 구현 완성",
+                "deliverable": "화면 구현 결과물",
+                "completion_criteria": [
+                  "소개와 가입 안내가 연결된다."
+                ],
+                "public_rationale": "공동 소개 웹사이트 시연에 기여합니다.",
+                "evidence_refs": [
+                  "confirmation:4b62c423f5187242",
+                  "g1",
+                  "g2"
+                ],
+                "review_status": "ACCEPTED"
+              },
+              "profile_fields": {
+                "tools": {
+                  "value": null,
+                  "origin": "UNRESOLVED",
+                  "evidence_refs": [],
+                  "reason": "아직 대화에서 확인하지 않았습니다.",
+                  "review_status": "ACCEPTED",
+                  "validation_errors": []
+                },
+                "support_needed": {
+                  "value": null,
+                  "origin": "UNRESOLVED",
+                  "evidence_refs": [],
+                  "reason": "아직 대화에서 확인하지 않았습니다.",
+                  "review_status": "ACCEPTED",
+                  "validation_errors": []
+                },
+                "current_progress": {
+                  "value": null,
+                  "origin": "UNRESOLVED",
+                  "evidence_refs": [],
+                  "reason": "아직 대화에서 확인하지 않았습니다.",
+                  "review_status": "ACCEPTED",
+                  "validation_errors": []
+                },
+                "preferred_times": {
+                  "value": null,
+                  "origin": "UNRESOLVED",
+                  "evidence_refs": [],
+                  "reason": "아직 대화에서 확인하지 않았습니다.",
+                  "review_status": "ACCEPTED",
+                  "validation_errors": []
+                },
+                "scope": {
+                  "value": null,
+                  "origin": "UNRESOLVED",
+                  "evidence_refs": [],
+                  "reason": "아직 대화에서 확인하지 않았습니다.",
+                  "review_status": "ACCEPTED",
+                  "validation_errors": []
+                },
+                "constraints": {
+                  "value": [
+                    "목요일 개인 병원 방문"
+                  ],
+                  "origin": "EXTRACTED",
+                  "evidence_refs": [
+                    "coding-private"
+                  ],
+                  "reason": "",
+                  "review_status": "ACCEPTED",
+                  "validation_errors": []
+                },
+                "weekly_available_minutes": {
+                  "value": 300,
+                  "origin": "EXTRACTED",
+                  "evidence_refs": [
+                    "coding-answer-1"
+                  ],
+                  "reason": "사용자가 선택한 답변",
+                  "review_status": "ACCEPTED",
+                  "validation_errors": []
+                },
+                "current_level": {
+                  "value": "혼자 구현할 수 있어요",
+                  "origin": "EXTRACTED",
+                  "evidence_refs": [
+                    "coding-answer-0"
+                  ],
+                  "reason": "사용자가 선택한 답변",
+                  "review_status": "ACCEPTED",
+                  "validation_errors": []
+                }
+              },
+              "missing_fields": [],
+              "assumptions": [
+                "담당 결과물 정보를 확인하지 않아 관련 세부 조건은 후속 확인이 필요합니다.",
+                "현재 진척 정보를 확인하지 않아 관련 세부 조건은 후속 확인이 필요합니다."
+              ]
+            },
+            "conversation": [
+              {
+                "message_id": "coding-private",
+                "speaker_id": "coding",
+                "role": "user",
+                "text": "내 담당 결과물을 나누고 싶어요. 목요일 개인 병원 방문이 있어요.",
+                "created_at": "2026-10-29T10:00:00+09:00"
+              },
+              {
+                "message_id": "coding-answer-0",
+                "speaker_id": "coding",
+                "role": "user",
+                "text": "혼자 구현할 수 있어요",
+                "created_at": "2026-10-29T10:00:00+09:00"
+              },
+              {
+                "message_id": "coding-answer-1",
+                "speaker_id": "coding",
+                "role": "user",
+                "text": "5시간",
+                "created_at": "2026-10-29T10:00:00+09:00"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "questions": [],
+    "warnings": [],
+    "error": null,
+    "meta": {
+      "run_id": "e0d3ec12-1949-4691-a260-47460a67ee59",
+      "task": "handoff",
+      "prompt_version": "m1-handoff-v1",
+      "model": null,
+      "usage": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "latency_ms": 4,
+      "transport_attempts": 0,
+      "repair_attempts": 0,
+      "plan_repair_attempts": 0,
+      "provider_request_ids": [],
+      "trace_id": "06d72896-0df5-4e6c-9fa2-3ca63163fce0",
+      "parent_run_id": null,
+      "prompt_variant": null,
+      "reference_case_ids": [],
+      "reference_data_version": null,
+      "execution_source": "REPLAY",
+      "source_run_id": null,
+      "cache_hit": false,
+      "cached_usage": null,
+      "source_execution_source": null,
+      "validator_version": "contracts-2026-10-v10.2-assisted-calendar"
+    }
+  }
+}

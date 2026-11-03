@@ -1,0 +1,568 @@
+{
+  "$defs": {
+    "AnalysisRequest": {
+      "additionalProperties": false,
+      "properties": {
+        "conversation": {
+          "items": {
+            "$ref": "#/$defs/Message"
+          },
+          "maxItems": 200,
+          "minItems": 1,
+          "title": "Conversation",
+          "type": "array"
+        },
+        "members": {
+          "items": {
+            "$ref": "#/$defs/Member"
+          },
+          "maxItems": 30,
+          "minItems": 1,
+          "title": "Members",
+          "type": "array"
+        },
+        "reference_date": {
+          "format": "date",
+          "title": "Reference Date",
+          "type": "string"
+        },
+        "timezone": {
+          "default": "Asia/Seoul",
+          "title": "Timezone",
+          "type": "string"
+        }
+      },
+      "required": [
+        "conversation",
+        "members",
+        "reference_date"
+      ],
+      "title": "AnalysisRequest",
+      "type": "object"
+    },
+    "ConfirmedDecisions": {
+      "additionalProperties": false,
+      "properties": {
+        "confirmed": {
+          "default": false,
+          "title": "Confirmed",
+          "type": "boolean"
+        },
+        "goal": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Goal"
+        },
+        "expected_outcome": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Expected Outcome"
+        },
+        "completion_criteria": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Completion Criteria",
+          "type": "array"
+        },
+        "start_date": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Start Date"
+        },
+        "end_date": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "End Date"
+        },
+        "frequency_per_week": {
+          "anyOf": [
+            {
+              "maximum": 7,
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Frequency Per Week"
+        },
+        "execution_method": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Execution Method"
+        },
+        "verification_method": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Verification Method"
+        },
+        "privacy_scope": {
+          "anyOf": [
+            {
+              "enum": [
+                "OBJECTIVE_ONLY",
+                "PRIVATE",
+                "CUSTOM"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Privacy Scope"
+        },
+        "custom_privacy_fields": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Custom Privacy Fields",
+          "type": "array"
+        },
+        "metric": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Metric"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "checkins": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Checkins",
+          "type": "array"
+        },
+        "milestones": {
+          "items": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "title": "Milestones",
+          "type": "array"
+        },
+        "roles": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Roles",
+          "type": "object"
+        }
+      },
+      "title": "ConfirmedDecisions",
+      "type": "object"
+    },
+    "DraftField": {
+      "additionalProperties": false,
+      "properties": {
+        "value": {
+          "default": null,
+          "title": "Value"
+        },
+        "origin": {
+          "default": "UNRESOLVED",
+          "enum": [
+            "EXTRACTED",
+            "AI_SUGGESTED",
+            "UNRESOLVED"
+          ],
+          "title": "Origin",
+          "type": "string"
+        },
+        "evidence_refs": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Refs",
+          "type": "array"
+        },
+        "reason": {
+          "default": "",
+          "title": "Reason",
+          "type": "string"
+        },
+        "review_status": {
+          "default": "PENDING",
+          "enum": [
+            "PENDING",
+            "ACCEPTED",
+            "EDITED"
+          ],
+          "title": "Review Status",
+          "type": "string"
+        },
+        "validation_errors": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Validation Errors",
+          "type": "array"
+        }
+      },
+      "title": "DraftField",
+      "type": "object"
+    },
+    "Member": {
+      "additionalProperties": false,
+      "properties": {
+        "member_id": {
+          "minLength": 1,
+          "title": "Member Id",
+          "type": "string"
+        },
+        "nickname": {
+          "maxLength": 40,
+          "minLength": 1,
+          "title": "Nickname",
+          "type": "string"
+        }
+      },
+      "required": [
+        "member_id",
+        "nickname"
+      ],
+      "title": "Member",
+      "type": "object"
+    },
+    "MemberProfile": {
+      "additionalProperties": false,
+      "properties": {
+        "member_id": {
+          "title": "Member Id",
+          "type": "string"
+        },
+        "current_level": {
+          "minLength": 1,
+          "title": "Current Level",
+          "type": "string"
+        },
+        "weekly_available_minutes": {
+          "exclusiveMinimum": 0,
+          "maximum": 10080,
+          "title": "Weekly Available Minutes",
+          "type": "integer"
+        },
+        "preferred_times": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Preferred Times",
+          "type": "array"
+        },
+        "constraints": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Constraints",
+          "type": "array"
+        },
+        "planning_context": {
+          "additionalProperties": {
+            "$ref": "#/$defs/DraftField"
+          },
+          "title": "Planning Context",
+          "type": "object"
+        }
+      },
+      "required": [
+        "member_id",
+        "current_level",
+        "weekly_available_minutes",
+        "preferred_times",
+        "constraints"
+      ],
+      "title": "MemberProfile",
+      "type": "object"
+    },
+    "Message": {
+      "additionalProperties": false,
+      "properties": {
+        "message_id": {
+          "minLength": 1,
+          "title": "Message Id",
+          "type": "string"
+        },
+        "speaker_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Speaker Id"
+        },
+        "role": {
+          "enum": [
+            "user",
+            "assistant"
+          ],
+          "title": "Role",
+          "type": "string"
+        },
+        "text": {
+          "maxLength": 12000,
+          "minLength": 1,
+          "title": "Text",
+          "type": "string"
+        },
+        "created_at": {
+          "format": "date-time",
+          "title": "Created At",
+          "type": "string"
+        }
+      },
+      "required": [
+        "message_id",
+        "role",
+        "text",
+        "created_at"
+      ],
+      "title": "Message",
+      "type": "object"
+    },
+    "Metric": {
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "target": {
+          "exclusiveMinimum": 0,
+          "title": "Target",
+          "type": "number"
+        },
+        "unit": {
+          "title": "Unit",
+          "type": "string"
+        },
+        "allocation": {
+          "enum": [
+            "PER_MEMBER",
+            "GROUP_TOTAL"
+          ],
+          "title": "Allocation",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "target",
+        "unit",
+        "allocation"
+      ],
+      "title": "Metric",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "data_version": {
+      "default": "scenarios-2026-10-v1",
+      "title": "Data Version",
+      "type": "string"
+    },
+    "case_id": {
+      "title": "Case Id",
+      "type": "string"
+    },
+    "family_id": {
+      "title": "Family Id",
+      "type": "string"
+    },
+    "kind": {
+      "enum": [
+        "BASE",
+        "VARIANT"
+      ],
+      "title": "Kind",
+      "type": "string"
+    },
+    "paired_case_id": {
+      "title": "Paired Case Id",
+      "type": "string"
+    },
+    "split": {
+      "enum": [
+        "REFERENCE",
+        "DEV",
+        "TEST"
+      ],
+      "title": "Split",
+      "type": "string"
+    },
+    "domain": {
+      "title": "Domain",
+      "type": "string"
+    },
+    "title": {
+      "title": "Title",
+      "type": "string"
+    },
+    "summary": {
+      "title": "Summary",
+      "type": "string"
+    },
+    "purpose": {
+      "title": "Purpose",
+      "type": "string"
+    },
+    "difficulty": {
+      "enum": [
+        "BASIC",
+        "INTERMEDIATE",
+        "ADVANCED"
+      ],
+      "title": "Difficulty",
+      "type": "string"
+    },
+    "entry_module": {
+      "enum": [
+        "A",
+        "B",
+        "C",
+        "E",
+        "PLAN"
+      ],
+      "title": "Entry Module",
+      "type": "string"
+    },
+    "tags": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Tags",
+      "type": "array"
+    },
+    "group_input": {
+      "$ref": "#/$defs/AnalysisRequest"
+    },
+    "private_conversations": {
+      "additionalProperties": {
+        "items": {
+          "additionalProperties": true,
+          "type": "object"
+        },
+        "type": "array"
+      },
+      "title": "Private Conversations",
+      "type": "object"
+    },
+    "profiles": {
+      "items": {
+        "$ref": "#/$defs/MemberProfile"
+      },
+      "title": "Profiles",
+      "type": "array"
+    },
+    "confirmed_fixture": {
+      "$ref": "#/$defs/ConfirmedDecisions"
+    },
+    "expected": {
+      "additionalProperties": true,
+      "title": "Expected",
+      "type": "object"
+    },
+    "comparison": {
+      "additionalProperties": true,
+      "title": "Comparison",
+      "type": "object"
+    },
+    "reference_answer": {
+      "additionalProperties": true,
+      "title": "Reference Answer",
+      "type": "object"
+    },
+    "reference_label": {
+      "default": "작성된 기준안 · AI 미실행 · 사람 검토 전",
+      "title": "Reference Label",
+      "type": "string"
+    },
+    "authoring_status": {
+      "default": "SYNTHETIC_AUTHORED",
+      "title": "Authoring Status",
+      "type": "string"
+    }
+  },
+  "required": [
+    "case_id",
+    "family_id",
+    "kind",
+    "paired_case_id",
+    "split",
+    "domain",
+    "title",
+    "summary",
+    "purpose",
+    "difficulty",
+    "entry_module",
+    "tags",
+    "group_input",
+    "private_conversations",
+    "profiles",
+    "confirmed_fixture",
+    "expected",
+    "comparison",
+    "reference_answer"
+  ],
+  "title": "Scenario",
+  "type": "object"
+}

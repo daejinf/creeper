@@ -1,0 +1,365 @@
+{
+  "request": {
+    "diagnostic_mode": "ADAPTIVE",
+    "continue_diagnosis": false,
+    "goal_spec": {
+      "spec_id": "fbe93549-5fa1-48fa-80dd-e039e8b77eb7",
+      "goal": "동아리 소개 웹사이트",
+      "expected_outcome": "소개와 가입 안내가 연결된 시연",
+      "completion_criteria": [
+        "소개와 가입 안내를 모바일 화면에서 시연한다."
+      ],
+      "start_date": "2026-10-29",
+      "end_date": "2026-11-11",
+      "execution_method": "UI 시안 공유 후 화면 구현 및 연결 점검",
+      "verification_method": "이미지 첨부",
+      "privacy_scope": "OBJECTIVE_ONLY",
+      "custom_privacy_fields": [],
+      "frequency_per_week": null,
+      "metric": null,
+      "checkins": [
+        "금요일 · 이미지 확인"
+      ],
+      "milestones": [
+        {
+          "title": "중간 목표",
+          "due_date": "2026-11-04"
+        },
+        {
+          "title": "개발 완료",
+          "due_date": "2026-11-08"
+        },
+        {
+          "title": "최종 제출",
+          "due_date": "2026-11-11"
+        }
+      ],
+      "roles": {
+        "design": "디자인",
+        "coding": "프론트"
+      },
+      "members": [
+        {
+          "member_id": "design",
+          "nickname": "민지"
+        },
+        {
+          "member_id": "coding",
+          "nickname": "도윤"
+        }
+      ],
+      "evidence_ids": [
+        "confirmation:4b62c423f5187242",
+        "g1",
+        "g2"
+      ],
+      "confirmed": true
+    },
+    "group_plan": {
+      "plan_id": "5ead9ef6-b7fa-4aac-a933-9d1a2823c246",
+      "spec_id": "fbe93549-5fa1-48fa-80dd-e039e8b77eb7",
+      "revision": 1,
+      "previous_plan_id": null,
+      "status": "DRAFT",
+      "goal": "동아리 소개 웹사이트",
+      "expected_outcome": "소개와 가입 안내가 연결된 시연",
+      "completion_criteria": [
+        "소개와 가입 안내를 모바일 화면에서 시연한다."
+      ],
+      "start_date": "2026-10-29",
+      "end_date": "2026-11-11",
+      "frequency_per_week": null,
+      "metric": null,
+      "milestones": [
+        {
+          "title": "중간 목표",
+          "due_date": "2026-11-04",
+          "completion_criteria": "중간 목표 결과물 확인",
+          "evidence_refs": [
+            "confirmation:4b62c423f5187242",
+            "g1",
+            "g2"
+          ]
+        },
+        {
+          "title": "개발 완료",
+          "due_date": "2026-11-08",
+          "completion_criteria": "개발 완료 결과물 확인",
+          "evidence_refs": [
+            "confirmation:4b62c423f5187242",
+            "g1",
+            "g2"
+          ]
+        },
+        {
+          "title": "최종 제출",
+          "due_date": "2026-11-11",
+          "completion_criteria": "최종 제출 결과물 확인",
+          "evidence_refs": [
+            "confirmation:4b62c423f5187242",
+            "g1",
+            "g2"
+          ]
+        }
+      ],
+      "weekly_outline": [
+        {
+          "week": 1,
+          "outcome": "UI 시안 공유",
+          "tasks": [
+            "민지: UI 시안 전달",
+            "도윤: 화면 연결 및 점검"
+          ]
+        },
+        {
+          "week": 2,
+          "outcome": "연결 시연 완성",
+          "tasks": [
+            "민지: UI 시안 전달",
+            "도윤: 화면 연결 및 점검"
+          ]
+        }
+      ],
+      "suggested_checkins": [],
+      "assumptions": [],
+      "evidence_refs": [
+        "confirmation:4b62c423f5187242",
+        "g1",
+        "g2"
+      ]
+    },
+    "owner_member_id": "coding",
+    "conversation": [
+      {
+        "message_id": "coding-private",
+        "speaker_id": "coding",
+        "role": "user",
+        "text": "내 담당 결과물을 나누고 싶어요. 목요일 개인 병원 방문이 있어요.",
+        "created_at": "2026-10-29T10:00:00+09:00"
+      },
+      {
+        "message_id": "coding-answer-0",
+        "speaker_id": "coding",
+        "role": "user",
+        "text": "혼자 구현할 수 있어요",
+        "created_at": "2026-10-29T10:00:00+09:00"
+      },
+      {
+        "message_id": "coding-answer-1",
+        "speaker_id": "coding",
+        "role": "user",
+        "text": "5시간",
+        "created_at": "2026-10-29T10:00:00+09:00"
+      }
+    ],
+    "reference_date": "2026-10-29",
+    "timezone": "Asia/Seoul",
+    "state": {
+      "owner_member_id": "coding",
+      "group_plan_id": "5ead9ef6-b7fa-4aac-a933-9d1a2823c246",
+      "fields": {
+        "constraints": {
+          "value": [
+            "목요일 개인 병원 방문"
+          ],
+          "origin": "EXTRACTED",
+          "evidence_refs": [
+            "coding-private"
+          ],
+          "reason": "",
+          "review_status": "PENDING",
+          "validation_errors": []
+        },
+        "current_level": {
+          "value": "혼자 구현할 수 있어요",
+          "origin": "EXTRACTED",
+          "evidence_refs": [
+            "coding-answer-0"
+          ],
+          "reason": "사용자가 선택한 답변",
+          "review_status": "PENDING",
+          "validation_errors": []
+        },
+        "weekly_available_minutes": {
+          "value": 300,
+          "origin": "EXTRACTED",
+          "evidence_refs": [
+            "coding-answer-1"
+          ],
+          "reason": "사용자가 선택한 답변",
+          "review_status": "PENDING",
+          "validation_errors": []
+        }
+      },
+      "answer_states": {
+        "constraints": "KNOWN",
+        "current_level": "KNOWN",
+        "weekly_available_minutes": "KNOWN"
+      },
+      "current_question": null,
+      "answered_question_ids": [
+        "acd5cce3-28e1-48b8-b666-f5bcfbb95974",
+        "46c4de2b-e1f4-4ff4-87da-f94bc4aee599"
+      ],
+      "consecutive_questions": 0,
+      "diagnostic_dimensions": [
+        {
+          "field_id": "current_level",
+          "label": "경험",
+          "reason": "이 역할의 작업 범위와 난이도를 조절합니다."
+        },
+        {
+          "field_id": "weekly_available_minutes",
+          "label": "시간",
+          "reason": "이 역할의 작업 범위와 난이도를 조절합니다."
+        },
+        {
+          "field_id": "scope",
+          "label": "담당 결과물",
+          "reason": "이 역할의 작업 범위와 난이도를 조절합니다."
+        },
+        {
+          "field_id": "current_progress",
+          "label": "현재 진척",
+          "reason": "이 역할의 작업 범위와 난이도를 조절합니다."
+        }
+      ],
+      "awaiting_continue": true
+    },
+    "answer": null,
+    "previous_draft": null
+  },
+  "response": {
+    "status": "OK",
+    "data": {
+      "draft_id": "323d5b21-2986-4b61-a301-6020b9f0c4a0",
+      "owner_member_id": "coding",
+      "group_plan_id": "5ead9ef6-b7fa-4aac-a933-9d1a2823c246",
+      "contribution": {
+        "owner_member_id": "coding",
+        "group_plan_id": "5ead9ef6-b7fa-4aac-a933-9d1a2823c246",
+        "title": "화면 구현 완성",
+        "deliverable": "화면 구현 결과물",
+        "completion_criteria": [
+          "소개와 가입 안내가 연결된다."
+        ],
+        "public_rationale": "공동 소개 웹사이트 시연에 기여합니다.",
+        "evidence_refs": [
+          "confirmation:4b62c423f5187242",
+          "g1",
+          "g2"
+        ],
+        "review_status": "PENDING"
+      },
+      "profile_fields": {
+        "tools": {
+          "value": null,
+          "origin": "UNRESOLVED",
+          "evidence_refs": [],
+          "reason": "아직 대화에서 확인하지 않았습니다.",
+          "review_status": "PENDING",
+          "validation_errors": []
+        },
+        "support_needed": {
+          "value": null,
+          "origin": "UNRESOLVED",
+          "evidence_refs": [],
+          "reason": "아직 대화에서 확인하지 않았습니다.",
+          "review_status": "PENDING",
+          "validation_errors": []
+        },
+        "current_progress": {
+          "value": null,
+          "origin": "UNRESOLVED",
+          "evidence_refs": [],
+          "reason": "아직 대화에서 확인하지 않았습니다.",
+          "review_status": "PENDING",
+          "validation_errors": []
+        },
+        "preferred_times": {
+          "value": null,
+          "origin": "UNRESOLVED",
+          "evidence_refs": [],
+          "reason": "아직 대화에서 확인하지 않았습니다.",
+          "review_status": "PENDING",
+          "validation_errors": []
+        },
+        "scope": {
+          "value": null,
+          "origin": "UNRESOLVED",
+          "evidence_refs": [],
+          "reason": "아직 대화에서 확인하지 않았습니다.",
+          "review_status": "PENDING",
+          "validation_errors": []
+        },
+        "constraints": {
+          "value": [
+            "목요일 개인 병원 방문"
+          ],
+          "origin": "EXTRACTED",
+          "evidence_refs": [
+            "coding-private"
+          ],
+          "reason": "",
+          "review_status": "PENDING",
+          "validation_errors": []
+        },
+        "weekly_available_minutes": {
+          "value": 300,
+          "origin": "EXTRACTED",
+          "evidence_refs": [
+            "coding-answer-1"
+          ],
+          "reason": "사용자가 선택한 답변",
+          "review_status": "PENDING",
+          "validation_errors": []
+        },
+        "current_level": {
+          "value": "혼자 구현할 수 있어요",
+          "origin": "EXTRACTED",
+          "evidence_refs": [
+            "coding-answer-0"
+          ],
+          "reason": "사용자가 선택한 답변",
+          "review_status": "PENDING",
+          "validation_errors": []
+        }
+      },
+      "missing_fields": [],
+      "assumptions": [
+        "담당 결과물 정보를 확인하지 않아 관련 세부 조건은 후속 확인이 필요합니다.",
+        "현재 진척 정보를 확인하지 않아 관련 세부 조건은 후속 확인이 필요합니다."
+      ]
+    },
+    "questions": [],
+    "warnings": [],
+    "error": null,
+    "meta": {
+      "run_id": "0dc954c5-2d5c-45c4-b9ae-a76b085ddcac",
+      "task": "member-goal-draft",
+      "prompt_version": "m1-member-goal-v1",
+      "model": "AUTHORED_FIXTURE_NOT_LIVE",
+      "usage": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "latency_ms": 1,
+      "transport_attempts": 0,
+      "repair_attempts": 0,
+      "plan_repair_attempts": 0,
+      "provider_request_ids": [],
+      "trace_id": "b99693bd-bb99-41b5-a4ce-783740809ba2",
+      "parent_run_id": null,
+      "prompt_variant": null,
+      "reference_case_ids": [],
+      "reference_data_version": null,
+      "execution_source": "REPLAY",
+      "source_run_id": null,
+      "cache_hit": false,
+      "cached_usage": null,
+      "source_execution_source": null,
+      "validator_version": "contracts-2026-10-v10.2-assisted-calendar"
+    }
+  }
+}

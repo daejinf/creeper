@@ -1,0 +1,100 @@
+{
+  "draft_id": "797ca2aa-6599-4820-8e39-49d592a5f1f0",
+  "owner_member_id": "design",
+  "group_plan_id": "5ead9ef6-b7fa-4aac-a933-9d1a2823c246",
+  "contribution": {
+    "owner_member_id": "design",
+    "group_plan_id": "5ead9ef6-b7fa-4aac-a933-9d1a2823c246",
+    "title": "UI 시안 완성",
+    "deliverable": "UI 시안 결과물",
+    "completion_criteria": [
+      "소개와 가입 안내가 연결된다."
+    ],
+    "public_rationale": "공동 소개 웹사이트 시연에 기여합니다.",
+    "evidence_refs": [
+      "confirmation:4b62c423f5187242",
+      "g1",
+      "g2"
+    ],
+    "review_status": "ACCEPTED"
+  },
+  "profile_fields": {
+    "tools": {
+      "value": null,
+      "origin": "UNRESOLVED",
+      "evidence_refs": [],
+      "reason": "아직 대화에서 확인하지 않았습니다.",
+      "review_status": "ACCEPTED",
+      "validation_errors": []
+    },
+    "support_needed": {
+      "value": null,
+      "origin": "UNRESOLVED",
+      "evidence_refs": [],
+      "reason": "아직 대화에서 확인하지 않았습니다.",
+      "review_status": "ACCEPTED",
+      "validation_errors": []
+    },
+    "current_progress": {
+      "value": null,
+      "origin": "UNRESOLVED",
+      "evidence_refs": [],
+      "reason": "아직 대화에서 확인하지 않았습니다.",
+      "review_status": "ACCEPTED",
+      "validation_errors": []
+    },
+    "preferred_times": {
+      "value": null,
+      "origin": "UNRESOLVED",
+      "evidence_refs": [],
+      "reason": "아직 대화에서 확인하지 않았습니다.",
+      "review_status": "ACCEPTED",
+      "validation_errors": []
+    },
+    "scope": {
+      "value": null,
+      "origin": "UNRESOLVED",
+      "evidence_refs": [],
+      "reason": "아직 대화에서 확인하지 않았습니다.",
+      "review_status": "ACCEPTED",
+      "validation_errors": []
+    },
+    "constraints": {
+      "value": [
+        "화요일 가족 돌봄 일정"
+      ],
+      "origin": "EXTRACTED",
+      "evidence_refs": [
+        "design-private"
+      ],
+      "reason": "",
+      "review_status": "ACCEPTED",
+      "validation_errors": []
+    },
+    "weekly_available_minutes": {
+      "value": 120,
+      "origin": "EXTRACTED",
+      "evidence_refs": [
+        "design-answer-1"
+      ],
+      "reason": "사용자가 선택한 답변",
+      "review_status": "ACCEPTED",
+      "validation_errors": []
+    },
+    "current_level": {
+      "value": "처음이에요",
+      "origin": "EXTRACTED",
+      "evidence_refs": [
+        "design-answer-0"
+      ],
+      "reason": "사용자가 선택한 답변",
+      "review_status": "ACCEPTED",
+      "validation_errors": []
+    }
+  },
+  "missing_fields": [],
+  "assumptions": [
+    "담당 결과물 정보를 확인하지 않아 관련 세부 조건은 후속 확인이 필요합니다.",
+    "현재 진척 정보를 확인하지 않아 관련 세부 조건은 후속 확인이 필요합니다."
+  ]
+}

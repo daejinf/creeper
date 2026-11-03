@@ -1,0 +1,331 @@
+{
+  "schema_version": "1.1",
+  "trace_id": "06d72896-0df5-4e6c-9fa2-3ca63163fce0",
+  "integration_ready": true,
+  "group_payload": {
+    "goal_spec": {
+      "spec_id": "fbe93549-5fa1-48fa-80dd-e039e8b77eb7",
+      "goal": "동아리 소개 웹사이트",
+      "expected_outcome": "소개와 가입 안내가 연결된 시연",
+      "completion_criteria": [
+        "소개와 가입 안내를 모바일 화면에서 시연한다."
+      ],
+      "start_date": "2026-10-29",
+      "end_date": "2026-11-11",
+      "execution_method": "UI 시안 공유 후 화면 구현 및 연결 점검",
+      "verification_method": "이미지 첨부",
+      "privacy_scope": "OBJECTIVE_ONLY",
+      "custom_privacy_fields": [],
+      "frequency_per_week": null,
+      "metric": null,
+      "checkins": [
+        "금요일 · 이미지 확인"
+      ],
+      "milestones": [
+        {
+          "title": "중간 목표",
+          "due_date": "2026-11-04"
+        },
+        {
+          "title": "개발 완료",
+          "due_date": "2026-11-08"
+        },
+        {
+          "title": "최종 제출",
+          "due_date": "2026-11-11"
+        }
+      ],
+      "roles": {
+        "design": "디자인",
+        "coding": "프론트"
+      },
+      "members": [
+        {
+          "member_id": "design",
+          "nickname": "민지"
+        },
+        {
+          "member_id": "coding",
+          "nickname": "도윤"
+        }
+      ],
+      "evidence_ids": [
+        "confirmation:4b62c423f5187242",
+        "g1",
+        "g2"
+      ],
+      "confirmed": true
+    },
+    "group_plan": {
+      "plan_id": "5ead9ef6-b7fa-4aac-a933-9d1a2823c246",
+      "spec_id": "fbe93549-5fa1-48fa-80dd-e039e8b77eb7",
+      "revision": 1,
+      "previous_plan_id": null,
+      "status": "DRAFT",
+      "goal": "동아리 소개 웹사이트",
+      "expected_outcome": "소개와 가입 안내가 연결된 시연",
+      "completion_criteria": [
+        "소개와 가입 안내를 모바일 화면에서 시연한다."
+      ],
+      "start_date": "2026-10-29",
+      "end_date": "2026-11-11",
+      "frequency_per_week": null,
+      "metric": null,
+      "milestones": [
+        {
+          "title": "중간 목표",
+          "due_date": "2026-11-04",
+          "completion_criteria": "중간 목표 결과물 확인",
+          "evidence_refs": [
+            "confirmation:4b62c423f5187242",
+            "g1",
+            "g2"
+          ]
+        },
+        {
+          "title": "개발 완료",
+          "due_date": "2026-11-08",
+          "completion_criteria": "개발 완료 결과물 확인",
+          "evidence_refs": [
+            "confirmation:4b62c423f5187242",
+            "g1",
+            "g2"
+          ]
+        },
+        {
+          "title": "최종 제출",
+          "due_date": "2026-11-11",
+          "completion_criteria": "최종 제출 결과물 확인",
+          "evidence_refs": [
+            "confirmation:4b62c423f5187242",
+            "g1",
+            "g2"
+          ]
+        }
+      ],
+      "weekly_outline": [
+        {
+          "week": 1,
+          "outcome": "UI 시안 공유",
+          "tasks": [
+            "민지: UI 시안 전달",
+            "도윤: 화면 연결 및 점검"
+          ]
+        },
+        {
+          "week": 2,
+          "outcome": "연결 시연 완성",
+          "tasks": [
+            "민지: UI 시안 전달",
+            "도윤: 화면 연결 및 점검"
+          ]
+        }
+      ],
+      "suggested_checkins": [],
+      "assumptions": [],
+      "evidence_refs": [
+        "confirmation:4b62c423f5187242",
+        "g1",
+        "g2"
+      ]
+    },
+    "member_plans": [
+      {
+        "plan_id": "99721af8-b147-4f7b-b380-349798e9f47c",
+        "group_plan_id": "5ead9ef6-b7fa-4aac-a933-9d1a2823c246",
+        "member_id": "design",
+        "revision": 1,
+        "previous_plan_id": null,
+        "weekly_targets": [
+          {
+            "week": 1,
+            "outcome": "UI 시안 단계 완성",
+            "estimated_minutes": 50,
+            "target_amount": null
+          },
+          {
+            "week": 2,
+            "outcome": "UI 시안 단계 완성",
+            "estimated_minutes": 50,
+            "target_amount": null
+          }
+        ],
+        "first_week_todos": [
+          {
+            "task_id": "b6487ffe-ea3a-4b05-ae67-64daa8d0cacc",
+            "scheduled_date": "2026-10-29",
+            "action": "UI 시안 1단계",
+            "amount_or_deliverable": "UI 시안 검토본",
+            "estimated_minutes": 25,
+            "difficulty": "EASY",
+            "completion_criteria": "모바일 화면에서 소개와 가입 안내를 확인한다.",
+            "origin": "AI_SUGGESTION",
+            "evidence_refs": [
+              "confirmation:4b62c423f5187242",
+              "g1",
+              "g2"
+            ],
+            "dependencies": []
+          },
+          {
+            "task_id": "2b70a522-fc32-4021-9786-73e9c73065a6",
+            "scheduled_date": "2026-10-30",
+            "action": "UI 시안 2단계",
+            "amount_or_deliverable": "UI 시안 검토본",
+            "estimated_minutes": 25,
+            "difficulty": "EASY",
+            "completion_criteria": "모바일 화면에서 소개와 가입 안내를 확인한다.",
+            "origin": "AI_SUGGESTION",
+            "evidence_refs": [
+              "confirmation:4b62c423f5187242",
+              "g1",
+              "g2"
+            ],
+            "dependencies": []
+          }
+        ],
+        "adaptation_rules": [
+          "지연되면 남은 작업을 우선순위에 따라 다음 버전에서 조정한다."
+        ],
+        "public_rationale": "담당 결과물을 공동 시연에 연결합니다.",
+        "evidence_refs": [
+          "confirmation:4b62c423f5187242",
+          "g1",
+          "g2"
+        ]
+      },
+      {
+        "plan_id": "e6c088d4-4791-44cb-8aa0-6d494e999e1c",
+        "group_plan_id": "5ead9ef6-b7fa-4aac-a933-9d1a2823c246",
+        "member_id": "coding",
+        "revision": 1,
+        "previous_plan_id": null,
+        "weekly_targets": [
+          {
+            "week": 1,
+            "outcome": "화면 구현 단계 완성",
+            "estimated_minutes": 120,
+            "target_amount": null
+          },
+          {
+            "week": 2,
+            "outcome": "화면 구현 단계 완성",
+            "estimated_minutes": 120,
+            "target_amount": null
+          }
+        ],
+        "first_week_todos": [
+          {
+            "task_id": "5582fa6f-f29e-4b8d-a78b-d0324f406210",
+            "scheduled_date": "2026-10-29",
+            "action": "화면 구현 1단계",
+            "amount_or_deliverable": "화면 구현 검토본",
+            "estimated_minutes": 60,
+            "difficulty": "MEDIUM",
+            "completion_criteria": "모바일 화면에서 소개와 가입 안내를 확인한다.",
+            "origin": "AI_SUGGESTION",
+            "evidence_refs": [
+              "confirmation:4b62c423f5187242",
+              "g1",
+              "g2"
+            ],
+            "dependencies": []
+          },
+          {
+            "task_id": "d9f58a7d-1ae0-4bc4-8189-7b8a7780104b",
+            "scheduled_date": "2026-10-30",
+            "action": "화면 구현 2단계",
+            "amount_or_deliverable": "화면 구현 검토본",
+            "estimated_minutes": 60,
+            "difficulty": "MEDIUM",
+            "completion_criteria": "모바일 화면에서 소개와 가입 안내를 확인한다.",
+            "origin": "AI_SUGGESTION",
+            "evidence_refs": [
+              "confirmation:4b62c423f5187242",
+              "g1",
+              "g2"
+            ],
+            "dependencies": []
+          }
+        ],
+        "adaptation_rules": [
+          "지연되면 남은 작업을 우선순위에 따라 다음 버전에서 조정한다."
+        ],
+        "public_rationale": "담당 결과물을 공동 시연에 연결합니다.",
+        "evidence_refs": [
+          "confirmation:4b62c423f5187242",
+          "g1",
+          "g2"
+        ]
+      }
+    ],
+    "contribution_goals": [
+      {
+        "owner_member_id": "design",
+        "group_plan_id": "5ead9ef6-b7fa-4aac-a933-9d1a2823c246",
+        "title": "UI 시안 완성",
+        "deliverable": "UI 시안 결과물",
+        "completion_criteria": [
+          "소개와 가입 안내가 연결된다."
+        ],
+        "public_rationale": "공동 소개 웹사이트 시연에 기여합니다.",
+        "evidence_refs": [
+          "confirmation:4b62c423f5187242",
+          "g1",
+          "g2"
+        ],
+        "review_status": "ACCEPTED"
+      },
+      {
+        "owner_member_id": "coding",
+        "group_plan_id": "5ead9ef6-b7fa-4aac-a933-9d1a2823c246",
+        "title": "화면 구현 완성",
+        "deliverable": "화면 구현 결과물",
+        "completion_criteria": [
+          "소개와 가입 안내가 연결된다."
+        ],
+        "public_rationale": "공동 소개 웹사이트 시연에 기여합니다.",
+        "evidence_refs": [
+          "confirmation:4b62c423f5187242",
+          "g1",
+          "g2"
+        ],
+        "review_status": "ACCEPTED"
+      }
+    ]
+  },
+  "validation": {
+    "valid": true,
+    "issues": []
+  },
+  "run_manifest": [],
+  "evaluation_baselines": [
+    {
+      "baseline_id": "c5628ac2-893f-4398-be9a-747ad66420cc",
+      "scope": "PERSONAL",
+      "owner_member_id": "design",
+      "plan_version_id": "99721af8-b147-4f7b-b380-349798e9f47c",
+      "group_plan_version_id": "5ead9ef6-b7fa-4aac-a933-9d1a2823c246",
+      "task_ids": [
+        "b6487ffe-ea3a-4b05-ae67-64daa8d0cacc",
+        "2b70a522-fc32-4021-9786-73e9c73065a6"
+      ],
+      "confirmed_by": "design",
+      "confirmed_at": "2026-11-03T10:49:39.977411+00:00"
+    },
+    {
+      "baseline_id": "f24ef5bd-808c-4ff3-970a-cd3fafbc3c45",
+      "scope": "PERSONAL",
+      "owner_member_id": "coding",
+      "plan_version_id": "e6c088d4-4791-44cb-8aa0-6d494e999e1c",
+      "group_plan_version_id": "5ead9ef6-b7fa-4aac-a933-9d1a2823c246",
+      "task_ids": [
+        "5582fa6f-f29e-4b8d-a78b-d0324f406210",
+        "d9f58a7d-1ae0-4bc4-8189-7b8a7780104b"
+      ],
+      "confirmed_by": "coding",
+      "confirmed_at": "2026-11-03T10:49:39.983418+00:00"
+    }
+  ],
+  "activation": "REQUIRES_SW_APPROVAL"
+}

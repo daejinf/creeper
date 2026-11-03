@@ -1,0 +1,265 @@
+{
+  "request": {
+    "diagnostic_mode": "ADAPTIVE",
+    "continue_diagnosis": false,
+    "goal_spec": {
+      "spec_id": "fbe93549-5fa1-48fa-80dd-e039e8b77eb7",
+      "goal": "동아리 소개 웹사이트",
+      "expected_outcome": "소개와 가입 안내가 연결된 시연",
+      "completion_criteria": [
+        "소개와 가입 안내를 모바일 화면에서 시연한다."
+      ],
+      "start_date": "2026-10-29",
+      "end_date": "2026-11-11",
+      "execution_method": "UI 시안 공유 후 화면 구현 및 연결 점검",
+      "verification_method": "이미지 첨부",
+      "privacy_scope": "OBJECTIVE_ONLY",
+      "custom_privacy_fields": [],
+      "frequency_per_week": null,
+      "metric": null,
+      "checkins": [
+        "금요일 · 이미지 확인"
+      ],
+      "milestones": [
+        {
+          "title": "중간 목표",
+          "due_date": "2026-11-04"
+        },
+        {
+          "title": "개발 완료",
+          "due_date": "2026-11-08"
+        },
+        {
+          "title": "최종 제출",
+          "due_date": "2026-11-11"
+        }
+      ],
+      "roles": {
+        "design": "디자인",
+        "coding": "프론트"
+      },
+      "members": [
+        {
+          "member_id": "design",
+          "nickname": "민지"
+        },
+        {
+          "member_id": "coding",
+          "nickname": "도윤"
+        }
+      ],
+      "evidence_ids": [
+        "confirmation:4b62c423f5187242",
+        "g1",
+        "g2"
+      ],
+      "confirmed": true
+    },
+    "group_plan": {
+      "plan_id": "5ead9ef6-b7fa-4aac-a933-9d1a2823c246",
+      "spec_id": "fbe93549-5fa1-48fa-80dd-e039e8b77eb7",
+      "revision": 1,
+      "previous_plan_id": null,
+      "status": "DRAFT",
+      "goal": "동아리 소개 웹사이트",
+      "expected_outcome": "소개와 가입 안내가 연결된 시연",
+      "completion_criteria": [
+        "소개와 가입 안내를 모바일 화면에서 시연한다."
+      ],
+      "start_date": "2026-10-29",
+      "end_date": "2026-11-11",
+      "frequency_per_week": null,
+      "metric": null,
+      "milestones": [
+        {
+          "title": "중간 목표",
+          "due_date": "2026-11-04",
+          "completion_criteria": "중간 목표 결과물 확인",
+          "evidence_refs": [
+            "confirmation:4b62c423f5187242",
+            "g1",
+            "g2"
+          ]
+        },
+        {
+          "title": "개발 완료",
+          "due_date": "2026-11-08",
+          "completion_criteria": "개발 완료 결과물 확인",
+          "evidence_refs": [
+            "confirmation:4b62c423f5187242",
+            "g1",
+            "g2"
+          ]
+        },
+        {
+          "title": "최종 제출",
+          "due_date": "2026-11-11",
+          "completion_criteria": "최종 제출 결과물 확인",
+          "evidence_refs": [
+            "confirmation:4b62c423f5187242",
+            "g1",
+            "g2"
+          ]
+        }
+      ],
+      "weekly_outline": [
+        {
+          "week": 1,
+          "outcome": "UI 시안 공유",
+          "tasks": [
+            "민지: UI 시안 전달",
+            "도윤: 화면 연결 및 점검"
+          ]
+        },
+        {
+          "week": 2,
+          "outcome": "연결 시연 완성",
+          "tasks": [
+            "민지: UI 시안 전달",
+            "도윤: 화면 연결 및 점검"
+          ]
+        }
+      ],
+      "suggested_checkins": [],
+      "assumptions": [],
+      "evidence_refs": [
+        "confirmation:4b62c423f5187242",
+        "g1",
+        "g2"
+      ]
+    },
+    "owner_member_id": "design",
+    "conversation": [
+      {
+        "message_id": "design-private",
+        "speaker_id": "design",
+        "role": "user",
+        "text": "내 담당 결과물을 나누고 싶어요. 화요일 가족 돌봄 일정이 있어요.",
+        "created_at": "2026-10-29T10:00:00+09:00"
+      }
+    ],
+    "reference_date": "2026-10-29",
+    "timezone": "Asia/Seoul",
+    "state": {
+      "owner_member_id": null,
+      "group_plan_id": null,
+      "fields": {},
+      "answer_states": {},
+      "current_question": null,
+      "answered_question_ids": [],
+      "consecutive_questions": 0,
+      "diagnostic_dimensions": [],
+      "awaiting_continue": false
+    },
+    "answer": null,
+    "previous_draft": null
+  },
+  "response": {
+    "status": "OK",
+    "data": {
+      "contract_issues": [],
+      "reply": "담당 결과물을 공동 시연에 맞춰 나누겠습니다. 확인한 조건으로 범위를 조절할 수 있습니다.",
+      "kind": "CLARIFICATION",
+      "state": {
+        "owner_member_id": "design",
+        "group_plan_id": "5ead9ef6-b7fa-4aac-a933-9d1a2823c246",
+        "fields": {
+          "constraints": {
+            "value": [
+              "화요일 가족 돌봄 일정"
+            ],
+            "origin": "EXTRACTED",
+            "evidence_refs": [
+              "design-private"
+            ],
+            "reason": "",
+            "review_status": "PENDING",
+            "validation_errors": []
+          }
+        },
+        "answer_states": {
+          "constraints": "KNOWN"
+        },
+        "current_question": {
+          "question_id": "1375b8dc-33d2-438b-9da1-b7c371679d18",
+          "target_field": "current_level",
+          "text": "이 작업의 경험은 어느 정도인가요?",
+          "multiple": false,
+          "options": [
+            {
+              "option_id": "2c551c59-347c-4678-be45-2f2d68da80df",
+              "label": "처음이에요",
+              "value": "처음이에요",
+              "action": "VALUE"
+            },
+            {
+              "option_id": "b847e441-88cf-4b4a-865e-9f3cc58c5e7d",
+              "label": "아직 모르겠어요",
+              "value": null,
+              "action": "UNKNOWN"
+            }
+          ]
+        },
+        "answered_question_ids": [],
+        "consecutive_questions": 1,
+        "diagnostic_dimensions": [
+          {
+            "field_id": "current_level",
+            "label": "경험",
+            "reason": "이 역할의 작업 범위와 난이도를 조절합니다."
+          },
+          {
+            "field_id": "weekly_available_minutes",
+            "label": "시간",
+            "reason": "이 역할의 작업 범위와 난이도를 조절합니다."
+          },
+          {
+            "field_id": "scope",
+            "label": "담당 결과물",
+            "reason": "이 역할의 작업 범위와 난이도를 조절합니다."
+          },
+          {
+            "field_id": "current_progress",
+            "label": "현재 진척",
+            "reason": "이 역할의 작업 범위와 난이도를 조절합니다."
+          }
+        ],
+        "awaiting_continue": false
+      },
+      "missing_fields": [
+        "current_level",
+        "weekly_available_minutes"
+      ]
+    },
+    "questions": [],
+    "warnings": [],
+    "error": null,
+    "meta": {
+      "run_id": "6aefd98c-3cfc-4fad-8705-6fd57d3818d3",
+      "task": "member-goal-coach",
+      "prompt_version": "m1-member-coach-v2",
+      "model": "AUTHORED_FIXTURE_NOT_LIVE",
+      "usage": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "latency_ms": 1,
+      "transport_attempts": 0,
+      "repair_attempts": 0,
+      "plan_repair_attempts": 0,
+      "provider_request_ids": [],
+      "trace_id": "b9ff5ef7-7167-4f0e-ac38-3e57561e9b53",
+      "parent_run_id": null,
+      "prompt_variant": null,
+      "reference_case_ids": [],
+      "reference_data_version": null,
+      "execution_source": "REPLAY",
+      "source_run_id": null,
+      "cache_hit": false,
+      "cached_usage": null,
+      "source_execution_source": null,
+      "validator_version": "contracts-2026-10-v10.2-assisted-calendar"
+    }
+  }
+}

@@ -1,0 +1,145 @@
+{
+  "schema_version": "1.1",
+  "trace_id": "06d72896-0df5-4e6c-9fa2-3ca63163fce0",
+  "owner_member_id": "coding",
+  "integration_ready": true,
+  "private_payload": {
+    "profile": {
+      "member_id": "coding",
+      "current_level": "혼자 구현할 수 있어요",
+      "weekly_available_minutes": 300,
+      "preferred_times": [],
+      "constraints": [
+        "목요일 개인 병원 방문"
+      ],
+      "planning_context": {}
+    },
+    "intake": null,
+    "private_notes": [
+      "본인에게만 전달하는 작업 조절 안내입니다."
+    ],
+    "personal_draft": {
+      "draft_id": "323d5b21-2986-4b61-a301-6020b9f0c4a0",
+      "owner_member_id": "coding",
+      "group_plan_id": "5ead9ef6-b7fa-4aac-a933-9d1a2823c246",
+      "contribution": {
+        "owner_member_id": "coding",
+        "group_plan_id": "5ead9ef6-b7fa-4aac-a933-9d1a2823c246",
+        "title": "화면 구현 완성",
+        "deliverable": "화면 구현 결과물",
+        "completion_criteria": [
+          "소개와 가입 안내가 연결된다."
+        ],
+        "public_rationale": "공동 소개 웹사이트 시연에 기여합니다.",
+        "evidence_refs": [
+          "confirmation:4b62c423f5187242",
+          "g1",
+          "g2"
+        ],
+        "review_status": "ACCEPTED"
+      },
+      "profile_fields": {
+        "tools": {
+          "value": null,
+          "origin": "UNRESOLVED",
+          "evidence_refs": [],
+          "reason": "아직 대화에서 확인하지 않았습니다.",
+          "review_status": "ACCEPTED",
+          "validation_errors": []
+        },
+        "support_needed": {
+          "value": null,
+          "origin": "UNRESOLVED",
+          "evidence_refs": [],
+          "reason": "아직 대화에서 확인하지 않았습니다.",
+          "review_status": "ACCEPTED",
+          "validation_errors": []
+        },
+        "current_progress": {
+          "value": null,
+          "origin": "UNRESOLVED",
+          "evidence_refs": [],
+          "reason": "아직 대화에서 확인하지 않았습니다.",
+          "review_status": "ACCEPTED",
+          "validation_errors": []
+        },
+        "preferred_times": {
+          "value": null,
+          "origin": "UNRESOLVED",
+          "evidence_refs": [],
+          "reason": "아직 대화에서 확인하지 않았습니다.",
+          "review_status": "ACCEPTED",
+          "validation_errors": []
+        },
+        "scope": {
+          "value": null,
+          "origin": "UNRESOLVED",
+          "evidence_refs": [],
+          "reason": "아직 대화에서 확인하지 않았습니다.",
+          "review_status": "ACCEPTED",
+          "validation_errors": []
+        },
+        "constraints": {
+          "value": [
+            "목요일 개인 병원 방문"
+          ],
+          "origin": "EXTRACTED",
+          "evidence_refs": [
+            "coding-private"
+          ],
+          "reason": "",
+          "review_status": "ACCEPTED",
+          "validation_errors": []
+        },
+        "weekly_available_minutes": {
+          "value": 300,
+          "origin": "EXTRACTED",
+          "evidence_refs": [
+            "coding-answer-1"
+          ],
+          "reason": "사용자가 선택한 답변",
+          "review_status": "ACCEPTED",
+          "validation_errors": []
+        },
+        "current_level": {
+          "value": "혼자 구현할 수 있어요",
+          "origin": "EXTRACTED",
+          "evidence_refs": [
+            "coding-answer-0"
+          ],
+          "reason": "사용자가 선택한 답변",
+          "review_status": "ACCEPTED",
+          "validation_errors": []
+        }
+      },
+      "missing_fields": [],
+      "assumptions": [
+        "담당 결과물 정보를 확인하지 않아 관련 세부 조건은 후속 확인이 필요합니다.",
+        "현재 진척 정보를 확인하지 않아 관련 세부 조건은 후속 확인이 필요합니다."
+      ]
+    },
+    "conversation": [
+      {
+        "message_id": "coding-private",
+        "speaker_id": "coding",
+        "role": "user",
+        "text": "내 담당 결과물을 나누고 싶어요. 목요일 개인 병원 방문이 있어요.",
+        "created_at": "2026-10-29T10:00:00+09:00"
+      },
+      {
+        "message_id": "coding-answer-0",
+        "speaker_id": "coding",
+        "role": "user",
+        "text": "혼자 구현할 수 있어요",
+        "created_at": "2026-10-29T10:00:00+09:00"
+      },
+      {
+        "message_id": "coding-answer-1",
+        "speaker_id": "coding",
+        "role": "user",
+        "text": "5시간",
+        "created_at": "2026-10-29T10:00:00+09:00"
+      }
+    ]
+  }
+}

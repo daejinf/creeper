@@ -1,0 +1,20 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: wemeet
+      POSTGRES_PASSWORD: wemeet
+      POSTGRES_DB: wemeet
+    ports:
+      - "5432:5432"
+    volumes:
+      - wemeet_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U wemeet"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  wemeet_pgdata:
+

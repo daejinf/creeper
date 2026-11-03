@@ -1,0 +1,17 @@
+{
+  "design": {
+    "profile": {
+      "member_id": "design",
+      "current_level": "처음이에요",
+      "weekly_available_minutes": 120,
+      "preferred_times": [],
+      "constraints": [
+        "화요일 가족 돌봄 일정"
+      ],
+      "planning_context": {}
+    },
+    "private_notes": [
+      "본인에게만 전달하는 작업 조절 안내입니다."
+    ]
+  }
+}
