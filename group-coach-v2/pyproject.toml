@@ -1,0 +1,19 @@
+[project]
+name = "wemeet-coach"
+description = "Independent group and personal planning modules with optional PostgreSQL persistence"
+readme = "README.md"
+version = "0.3.0"
+requires-python = ">=3.11"
+dependencies = ["requests>=2.32,<3", "pydantic>=2.7,<3"]
+[project.optional-dependencies]
+database = ["SQLAlchemy>=2,<3", "psycopg[binary]>=3.2,<4", "cryptography>=46,<49", "alembic>=1.13,<2"]
+web = ["fastapi>=0.115,<1", "uvicorn>=0.34,<1"]
+test = ["pytest>=8,<9", "httpx>=0.28,<1", "build>=1.2", "setuptools>=75"]
+[build-system]
+requires = ["setuptools>=75"]
+build-backend = "setuptools.build_meta"
+[tool.setuptools.packages.find]
+where = ["src"]
+[tool.pytest.ini_options]
+pythonpath = ["src", "."]
+testpaths = ["tests"]

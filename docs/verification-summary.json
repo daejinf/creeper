@@ -1,0 +1,98 @@
+{
+  "version": "0.12.0",
+  "reviewer": "AGENT_NOT_HUMAN",
+  "exact_rounds": 3,
+  "rounds": [
+    {
+      "round": 1,
+      "scenario_count": 3,
+      "planned_module_calls": 5,
+      "executed_modules": 5,
+      "ok": 5,
+      "new_http": 6,
+      "global_new_http": 6,
+      "tokens": 13914,
+      "source_sha256": "b2985ce00295681b9ff4a86b05f7a63917a6866da6a02a63c7745a21e213468b",
+      "semantic_review": "PENDING_AGENT_REVIEW",
+      "human_review": false,
+      "agent_review": "COMPLETED_SEPARATE_REVIEW_NOT_HUMAN",
+      "review_document": "review.json"
+    },
+    {
+      "round": 2,
+      "scenario_count": 3,
+      "planned_module_calls": 5,
+      "record_backed_inputs": true,
+      "executed_modules": 5,
+      "ok": 5,
+      "new_http": 7,
+      "global_new_http": 13,
+      "tokens": 18567,
+      "source_sha256": "e5afb81854f43973865be6c9d4af98967d15ff85025e610530d7c68776b63d59",
+      "semantic_review": "PENDING_AGENT_REVIEW",
+      "human_review": false,
+      "agent_review": "COMPLETED_SEPARATE_REVIEW_NOT_HUMAN",
+      "review_document": "review.json"
+    },
+    {
+      "round": 3,
+      "scenario_count": 3,
+      "planned_module_calls": 5,
+      "record_backed_inputs": true,
+      "executed_modules": 5,
+      "ok": 5,
+      "new_http": 5,
+      "global_new_http": 18,
+      "tokens": 13222,
+      "source_sha256": "87f160031bd8a1de7673c78d59bf83e2ab3abfaeaab2f516211d5ae3d247ee90",
+      "semantic_review": "PENDING_AGENT_REVIEW",
+      "human_review": false,
+      "agent_review": "COMPLETED_SEPARATE_REVIEW_NOT_HUMAN",
+      "review_document": "review.json"
+    }
+  ],
+  "within_round_3_retests": [
+    {
+      "file": "B-retest.json",
+      "module": "B",
+      "http": 1,
+      "tokens": 3369,
+      "status": "OK"
+    },
+    {
+      "file": "C-retest.json",
+      "module": "C",
+      "http": 1,
+      "tokens": 2139,
+      "status": "OK"
+    },
+    {
+      "file": "C-final-retest.json",
+      "module": "C",
+      "http": 1,
+      "tokens": 2869,
+      "status": "OK"
+    }
+  ],
+  "total_new_http": 21,
+  "new_http_limit": 30,
+  "previous_version_http_separate": 116,
+  "known_total_tokens": 54080,
+  "final_source_sha256": "7c1802a148e87c176d9c29c9b2d3c6bd5732a54132b9d8acc680cf0365188fe1",
+  "tests": 112,
+  "test_failures": 0,
+  "scenario_data_checked": 200,
+  "live_distinct_synthetic_scenarios": 3,
+  "live_module_results": 18,
+  "agent_reviewed_outputs": 18,
+  "human_reviewed": 0,
+  "browser_fixture_checks": 32,
+  "decision": "CONDITIONAL_DEVELOPER_USE",
+  "limitations": [
+    "대규모 최신 프롬프트 LIVE 품질",
+    "SW팀 직접 인수",
+    "사람 의미 검토",
+    "디스크 장애 중 서버 종료 시 메모리의 미저장 응답은 복구 불가",
+    "한국어 표현 품질·AI 제안과 사용자 사실의 의미적 구분은 사람 검토 필요"
+  ]
+}

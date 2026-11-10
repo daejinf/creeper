@@ -1,0 +1,127 @@
+{
+  "version": "0.13.1",
+  "regression_tests_passed": 156,
+  "regression_warnings": [
+    "FastAPI TestClient/httpx deprecation"
+  ],
+  "automatic_reload": {
+    "automatic_python_reload": "PASS",
+    "workspace_source": "WORKSPACE",
+    "other_module_unchanged": "PASS",
+    "original_file_restored": true,
+    "worker_pids": [
+      33344,
+      5628,
+      15128
+    ],
+    "paid_http": 0,
+    "earlier_probe": "first restore wait timed out; subsequent server state matched original; repeated full probe"
+  },
+  "first_live_check": {
+    "live_status": "OK",
+    "meta": {
+      "cache_hit": false,
+      "cached_usage": null,
+      "execution_source": "LIVE",
+      "latency_ms": 7030,
+      "model": "openai/gpt-5.6-luna",
+      "prompt_version": "A-0.13.1-v5-kickoff",
+      "provider_request_ids": [
+        "gen-1793782359-6Chb5bf3kgfn9qpZiLKy"
+      ],
+      "repair_attempts": 0,
+      "run_id": "24409696-009e-4e46-a63c-5cdd596d71d4",
+      "source_revision": "25b9aa8f81bf72e7",
+      "source_run_id": null,
+      "task": "A",
+      "transport_attempts": 1,
+      "usage": {
+        "completion_tokens": 683,
+        "prompt_tokens": 2781,
+        "total_tokens": 3464
+      }
+    },
+    "code_matches_loaded_source": true,
+    "unchanged_request_reuses_saved_success": true,
+    "confirmed_goal_preserved": true,
+    "additional_reuse_http": 0
+  },
+  "browser_draft_restore": "PASS; unsaved checkin value restored after UI refresh; temporary value cleared",
+  "fresh_wheel_install": "PASS; isolated Python imports A-F without web/DB dependencies",
+  "source_matches_wheel": true,
+  "wheel_secret_scan": "PASS",
+  "preserved": "SQLite records, confirmed conditions, historic plans and runs",
+  "limits": [
+    "No new full semantic quality evaluation",
+    "SW deployed package requires upgrade and process restart",
+    "Earlier automatic reload probe restore wait timed out; repeated full probe passed"
+  ],
+  "transient_reload_retry_recovery": "PASS; durable CACHE success, new usage 0, no duplicate assistant message",
+  "recovered_result_meta": {
+    "cache_hit": true,
+    "cached_usage": {
+      "completion_tokens": 897,
+      "prompt_tokens": 3680,
+      "total_tokens": 4577
+    },
+    "execution_source": "CACHE",
+    "latency_ms": 0,
+    "model": "openai/gpt-5.6-luna",
+    "prompt_version": "A-0.13.1-v5-kickoff",
+    "provider_request_ids": [],
+    "repair_attempts": 0,
+    "run_id": "340aeb75-0f93-4a6d-ab94-87b97ca9bad2",
+    "source_revision": "25b9aa8f81bf72e7",
+    "source_run_id": "656fbc98-96b7-443a-8826-a9e6251eff03",
+    "task": "A",
+    "transport_attempts": 0,
+    "usage": {
+      "completion_tokens": 0,
+      "prompt_tokens": 0,
+      "total_tokens": 0
+    }
+  },
+  "server_final": {
+    "modules": {
+      "A": {
+        "loaded": "25b9aa8f81bf72e7",
+        "disk": "25b9aa8f81bf72e7"
+      },
+      "B": {
+        "loaded": "fa68685597696de7",
+        "disk": "fa68685597696de7"
+      },
+      "C": {
+        "loaded": "2fa8c21952044d10",
+        "disk": "2fa8c21952044d10"
+      },
+      "D": {
+        "loaded": "9f5dc76207af51ae",
+        "disk": "9f5dc76207af51ae"
+      },
+      "E.coach": {
+        "loaded": "12a9e0f9fc3cc49b",
+        "disk": "12a9e0f9fc3cc49b"
+      },
+      "E.draft": {
+        "loaded": "12a9e0f9fc3cc49b",
+        "disk": "12a9e0f9fc3cc49b"
+      },
+      "E.plan": {
+        "loaded": "4f728fcf38395f8f",
+        "disk": "4f728fcf38395f8f"
+      },
+      "F": {
+        "loaded": "b02422097d47834c",
+        "disk": "b02422097d47834c"
+      }
+    },
+    "reload_required": false,
+    "version": "0.13.1",
+    "process_id": 22744,
+    "reload_mode": "AUTO",
+    "adapter_reload_required": false,
+    "ui_revision": "aa89b3bb5aa22ec4",
+    "source_kind": "WORKSPACE"
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "scope": "GROUP",
+  "group_plan": {
+    "plan_version_id": "external-plan-1",
+    "goal": "온라인 교류회 진행안 만들기",
+    "start_date": "2026-12-01",
+    "end_date": "2026-12-21",
+    "owner_member_id": null,
+    "milestones": [
+      {
+        "title": "진행안 검토",
+        "due_date": "2026-12-15"
+      }
+    ],
+    "weekly_outcomes": [
+      "참여 방식 후보와 수집 문구 작성"
+    ],
+    "tasks": [
+      {
+        "task_id": "external-task-1",
+        "owner_member_id": null,
+        "title": "참여 방식 초안 작성",
+        "deliverable": "선택형 참여 방식과 수집 문구 한 장",
+        "completion_criteria": [
+          "익명/공개 중 선택 가능",
+          "강제 지목 없음"
+        ],
+        "due_date": "2026-12-05",
+        "estimated_minutes": 20
+      }
+    ],
+    "adaptation_rules": [
+      "시간이 부족하면 주제 후보를 줄이고 문구부터 공유"
+    ]
+  },
+  "context": {
+    "goal": "온라인 교류회 진행안 만들기",
+    "role": "참여 설계",
+    "start_date": "2026-12-01",
+    "end_date": "2026-12-21",
+    "completion_criteria": [
+      "참여 방식 선택 가능",
+      "강제 지목 없음"
+    ],
+    "verification_method": "진행안 문서",
+    "privacy_scope": "OBJECTIVE_ONLY"
+  }
+}

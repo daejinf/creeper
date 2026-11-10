@@ -1,0 +1,97 @@
+{
+  "label": "AUTHORED_FIXTURE_NOT_LIVE",
+  "module": "E.plan",
+  "request": {
+    "context": {
+      "goal": "온라인 교류회 진행안 만들기",
+      "role": "참여 설계",
+      "start_date": "2026-12-01",
+      "end_date": "2026-12-21",
+      "completion_criteria": [
+        "참여 방식 선택 가능",
+        "강제 지목 없음"
+      ],
+      "verification_method": "진행안 문서",
+      "privacy_scope": "OBJECTIVE_ONLY"
+    },
+    "owner_member_id": "u1",
+    "contribution": {
+      "title": "참여 설계",
+      "deliverable": "참여 방식 안내 한 장",
+      "completion_criteria": [
+        "참여 방식 선택 가능",
+        "강제 지목 없음"
+      ],
+      "confirmed": true
+    },
+    "profile": {
+      "current_level": "일부 경험",
+      "weekly_available_minutes": 30,
+      "confirmed": true
+    }
+  },
+  "response": {
+    "status": "OK",
+    "data": {
+      "plan_version_id": "79c4ac2a-6a29-428e-adf8-554d76230497",
+      "previous_plan_version_id": null,
+      "status": "DRAFT",
+      "goal": "온라인 교류회 진행안 만들기",
+      "start_date": "2026-12-01",
+      "end_date": "2026-12-21",
+      "owner_member_id": "u1",
+      "milestones": [
+        {
+          "title": "진행안 검토",
+          "due_date": "2026-12-15",
+          "description": ""
+        }
+      ],
+      "weekly_outcomes": [
+        "참여 방식 후보와 수집 문구 작성"
+      ],
+      "tasks": [
+        {
+          "task_id": "882df690-a06f-4c75-b6be-145051a76261",
+          "owner_member_id": "u1",
+          "title": "참여 방식 초안 작성",
+          "deliverable": "선택형 참여 방식과 수집 문구 한 장",
+          "completion_criteria": [
+            "익명/공개 중 선택 가능",
+            "강제 지목 없음"
+          ],
+          "due_date": "2026-12-05",
+          "estimated_minutes": 20,
+          "difficulty": "MEDIUM",
+          "dependencies": []
+        }
+      ],
+      "adaptation_rules": [
+        "시간이 부족하면 주제 후보를 줄이고 문구부터 공유"
+      ],
+      "suggestions": []
+    },
+    "needed_inputs": [],
+    "warnings": [],
+    "error": null,
+    "meta": {
+      "run_id": "5399d502-29de-4de0-942f-2e110e05eb04",
+      "task": "E.plan",
+      "prompt_version": "E.plan-0.12.1-v2",
+      "model": "AUTHORED FIXTURE · AI 미실행",
+      "usage": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "latency_ms": 1,
+      "transport_attempts": 0,
+      "repair_attempts": 0,
+      "provider_request_ids": [],
+      "execution_source": "REPLAY",
+      "source_run_id": null,
+      "cached_usage": null,
+      "cache_hit": false
+    }
+  }
+}

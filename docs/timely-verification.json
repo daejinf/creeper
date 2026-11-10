@@ -1,0 +1,31 @@
+{
+  "version": "0.13.0",
+  "provider": "Timely",
+  "default_model": "openai/gpt-5.6-luna",
+  "regression_tests": 128,
+  "data_checks": 200,
+  "fresh_wheel_install": "PASS",
+  "independent_fixture_examples": 6,
+  "record_continuation_fixture": "PASS",
+  "source_matches_wheel": true,
+  "secret_scan": "PASS",
+  "server_restart": "PASS",
+  "existing_records_restored": 8,
+  "database_counts_unchanged": true,
+  "live_http": 11,
+  "live_status": "ALL_SIX_ENTRYPOINTS_RETURNED_OK_AFTER_TARGETED_REPAIR",
+  "coaching_latency_ms": 10774,
+  "semantic_quality": "LIMITED_AGENT_REVIEW_NOT_HUMAN_ACCEPTANCE",
+  "live_http_budget": 12,
+  "historical_deepseek_results": "PRESERVED_NOT_RELABELED",
+  "warning": "FastAPI TestClient httpx deprecation; all tests passed.",
+  "coaching_10s_target_met": false,
+  "live_usage": {
+    "prompt_tokens": 18783,
+    "completion_tokens": 12647,
+    "total_tokens": 31430
+  },
+  "personal_time_budget_validation": "PASS",
+  "live_failures_observed": 2,
+  "latest_prompt_version": "0.13.0-v3"
+}

@@ -1,0 +1,167 @@
+{
+  "browser-proof": {
+    "anonymous_group_id": "d09367c5-71e7-4afd-8bbb-1d1ca0aae133",
+    "operations": [
+      {
+        "module": "personal.TALK",
+        "state": "COMPLETE"
+      },
+      {
+        "module": "personal.TALK",
+        "state": "COMPLETE"
+      },
+      {
+        "module": "personal.TALK",
+        "state": "COMPLETE"
+      },
+      {
+        "module": "personal.PLAN",
+        "state": "COMPLETE"
+      },
+      {
+        "module": "group.PROPOSE",
+        "state": "COMPLETE"
+      },
+      {
+        "module": "personal.TALK",
+        "state": "COMPLETE"
+      },
+      {
+        "module": "personal.TALK",
+        "state": "COMPLETE"
+      },
+      {
+        "module": "personal.TALK",
+        "state": "COMPLETE"
+      }
+    ],
+    "actual_http": 8,
+    "actual_tokens": 53913,
+    "plans_retained": 2,
+    "latest_plan_id": "eace2e19-32a5-4140-8fa9-e88f6ebb4c8f",
+    "shared_events": 1,
+    "shared_plan_matches_pointer": true,
+    "constraints_status": "SKIPPED",
+    "private_raw_not_in_public_share": true,
+    "new_context_ready": "READY",
+    "screenshots": [
+      "private-390.jpg",
+      "private-768.jpg",
+      "private-1024.jpg",
+      "private-1440.jpg",
+      "public-confirmation.jpg"
+    ],
+    "confirmation_preview_and_cancel_observed": true,
+    "viewport_override_reset": true
+  },
+  "fresh-sw-proof": {
+    "wheel_source_matches": true,
+    "source_files": 16,
+    "wheel_sha256": "670794860ab15fbd1f1deb1f013f53678c1931b9f8b48f5b6898818a35b88ca0",
+    "fresh_reader": {
+      "version": "0.3.0",
+      "ready": true,
+      "baseline_relation": true,
+      "private_raw_dialogue_absent": true,
+      "AI_calls": 0
+    }
+  },
+  "original-preservation": {
+    "old_database_content_equal_to_saved_snapshot": true,
+    "old_database_read_only": true,
+    "tables": 17,
+    "new_primary_backed_up": true,
+    "old_source_files_checked": 60,
+    "old_source_changed": []
+  },
+  "primary-migration-0006": {
+    "migration": "0006_plan_relationships",
+    "all_table_contents_equal_to_backup": true,
+    "AI_calls": 0
+  },
+  "final-server-db-check": {
+    "servers": {
+      "8010": {
+        "status": 200
+      },
+      "8020": {
+        "status": 200,
+        "version": "0.3.0",
+        "configured": true
+      },
+      "8021": {
+        "status": 200
+      }
+    },
+    "primary_checks": {
+      "current_group_missing_baseline": 0
+    }
+  },
+  "library-check": {
+    "written": 200,
+    "unique_cases": 200,
+    "families": 100,
+    "kinds": {
+      "BASE": 100,
+      "VARIANT": 100
+    },
+    "domains": {
+      "software": 20,
+      "design": 20,
+      "course": 20,
+      "exam": 20,
+      "language": 20,
+      "career": 20,
+      "habit": 20,
+      "reading": 20,
+      "creative": 20,
+      "community": 20
+    },
+    "checks": [
+      "group input contract",
+      "private speaker and owner links",
+      "profile membership links",
+      "base/variant pairing",
+      "family evaluation split separation"
+    ],
+    "issues": [],
+    "AI_calls": 0,
+    "not_live_quality_evidence": true
+  },
+  "operational": {
+    "commit_failed_without_success_claim": true,
+    "no_half_saved_plans": true,
+    "repeat_no_http": true,
+    "ready": true,
+    "restored_plan_id_matches": true,
+    "actual_http": 2,
+    "actual_tokens": 11024
+  },
+  "release_package": {
+    "version": "0.3.0",
+    "wheel_source_matches": true,
+    "source_files": 16,
+    "final_wheel_sha256": "65e150b8b99ecf75fbec1b4968e94e4ca9f526838b5c25d38d93ddf8aab73cdc",
+    "secret_scan_files": 104,
+    "secret_leaks": 0,
+    "fresh_release_examples": "입력 계약 정상 · AI 호출 없음 · 구성원 3\n입력 계약 정상 · AI 호출 없음 · 구성원 1\n"
+  },
+  "minimal_context_schema": {
+    "required_fields_match": true,
+    "goal_tasks_conditions_contract_valid": true
+  },
+  "cleanup": {
+    "generated_build_removed": true,
+    "temporary_install_environment_removed": true,
+    "old_duplicate_wheel_removed": true,
+    "database_recovery_and_raw_evaluation_preserved": true
+  },
+  "final_tests": {
+    "passed": 123,
+    "expected_known_failures": 2,
+    "unexpected_failures": 0,
+    "database_tests_skipped": 0,
+    "log": "runtime/improve5/final-check-tests.log"
+  },
+  "validation_server_stopped": true
+}

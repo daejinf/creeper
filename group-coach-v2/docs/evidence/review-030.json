@@ -1,0 +1,238 @@
+{
+  "version": "0.3.0",
+  "integration_ready": false,
+  "acceptance": "HOLD",
+  "human_reviews": 0,
+  "review_type": "MODEL_ASSISTED_AND_AGENT_REVIEW",
+  "rounds": [
+    {
+      "label": "baseline",
+      "cases": 60,
+      "statuses": {
+        "OK": 50,
+        "FAILED": 6,
+        "NEEDS_INPUT": 4
+      },
+      "http": 89,
+      "tokens": 587450,
+      "quality_mean_20": 18.0,
+      "stage_means": {
+        "TALK": 19.3,
+        "REVISE": 18.5,
+        "E2E": 16.7,
+        "COACH": 18.8,
+        "PLAN": 15.9,
+        "PROPOSE": 18.8
+      },
+      "judge_http": 30,
+      "judge_tokens": 397915,
+      "source_sha256": "1d6786a06145df965ba1baa204d1c46c75d06cc1f70ff062462705d4017146d4"
+    },
+    {
+      "label": "round1",
+      "cases": 60,
+      "statuses": {
+        "OK": 56,
+        "FAILED": 3,
+        "NEEDS_INPUT": 1
+      },
+      "http": 85,
+      "tokens": 532193,
+      "quality_mean_20": 18.8,
+      "stage_means": {
+        "TALK": 19.3,
+        "PLAN": 18.7,
+        "REVISE": 18.6,
+        "E2E": 18.0,
+        "COACH": 19.1,
+        "PROPOSE": 19.1
+      },
+      "judge_http": 30,
+      "judge_tokens": 398220,
+      "source_sha256": "0a8a4966184922c5a1a91471c649fe90b4a8cf66d6a82fad3176d9d19f360f4d"
+    },
+    {
+      "label": "round2",
+      "cases": 60,
+      "statuses": {
+        "OK": 58,
+        "FAILED": 2
+      },
+      "http": 85,
+      "tokens": 506280,
+      "quality_mean_20": 18.566666666666666,
+      "stage_means": {
+        "COACH": 19.4,
+        "TALK": 19.6,
+        "REVISE": 18.6,
+        "PLAN": 18.9,
+        "PROPOSE": 17.5,
+        "E2E": 17.4
+      },
+      "judge_http": 30,
+      "judge_tokens": 394602,
+      "source_sha256": "a2a1d924d5229ac9ef31c5948c0e2b414d4e19b68c79abd0bfade191c2223e6c"
+    },
+    {
+      "label": "round3",
+      "cases": 60,
+      "statuses": {
+        "OK": 51,
+        "NEEDS_INPUT": 9
+      },
+      "http": 82,
+      "tokens": 503172,
+      "quality_mean_20": 18.183333333333334,
+      "stage_means": {
+        "TALK": 17.8,
+        "REVISE": 18.3,
+        "E2E": 17.5,
+        "PLAN": 18.3,
+        "PROPOSE": 18.6,
+        "COACH": 18.6
+      },
+      "judge_http": 30,
+      "judge_tokens": 393226,
+      "source_sha256": "596accb175a7f6739b9b5da4dec3322f977cc8a9d56ec844280466f9771fbadb"
+    },
+    {
+      "label": "round4",
+      "cases": 60,
+      "statuses": {
+        "OK": 51,
+        "FAILED": 3,
+        "NEEDS_INPUT": 6
+      },
+      "http": 89,
+      "tokens": 542768,
+      "quality_mean_20": 17.8,
+      "stage_means": {
+        "E2E": 18.2,
+        "COACH": 18.7,
+        "PLAN": 18.5,
+        "PROPOSE": 18.5,
+        "REVISE": 19.0,
+        "TALK": 13.9
+      },
+      "judge_http": 30,
+      "judge_tokens": 384194,
+      "source_sha256": "5f038cdddfa52a79f8266caa2bcf52eee1c6f6a2542f177db141db56342d6bdf"
+    },
+    {
+      "label": "round5",
+      "cases": 80,
+      "statuses": {
+        "OK": 75,
+        "NEEDS_INPUT": 5
+      },
+      "http": 108,
+      "tokens": 681963,
+      "quality_mean_20": 18.575,
+      "stage_means": {
+        "E2E": 18.46153846153846,
+        "TALK": 19.357142857142858,
+        "PLAN": 18.923076923076923,
+        "PROPOSE": 18.0,
+        "REVISE": 17.46153846153846,
+        "COACH": 19.142857142857142
+      },
+      "judge_http": 40,
+      "judge_tokens": 532269,
+      "source_sha256": "70e27a16165a0b89ea5f65655f8ccb80dec4b6bde8ca7dc7aaa69abfd04c88c0"
+    }
+  ],
+  "final_split_scores": {
+    "fixed": {
+      "count": 60,
+      "mean_20": 18.8
+    },
+    "protected": {
+      "count": 20,
+      "mean_20": 17.9
+    }
+  },
+  "usage": {
+    "formal_scenarios": 380,
+    "preliminary_cycle5_scenarios": 80,
+    "all_scenario_executions": 460,
+    "formal_core_http": 538,
+    "formal_core_tokens": 3353826,
+    "formal_judge_http": 190,
+    "formal_judge_tokens": 2500426,
+    "discarded_judge_calibration_http": 25,
+    "discarded_judge_calibration_tokens": 408920,
+    "preliminary_cycle5_http": 117,
+    "preliminary_cycle5_tokens": 736908,
+    "browser_http": 8,
+    "browser_tokens": 53913,
+    "operational_http": 2,
+    "operational_tokens": 11024,
+    "total_actual_http": 880,
+    "total_actual_tokens": 7065017
+  },
+  "final_model_flagged_candidates": [
+    "propose-habit-02-b",
+    "propose-reading-02-b",
+    "propose-creative-02-b",
+    "revise-exam-03-b",
+    "revise-language-03-b",
+    "talk-creative-04-b",
+    "plan-software-05-b",
+    "e2e-career-06-b",
+    "e2e-reading-06-b",
+    "e2e-creative-06-b",
+    "holdout-language-09-b",
+    "holdout-habit-09-b",
+    "holdout-creative-09-b",
+    "holdout-creative-10-b",
+    "coach-exam-01-v",
+    "propose-habit-02-v",
+    "revise-course-03-v",
+    "revise-exam-03-v",
+    "talk-creative-04-v",
+    "talk-community-04-v",
+    "e2e-career-06-v",
+    "e2e-creative-06-v",
+    "e2e-community-06-v",
+    "holdout-reading-09-b",
+    "holdout-community-09-b",
+    "holdout-career-10-b"
+  ],
+  "confirmed_remaining_issues": [
+    {
+      "priority": "P1",
+      "id": "CONDITION_ADDITION_REPLACES_OLD",
+      "case_id": "holdout-career-10-b",
+      "reproduced_by": "tests/test_known_failures.py",
+      "impact": "새 제약을 추가한 뒤 이전 제약이 최신 state에서 대체되고, plan=null인데 작성 완료 문구가 남음"
+    },
+    {
+      "priority": "P1",
+      "id": "RECURRING_COUNT_MISMATCH",
+      "case_id": "holdout-habit-09-b",
+      "reproduced_by": "evaluations/regressions-030.json",
+      "impact": "반복 횟수 기준과 실제 수행 과제 수·시간이 불일치"
+    },
+    {
+      "priority": "P1",
+      "id": "FINAL_DELIVERABLE_STAGE_MISSING",
+      "case_id": "propose-creative-02-b",
+      "reproduced_by": "evaluations/regressions-030.json",
+      "impact": "영상 완성 목표에 실제 촬영·편집·통합 경로가 빠짐"
+    }
+  ],
+  "local_tests": {
+    "passed": 123,
+    "known_expected_failures": 2,
+    "unexpected_failures": 0,
+    "skipped_database_tests": 0
+  },
+  "scope_notes": [
+    "정확히 5개 개선 회차; 5회차 중간 소스 80건은 별도 보존 후 최종 단일 소스 80건 재평가",
+    "보호 응답은 최종 소스 수정에 사용하지 않음",
+    "기존 사용자 원문 외부 재전송 없음",
+    "소스별 동결·완료 저장 재개, 캐시/가짜 답변 LIVE 집계 없음",
+    "초기 기준선 직렬 후 독립 평가 묶음 병행; 모든 실행을 동시성1로 수행했다고 주장하지 않음",
+    "모델의 중대 후보는 확정 결함과 다름; 에이전트 전수 의미 판정 완료로 간주하지 않음"
+  ]
+}

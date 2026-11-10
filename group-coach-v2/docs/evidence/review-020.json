@@ -1,0 +1,224 @@
+{
+  "version": "0.2.0",
+  "review_date": "2026-11-07",
+  "review_cycles": 3,
+  "reviewer": "AUTOMATED_MODEL_REVIEW_WITH_AGENT_ADJUDICATION_NOT_HUMAN",
+  "rounds": [
+    {
+      "round": 1,
+      "cases": 30,
+      "status_counts": {
+        "OK": 29,
+        "FAILED": 1
+      },
+      "scenario_http": 42,
+      "usage": {
+        "prompt_tokens": 89721,
+        "completion_tokens": 59628,
+        "total_tokens": 149349
+      },
+      "quality_mean_20": 18.733333333333334,
+      "stage_means": {
+        "REVISE": 19.2,
+        "COACH": 19.6,
+        "PLAN": 20.0,
+        "E2E": 19.8,
+        "PROPOSE": 19.6,
+        "TALK": 14.2
+      },
+      "automatic_critical_flags": [
+        "talk-1"
+      ]
+    },
+    {
+      "round": 2,
+      "cases": 30,
+      "status_counts": {
+        "OK": 30
+      },
+      "scenario_http": 45,
+      "usage": {
+        "prompt_tokens": 111936,
+        "completion_tokens": 86326,
+        "total_tokens": 198262
+      },
+      "quality_mean_20": 19.7,
+      "stage_means": {
+        "PLAN": 19.4,
+        "REVISE": 19.6,
+        "PROPOSE": 20.0,
+        "E2E": 19.6,
+        "TALK": 19.6,
+        "COACH": 20.0
+      },
+      "automatic_critical_flags": []
+    },
+    {
+      "round": 3,
+      "cases": 40,
+      "status_counts": {
+        "OK": 39,
+        "NEEDS_INPUT": 1
+      },
+      "scenario_http": 83,
+      "usage": {
+        "prompt_tokens": 225656,
+        "completion_tokens": 165076,
+        "total_tokens": 390732
+      },
+      "quality_mean_20": 19.675,
+      "stage_means": {
+        "COACH": 19.833333333333332,
+        "E2E": 19.857142857142858,
+        "PROPOSE": 19.142857142857142,
+        "PLAN": 19.857142857142858,
+        "REVISE": 19.714285714285715,
+        "TALK": 19.666666666666668
+      },
+      "automatic_critical_flags": []
+    }
+  ],
+  "tests_passed": 84,
+  "latest_validator_replay": [
+    {
+      "round": 1,
+      "plan_results_checked": 25,
+      "violations": [
+        {
+          "case": "propose-4",
+          "step": "PROPOSE",
+          "issues": [
+            "tasks.0: 담당자를 구성원 중에서 지정해야 합니다."
+          ]
+        },
+        {
+          "case": "propose-5",
+          "step": "PROPOSE",
+          "issues": [
+            "tasks.3: 담당자를 구성원 중에서 지정해야 합니다."
+          ]
+        },
+        {
+          "case": "e2e-1",
+          "step": "PROPOSE",
+          "issues": [
+            "tasks.1: 담당자를 구성원 중에서 지정해야 합니다.",
+            "tasks.2: 담당자를 구성원 중에서 지정해야 합니다.",
+            "tasks.3: 담당자를 구성원 중에서 지정해야 합니다."
+          ]
+        }
+      ]
+    },
+    {
+      "round": 2,
+      "plan_results_checked": 25,
+      "violations": [
+        {
+          "case": "revise-3",
+          "step": "REVISE",
+          "issues": [
+            "tasks.2: 선행 작업 완료일보다 이른 의존 작업 일정"
+          ]
+        },
+        {
+          "case": "e2e-1",
+          "step": "PROPOSE",
+          "issues": [
+            "tasks.1: 담당자를 구성원 중에서 지정해야 합니다.",
+            "tasks.2: 담당자를 구성원 중에서 지정해야 합니다.",
+            "tasks.3: 담당자를 구성원 중에서 지정해야 합니다.",
+            "tasks.4: 담당자를 구성원 중에서 지정해야 합니다."
+          ]
+        },
+        {
+          "case": "e2e-5",
+          "step": "PROPOSE",
+          "issues": [
+            "tasks.6: 담당자를 구성원 중에서 지정해야 합니다."
+          ]
+        }
+      ]
+    },
+    {
+      "round": 3,
+      "plan_results_checked": 34,
+      "violations": []
+    }
+  ],
+  "scoped_membership_reads": 66,
+  "baseline_task_lookups": 68,
+  "fresh_install_constraints": 56,
+  "fresh_install_passed": true,
+  "restore_snapshot_equal": true,
+  "restored_orphan_tasks": 0,
+  "db_checks": {
+    "orphan_goals": 0,
+    "orphan_tasks": 0,
+    "orphan_baselines": 0,
+    "unlinked_members": 2030,
+    "missing_current_group_baselines": 0,
+    "task_owner_json_mismatch": 0
+  },
+  "old_core_files_checked": 60,
+  "old_source_changes": [],
+  "old_database_unchanged": true,
+  "recorded_judge_http": 34,
+  "recorded_judge_tokens": 730508,
+  "browser_smoke": {
+    "status": "OK",
+    "persistence": "COMPLETE",
+    "meta": {
+      "task": "group.coach",
+      "model": "openai/gpt-5.6-luna",
+      "usage": {
+        "total_tokens": 2510,
+        "prompt_tokens": 1329,
+        "completion_tokens": 1181
+      },
+      "run_id": "e0c241ba-26dc-43b6-8cca-753bb64fceac",
+      "latency_ms": 11573,
+      "prompt_version": "coach-0.2-v3",
+      "repair_attempts": 0,
+      "execution_source": "LIVE",
+      "output_expansions": 0,
+      "transport_attempts": 1,
+      "provider_request_ids": [
+        "gen-1794035038-Xqsit1Ii7TmaqdKCifCL"
+      ]
+    },
+    "summary_present": true,
+    "details_present": true,
+    "browser_summary_expand_verified": true,
+    "browser_full_private_flow": false
+  },
+  "wheel_sha256": "6289669de3c23d512865a78fa8c1ce589e18fcea3785b86d65cabe9a8da530fd",
+  "wheel_matches_source": true,
+  "decision": "CONDITIONAL_TECHNICAL_HANDOFF",
+  "pending": [
+    "SW direct acceptance",
+    "Human semantic review",
+    "Full private UI flow and responsive viewport testing",
+    "Single final prompt version full-set LIVE rerun (successful steps intentionally retained)"
+  ],
+  "recorded_total_http": 205,
+  "recorded_total_tokens": 1471361,
+  "scenario_contracts": {
+    "count": 200,
+    "unique_ids": 200,
+    "valid_group_inputs": 200,
+    "errors": [],
+    "AI_calls": 0
+  },
+  "installed_reader": {
+    "installed_package_reader": "PASS",
+    "scope": "GROUP",
+    "baseline_present": true,
+    "AI_calls": 0
+  },
+  "base_install": {
+    "version": "0.2.0",
+    "web_installed": false,
+    "database_installed": false,
+    "old_project_installed": false
+  }
+}

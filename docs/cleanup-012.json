@@ -1,0 +1,23 @@
+{
+  "version": "0.12.0",
+  "backup_verified_files": 198,
+  "removed": [
+    "evaluations/live_acceptance.py",
+    "evaluations/recheck_saved.py",
+    "evaluations/recover_flow.py",
+    "examples/compose.py",
+    "old runtime acceptance-v1/acceptance-v2/recovered-flow/browser-live/browser-live-v4"
+  ],
+  "merged_into": [
+    "evaluations/evaluate.py",
+    "examples/continue_record.py"
+  ],
+  "single_source_examples": "examples/requests/*.json",
+  "preserved": [
+    "runtime/records.sqlite3",
+    "runtime/evaluation-012",
+    "200 scenario data",
+    "privacy/failure regression tests"
+  ],
+  "reason": "중복 실행기·예제 정의 제거; 이력/원문은 외부 보관"
+}

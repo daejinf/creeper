@@ -1,0 +1,41 @@
+{
+  "conversation": [
+    {
+      "message_id": "m1",
+      "speaker_id": "u1",
+      "role": "user",
+      "text": "12/1부터 12/21까지 온라인 교류회 진행안을 만들자. 참여 방식은 선택할 수 있고 강제 지목은 없게 해요.",
+      "created_at": "2026-11-20T10:00:00+09:00"
+    },
+    {
+      "message_id": "m2",
+      "speaker_id": "u2",
+      "role": "user",
+      "text": "좋아요. 공유 문서로 작성하고 진행안 문서로 인증해요. 그룹에는 완료 여부와 달성률만 공개해요.",
+      "created_at": "2026-11-20T10:01:00+09:00"
+    }
+  ],
+  "members": [
+    {
+      "member_id": "u1",
+      "nickname": "도윤"
+    },
+    {
+      "member_id": "u2",
+      "nickname": "서연"
+    }
+  ],
+  "reference_date": "2026-11-20",
+  "context": {
+    "goal": "온라인 교류회 진행안 만들기",
+    "role": "참여 설계",
+    "start_date": "2026-12-01",
+    "end_date": "2026-12-21",
+    "completion_criteria": [
+      "참여 방식 선택 가능",
+      "강제 지목 없음"
+    ],
+    "verification_method": "진행안 문서",
+    "privacy_scope": "OBJECTIVE_ONLY"
+  }
+}

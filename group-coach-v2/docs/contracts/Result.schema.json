@@ -1,0 +1,184 @@
+{
+  "$defs": {
+    "Error": {
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "title": "Code",
+          "type": "string"
+        },
+        "message": {
+          "title": "Message",
+          "type": "string"
+        },
+        "retryable": {
+          "default": false,
+          "title": "Retryable",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "code",
+        "message"
+      ],
+      "title": "Error",
+      "type": "object"
+    },
+    "Meta": {
+      "additionalProperties": false,
+      "properties": {
+        "run_id": {
+          "title": "Run Id",
+          "type": "string"
+        },
+        "task": {
+          "title": "Task",
+          "type": "string"
+        },
+        "prompt_version": {
+          "default": "CODE",
+          "title": "Prompt Version",
+          "type": "string"
+        },
+        "model": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Model"
+        },
+        "usage": {
+          "$ref": "#/$defs/Usage"
+        },
+        "transport_attempts": {
+          "default": 0,
+          "title": "Transport Attempts",
+          "type": "integer"
+        },
+        "repair_attempts": {
+          "default": 0,
+          "title": "Repair Attempts",
+          "type": "integer"
+        },
+        "output_expansions": {
+          "default": 0,
+          "title": "Output Expansions",
+          "type": "integer"
+        },
+        "provider_request_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Provider Request Ids",
+          "type": "array"
+        },
+        "latency_ms": {
+          "default": 0,
+          "title": "Latency Ms",
+          "type": "integer"
+        },
+        "execution_source": {
+          "default": "CODE",
+          "enum": [
+            "LIVE",
+            "CODE",
+            "REUSED"
+          ],
+          "title": "Execution Source",
+          "type": "string"
+        }
+      },
+      "required": [
+        "run_id",
+        "task"
+      ],
+      "title": "Meta",
+      "type": "object"
+    },
+    "Usage": {
+      "additionalProperties": false,
+      "properties": {
+        "prompt_tokens": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Prompt Tokens",
+          "type": "integer"
+        },
+        "completion_tokens": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Completion Tokens",
+          "type": "integer"
+        },
+        "total_tokens": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Total Tokens",
+          "type": "integer"
+        }
+      },
+      "title": "Usage",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "status": {
+      "default": "OK",
+      "enum": [
+        "OK",
+        "NEEDS_INPUT",
+        "FAILED"
+      ],
+      "title": "Status",
+      "type": "string"
+    },
+    "data": {
+      "default": null,
+      "title": "Data"
+    },
+    "needed_inputs": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Needed Inputs",
+      "type": "array"
+    },
+    "warnings": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Warnings",
+      "type": "array"
+    },
+    "error": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Error"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "meta": {
+      "$ref": "#/$defs/Meta"
+    },
+    "persistence": {
+      "additionalProperties": true,
+      "title": "Persistence",
+      "type": "object"
+    }
+  },
+  "required": [
+    "meta"
+  ],
+  "title": "Result",
+  "type": "object"
+}

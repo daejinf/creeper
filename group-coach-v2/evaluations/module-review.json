@@ -1,0 +1,3853 @@
+{
+  "schema_version": "1",
+  "fixed": 30,
+  "holdout": 10,
+  "cases": [
+    {
+      "id": "coach-1",
+      "stage": "COACH",
+      "domain": "UI",
+      "holdout": false,
+      "pair": "coach-pair",
+      "request": {
+        "action": "COACH",
+        "members": [
+          {
+            "member_id": "u0",
+            "nickname": "검증자1"
+          },
+          {
+            "member_id": "u1",
+            "nickname": "검증자2"
+          },
+          {
+            "member_id": "u2",
+            "nickname": "검증자3"
+          }
+        ],
+        "conversation": [
+          {
+            "message_id": "m0",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "공동 목표는 행사 안내 화면 3개 시연 준비야. 완료 기준은 메인·상세·일정 화면을 시연하고 오류2건 이상을 점검한다.",
+            "created_at": "2026-11-06T10:00:00+09:00"
+          },
+          {
+            "message_id": "m1",
+            "speaker_id": "u1",
+            "role": "user",
+            "text": "2026-11-09부터 2026-11-22까지 진행하자. 인증은 결과 기록으로 하고 완료 여부와 달성률만 공개하자.",
+            "created_at": "2026-11-06T10:01:00+09:00"
+          },
+          {
+            "message_id": "m2",
+            "speaker_id": "u2",
+            "role": "user",
+            "text": "역할은 검증자1=메인 화면, 검증자2=상세·일정 화면, 검증자3=시연 검증",
+            "created_at": "2026-11-06T10:02:00+09:00"
+          },
+          {
+            "message_id": "m3",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "화요일 체크인은 좋지만 시간은 미정이야. AI가 실행 방법2개와 포기할 점을 설명해주면 고르자.",
+            "created_at": "2026-11-06T10:03:00+09:00"
+          },
+          {
+            "message_id": "m4",
+            "speaker_id": "u1",
+            "role": "user",
+            "text": "좋아. 제안은 듣고 결정하자. 개인 시간과 제약은 개인 상담에서 이야기할게.",
+            "created_at": "2026-11-06T10:04:00+09:00"
+          }
+        ],
+        "reference_date": "2026-11-06",
+        "timezone": "Asia/Seoul"
+      },
+      "expected": [
+        "확인된 사실과 제안 분리",
+        "역할·기간·개인 조건 반영",
+        "필요한 이유·대안 설명"
+      ],
+      "forbidden": [
+        "가짜 근거",
+        "개인 사유 공개",
+        "임의 승인",
+        "확정 조건 변경"
+      ],
+      "changed_condition": null
+    },
+    {
+      "id": "coach-2",
+      "stage": "COACH",
+      "domain": "UI",
+      "holdout": false,
+      "pair": "coach-pair",
+      "request": {
+        "action": "COACH",
+        "members": [
+          {
+            "member_id": "u0",
+            "nickname": "검증자1"
+          },
+          {
+            "member_id": "u1",
+            "nickname": "검증자2"
+          },
+          {
+            "member_id": "u2",
+            "nickname": "검증자3"
+          }
+        ],
+        "conversation": [
+          {
+            "message_id": "m0",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "공동 목표는 행사 안내 화면 3개 시연 준비야. 완료 기준은 메인·상세·일정 화면을 시연하고 오류2건 이상을 점검한다.",
+            "created_at": "2026-11-06T10:00:00+09:00"
+          },
+          {
+            "message_id": "m1",
+            "speaker_id": "u1",
+            "role": "user",
+            "text": "2026-11-09부터 2026-11-15까지 진행하자. 인증은 결과 기록으로 하고 완료 여부와 달성률만 공개하자.",
+            "created_at": "2026-11-06T10:01:00+09:00"
+          },
+          {
+            "message_id": "m2",
+            "speaker_id": "u2",
+            "role": "user",
+            "text": "역할은 검증자1=메인 화면, 검증자2=상세·일정 화면, 검증자3=시연 검증",
+            "created_at": "2026-11-06T10:02:00+09:00"
+          },
+          {
+            "message_id": "m3",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "화요일 체크인은 좋지만 시간은 미정이야. AI가 실행 방법2개와 포기할 점을 설명해주면 고르자.",
+            "created_at": "2026-11-06T10:03:00+09:00"
+          },
+          {
+            "message_id": "m4",
+            "speaker_id": "u1",
+            "role": "user",
+            "text": "좋아. 제안은 듣고 결정하자. 개인 시간과 제약은 개인 상담에서 이야기할게.",
+            "created_at": "2026-11-06T10:04:00+09:00"
+          }
+        ],
+        "reference_date": "2026-11-06",
+        "timezone": "Asia/Seoul"
+      },
+      "expected": [
+        "확인된 사실과 제안 분리",
+        "역할·기간·개인 조건 반영",
+        "필요한 이유·대안 설명"
+      ],
+      "forbidden": [
+        "가짜 근거",
+        "개인 사유 공개",
+        "임의 승인",
+        "확정 조건 변경"
+      ],
+      "changed_condition": "기간 단축"
+    },
+    {
+      "id": "coach-3",
+      "stage": "COACH",
+      "domain": "STUDY",
+      "holdout": false,
+      "pair": null,
+      "request": {
+        "action": "COACH",
+        "members": [
+          {
+            "member_id": "u0",
+            "nickname": "검증자1"
+          },
+          {
+            "member_id": "u1",
+            "nickname": "검증자2"
+          },
+          {
+            "member_id": "u2",
+            "nickname": "검증자3"
+          }
+        ],
+        "conversation": [
+          {
+            "message_id": "m0",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "공동 목표는 SQL 문제6개 학습야. 완료 기준은 SQL 문제6개를 풀고 오답 원인과 수정 쿼리를 기록한다.",
+            "created_at": "2026-11-06T10:00:00+09:00"
+          },
+          {
+            "message_id": "m1",
+            "speaker_id": "u1",
+            "role": "user",
+            "text": "2026-11-09부터 2026-11-22까지 진행하자. 인증은 결과 기록으로 하고 완료 여부와 달성률만 공개하자.",
+            "created_at": "2026-11-06T10:01:00+09:00"
+          },
+          {
+            "message_id": "m2",
+            "speaker_id": "u2",
+            "role": "user",
+            "text": "역할은 검증자1=문제 풀이, 검증자2=복습 기준, 검증자3=결과 검토",
+            "created_at": "2026-11-06T10:02:00+09:00"
+          },
+          {
+            "message_id": "m3",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "화요일 체크인은 좋지만 시간은 미정이야. AI가 실행 방법2개와 포기할 점을 설명해주면 고르자.",
+            "created_at": "2026-11-06T10:03:00+09:00"
+          },
+          {
+            "message_id": "m4",
+            "speaker_id": "u1",
+            "role": "user",
+            "text": "좋아. 제안은 듣고 결정하자. 개인 시간과 제약은 개인 상담에서 이야기할게.",
+            "created_at": "2026-11-06T10:04:00+09:00"
+          }
+        ],
+        "reference_date": "2026-11-06",
+        "timezone": "Asia/Seoul"
+      },
+      "expected": [
+        "확인된 사실과 제안 분리",
+        "역할·기간·개인 조건 반영",
+        "필요한 이유·대안 설명"
+      ],
+      "forbidden": [
+        "가짜 근거",
+        "개인 사유 공개",
+        "임의 승인",
+        "확정 조건 변경"
+      ],
+      "changed_condition": null
+    },
+    {
+      "id": "coach-4",
+      "stage": "COACH",
+      "domain": "HABIT",
+      "holdout": false,
+      "pair": null,
+      "request": {
+        "action": "COACH",
+        "members": [
+          {
+            "member_id": "u0",
+            "nickname": "검증자1"
+          },
+          {
+            "member_id": "u1",
+            "nickname": "검증자2"
+          },
+          {
+            "member_id": "u2",
+            "nickname": "검증자3"
+          }
+        ],
+        "conversation": [
+          {
+            "message_id": "m0",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "공동 목표는 10분 걷기 습관야. 완료 기준은 각자 주2회 10분 걷기를 2주간 총4회 완료하고 기록한다.",
+            "created_at": "2026-11-06T10:00:00+09:00"
+          },
+          {
+            "message_id": "m1",
+            "speaker_id": "u1",
+            "role": "user",
+            "text": "2026-11-09부터 2026-11-22까지 진행하자. 인증은 결과 기록으로 하고 완료 여부와 달성률만 공개하자.",
+            "created_at": "2026-11-06T10:01:00+09:00"
+          },
+          {
+            "message_id": "m2",
+            "speaker_id": "u2",
+            "role": "user",
+            "text": "역할은 검증자1=본인 걷기 기록, 검증자2=본인 걷기 기록, 검증자3=본인 걷기 기록",
+            "created_at": "2026-11-06T10:02:00+09:00"
+          },
+          {
+            "message_id": "m3",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "화요일 체크인은 좋지만 시간은 미정이야. AI가 실행 방법2개와 포기할 점을 설명해주면 고르자.",
+            "created_at": "2026-11-06T10:03:00+09:00"
+          },
+          {
+            "message_id": "m4",
+            "speaker_id": "u1",
+            "role": "user",
+            "text": "좋아. 제안은 듣고 결정하자. 개인 시간과 제약은 개인 상담에서 이야기할게.",
+            "created_at": "2026-11-06T10:04:00+09:00"
+          }
+        ],
+        "reference_date": "2026-11-06",
+        "timezone": "Asia/Seoul"
+      },
+      "expected": [
+        "확인된 사실과 제안 분리",
+        "역할·기간·개인 조건 반영",
+        "필요한 이유·대안 설명"
+      ],
+      "forbidden": [
+        "가짜 근거",
+        "개인 사유 공개",
+        "임의 승인",
+        "확정 조건 변경"
+      ],
+      "changed_condition": null
+    },
+    {
+      "id": "coach-5",
+      "stage": "COACH",
+      "domain": "CREATIVE",
+      "holdout": false,
+      "pair": null,
+      "request": {
+        "action": "COACH",
+        "members": [
+          {
+            "member_id": "u0",
+            "nickname": "검증자1"
+          },
+          {
+            "member_id": "u1",
+            "nickname": "검증자2"
+          },
+          {
+            "member_id": "u2",
+            "nickname": "검증자3"
+          }
+        ],
+        "conversation": [
+          {
+            "message_id": "m0",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "공동 목표는 동아리 소개 영상 기획야. 완료 기준은 60초 소개 영상의 장면 구성·촬영 목록·편집 검토를 완성한다.",
+            "created_at": "2026-11-06T10:00:00+09:00"
+          },
+          {
+            "message_id": "m1",
+            "speaker_id": "u1",
+            "role": "user",
+            "text": "2026-11-09부터 2026-11-22까지 진행하자. 인증은 결과 기록으로 하고 완료 여부와 달성률만 공개하자.",
+            "created_at": "2026-11-06T10:01:00+09:00"
+          },
+          {
+            "message_id": "m2",
+            "speaker_id": "u2",
+            "role": "user",
+            "text": "역할은 검증자1=구성안, 검증자2=촬영 목록, 검증자3=편집 검토",
+            "created_at": "2026-11-06T10:02:00+09:00"
+          },
+          {
+            "message_id": "m3",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "화요일 체크인은 좋지만 시간은 미정이야. AI가 실행 방법2개와 포기할 점을 설명해주면 고르자.",
+            "created_at": "2026-11-06T10:03:00+09:00"
+          },
+          {
+            "message_id": "m4",
+            "speaker_id": "u1",
+            "role": "user",
+            "text": "좋아. 제안은 듣고 결정하자. 개인 시간과 제약은 개인 상담에서 이야기할게.",
+            "created_at": "2026-11-06T10:04:00+09:00"
+          }
+        ],
+        "reference_date": "2026-11-06",
+        "timezone": "Asia/Seoul"
+      },
+      "expected": [
+        "확인된 사실과 제안 분리",
+        "역할·기간·개인 조건 반영",
+        "필요한 이유·대안 설명"
+      ],
+      "forbidden": [
+        "가짜 근거",
+        "개인 사유 공개",
+        "임의 승인",
+        "확정 조건 변경"
+      ],
+      "changed_condition": null
+    },
+    {
+      "id": "propose-1",
+      "stage": "PROPOSE",
+      "domain": "UI",
+      "holdout": false,
+      "pair": "propose-pair",
+      "request": {
+        "action": "PROPOSE",
+        "members": [
+          {
+            "member_id": "u0",
+            "nickname": "검증자1"
+          },
+          {
+            "member_id": "u1",
+            "nickname": "검증자2"
+          },
+          {
+            "member_id": "u2",
+            "nickname": "검증자3"
+          }
+        ],
+        "conversation": [
+          {
+            "message_id": "m0",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "공동 목표는 행사 안내 화면 3개 시연 준비야. 완료 기준은 메인·상세·일정 화면을 시연하고 오류2건 이상을 점검한다.",
+            "created_at": "2026-11-06T10:00:00+09:00"
+          },
+          {
+            "message_id": "m1",
+            "speaker_id": "u1",
+            "role": "user",
+            "text": "2026-11-09부터 2026-11-22까지 진행하자. 인증은 결과 기록으로 하고 완료 여부와 달성률만 공개하자.",
+            "created_at": "2026-11-06T10:01:00+09:00"
+          },
+          {
+            "message_id": "m2",
+            "speaker_id": "u2",
+            "role": "user",
+            "text": "역할은 검증자1=메인 화면, 검증자2=상세·일정 화면, 검증자3=시연 검증",
+            "created_at": "2026-11-06T10:02:00+09:00"
+          },
+          {
+            "message_id": "m3",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "화요일 체크인은 좋지만 시간은 미정이야. AI가 실행 방법2개와 포기할 점을 설명해주면 고르자.",
+            "created_at": "2026-11-06T10:03:00+09:00"
+          },
+          {
+            "message_id": "m4",
+            "speaker_id": "u1",
+            "role": "user",
+            "text": "좋아. 제안은 듣고 결정하자. 개인 시간과 제약은 개인 상담에서 이야기할게.",
+            "created_at": "2026-11-06T10:04:00+09:00"
+          }
+        ],
+        "reference_date": "2026-11-06",
+        "timezone": "Asia/Seoul"
+      },
+      "expected": [
+        "확인된 사실과 제안 분리",
+        "역할·기간·개인 조건 반영",
+        "필요한 이유·대안 설명"
+      ],
+      "forbidden": [
+        "가짜 근거",
+        "개인 사유 공개",
+        "임의 승인",
+        "확정 조건 변경"
+      ],
+      "changed_condition": null
+    },
+    {
+      "id": "propose-2",
+      "stage": "PROPOSE",
+      "domain": "UI",
+      "holdout": false,
+      "pair": "propose-pair",
+      "request": {
+        "action": "PROPOSE",
+        "members": [
+          {
+            "member_id": "u0",
+            "nickname": "검증자1"
+          },
+          {
+            "member_id": "u1",
+            "nickname": "검증자2"
+          },
+          {
+            "member_id": "u2",
+            "nickname": "검증자3"
+          }
+        ],
+        "conversation": [
+          {
+            "message_id": "m0",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "공동 목표는 행사 안내 화면 3개 시연 준비야. 완료 기준은 메인·상세·일정 화면을 시연하고 오류2건 이상을 점검한다.",
+            "created_at": "2026-11-06T10:00:00+09:00"
+          },
+          {
+            "message_id": "m1",
+            "speaker_id": "u1",
+            "role": "user",
+            "text": "2026-11-09부터 2026-11-15까지 진행하자. 인증은 결과 기록으로 하고 완료 여부와 달성률만 공개하자.",
+            "created_at": "2026-11-06T10:01:00+09:00"
+          },
+          {
+            "message_id": "m2",
+            "speaker_id": "u2",
+            "role": "user",
+            "text": "역할은 검증자1=메인 화면, 검증자2=상세·일정 화면, 검증자3=시연 검증",
+            "created_at": "2026-11-06T10:02:00+09:00"
+          },
+          {
+            "message_id": "m3",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "화요일 체크인은 좋지만 시간은 미정이야. AI가 실행 방법2개와 포기할 점을 설명해주면 고르자.",
+            "created_at": "2026-11-06T10:03:00+09:00"
+          },
+          {
+            "message_id": "m4",
+            "speaker_id": "u1",
+            "role": "user",
+            "text": "좋아. 제안은 듣고 결정하자. 개인 시간과 제약은 개인 상담에서 이야기할게.",
+            "created_at": "2026-11-06T10:04:00+09:00"
+          }
+        ],
+        "reference_date": "2026-11-06",
+        "timezone": "Asia/Seoul"
+      },
+      "expected": [
+        "확인된 사실과 제안 분리",
+        "역할·기간·개인 조건 반영",
+        "필요한 이유·대안 설명"
+      ],
+      "forbidden": [
+        "가짜 근거",
+        "개인 사유 공개",
+        "임의 승인",
+        "확정 조건 변경"
+      ],
+      "changed_condition": "기간 단축"
+    },
+    {
+      "id": "propose-3",
+      "stage": "PROPOSE",
+      "domain": "STUDY",
+      "holdout": false,
+      "pair": null,
+      "request": {
+        "action": "PROPOSE",
+        "members": [
+          {
+            "member_id": "u0",
+            "nickname": "검증자1"
+          },
+          {
+            "member_id": "u1",
+            "nickname": "검증자2"
+          },
+          {
+            "member_id": "u2",
+            "nickname": "검증자3"
+          }
+        ],
+        "conversation": [
+          {
+            "message_id": "m0",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "공동 목표는 SQL 문제6개 학습야. 완료 기준은 SQL 문제6개를 풀고 오답 원인과 수정 쿼리를 기록한다.",
+            "created_at": "2026-11-06T10:00:00+09:00"
+          },
+          {
+            "message_id": "m1",
+            "speaker_id": "u1",
+            "role": "user",
+            "text": "2026-11-09부터 2026-11-22까지 진행하자. 인증은 결과 기록으로 하고 완료 여부와 달성률만 공개하자.",
+            "created_at": "2026-11-06T10:01:00+09:00"
+          },
+          {
+            "message_id": "m2",
+            "speaker_id": "u2",
+            "role": "user",
+            "text": "역할은 검증자1=문제 풀이, 검증자2=복습 기준, 검증자3=결과 검토",
+            "created_at": "2026-11-06T10:02:00+09:00"
+          },
+          {
+            "message_id": "m3",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "화요일 체크인은 좋지만 시간은 미정이야. AI가 실행 방법2개와 포기할 점을 설명해주면 고르자.",
+            "created_at": "2026-11-06T10:03:00+09:00"
+          },
+          {
+            "message_id": "m4",
+            "speaker_id": "u1",
+            "role": "user",
+            "text": "좋아. 제안은 듣고 결정하자. 개인 시간과 제약은 개인 상담에서 이야기할게.",
+            "created_at": "2026-11-06T10:04:00+09:00"
+          }
+        ],
+        "reference_date": "2026-11-06",
+        "timezone": "Asia/Seoul"
+      },
+      "expected": [
+        "확인된 사실과 제안 분리",
+        "역할·기간·개인 조건 반영",
+        "필요한 이유·대안 설명"
+      ],
+      "forbidden": [
+        "가짜 근거",
+        "개인 사유 공개",
+        "임의 승인",
+        "확정 조건 변경"
+      ],
+      "changed_condition": null
+    },
+    {
+      "id": "propose-4",
+      "stage": "PROPOSE",
+      "domain": "HABIT",
+      "holdout": false,
+      "pair": null,
+      "request": {
+        "action": "PROPOSE",
+        "members": [
+          {
+            "member_id": "u0",
+            "nickname": "검증자1"
+          },
+          {
+            "member_id": "u1",
+            "nickname": "검증자2"
+          },
+          {
+            "member_id": "u2",
+            "nickname": "검증자3"
+          }
+        ],
+        "conversation": [
+          {
+            "message_id": "m0",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "공동 목표는 10분 걷기 습관야. 완료 기준은 각자 주2회 10분 걷기를 2주간 총4회 완료하고 기록한다.",
+            "created_at": "2026-11-06T10:00:00+09:00"
+          },
+          {
+            "message_id": "m1",
+            "speaker_id": "u1",
+            "role": "user",
+            "text": "2026-11-09부터 2026-11-22까지 진행하자. 인증은 결과 기록으로 하고 완료 여부와 달성률만 공개하자.",
+            "created_at": "2026-11-06T10:01:00+09:00"
+          },
+          {
+            "message_id": "m2",
+            "speaker_id": "u2",
+            "role": "user",
+            "text": "역할은 검증자1=본인 걷기 기록, 검증자2=본인 걷기 기록, 검증자3=본인 걷기 기록",
+            "created_at": "2026-11-06T10:02:00+09:00"
+          },
+          {
+            "message_id": "m3",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "화요일 체크인은 좋지만 시간은 미정이야. AI가 실행 방법2개와 포기할 점을 설명해주면 고르자.",
+            "created_at": "2026-11-06T10:03:00+09:00"
+          },
+          {
+            "message_id": "m4",
+            "speaker_id": "u1",
+            "role": "user",
+            "text": "좋아. 제안은 듣고 결정하자. 개인 시간과 제약은 개인 상담에서 이야기할게.",
+            "created_at": "2026-11-06T10:04:00+09:00"
+          }
+        ],
+        "reference_date": "2026-11-06",
+        "timezone": "Asia/Seoul"
+      },
+      "expected": [
+        "확인된 사실과 제안 분리",
+        "역할·기간·개인 조건 반영",
+        "필요한 이유·대안 설명"
+      ],
+      "forbidden": [
+        "가짜 근거",
+        "개인 사유 공개",
+        "임의 승인",
+        "확정 조건 변경"
+      ],
+      "changed_condition": null
+    },
+    {
+      "id": "propose-5",
+      "stage": "PROPOSE",
+      "domain": "CREATIVE",
+      "holdout": false,
+      "pair": null,
+      "request": {
+        "action": "PROPOSE",
+        "members": [
+          {
+            "member_id": "u0",
+            "nickname": "검증자1"
+          },
+          {
+            "member_id": "u1",
+            "nickname": "검증자2"
+          },
+          {
+            "member_id": "u2",
+            "nickname": "검증자3"
+          }
+        ],
+        "conversation": [
+          {
+            "message_id": "m0",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "공동 목표는 동아리 소개 영상 기획야. 완료 기준은 60초 소개 영상의 장면 구성·촬영 목록·편집 검토를 완성한다.",
+            "created_at": "2026-11-06T10:00:00+09:00"
+          },
+          {
+            "message_id": "m1",
+            "speaker_id": "u1",
+            "role": "user",
+            "text": "2026-11-09부터 2026-11-22까지 진행하자. 인증은 결과 기록으로 하고 완료 여부와 달성률만 공개하자.",
+            "created_at": "2026-11-06T10:01:00+09:00"
+          },
+          {
+            "message_id": "m2",
+            "speaker_id": "u2",
+            "role": "user",
+            "text": "역할은 검증자1=구성안, 검증자2=촬영 목록, 검증자3=편집 검토",
+            "created_at": "2026-11-06T10:02:00+09:00"
+          },
+          {
+            "message_id": "m3",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "화요일 체크인은 좋지만 시간은 미정이야. AI가 실행 방법2개와 포기할 점을 설명해주면 고르자.",
+            "created_at": "2026-11-06T10:03:00+09:00"
+          },
+          {
+            "message_id": "m4",
+            "speaker_id": "u1",
+            "role": "user",
+            "text": "좋아. 제안은 듣고 결정하자. 개인 시간과 제약은 개인 상담에서 이야기할게.",
+            "created_at": "2026-11-06T10:04:00+09:00"
+          }
+        ],
+        "reference_date": "2026-11-06",
+        "timezone": "Asia/Seoul"
+      },
+      "expected": [
+        "확인된 사실과 제안 분리",
+        "역할·기간·개인 조건 반영",
+        "필요한 이유·대안 설명"
+      ],
+      "forbidden": [
+        "가짜 근거",
+        "개인 사유 공개",
+        "임의 승인",
+        "확정 조건 변경"
+      ],
+      "changed_condition": null
+    },
+    {
+      "id": "revise-1",
+      "stage": "REVISE",
+      "domain": "UI",
+      "holdout": false,
+      "pair": "revise-pair",
+      "request": {
+        "action": "REVISE",
+        "members": [
+          {
+            "member_id": "u0",
+            "nickname": "검증자1"
+          },
+          {
+            "member_id": "u1",
+            "nickname": "검증자2"
+          },
+          {
+            "member_id": "u2",
+            "nickname": "검증자3"
+          }
+        ],
+        "conversation": [
+          {
+            "message_id": "m0",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "공동 목표는 행사 안내 화면 3개 시연 준비야. 완료 기준은 메인·상세·일정 화면을 시연하고 오류2건 이상을 점검한다.",
+            "created_at": "2026-11-06T10:00:00+09:00"
+          },
+          {
+            "message_id": "m1",
+            "speaker_id": "u1",
+            "role": "user",
+            "text": "2026-11-09부터 2026-11-22까지 진행하자. 인증은 결과 기록으로 하고 완료 여부와 달성률만 공개하자.",
+            "created_at": "2026-11-06T10:01:00+09:00"
+          },
+          {
+            "message_id": "m2",
+            "speaker_id": "u2",
+            "role": "user",
+            "text": "역할은 검증자1=메인 화면, 검증자2=상세·일정 화면, 검증자3=시연 검증",
+            "created_at": "2026-11-06T10:02:00+09:00"
+          },
+          {
+            "message_id": "m3",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "화요일 체크인은 좋지만 시간은 미정이야. AI가 실행 방법2개와 포기할 점을 설명해주면 고르자.",
+            "created_at": "2026-11-06T10:03:00+09:00"
+          },
+          {
+            "message_id": "m4",
+            "speaker_id": "u1",
+            "role": "user",
+            "text": "좋아. 제안은 듣고 결정하자. 개인 시간과 제약은 개인 상담에서 이야기할게.",
+            "created_at": "2026-11-06T10:04:00+09:00"
+          }
+        ],
+        "reference_date": "2026-11-06",
+        "timezone": "Asia/Seoul",
+        "previous": {
+          "goal": {
+            "title": "행사 안내 화면 3개 시연 준비",
+            "start_date": "2026-11-09",
+            "end_date": "2026-11-22",
+            "completion_criteria": [
+              "메인·상세·일정 화면을 시연하고 오류2건 이상을 점검한다."
+            ],
+            "execution_method": "역할별로 준비 후 함께 검토",
+            "verification_method": "결과 기록",
+            "privacy_scope": "OBJECTIVE_ONLY",
+            "roles": {
+              "u0": "메인 화면",
+              "u1": "상세·일정 화면",
+              "u2": "시연 검증"
+            }
+          },
+          "tasks": [
+            {
+              "task_id": "t0",
+              "owner_member_id": "u0",
+              "title": "메인 화면 초안",
+              "deliverable": "검토 가능한 담당 결과물",
+              "due_date": "2026-11-22",
+              "estimated_minutes": 30,
+              "completion_criteria": [
+                "결과를 재현·검토할 수 있음"
+              ]
+            },
+            {
+              "task_id": "t1",
+              "owner_member_id": "u1",
+              "title": "상세·일정 화면 초안",
+              "deliverable": "검토 가능한 담당 결과물",
+              "due_date": "2026-11-22",
+              "estimated_minutes": 30,
+              "completion_criteria": [
+                "결과를 재현·검토할 수 있음"
+              ]
+            },
+            {
+              "task_id": "t2",
+              "owner_member_id": "u2",
+              "title": "시연 검증 초안",
+              "deliverable": "검토 가능한 담당 결과물",
+              "due_date": "2026-11-22",
+              "estimated_minutes": 30,
+              "completion_criteria": [
+                "결과를 재현·검토할 수 있음"
+              ]
+            }
+          ],
+          "evidence_refs": [
+            "m0",
+            "m1",
+            "m2"
+          ]
+        },
+        "objections": [
+          "본래 범위와 담당은 유지하고 최종 마감일만 2026-11-26으로 연장해주세요."
+        ]
+      },
+      "expected": [
+        "확인된 사실과 제안 분리",
+        "역할·기간·개인 조건 반영",
+        "필요한 이유·대안 설명"
+      ],
+      "forbidden": [
+        "가짜 근거",
+        "개인 사유 공개",
+        "임의 승인",
+        "확정 조건 변경"
+      ],
+      "changed_condition": null
+    },
+    {
+      "id": "revise-2",
+      "stage": "REVISE",
+      "domain": "UI",
+      "holdout": false,
+      "pair": "revise-pair",
+      "request": {
+        "action": "REVISE",
+        "members": [
+          {
+            "member_id": "u0",
+            "nickname": "검증자1"
+          },
+          {
+            "member_id": "u1",
+            "nickname": "검증자2"
+          },
+          {
+            "member_id": "u2",
+            "nickname": "검증자3"
+          }
+        ],
+        "conversation": [
+          {
+            "message_id": "m0",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "공동 목표는 행사 안내 화면 3개 시연 준비야. 완료 기준은 메인·상세·일정 화면을 시연하고 오류2건 이상을 점검한다.",
+            "created_at": "2026-11-06T10:00:00+09:00"
+          },
+          {
+            "message_id": "m1",
+            "speaker_id": "u1",
+            "role": "user",
+            "text": "2026-11-09부터 2026-11-15까지 진행하자. 인증은 결과 기록으로 하고 완료 여부와 달성률만 공개하자.",
+            "created_at": "2026-11-06T10:01:00+09:00"
+          },
+          {
+            "message_id": "m2",
+            "speaker_id": "u2",
+            "role": "user",
+            "text": "역할은 검증자1=메인 화면, 검증자2=상세·일정 화면, 검증자3=시연 검증",
+            "created_at": "2026-11-06T10:02:00+09:00"
+          },
+          {
+            "message_id": "m3",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "화요일 체크인은 좋지만 시간은 미정이야. AI가 실행 방법2개와 포기할 점을 설명해주면 고르자.",
+            "created_at": "2026-11-06T10:03:00+09:00"
+          },
+          {
+            "message_id": "m4",
+            "speaker_id": "u1",
+            "role": "user",
+            "text": "좋아. 제안은 듣고 결정하자. 개인 시간과 제약은 개인 상담에서 이야기할게.",
+            "created_at": "2026-11-06T10:04:00+09:00"
+          }
+        ],
+        "reference_date": "2026-11-06",
+        "timezone": "Asia/Seoul",
+        "previous": {
+          "goal": {
+            "title": "행사 안내 화면 3개 시연 준비",
+            "start_date": "2026-11-09",
+            "end_date": "2026-11-15",
+            "completion_criteria": [
+              "메인·상세·일정 화면을 시연하고 오류2건 이상을 점검한다."
+            ],
+            "execution_method": "역할별로 준비 후 함께 검토",
+            "verification_method": "결과 기록",
+            "privacy_scope": "OBJECTIVE_ONLY",
+            "roles": {
+              "u0": "메인 화면",
+              "u1": "상세·일정 화면",
+              "u2": "시연 검증"
+            }
+          },
+          "tasks": [
+            {
+              "task_id": "t0",
+              "owner_member_id": "u0",
+              "title": "메인 화면 초안",
+              "deliverable": "검토 가능한 담당 결과물",
+              "due_date": "2026-11-15",
+              "estimated_minutes": 30,
+              "completion_criteria": [
+                "결과를 재현·검토할 수 있음"
+              ]
+            },
+            {
+              "task_id": "t1",
+              "owner_member_id": "u1",
+              "title": "상세·일정 화면 초안",
+              "deliverable": "검토 가능한 담당 결과물",
+              "due_date": "2026-11-15",
+              "estimated_minutes": 30,
+              "completion_criteria": [
+                "결과를 재현·검토할 수 있음"
+              ]
+            },
+            {
+              "task_id": "t2",
+              "owner_member_id": "u2",
+              "title": "시연 검증 초안",
+              "deliverable": "검토 가능한 담당 결과물",
+              "due_date": "2026-11-15",
+              "estimated_minutes": 30,
+              "completion_criteria": [
+                "결과를 재현·검토할 수 있음"
+              ]
+            }
+          ],
+          "evidence_refs": [
+            "m0",
+            "m1",
+            "m2"
+          ]
+        },
+        "objections": [
+          "본래 범위와 담당은 유지하고 최종 마감일만 2026-11-26으로 연장해주세요."
+        ]
+      },
+      "expected": [
+        "확인된 사실과 제안 분리",
+        "역할·기간·개인 조건 반영",
+        "필요한 이유·대안 설명"
+      ],
+      "forbidden": [
+        "가짜 근거",
+        "개인 사유 공개",
+        "임의 승인",
+        "확정 조건 변경"
+      ],
+      "changed_condition": "기간 단축"
+    },
+    {
+      "id": "revise-3",
+      "stage": "REVISE",
+      "domain": "STUDY",
+      "holdout": false,
+      "pair": null,
+      "request": {
+        "action": "REVISE",
+        "members": [
+          {
+            "member_id": "u0",
+            "nickname": "검증자1"
+          },
+          {
+            "member_id": "u1",
+            "nickname": "검증자2"
+          },
+          {
+            "member_id": "u2",
+            "nickname": "검증자3"
+          }
+        ],
+        "conversation": [
+          {
+            "message_id": "m0",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "공동 목표는 SQL 문제6개 학습야. 완료 기준은 SQL 문제6개를 풀고 오답 원인과 수정 쿼리를 기록한다.",
+            "created_at": "2026-11-06T10:00:00+09:00"
+          },
+          {
+            "message_id": "m1",
+            "speaker_id": "u1",
+            "role": "user",
+            "text": "2026-11-09부터 2026-11-22까지 진행하자. 인증은 결과 기록으로 하고 완료 여부와 달성률만 공개하자.",
+            "created_at": "2026-11-06T10:01:00+09:00"
+          },
+          {
+            "message_id": "m2",
+            "speaker_id": "u2",
+            "role": "user",
+            "text": "역할은 검증자1=문제 풀이, 검증자2=복습 기준, 검증자3=결과 검토",
+            "created_at": "2026-11-06T10:02:00+09:00"
+          },
+          {
+            "message_id": "m3",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "화요일 체크인은 좋지만 시간은 미정이야. AI가 실행 방법2개와 포기할 점을 설명해주면 고르자.",
+            "created_at": "2026-11-06T10:03:00+09:00"
+          },
+          {
+            "message_id": "m4",
+            "speaker_id": "u1",
+            "role": "user",
+            "text": "좋아. 제안은 듣고 결정하자. 개인 시간과 제약은 개인 상담에서 이야기할게.",
+            "created_at": "2026-11-06T10:04:00+09:00"
+          }
+        ],
+        "reference_date": "2026-11-06",
+        "timezone": "Asia/Seoul",
+        "previous": {
+          "goal": {
+            "title": "SQL 문제6개 학습",
+            "start_date": "2026-11-09",
+            "end_date": "2026-11-22",
+            "completion_criteria": [
+              "SQL 문제6개를 풀고 오답 원인과 수정 쿼리를 기록한다."
+            ],
+            "execution_method": "역할별로 준비 후 함께 검토",
+            "verification_method": "결과 기록",
+            "privacy_scope": "OBJECTIVE_ONLY",
+            "roles": {
+              "u0": "문제 풀이",
+              "u1": "복습 기준",
+              "u2": "결과 검토"
+            }
+          },
+          "tasks": [
+            {
+              "task_id": "t0",
+              "owner_member_id": "u0",
+              "title": "문제 풀이 초안",
+              "deliverable": "검토 가능한 담당 결과물",
+              "due_date": "2026-11-22",
+              "estimated_minutes": 30,
+              "completion_criteria": [
+                "결과를 재현·검토할 수 있음"
+              ]
+            },
+            {
+              "task_id": "t1",
+              "owner_member_id": "u1",
+              "title": "복습 기준 초안",
+              "deliverable": "검토 가능한 담당 결과물",
+              "due_date": "2026-11-22",
+              "estimated_minutes": 30,
+              "completion_criteria": [
+                "결과를 재현·검토할 수 있음"
+              ]
+            },
+            {
+              "task_id": "t2",
+              "owner_member_id": "u2",
+              "title": "결과 검토 초안",
+              "deliverable": "검토 가능한 담당 결과물",
+              "due_date": "2026-11-22",
+              "estimated_minutes": 30,
+              "completion_criteria": [
+                "결과를 재현·검토할 수 있음"
+              ]
+            }
+          ],
+          "evidence_refs": [
+            "m0",
+            "m1",
+            "m2"
+          ]
+        },
+        "objections": [
+          "본래 범위와 담당은 유지하고 최종 마감일만 2026-11-26으로 연장해주세요."
+        ]
+      },
+      "expected": [
+        "확인된 사실과 제안 분리",
+        "역할·기간·개인 조건 반영",
+        "필요한 이유·대안 설명"
+      ],
+      "forbidden": [
+        "가짜 근거",
+        "개인 사유 공개",
+        "임의 승인",
+        "확정 조건 변경"
+      ],
+      "changed_condition": null
+    },
+    {
+      "id": "revise-4",
+      "stage": "REVISE",
+      "domain": "HABIT",
+      "holdout": false,
+      "pair": null,
+      "request": {
+        "action": "REVISE",
+        "members": [
+          {
+            "member_id": "u0",
+            "nickname": "검증자1"
+          },
+          {
+            "member_id": "u1",
+            "nickname": "검증자2"
+          },
+          {
+            "member_id": "u2",
+            "nickname": "검증자3"
+          }
+        ],
+        "conversation": [
+          {
+            "message_id": "m0",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "공동 목표는 10분 걷기 습관야. 완료 기준은 각자 주2회 10분 걷기를 2주간 총4회 완료하고 기록한다.",
+            "created_at": "2026-11-06T10:00:00+09:00"
+          },
+          {
+            "message_id": "m1",
+            "speaker_id": "u1",
+            "role": "user",
+            "text": "2026-11-09부터 2026-11-22까지 진행하자. 인증은 결과 기록으로 하고 완료 여부와 달성률만 공개하자.",
+            "created_at": "2026-11-06T10:01:00+09:00"
+          },
+          {
+            "message_id": "m2",
+            "speaker_id": "u2",
+            "role": "user",
+            "text": "역할은 검증자1=본인 걷기 기록, 검증자2=본인 걷기 기록, 검증자3=본인 걷기 기록",
+            "created_at": "2026-11-06T10:02:00+09:00"
+          },
+          {
+            "message_id": "m3",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "화요일 체크인은 좋지만 시간은 미정이야. AI가 실행 방법2개와 포기할 점을 설명해주면 고르자.",
+            "created_at": "2026-11-06T10:03:00+09:00"
+          },
+          {
+            "message_id": "m4",
+            "speaker_id": "u1",
+            "role": "user",
+            "text": "좋아. 제안은 듣고 결정하자. 개인 시간과 제약은 개인 상담에서 이야기할게.",
+            "created_at": "2026-11-06T10:04:00+09:00"
+          }
+        ],
+        "reference_date": "2026-11-06",
+        "timezone": "Asia/Seoul",
+        "previous": {
+          "goal": {
+            "title": "10분 걷기 습관",
+            "start_date": "2026-11-09",
+            "end_date": "2026-11-22",
+            "completion_criteria": [
+              "각자 주2회 10분 걷기를 2주간 총4회 완료하고 기록한다."
+            ],
+            "execution_method": "역할별로 준비 후 함께 검토",
+            "verification_method": "결과 기록",
+            "privacy_scope": "OBJECTIVE_ONLY",
+            "roles": {
+              "u0": "본인 걷기 기록",
+              "u1": "본인 걷기 기록",
+              "u2": "본인 걷기 기록"
+            }
+          },
+          "tasks": [
+            {
+              "task_id": "t0",
+              "owner_member_id": "u0",
+              "title": "본인 걷기 기록 초안",
+              "deliverable": "검토 가능한 담당 결과물",
+              "due_date": "2026-11-22",
+              "estimated_minutes": 30,
+              "completion_criteria": [
+                "결과를 재현·검토할 수 있음"
+              ]
+            },
+            {
+              "task_id": "t1",
+              "owner_member_id": "u1",
+              "title": "본인 걷기 기록 초안",
+              "deliverable": "검토 가능한 담당 결과물",
+              "due_date": "2026-11-22",
+              "estimated_minutes": 30,
+              "completion_criteria": [
+                "결과를 재현·검토할 수 있음"
+              ]
+            },
+            {
+              "task_id": "t2",
+              "owner_member_id": "u2",
+              "title": "본인 걷기 기록 초안",
+              "deliverable": "검토 가능한 담당 결과물",
+              "due_date": "2026-11-22",
+              "estimated_minutes": 30,
+              "completion_criteria": [
+                "결과를 재현·검토할 수 있음"
+              ]
+            }
+          ],
+          "evidence_refs": [
+            "m0",
+            "m1",
+            "m2"
+          ]
+        },
+        "objections": [
+          "본래 범위와 담당은 유지하고 최종 마감일만 2026-11-26으로 연장해주세요."
+        ]
+      },
+      "expected": [
+        "확인된 사실과 제안 분리",
+        "역할·기간·개인 조건 반영",
+        "필요한 이유·대안 설명"
+      ],
+      "forbidden": [
+        "가짜 근거",
+        "개인 사유 공개",
+        "임의 승인",
+        "확정 조건 변경"
+      ],
+      "changed_condition": null
+    },
+    {
+      "id": "revise-5",
+      "stage": "REVISE",
+      "domain": "CREATIVE",
+      "holdout": false,
+      "pair": null,
+      "request": {
+        "action": "REVISE",
+        "members": [
+          {
+            "member_id": "u0",
+            "nickname": "검증자1"
+          },
+          {
+            "member_id": "u1",
+            "nickname": "검증자2"
+          },
+          {
+            "member_id": "u2",
+            "nickname": "검증자3"
+          }
+        ],
+        "conversation": [
+          {
+            "message_id": "m0",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "공동 목표는 동아리 소개 영상 기획야. 완료 기준은 60초 소개 영상의 장면 구성·촬영 목록·편집 검토를 완성한다.",
+            "created_at": "2026-11-06T10:00:00+09:00"
+          },
+          {
+            "message_id": "m1",
+            "speaker_id": "u1",
+            "role": "user",
+            "text": "2026-11-09부터 2026-11-22까지 진행하자. 인증은 결과 기록으로 하고 완료 여부와 달성률만 공개하자.",
+            "created_at": "2026-11-06T10:01:00+09:00"
+          },
+          {
+            "message_id": "m2",
+            "speaker_id": "u2",
+            "role": "user",
+            "text": "역할은 검증자1=구성안, 검증자2=촬영 목록, 검증자3=편집 검토",
+            "created_at": "2026-11-06T10:02:00+09:00"
+          },
+          {
+            "message_id": "m3",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "화요일 체크인은 좋지만 시간은 미정이야. AI가 실행 방법2개와 포기할 점을 설명해주면 고르자.",
+            "created_at": "2026-11-06T10:03:00+09:00"
+          },
+          {
+            "message_id": "m4",
+            "speaker_id": "u1",
+            "role": "user",
+            "text": "좋아. 제안은 듣고 결정하자. 개인 시간과 제약은 개인 상담에서 이야기할게.",
+            "created_at": "2026-11-06T10:04:00+09:00"
+          }
+        ],
+        "reference_date": "2026-11-06",
+        "timezone": "Asia/Seoul",
+        "previous": {
+          "goal": {
+            "title": "동아리 소개 영상 기획",
+            "start_date": "2026-11-09",
+            "end_date": "2026-11-22",
+            "completion_criteria": [
+              "60초 소개 영상의 장면 구성·촬영 목록·편집 검토를 완성한다."
+            ],
+            "execution_method": "역할별로 준비 후 함께 검토",
+            "verification_method": "결과 기록",
+            "privacy_scope": "OBJECTIVE_ONLY",
+            "roles": {
+              "u0": "구성안",
+              "u1": "촬영 목록",
+              "u2": "편집 검토"
+            }
+          },
+          "tasks": [
+            {
+              "task_id": "t0",
+              "owner_member_id": "u0",
+              "title": "구성안 초안",
+              "deliverable": "검토 가능한 담당 결과물",
+              "due_date": "2026-11-22",
+              "estimated_minutes": 30,
+              "completion_criteria": [
+                "결과를 재현·검토할 수 있음"
+              ]
+            },
+            {
+              "task_id": "t1",
+              "owner_member_id": "u1",
+              "title": "촬영 목록 초안",
+              "deliverable": "검토 가능한 담당 결과물",
+              "due_date": "2026-11-22",
+              "estimated_minutes": 30,
+              "completion_criteria": [
+                "결과를 재현·검토할 수 있음"
+              ]
+            },
+            {
+              "task_id": "t2",
+              "owner_member_id": "u2",
+              "title": "편집 검토 초안",
+              "deliverable": "검토 가능한 담당 결과물",
+              "due_date": "2026-11-22",
+              "estimated_minutes": 30,
+              "completion_criteria": [
+                "결과를 재현·검토할 수 있음"
+              ]
+            }
+          ],
+          "evidence_refs": [
+            "m0",
+            "m1",
+            "m2"
+          ]
+        },
+        "objections": [
+          "본래 범위와 담당은 유지하고 최종 마감일만 2026-11-26으로 연장해주세요."
+        ]
+      },
+      "expected": [
+        "확인된 사실과 제안 분리",
+        "역할·기간·개인 조건 반영",
+        "필요한 이유·대안 설명"
+      ],
+      "forbidden": [
+        "가짜 근거",
+        "개인 사유 공개",
+        "임의 승인",
+        "확정 조건 변경"
+      ],
+      "changed_condition": null
+    },
+    {
+      "id": "talk-1",
+      "stage": "TALK",
+      "domain": "UI",
+      "holdout": false,
+      "pair": "talk-pair",
+      "request": {
+        "action": "TALK",
+        "goal": {
+          "title": "행사 안내 화면 3개 시연 준비",
+          "start_date": "2026-11-09",
+          "end_date": "2026-11-22",
+          "completion_criteria": [
+            "메인·상세·일정 화면을 시연하고 오류2건 이상을 점검한다."
+          ],
+          "execution_method": "역할별로 준비 후 함께 검토",
+          "verification_method": "결과 기록",
+          "privacy_scope": "OBJECTIVE_ONLY",
+          "roles": {
+            "u0": "메인 화면",
+            "u1": "상세·일정 화면",
+            "u2": "시연 검증"
+          }
+        },
+        "owner_member_id": "u0",
+        "conversation": [
+          {
+            "message_id": "p0",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "담당은 메인 화면이고 처음 해보며 주60분 가능해요. 아직 시작 전이고 사용할 도구는 알아보는 중이에요. 무엇부터 구체화하면 좋나요?",
+            "created_at": "2026-11-06T11:00:00+09:00"
+          }
+        ],
+        "state": {},
+        "reference_date": "2026-11-06"
+      },
+      "expected": [
+        "확인된 사실과 제안 분리",
+        "역할·기간·개인 조건 반영",
+        "필요한 이유·대안 설명"
+      ],
+      "forbidden": [
+        "가짜 근거",
+        "개인 사유 공개",
+        "임의 승인",
+        "확정 조건 변경"
+      ],
+      "changed_condition": null
+    },
+    {
+      "id": "talk-2",
+      "stage": "TALK",
+      "domain": "UI",
+      "holdout": false,
+      "pair": "talk-pair",
+      "request": {
+        "action": "TALK",
+        "goal": {
+          "title": "행사 안내 화면 3개 시연 준비",
+          "start_date": "2026-11-09",
+          "end_date": "2026-11-22",
+          "completion_criteria": [
+            "메인·상세·일정 화면을 시연하고 오류2건 이상을 점검한다."
+          ],
+          "execution_method": "역할별로 준비 후 함께 검토",
+          "verification_method": "결과 기록",
+          "privacy_scope": "OBJECTIVE_ONLY",
+          "roles": {
+            "u0": "메인 화면",
+            "u1": "상세·일정 화면",
+            "u2": "시연 검증"
+          }
+        },
+        "owner_member_id": "u0",
+        "conversation": [
+          {
+            "message_id": "p0",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "담당은 메인 화면이고 비슷한 작업을 해봤고 주300분 가능해요. 아직 시작 전이고 사용할 도구는 알아보는 중이에요. 무엇부터 구체화하면 좋나요?",
+            "created_at": "2026-11-06T11:00:00+09:00"
+          }
+        ],
+        "state": {},
+        "reference_date": "2026-11-06"
+      },
+      "expected": [
+        "확인된 사실과 제안 분리",
+        "역할·기간·개인 조건 반영",
+        "필요한 이유·대안 설명"
+      ],
+      "forbidden": [
+        "가짜 근거",
+        "개인 사유 공개",
+        "임의 승인",
+        "확정 조건 변경"
+      ],
+      "changed_condition": "경험·가능 시간 증가"
+    },
+    {
+      "id": "talk-3",
+      "stage": "TALK",
+      "domain": "STUDY",
+      "holdout": false,
+      "pair": null,
+      "request": {
+        "action": "TALK",
+        "goal": {
+          "title": "SQL 문제6개 학습",
+          "start_date": "2026-11-09",
+          "end_date": "2026-11-22",
+          "completion_criteria": [
+            "SQL 문제6개를 풀고 오답 원인과 수정 쿼리를 기록한다."
+          ],
+          "execution_method": "역할별로 준비 후 함께 검토",
+          "verification_method": "결과 기록",
+          "privacy_scope": "OBJECTIVE_ONLY",
+          "roles": {
+            "u0": "문제 풀이",
+            "u1": "복습 기준",
+            "u2": "결과 검토"
+          }
+        },
+        "owner_member_id": "u0",
+        "conversation": [
+          {
+            "message_id": "p0",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "담당은 문제 풀이이고 처음 해보며 주60분 가능해요. 아직 시작 전이고 사용할 도구는 알아보는 중이에요. 무엇부터 구체화하면 좋나요?",
+            "created_at": "2026-11-06T11:00:00+09:00"
+          }
+        ],
+        "state": {},
+        "reference_date": "2026-11-06"
+      },
+      "expected": [
+        "확인된 사실과 제안 분리",
+        "역할·기간·개인 조건 반영",
+        "필요한 이유·대안 설명"
+      ],
+      "forbidden": [
+        "가짜 근거",
+        "개인 사유 공개",
+        "임의 승인",
+        "확정 조건 변경"
+      ],
+      "changed_condition": null
+    },
+    {
+      "id": "talk-4",
+      "stage": "TALK",
+      "domain": "HABIT",
+      "holdout": false,
+      "pair": null,
+      "request": {
+        "action": "TALK",
+        "goal": {
+          "title": "10분 걷기 습관",
+          "start_date": "2026-11-09",
+          "end_date": "2026-11-22",
+          "completion_criteria": [
+            "각자 주2회 10분 걷기를 2주간 총4회 완료하고 기록한다."
+          ],
+          "execution_method": "역할별로 준비 후 함께 검토",
+          "verification_method": "결과 기록",
+          "privacy_scope": "OBJECTIVE_ONLY",
+          "roles": {
+            "u0": "본인 걷기 기록",
+            "u1": "본인 걷기 기록",
+            "u2": "본인 걷기 기록"
+          }
+        },
+        "owner_member_id": "u0",
+        "conversation": [
+          {
+            "message_id": "p0",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "담당은 본인 걷기 기록이고 처음 해보며 주60분 가능해요. 아직 시작 전이고 사용할 도구는 알아보는 중이에요. 무엇부터 구체화하면 좋나요?",
+            "created_at": "2026-11-06T11:00:00+09:00"
+          }
+        ],
+        "state": {},
+        "reference_date": "2026-11-06"
+      },
+      "expected": [
+        "확인된 사실과 제안 분리",
+        "역할·기간·개인 조건 반영",
+        "필요한 이유·대안 설명"
+      ],
+      "forbidden": [
+        "가짜 근거",
+        "개인 사유 공개",
+        "임의 승인",
+        "확정 조건 변경"
+      ],
+      "changed_condition": null
+    },
+    {
+      "id": "talk-5",
+      "stage": "TALK",
+      "domain": "CREATIVE",
+      "holdout": false,
+      "pair": null,
+      "request": {
+        "action": "TALK",
+        "goal": {
+          "title": "동아리 소개 영상 기획",
+          "start_date": "2026-11-09",
+          "end_date": "2026-11-22",
+          "completion_criteria": [
+            "60초 소개 영상의 장면 구성·촬영 목록·편집 검토를 완성한다."
+          ],
+          "execution_method": "역할별로 준비 후 함께 검토",
+          "verification_method": "결과 기록",
+          "privacy_scope": "OBJECTIVE_ONLY",
+          "roles": {
+            "u0": "구성안",
+            "u1": "촬영 목록",
+            "u2": "편집 검토"
+          }
+        },
+        "owner_member_id": "u0",
+        "conversation": [
+          {
+            "message_id": "p0",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "담당은 구성안이고 처음 해보며 주60분 가능해요. 아직 시작 전이고 사용할 도구는 알아보는 중이에요. 무엇부터 구체화하면 좋나요?",
+            "created_at": "2026-11-06T11:00:00+09:00"
+          }
+        ],
+        "state": {},
+        "reference_date": "2026-11-06"
+      },
+      "expected": [
+        "확인된 사실과 제안 분리",
+        "역할·기간·개인 조건 반영",
+        "필요한 이유·대안 설명"
+      ],
+      "forbidden": [
+        "가짜 근거",
+        "개인 사유 공개",
+        "임의 승인",
+        "확정 조건 변경"
+      ],
+      "changed_condition": null
+    },
+    {
+      "id": "plan-1",
+      "stage": "PLAN",
+      "domain": "UI",
+      "holdout": false,
+      "pair": "plan-pair",
+      "request": {
+        "action": "PLAN",
+        "goal": {
+          "title": "행사 안내 화면 3개 시연 준비",
+          "start_date": "2026-11-09",
+          "end_date": "2026-11-22",
+          "completion_criteria": [
+            "메인·상세·일정 화면을 시연하고 오류2건 이상을 점검한다."
+          ],
+          "execution_method": "역할별로 준비 후 함께 검토",
+          "verification_method": "결과 기록",
+          "privacy_scope": "OBJECTIVE_ONLY",
+          "roles": {
+            "u0": "메인 화면",
+            "u1": "상세·일정 화면",
+            "u2": "시연 검증"
+          }
+        },
+        "owner_member_id": "u0",
+        "conversation": [
+          {
+            "message_id": "p0",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "처음 해봄",
+            "created_at": "2026-11-06T11:00:00+09:00"
+          },
+          {
+            "message_id": "p1",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "60",
+            "created_at": "2026-11-06T11:00:00+09:00"
+          },
+          {
+            "message_id": "p2",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "메인 화면의 담당 결과물",
+            "created_at": "2026-11-06T11:00:00+09:00"
+          },
+          {
+            "message_id": "p3",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "['주말']",
+            "created_at": "2026-11-06T11:00:00+09:00"
+          },
+          {
+            "message_id": "p4",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "[]",
+            "created_at": "2026-11-06T11:00:00+09:00"
+          }
+        ],
+        "state": {
+          "fields": {
+            "level": {
+              "value": "처음 해봄",
+              "status": "KNOWN",
+              "evidence_refs": [
+                "p0"
+              ]
+            },
+            "weekly_minutes": {
+              "value": 60,
+              "status": "KNOWN",
+              "evidence_refs": [
+                "p1"
+              ]
+            },
+            "scope": {
+              "value": "메인 화면의 담당 결과물",
+              "status": "KNOWN",
+              "evidence_refs": [
+                "p2"
+              ]
+            },
+            "preferred_times": {
+              "value": [
+                "주말"
+              ],
+              "status": "KNOWN",
+              "evidence_refs": [
+                "p3"
+              ]
+            },
+            "constraints": {
+              "value": [],
+              "status": "KNOWN",
+              "evidence_refs": [
+                "p4"
+              ]
+            }
+          }
+        },
+        "reference_date": "2026-11-06"
+      },
+      "expected": [
+        "확인된 사실과 제안 분리",
+        "역할·기간·개인 조건 반영",
+        "필요한 이유·대안 설명"
+      ],
+      "forbidden": [
+        "가짜 근거",
+        "개인 사유 공개",
+        "임의 승인",
+        "확정 조건 변경"
+      ],
+      "changed_condition": null
+    },
+    {
+      "id": "plan-2",
+      "stage": "PLAN",
+      "domain": "UI",
+      "holdout": false,
+      "pair": "plan-pair",
+      "request": {
+        "action": "PLAN",
+        "goal": {
+          "title": "행사 안내 화면 3개 시연 준비",
+          "start_date": "2026-11-09",
+          "end_date": "2026-11-22",
+          "completion_criteria": [
+            "메인·상세·일정 화면을 시연하고 오류2건 이상을 점검한다."
+          ],
+          "execution_method": "역할별로 준비 후 함께 검토",
+          "verification_method": "결과 기록",
+          "privacy_scope": "OBJECTIVE_ONLY",
+          "roles": {
+            "u0": "메인 화면",
+            "u1": "상세·일정 화면",
+            "u2": "시연 검증"
+          }
+        },
+        "owner_member_id": "u0",
+        "conversation": [
+          {
+            "message_id": "p0",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "유사 활동을 독립 수행한 경험 있음",
+            "created_at": "2026-11-06T11:00:00+09:00"
+          },
+          {
+            "message_id": "p1",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "300",
+            "created_at": "2026-11-06T11:00:00+09:00"
+          },
+          {
+            "message_id": "p2",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "메인 화면의 담당 결과물",
+            "created_at": "2026-11-06T11:00:00+09:00"
+          },
+          {
+            "message_id": "p3",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "['주말']",
+            "created_at": "2026-11-06T11:00:00+09:00"
+          },
+          {
+            "message_id": "p4",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "[]",
+            "created_at": "2026-11-06T11:00:00+09:00"
+          }
+        ],
+        "state": {
+          "fields": {
+            "level": {
+              "value": "유사 활동을 독립 수행한 경험 있음",
+              "status": "KNOWN",
+              "evidence_refs": [
+                "p0"
+              ]
+            },
+            "weekly_minutes": {
+              "value": 300,
+              "status": "KNOWN",
+              "evidence_refs": [
+                "p1"
+              ]
+            },
+            "scope": {
+              "value": "메인 화면의 담당 결과물",
+              "status": "KNOWN",
+              "evidence_refs": [
+                "p2"
+              ]
+            },
+            "preferred_times": {
+              "value": [
+                "주말"
+              ],
+              "status": "KNOWN",
+              "evidence_refs": [
+                "p3"
+              ]
+            },
+            "constraints": {
+              "value": [],
+              "status": "KNOWN",
+              "evidence_refs": [
+                "p4"
+              ]
+            }
+          }
+        },
+        "reference_date": "2026-11-06"
+      },
+      "expected": [
+        "확인된 사실과 제안 분리",
+        "역할·기간·개인 조건 반영",
+        "필요한 이유·대안 설명"
+      ],
+      "forbidden": [
+        "가짜 근거",
+        "개인 사유 공개",
+        "임의 승인",
+        "확정 조건 변경"
+      ],
+      "changed_condition": "경험·가능 시간 증가"
+    },
+    {
+      "id": "plan-3",
+      "stage": "PLAN",
+      "domain": "STUDY",
+      "holdout": false,
+      "pair": null,
+      "request": {
+        "action": "PLAN",
+        "goal": {
+          "title": "SQL 문제6개 학습",
+          "start_date": "2026-11-09",
+          "end_date": "2026-11-22",
+          "completion_criteria": [
+            "SQL 문제6개를 풀고 오답 원인과 수정 쿼리를 기록한다."
+          ],
+          "execution_method": "역할별로 준비 후 함께 검토",
+          "verification_method": "결과 기록",
+          "privacy_scope": "OBJECTIVE_ONLY",
+          "roles": {
+            "u0": "문제 풀이",
+            "u1": "복습 기준",
+            "u2": "결과 검토"
+          }
+        },
+        "owner_member_id": "u0",
+        "conversation": [
+          {
+            "message_id": "p0",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "처음 해봄",
+            "created_at": "2026-11-06T11:00:00+09:00"
+          },
+          {
+            "message_id": "p1",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "60",
+            "created_at": "2026-11-06T11:00:00+09:00"
+          },
+          {
+            "message_id": "p2",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "문제 풀이의 담당 결과물",
+            "created_at": "2026-11-06T11:00:00+09:00"
+          },
+          {
+            "message_id": "p3",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "['주말']",
+            "created_at": "2026-11-06T11:00:00+09:00"
+          },
+          {
+            "message_id": "p4",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "[]",
+            "created_at": "2026-11-06T11:00:00+09:00"
+          }
+        ],
+        "state": {
+          "fields": {
+            "level": {
+              "value": "처음 해봄",
+              "status": "KNOWN",
+              "evidence_refs": [
+                "p0"
+              ]
+            },
+            "weekly_minutes": {
+              "value": 60,
+              "status": "KNOWN",
+              "evidence_refs": [
+                "p1"
+              ]
+            },
+            "scope": {
+              "value": "문제 풀이의 담당 결과물",
+              "status": "KNOWN",
+              "evidence_refs": [
+                "p2"
+              ]
+            },
+            "preferred_times": {
+              "value": [
+                "주말"
+              ],
+              "status": "KNOWN",
+              "evidence_refs": [
+                "p3"
+              ]
+            },
+            "constraints": {
+              "value": [],
+              "status": "KNOWN",
+              "evidence_refs": [
+                "p4"
+              ]
+            }
+          }
+        },
+        "reference_date": "2026-11-06"
+      },
+      "expected": [
+        "확인된 사실과 제안 분리",
+        "역할·기간·개인 조건 반영",
+        "필요한 이유·대안 설명"
+      ],
+      "forbidden": [
+        "가짜 근거",
+        "개인 사유 공개",
+        "임의 승인",
+        "확정 조건 변경"
+      ],
+      "changed_condition": null
+    },
+    {
+      "id": "plan-4",
+      "stage": "PLAN",
+      "domain": "HABIT",
+      "holdout": false,
+      "pair": null,
+      "request": {
+        "action": "PLAN",
+        "goal": {
+          "title": "10분 걷기 습관",
+          "start_date": "2026-11-09",
+          "end_date": "2026-11-22",
+          "completion_criteria": [
+            "각자 주2회 10분 걷기를 2주간 총4회 완료하고 기록한다."
+          ],
+          "execution_method": "역할별로 준비 후 함께 검토",
+          "verification_method": "결과 기록",
+          "privacy_scope": "OBJECTIVE_ONLY",
+          "roles": {
+            "u0": "본인 걷기 기록",
+            "u1": "본인 걷기 기록",
+            "u2": "본인 걷기 기록"
+          }
+        },
+        "owner_member_id": "u0",
+        "conversation": [
+          {
+            "message_id": "p0",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "처음 해봄",
+            "created_at": "2026-11-06T11:00:00+09:00"
+          },
+          {
+            "message_id": "p1",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "60",
+            "created_at": "2026-11-06T11:00:00+09:00"
+          },
+          {
+            "message_id": "p2",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "본인 걷기 기록의 담당 결과물",
+            "created_at": "2026-11-06T11:00:00+09:00"
+          },
+          {
+            "message_id": "p3",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "['주말']",
+            "created_at": "2026-11-06T11:00:00+09:00"
+          },
+          {
+            "message_id": "p4",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "[]",
+            "created_at": "2026-11-06T11:00:00+09:00"
+          }
+        ],
+        "state": {
+          "fields": {
+            "level": {
+              "value": "처음 해봄",
+              "status": "KNOWN",
+              "evidence_refs": [
+                "p0"
+              ]
+            },
+            "weekly_minutes": {
+              "value": 60,
+              "status": "KNOWN",
+              "evidence_refs": [
+                "p1"
+              ]
+            },
+            "scope": {
+              "value": "본인 걷기 기록의 담당 결과물",
+              "status": "KNOWN",
+              "evidence_refs": [
+                "p2"
+              ]
+            },
+            "preferred_times": {
+              "value": [
+                "주말"
+              ],
+              "status": "KNOWN",
+              "evidence_refs": [
+                "p3"
+              ]
+            },
+            "constraints": {
+              "value": [],
+              "status": "KNOWN",
+              "evidence_refs": [
+                "p4"
+              ]
+            }
+          }
+        },
+        "reference_date": "2026-11-06"
+      },
+      "expected": [
+        "확인된 사실과 제안 분리",
+        "역할·기간·개인 조건 반영",
+        "필요한 이유·대안 설명"
+      ],
+      "forbidden": [
+        "가짜 근거",
+        "개인 사유 공개",
+        "임의 승인",
+        "확정 조건 변경"
+      ],
+      "changed_condition": null
+    },
+    {
+      "id": "plan-5",
+      "stage": "PLAN",
+      "domain": "CREATIVE",
+      "holdout": false,
+      "pair": null,
+      "request": {
+        "action": "PLAN",
+        "goal": {
+          "title": "동아리 소개 영상 기획",
+          "start_date": "2026-11-09",
+          "end_date": "2026-11-22",
+          "completion_criteria": [
+            "60초 소개 영상의 장면 구성·촬영 목록·편집 검토를 완성한다."
+          ],
+          "execution_method": "역할별로 준비 후 함께 검토",
+          "verification_method": "결과 기록",
+          "privacy_scope": "OBJECTIVE_ONLY",
+          "roles": {
+            "u0": "구성안",
+            "u1": "촬영 목록",
+            "u2": "편집 검토"
+          }
+        },
+        "owner_member_id": "u0",
+        "conversation": [
+          {
+            "message_id": "p0",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "처음 해봄",
+            "created_at": "2026-11-06T11:00:00+09:00"
+          },
+          {
+            "message_id": "p1",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "60",
+            "created_at": "2026-11-06T11:00:00+09:00"
+          },
+          {
+            "message_id": "p2",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "구성안의 담당 결과물",
+            "created_at": "2026-11-06T11:00:00+09:00"
+          },
+          {
+            "message_id": "p3",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "['주말']",
+            "created_at": "2026-11-06T11:00:00+09:00"
+          },
+          {
+            "message_id": "p4",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "[]",
+            "created_at": "2026-11-06T11:00:00+09:00"
+          }
+        ],
+        "state": {
+          "fields": {
+            "level": {
+              "value": "처음 해봄",
+              "status": "KNOWN",
+              "evidence_refs": [
+                "p0"
+              ]
+            },
+            "weekly_minutes": {
+              "value": 60,
+              "status": "KNOWN",
+              "evidence_refs": [
+                "p1"
+              ]
+            },
+            "scope": {
+              "value": "구성안의 담당 결과물",
+              "status": "KNOWN",
+              "evidence_refs": [
+                "p2"
+              ]
+            },
+            "preferred_times": {
+              "value": [
+                "주말"
+              ],
+              "status": "KNOWN",
+              "evidence_refs": [
+                "p3"
+              ]
+            },
+            "constraints": {
+              "value": [],
+              "status": "KNOWN",
+              "evidence_refs": [
+                "p4"
+              ]
+            }
+          }
+        },
+        "reference_date": "2026-11-06"
+      },
+      "expected": [
+        "확인된 사실과 제안 분리",
+        "역할·기간·개인 조건 반영",
+        "필요한 이유·대안 설명"
+      ],
+      "forbidden": [
+        "가짜 근거",
+        "개인 사유 공개",
+        "임의 승인",
+        "확정 조건 변경"
+      ],
+      "changed_condition": null
+    },
+    {
+      "id": "e2e-1",
+      "stage": "E2E",
+      "domain": "UI",
+      "holdout": false,
+      "pair": "e2e-pair",
+      "request": {
+        "action": "PROPOSE",
+        "members": [
+          {
+            "member_id": "u0",
+            "nickname": "검증자1"
+          }
+        ],
+        "conversation": [
+          {
+            "message_id": "m0",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "공동 목표는 행사 안내 화면 3개 시연 준비야. 완료 기준은 메인·상세·일정 화면을 시연하고 오류2건 이상을 점검한다.",
+            "created_at": "2026-11-06T10:00:00+09:00"
+          },
+          {
+            "message_id": "m1",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "2026-11-09부터 2026-11-22까지 진행하자. 인증은 결과 기록으로 하고 완료 여부와 달성률만 공개하자.",
+            "created_at": "2026-11-06T10:01:00+09:00"
+          },
+          {
+            "message_id": "m2",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "역할은 검증자1=메인 화면",
+            "created_at": "2026-11-06T10:02:00+09:00"
+          },
+          {
+            "message_id": "m3",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "화요일 체크인은 좋지만 시간은 미정이야. AI가 실행 방법2개와 포기할 점을 설명해주면 고르자.",
+            "created_at": "2026-11-06T10:03:00+09:00"
+          },
+          {
+            "message_id": "m4",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "좋아. 제안은 듣고 결정하자. 개인 시간과 제약은 개인 상담에서 이야기할게.",
+            "created_at": "2026-11-06T10:04:00+09:00"
+          }
+        ],
+        "reference_date": "2026-11-06",
+        "timezone": "Asia/Seoul"
+      },
+      "expected": [
+        "확인된 사실과 제안 분리",
+        "역할·기간·개인 조건 반영",
+        "필요한 이유·대안 설명"
+      ],
+      "forbidden": [
+        "가짜 근거",
+        "개인 사유 공개",
+        "임의 승인",
+        "확정 조건 변경"
+      ],
+      "changed_condition": null,
+      "confirmed_fields": {
+        "level": {
+          "value": "처음 해봄",
+          "status": "KNOWN"
+        },
+        "weekly_minutes": {
+          "value": 60,
+          "status": "KNOWN"
+        },
+        "scope": {
+          "value": "메인 화면의 담당 결과물",
+          "status": "KNOWN"
+        },
+        "preferred_times": {
+          "value": [
+            "주말"
+          ],
+          "status": "KNOWN"
+        },
+        "constraints": {
+          "value": [],
+          "status": "KNOWN"
+        }
+      }
+    },
+    {
+      "id": "e2e-2",
+      "stage": "E2E",
+      "domain": "UI",
+      "holdout": false,
+      "pair": "e2e-pair",
+      "request": {
+        "action": "PROPOSE",
+        "members": [
+          {
+            "member_id": "u0",
+            "nickname": "검증자1"
+          },
+          {
+            "member_id": "u1",
+            "nickname": "검증자2"
+          },
+          {
+            "member_id": "u2",
+            "nickname": "검증자3"
+          }
+        ],
+        "conversation": [
+          {
+            "message_id": "m0",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "공동 목표는 행사 안내 화면 3개 시연 준비야. 완료 기준은 메인·상세·일정 화면을 시연하고 오류2건 이상을 점검한다.",
+            "created_at": "2026-11-06T10:00:00+09:00"
+          },
+          {
+            "message_id": "m1",
+            "speaker_id": "u1",
+            "role": "user",
+            "text": "2026-11-09부터 2026-11-22까지 진행하자. 인증은 결과 기록으로 하고 완료 여부와 달성률만 공개하자.",
+            "created_at": "2026-11-06T10:01:00+09:00"
+          },
+          {
+            "message_id": "m2",
+            "speaker_id": "u2",
+            "role": "user",
+            "text": "역할은 검증자1=메인 화면, 검증자2=상세·일정 화면, 검증자3=시연 검증",
+            "created_at": "2026-11-06T10:02:00+09:00"
+          },
+          {
+            "message_id": "m3",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "화요일 체크인은 좋지만 시간은 미정이야. AI가 실행 방법2개와 포기할 점을 설명해주면 고르자.",
+            "created_at": "2026-11-06T10:03:00+09:00"
+          },
+          {
+            "message_id": "m4",
+            "speaker_id": "u1",
+            "role": "user",
+            "text": "좋아. 제안은 듣고 결정하자. 개인 시간과 제약은 개인 상담에서 이야기할게.",
+            "created_at": "2026-11-06T10:04:00+09:00"
+          }
+        ],
+        "reference_date": "2026-11-06",
+        "timezone": "Asia/Seoul"
+      },
+      "expected": [
+        "확인된 사실과 제안 분리",
+        "역할·기간·개인 조건 반영",
+        "필요한 이유·대안 설명"
+      ],
+      "forbidden": [
+        "가짜 근거",
+        "개인 사유 공개",
+        "임의 승인",
+        "확정 조건 변경"
+      ],
+      "changed_condition": "경험·가능 시간 증가",
+      "confirmed_fields": {
+        "level": {
+          "value": "유사 활동을 독립 수행한 경험 있음",
+          "status": "KNOWN"
+        },
+        "weekly_minutes": {
+          "value": 300,
+          "status": "KNOWN"
+        },
+        "scope": {
+          "value": "메인 화면의 담당 결과물",
+          "status": "KNOWN"
+        },
+        "preferred_times": {
+          "value": [
+            "주말"
+          ],
+          "status": "KNOWN"
+        },
+        "constraints": {
+          "value": [],
+          "status": "KNOWN"
+        }
+      }
+    },
+    {
+      "id": "e2e-3",
+      "stage": "E2E",
+      "domain": "STUDY",
+      "holdout": false,
+      "pair": null,
+      "request": {
+        "action": "PROPOSE",
+        "members": [
+          {
+            "member_id": "u0",
+            "nickname": "검증자1"
+          },
+          {
+            "member_id": "u1",
+            "nickname": "검증자2"
+          },
+          {
+            "member_id": "u2",
+            "nickname": "검증자3"
+          },
+          {
+            "member_id": "u3",
+            "nickname": "검증자4"
+          },
+          {
+            "member_id": "u4",
+            "nickname": "검증자5"
+          }
+        ],
+        "conversation": [
+          {
+            "message_id": "m0",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "공동 목표는 SQL 문제6개 학습야. 완료 기준은 SQL 문제6개를 풀고 오답 원인과 수정 쿼리를 기록한다.",
+            "created_at": "2026-11-06T10:00:00+09:00"
+          },
+          {
+            "message_id": "m1",
+            "speaker_id": "u1",
+            "role": "user",
+            "text": "2026-11-09부터 2026-11-22까지 진행하자. 인증은 결과 기록으로 하고 완료 여부와 달성률만 공개하자.",
+            "created_at": "2026-11-06T10:01:00+09:00"
+          },
+          {
+            "message_id": "m2",
+            "speaker_id": "u2",
+            "role": "user",
+            "text": "역할은 검증자1=문제 풀이, 검증자2=복습 기준, 검증자3=결과 검토, 검증자4=문제 풀이, 검증자5=복습 기준",
+            "created_at": "2026-11-06T10:02:00+09:00"
+          },
+          {
+            "message_id": "m3",
+            "speaker_id": "u3",
+            "role": "user",
+            "text": "화요일 체크인은 좋지만 시간은 미정이야. AI가 실행 방법2개와 포기할 점을 설명해주면 고르자.",
+            "created_at": "2026-11-06T10:03:00+09:00"
+          },
+          {
+            "message_id": "m4",
+            "speaker_id": "u4",
+            "role": "user",
+            "text": "좋아. 제안은 듣고 결정하자. 개인 시간과 제약은 개인 상담에서 이야기할게.",
+            "created_at": "2026-11-06T10:04:00+09:00"
+          }
+        ],
+        "reference_date": "2026-11-06",
+        "timezone": "Asia/Seoul"
+      },
+      "expected": [
+        "확인된 사실과 제안 분리",
+        "역할·기간·개인 조건 반영",
+        "필요한 이유·대안 설명"
+      ],
+      "forbidden": [
+        "가짜 근거",
+        "개인 사유 공개",
+        "임의 승인",
+        "확정 조건 변경"
+      ],
+      "changed_condition": null,
+      "confirmed_fields": {
+        "level": {
+          "value": "처음 해봄",
+          "status": "KNOWN"
+        },
+        "weekly_minutes": {
+          "value": 60,
+          "status": "KNOWN"
+        },
+        "scope": {
+          "value": "문제 풀이의 담당 결과물",
+          "status": "KNOWN"
+        },
+        "preferred_times": {
+          "value": [
+            "주말"
+          ],
+          "status": "KNOWN"
+        },
+        "constraints": {
+          "value": [],
+          "status": "KNOWN"
+        }
+      }
+    },
+    {
+      "id": "e2e-4",
+      "stage": "E2E",
+      "domain": "HABIT",
+      "holdout": false,
+      "pair": null,
+      "request": {
+        "action": "PROPOSE",
+        "members": [
+          {
+            "member_id": "u0",
+            "nickname": "검증자1"
+          },
+          {
+            "member_id": "u1",
+            "nickname": "검증자2"
+          },
+          {
+            "member_id": "u2",
+            "nickname": "검증자3"
+          },
+          {
+            "member_id": "u3",
+            "nickname": "검증자4"
+          },
+          {
+            "member_id": "u4",
+            "nickname": "검증자5"
+          },
+          {
+            "member_id": "u5",
+            "nickname": "검증자6"
+          },
+          {
+            "member_id": "u6",
+            "nickname": "검증자7"
+          },
+          {
+            "member_id": "u7",
+            "nickname": "검증자8"
+          }
+        ],
+        "conversation": [
+          {
+            "message_id": "m0",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "공동 목표는 10분 걷기 습관야. 완료 기준은 각자 주2회 10분 걷기를 2주간 총4회 완료하고 기록한다.",
+            "created_at": "2026-11-06T10:00:00+09:00"
+          },
+          {
+            "message_id": "m1",
+            "speaker_id": "u1",
+            "role": "user",
+            "text": "2026-11-09부터 2026-11-22까지 진행하자. 인증은 결과 기록으로 하고 완료 여부와 달성률만 공개하자.",
+            "created_at": "2026-11-06T10:01:00+09:00"
+          },
+          {
+            "message_id": "m2",
+            "speaker_id": "u2",
+            "role": "user",
+            "text": "역할은 검증자1=본인 걷기 기록, 검증자2=본인 걷기 기록, 검증자3=본인 걷기 기록, 검증자4=본인 걷기 기록, 검증자5=본인 걷기 기록, 검증자6=본인 걷기 기록, 검증자7=본인 걷기 기록, 검증자8=본인 걷기 기록",
+            "created_at": "2026-11-06T10:02:00+09:00"
+          },
+          {
+            "message_id": "m3",
+            "speaker_id": "u3",
+            "role": "user",
+            "text": "화요일 체크인은 좋지만 시간은 미정이야. AI가 실행 방법2개와 포기할 점을 설명해주면 고르자.",
+            "created_at": "2026-11-06T10:03:00+09:00"
+          },
+          {
+            "message_id": "m4",
+            "speaker_id": "u4",
+            "role": "user",
+            "text": "좋아. 제안은 듣고 결정하자. 개인 시간과 제약은 개인 상담에서 이야기할게.",
+            "created_at": "2026-11-06T10:04:00+09:00"
+          }
+        ],
+        "reference_date": "2026-11-06",
+        "timezone": "Asia/Seoul"
+      },
+      "expected": [
+        "확인된 사실과 제안 분리",
+        "역할·기간·개인 조건 반영",
+        "필요한 이유·대안 설명"
+      ],
+      "forbidden": [
+        "가짜 근거",
+        "개인 사유 공개",
+        "임의 승인",
+        "확정 조건 변경"
+      ],
+      "changed_condition": null,
+      "confirmed_fields": {
+        "level": {
+          "value": "처음 해봄",
+          "status": "KNOWN"
+        },
+        "weekly_minutes": {
+          "value": 60,
+          "status": "KNOWN"
+        },
+        "scope": {
+          "value": "본인 걷기 기록의 담당 결과물",
+          "status": "KNOWN"
+        },
+        "preferred_times": {
+          "value": [
+            "주말"
+          ],
+          "status": "KNOWN"
+        },
+        "constraints": {
+          "value": [],
+          "status": "KNOWN"
+        }
+      }
+    },
+    {
+      "id": "e2e-5",
+      "stage": "E2E",
+      "domain": "CREATIVE",
+      "holdout": false,
+      "pair": null,
+      "request": {
+        "action": "PROPOSE",
+        "members": [
+          {
+            "member_id": "u0",
+            "nickname": "검증자1"
+          },
+          {
+            "member_id": "u1",
+            "nickname": "검증자2"
+          },
+          {
+            "member_id": "u2",
+            "nickname": "검증자3"
+          }
+        ],
+        "conversation": [
+          {
+            "message_id": "m0",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "공동 목표는 동아리 소개 영상 기획야. 완료 기준은 60초 소개 영상의 장면 구성·촬영 목록·편집 검토를 완성한다.",
+            "created_at": "2026-11-06T10:00:00+09:00"
+          },
+          {
+            "message_id": "m1",
+            "speaker_id": "u1",
+            "role": "user",
+            "text": "2026-11-09부터 2026-11-22까지 진행하자. 인증은 결과 기록으로 하고 완료 여부와 달성률만 공개하자.",
+            "created_at": "2026-11-06T10:01:00+09:00"
+          },
+          {
+            "message_id": "m2",
+            "speaker_id": "u2",
+            "role": "user",
+            "text": "역할은 검증자1=구성안, 검증자2=촬영 목록, 검증자3=편집 검토",
+            "created_at": "2026-11-06T10:02:00+09:00"
+          },
+          {
+            "message_id": "m3",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "화요일 체크인은 좋지만 시간은 미정이야. AI가 실행 방법2개와 포기할 점을 설명해주면 고르자.",
+            "created_at": "2026-11-06T10:03:00+09:00"
+          },
+          {
+            "message_id": "m4",
+            "speaker_id": "u1",
+            "role": "user",
+            "text": "좋아. 제안은 듣고 결정하자. 개인 시간과 제약은 개인 상담에서 이야기할게.",
+            "created_at": "2026-11-06T10:04:00+09:00"
+          }
+        ],
+        "reference_date": "2026-11-06",
+        "timezone": "Asia/Seoul"
+      },
+      "expected": [
+        "확인된 사실과 제안 분리",
+        "역할·기간·개인 조건 반영",
+        "필요한 이유·대안 설명"
+      ],
+      "forbidden": [
+        "가짜 근거",
+        "개인 사유 공개",
+        "임의 승인",
+        "확정 조건 변경"
+      ],
+      "changed_condition": null,
+      "confirmed_fields": {
+        "level": {
+          "value": "처음 해봄",
+          "status": "KNOWN"
+        },
+        "weekly_minutes": {
+          "value": 60,
+          "status": "KNOWN"
+        },
+        "scope": {
+          "value": "구성안의 담당 결과물",
+          "status": "KNOWN"
+        },
+        "preferred_times": {
+          "value": [
+            "주말"
+          ],
+          "status": "KNOWN"
+        },
+        "constraints": {
+          "value": [],
+          "status": "KNOWN"
+        }
+      }
+    },
+    {
+      "id": "holdout-1",
+      "stage": "COACH",
+      "domain": "STUDY-holdout",
+      "holdout": true,
+      "pair": null,
+      "request": {
+        "action": "COACH",
+        "members": [
+          {
+            "member_id": "u0",
+            "nickname": "검증자1"
+          },
+          {
+            "member_id": "u1",
+            "nickname": "검증자2"
+          },
+          {
+            "member_id": "u2",
+            "nickname": "검증자3"
+          }
+        ],
+        "conversation": [
+          {
+            "message_id": "m0",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "공동 목표는 SQL 문제6개 학습야. 완료 기준은 SQL 문제6개를 풀고 오답 원인과 수정 쿼리를 기록한다.",
+            "created_at": "2026-11-06T10:00:00+09:00"
+          },
+          {
+            "message_id": "m1",
+            "speaker_id": "u1",
+            "role": "user",
+            "text": "2026-11-09부터 2026-11-22까지 진행하자. 인증은 결과 기록으로 하고 완료 여부와 달성률만 공개하자.",
+            "created_at": "2026-11-06T10:01:00+09:00"
+          },
+          {
+            "message_id": "m2",
+            "speaker_id": "u2",
+            "role": "user",
+            "text": "역할은 검증자1=문제 풀이, 검증자2=복습 기준, 검증자3=결과 검토",
+            "created_at": "2026-11-06T10:02:00+09:00"
+          },
+          {
+            "message_id": "m3",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "화요일 체크인은 좋지만 시간은 미정이야. AI가 실행 방법2개와 포기할 점을 설명해주면 고르자.",
+            "created_at": "2026-11-06T10:03:00+09:00"
+          },
+          {
+            "message_id": "m4",
+            "speaker_id": "u1",
+            "role": "user",
+            "text": "좋아. 제안은 듣고 결정하자. 개인 시간과 제약은 개인 상담에서 이야기할게.",
+            "created_at": "2026-11-06T10:04:00+09:00"
+          },
+          {
+            "message_id": "holdout-change",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "기능을 늘리지 말고 시연에 필요한 최소 범위부터 정하자. 동의하지 않은 부분은 확정하지 마.",
+            "created_at": "2026-11-06T12:00:00+09:00"
+          }
+        ],
+        "reference_date": "2026-11-06",
+        "timezone": "Asia/Seoul"
+      },
+      "expected": [
+        "확인된 사실과 제안 분리",
+        "역할·기간·개인 조건 반영",
+        "필요한 이유·대안 설명",
+        "새 일정·수정·모호한 답변에 적응"
+      ],
+      "forbidden": [
+        "가짜 근거",
+        "개인 사유 공개",
+        "임의 승인",
+        "확정 조건 변경"
+      ],
+      "changed_condition": null
+    },
+    {
+      "id": "holdout-2",
+      "stage": "PROPOSE",
+      "domain": "UI-holdout",
+      "holdout": true,
+      "pair": null,
+      "request": {
+        "action": "PROPOSE",
+        "members": [
+          {
+            "member_id": "u0",
+            "nickname": "검증자1"
+          },
+          {
+            "member_id": "u1",
+            "nickname": "검증자2"
+          },
+          {
+            "member_id": "u2",
+            "nickname": "검증자3"
+          }
+        ],
+        "conversation": [
+          {
+            "message_id": "m0",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "공동 목표는 행사 안내 화면 3개 시연 준비야. 완료 기준은 메인·상세·일정 화면을 시연하고 오류2건 이상을 점검한다.",
+            "created_at": "2026-11-06T10:00:00+09:00"
+          },
+          {
+            "message_id": "m1",
+            "speaker_id": "u1",
+            "role": "user",
+            "text": "2026-11-09부터 2026-11-22까지 진행하자. 인증은 결과 기록으로 하고 완료 여부와 달성률만 공개하자.",
+            "created_at": "2026-11-06T10:01:00+09:00"
+          },
+          {
+            "message_id": "m2",
+            "speaker_id": "u2",
+            "role": "user",
+            "text": "역할은 검증자1=메인 화면, 검증자2=상세·일정 화면, 검증자3=시연 검증",
+            "created_at": "2026-11-06T10:02:00+09:00"
+          },
+          {
+            "message_id": "m3",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "화요일 체크인은 좋지만 시간은 미정이야. AI가 실행 방법2개와 포기할 점을 설명해주면 고르자.",
+            "created_at": "2026-11-06T10:03:00+09:00"
+          },
+          {
+            "message_id": "m4",
+            "speaker_id": "u1",
+            "role": "user",
+            "text": "좋아. 제안은 듣고 결정하자. 개인 시간과 제약은 개인 상담에서 이야기할게.",
+            "created_at": "2026-11-06T10:04:00+09:00"
+          },
+          {
+            "message_id": "holdout-change",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "기능을 늘리지 말고 시연에 필요한 최소 범위부터 정하자. 동의하지 않은 부분은 확정하지 마.",
+            "created_at": "2026-11-06T12:00:00+09:00"
+          }
+        ],
+        "reference_date": "2026-11-06",
+        "timezone": "Asia/Seoul"
+      },
+      "expected": [
+        "확인된 사실과 제안 분리",
+        "역할·기간·개인 조건 반영",
+        "필요한 이유·대안 설명",
+        "새 일정·수정·모호한 답변에 적응"
+      ],
+      "forbidden": [
+        "가짜 근거",
+        "개인 사유 공개",
+        "임의 승인",
+        "확정 조건 변경"
+      ],
+      "changed_condition": null
+    },
+    {
+      "id": "holdout-3",
+      "stage": "PROPOSE",
+      "domain": "HABIT-holdout",
+      "holdout": true,
+      "pair": null,
+      "request": {
+        "action": "PROPOSE",
+        "members": [
+          {
+            "member_id": "u0",
+            "nickname": "검증자1"
+          },
+          {
+            "member_id": "u1",
+            "nickname": "검증자2"
+          },
+          {
+            "member_id": "u2",
+            "nickname": "검증자3"
+          }
+        ],
+        "conversation": [
+          {
+            "message_id": "m0",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "공동 목표는 10분 걷기 습관야. 완료 기준은 각자 주2회 10분 걷기를 2주간 총4회 완료하고 기록한다.",
+            "created_at": "2026-11-06T10:00:00+09:00"
+          },
+          {
+            "message_id": "m1",
+            "speaker_id": "u1",
+            "role": "user",
+            "text": "2026-11-09부터 2026-11-22까지 진행하자. 인증은 결과 기록으로 하고 완료 여부와 달성률만 공개하자.",
+            "created_at": "2026-11-06T10:01:00+09:00"
+          },
+          {
+            "message_id": "m2",
+            "speaker_id": "u2",
+            "role": "user",
+            "text": "역할은 검증자1=본인 걷기 기록, 검증자2=본인 걷기 기록, 검증자3=본인 걷기 기록",
+            "created_at": "2026-11-06T10:02:00+09:00"
+          },
+          {
+            "message_id": "m3",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "화요일 체크인은 좋지만 시간은 미정이야. AI가 실행 방법2개와 포기할 점을 설명해주면 고르자.",
+            "created_at": "2026-11-06T10:03:00+09:00"
+          },
+          {
+            "message_id": "m4",
+            "speaker_id": "u1",
+            "role": "user",
+            "text": "좋아. 제안은 듣고 결정하자. 개인 시간과 제약은 개인 상담에서 이야기할게.",
+            "created_at": "2026-11-06T10:04:00+09:00"
+          },
+          {
+            "message_id": "holdout-change",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "기능을 늘리지 말고 시연에 필요한 최소 범위부터 정하자. 동의하지 않은 부분은 확정하지 마.",
+            "created_at": "2026-11-06T12:00:00+09:00"
+          }
+        ],
+        "reference_date": "2026-11-06",
+        "timezone": "Asia/Seoul"
+      },
+      "expected": [
+        "확인된 사실과 제안 분리",
+        "역할·기간·개인 조건 반영",
+        "필요한 이유·대안 설명",
+        "새 일정·수정·모호한 답변에 적응"
+      ],
+      "forbidden": [
+        "가짜 근거",
+        "개인 사유 공개",
+        "임의 승인",
+        "확정 조건 변경"
+      ],
+      "changed_condition": null
+    },
+    {
+      "id": "holdout-4",
+      "stage": "REVISE",
+      "domain": "UI-holdout",
+      "holdout": true,
+      "pair": null,
+      "request": {
+        "action": "REVISE",
+        "members": [
+          {
+            "member_id": "u0",
+            "nickname": "검증자1"
+          },
+          {
+            "member_id": "u1",
+            "nickname": "검증자2"
+          },
+          {
+            "member_id": "u2",
+            "nickname": "검증자3"
+          }
+        ],
+        "conversation": [
+          {
+            "message_id": "m0",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "공동 목표는 행사 안내 화면 3개 시연 준비야. 완료 기준은 메인·상세·일정 화면을 시연하고 오류2건 이상을 점검한다.",
+            "created_at": "2026-11-06T10:00:00+09:00"
+          },
+          {
+            "message_id": "m1",
+            "speaker_id": "u1",
+            "role": "user",
+            "text": "2026-11-09부터 2026-11-15까지 진행하자. 인증은 결과 기록으로 하고 완료 여부와 달성률만 공개하자.",
+            "created_at": "2026-11-06T10:01:00+09:00"
+          },
+          {
+            "message_id": "m2",
+            "speaker_id": "u2",
+            "role": "user",
+            "text": "역할은 검증자1=메인 화면, 검증자2=상세·일정 화면, 검증자3=시연 검증",
+            "created_at": "2026-11-06T10:02:00+09:00"
+          },
+          {
+            "message_id": "m3",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "화요일 체크인은 좋지만 시간은 미정이야. AI가 실행 방법2개와 포기할 점을 설명해주면 고르자.",
+            "created_at": "2026-11-06T10:03:00+09:00"
+          },
+          {
+            "message_id": "m4",
+            "speaker_id": "u1",
+            "role": "user",
+            "text": "좋아. 제안은 듣고 결정하자. 개인 시간과 제약은 개인 상담에서 이야기할게.",
+            "created_at": "2026-11-06T10:04:00+09:00"
+          },
+          {
+            "message_id": "holdout-change",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "기능을 늘리지 말고 시연에 필요한 최소 범위부터 정하자. 동의하지 않은 부분은 확정하지 마.",
+            "created_at": "2026-11-06T12:00:00+09:00"
+          }
+        ],
+        "reference_date": "2026-11-06",
+        "timezone": "Asia/Seoul",
+        "previous": {
+          "goal": {
+            "title": "행사 안내 화면 3개 시연 준비",
+            "start_date": "2026-11-09",
+            "end_date": "2026-11-15",
+            "completion_criteria": [
+              "메인·상세·일정 화면을 시연하고 오류2건 이상을 점검한다."
+            ],
+            "execution_method": "역할별로 준비 후 함께 검토",
+            "verification_method": "결과 기록",
+            "privacy_scope": "OBJECTIVE_ONLY",
+            "roles": {
+              "u0": "메인 화면",
+              "u1": "상세·일정 화면",
+              "u2": "시연 검증"
+            }
+          },
+          "tasks": [
+            {
+              "task_id": "t0",
+              "owner_member_id": "u0",
+              "title": "메인 화면 초안",
+              "deliverable": "검토 가능한 담당 결과물",
+              "due_date": "2026-11-15",
+              "estimated_minutes": 30,
+              "completion_criteria": [
+                "결과를 재현·검토할 수 있음"
+              ]
+            },
+            {
+              "task_id": "t1",
+              "owner_member_id": "u1",
+              "title": "상세·일정 화면 초안",
+              "deliverable": "검토 가능한 담당 결과물",
+              "due_date": "2026-11-15",
+              "estimated_minutes": 30,
+              "completion_criteria": [
+                "결과를 재현·검토할 수 있음"
+              ]
+            },
+            {
+              "task_id": "t2",
+              "owner_member_id": "u2",
+              "title": "시연 검증 초안",
+              "deliverable": "검토 가능한 담당 결과물",
+              "due_date": "2026-11-15",
+              "estimated_minutes": 30,
+              "completion_criteria": [
+                "결과를 재현·검토할 수 있음"
+              ]
+            }
+          ],
+          "evidence_refs": [
+            "m0",
+            "m1",
+            "m2"
+          ]
+        },
+        "objections": [
+          "본래 범위와 담당은 유지하고 최종 마감일만 2026-11-26으로 연장해주세요."
+        ]
+      },
+      "expected": [
+        "확인된 사실과 제안 분리",
+        "역할·기간·개인 조건 반영",
+        "필요한 이유·대안 설명",
+        "새 일정·수정·모호한 답변에 적응"
+      ],
+      "forbidden": [
+        "가짜 근거",
+        "개인 사유 공개",
+        "임의 승인",
+        "확정 조건 변경"
+      ],
+      "changed_condition": "기간 단축"
+    },
+    {
+      "id": "holdout-5",
+      "stage": "REVISE",
+      "domain": "CREATIVE-holdout",
+      "holdout": true,
+      "pair": null,
+      "request": {
+        "action": "REVISE",
+        "members": [
+          {
+            "member_id": "u0",
+            "nickname": "검증자1"
+          },
+          {
+            "member_id": "u1",
+            "nickname": "검증자2"
+          },
+          {
+            "member_id": "u2",
+            "nickname": "검증자3"
+          }
+        ],
+        "conversation": [
+          {
+            "message_id": "m0",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "공동 목표는 동아리 소개 영상 기획야. 완료 기준은 60초 소개 영상의 장면 구성·촬영 목록·편집 검토를 완성한다.",
+            "created_at": "2026-11-06T10:00:00+09:00"
+          },
+          {
+            "message_id": "m1",
+            "speaker_id": "u1",
+            "role": "user",
+            "text": "2026-11-09부터 2026-11-22까지 진행하자. 인증은 결과 기록으로 하고 완료 여부와 달성률만 공개하자.",
+            "created_at": "2026-11-06T10:01:00+09:00"
+          },
+          {
+            "message_id": "m2",
+            "speaker_id": "u2",
+            "role": "user",
+            "text": "역할은 검증자1=구성안, 검증자2=촬영 목록, 검증자3=편집 검토",
+            "created_at": "2026-11-06T10:02:00+09:00"
+          },
+          {
+            "message_id": "m3",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "화요일 체크인은 좋지만 시간은 미정이야. AI가 실행 방법2개와 포기할 점을 설명해주면 고르자.",
+            "created_at": "2026-11-06T10:03:00+09:00"
+          },
+          {
+            "message_id": "m4",
+            "speaker_id": "u1",
+            "role": "user",
+            "text": "좋아. 제안은 듣고 결정하자. 개인 시간과 제약은 개인 상담에서 이야기할게.",
+            "created_at": "2026-11-06T10:04:00+09:00"
+          },
+          {
+            "message_id": "holdout-change",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "기능을 늘리지 말고 시연에 필요한 최소 범위부터 정하자. 동의하지 않은 부분은 확정하지 마.",
+            "created_at": "2026-11-06T12:00:00+09:00"
+          }
+        ],
+        "reference_date": "2026-11-06",
+        "timezone": "Asia/Seoul",
+        "previous": {
+          "goal": {
+            "title": "동아리 소개 영상 기획",
+            "start_date": "2026-11-09",
+            "end_date": "2026-11-22",
+            "completion_criteria": [
+              "60초 소개 영상의 장면 구성·촬영 목록·편집 검토를 완성한다."
+            ],
+            "execution_method": "역할별로 준비 후 함께 검토",
+            "verification_method": "결과 기록",
+            "privacy_scope": "OBJECTIVE_ONLY",
+            "roles": {
+              "u0": "구성안",
+              "u1": "촬영 목록",
+              "u2": "편집 검토"
+            }
+          },
+          "tasks": [
+            {
+              "task_id": "t0",
+              "owner_member_id": "u0",
+              "title": "구성안 초안",
+              "deliverable": "검토 가능한 담당 결과물",
+              "due_date": "2026-11-22",
+              "estimated_minutes": 30,
+              "completion_criteria": [
+                "결과를 재현·검토할 수 있음"
+              ]
+            },
+            {
+              "task_id": "t1",
+              "owner_member_id": "u1",
+              "title": "촬영 목록 초안",
+              "deliverable": "검토 가능한 담당 결과물",
+              "due_date": "2026-11-22",
+              "estimated_minutes": 30,
+              "completion_criteria": [
+                "결과를 재현·검토할 수 있음"
+              ]
+            },
+            {
+              "task_id": "t2",
+              "owner_member_id": "u2",
+              "title": "편집 검토 초안",
+              "deliverable": "검토 가능한 담당 결과물",
+              "due_date": "2026-11-22",
+              "estimated_minutes": 30,
+              "completion_criteria": [
+                "결과를 재현·검토할 수 있음"
+              ]
+            }
+          ],
+          "evidence_refs": [
+            "m0",
+            "m1",
+            "m2"
+          ]
+        },
+        "objections": [
+          "본래 범위와 담당은 유지하고 최종 마감일만 2026-11-26으로 연장해주세요."
+        ]
+      },
+      "expected": [
+        "확인된 사실과 제안 분리",
+        "역할·기간·개인 조건 반영",
+        "필요한 이유·대안 설명",
+        "새 일정·수정·모호한 답변에 적응"
+      ],
+      "forbidden": [
+        "가짜 근거",
+        "개인 사유 공개",
+        "임의 승인",
+        "확정 조건 변경"
+      ],
+      "changed_condition": null
+    },
+    {
+      "id": "holdout-6",
+      "stage": "TALK",
+      "domain": "STUDY-holdout",
+      "holdout": true,
+      "pair": null,
+      "request": {
+        "action": "TALK",
+        "goal": {
+          "title": "SQL 문제6개 학습",
+          "start_date": "2026-11-09",
+          "end_date": "2026-11-22",
+          "completion_criteria": [
+            "SQL 문제6개를 풀고 오답 원인과 수정 쿼리를 기록한다."
+          ],
+          "execution_method": "역할별로 준비 후 함께 검토",
+          "verification_method": "결과 기록",
+          "privacy_scope": "OBJECTIVE_ONLY",
+          "roles": {
+            "u0": "문제 풀이",
+            "u1": "복습 기준",
+            "u2": "결과 검토"
+          }
+        },
+        "owner_member_id": "u0",
+        "conversation": [
+          {
+            "message_id": "p0",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "담당은 문제 풀이이고 처음 해보며 주60분 가능해요. 아직 시작 전이고 사용할 도구는 알아보는 중이에요. 무엇부터 구체화하면 좋나요?",
+            "created_at": "2026-11-06T11:00:00+09:00"
+          },
+          {
+            "message_id": "holdout-change",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "도구는 아직 결정하지 못했어요. 추가 비용이 드는 도구는 피하고 싶어요. 그 조건에서 가능한 실행안을 제안해주세요.",
+            "created_at": "2026-11-06T12:00:00+09:00"
+          }
+        ],
+        "state": {},
+        "reference_date": "2026-11-06"
+      },
+      "expected": [
+        "확인된 사실과 제안 분리",
+        "역할·기간·개인 조건 반영",
+        "필요한 이유·대안 설명",
+        "새 일정·수정·모호한 답변에 적응"
+      ],
+      "forbidden": [
+        "가짜 근거",
+        "개인 사유 공개",
+        "임의 승인",
+        "확정 조건 변경"
+      ],
+      "changed_condition": null
+    },
+    {
+      "id": "holdout-7",
+      "stage": "PLAN",
+      "domain": "UI-holdout",
+      "holdout": true,
+      "pair": null,
+      "request": {
+        "action": "PLAN",
+        "goal": {
+          "title": "행사 안내 화면 3개 시연 준비",
+          "start_date": "2026-11-09",
+          "end_date": "2026-11-22",
+          "completion_criteria": [
+            "메인·상세·일정 화면을 시연하고 오류2건 이상을 점검한다."
+          ],
+          "execution_method": "역할별로 준비 후 함께 검토",
+          "verification_method": "결과 기록",
+          "privacy_scope": "OBJECTIVE_ONLY",
+          "roles": {
+            "u0": "메인 화면",
+            "u1": "상세·일정 화면",
+            "u2": "시연 검증"
+          }
+        },
+        "owner_member_id": "u0",
+        "conversation": [
+          {
+            "message_id": "p0",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "처음 해봄",
+            "created_at": "2026-11-06T11:00:00+09:00"
+          },
+          {
+            "message_id": "p1",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "60",
+            "created_at": "2026-11-06T11:00:00+09:00"
+          },
+          {
+            "message_id": "p2",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "메인 화면의 담당 결과물",
+            "created_at": "2026-11-06T11:00:00+09:00"
+          },
+          {
+            "message_id": "p3",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "['주말']",
+            "created_at": "2026-11-06T11:00:00+09:00"
+          },
+          {
+            "message_id": "p4",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "[]",
+            "created_at": "2026-11-06T11:00:00+09:00"
+          },
+          {
+            "message_id": "holdout-change",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "도구는 아직 결정하지 못했어요. 추가 비용이 드는 도구는 피하고 싶어요. 그 조건에서 가능한 실행안을 제안해주세요.",
+            "created_at": "2026-11-06T12:00:00+09:00"
+          }
+        ],
+        "state": {
+          "fields": {
+            "level": {
+              "value": "처음 해봄",
+              "status": "KNOWN",
+              "evidence_refs": [
+                "p0"
+              ]
+            },
+            "weekly_minutes": {
+              "value": 60,
+              "status": "KNOWN",
+              "evidence_refs": [
+                "p1"
+              ]
+            },
+            "scope": {
+              "value": "메인 화면의 담당 결과물",
+              "status": "KNOWN",
+              "evidence_refs": [
+                "p2"
+              ]
+            },
+            "preferred_times": {
+              "value": [
+                "주말"
+              ],
+              "status": "KNOWN",
+              "evidence_refs": [
+                "p3"
+              ]
+            },
+            "constraints": {
+              "value": [],
+              "status": "KNOWN",
+              "evidence_refs": [
+                "p4"
+              ]
+            }
+          }
+        },
+        "reference_date": "2026-11-06"
+      },
+      "expected": [
+        "확인된 사실과 제안 분리",
+        "역할·기간·개인 조건 반영",
+        "필요한 이유·대안 설명",
+        "새 일정·수정·모호한 답변에 적응"
+      ],
+      "forbidden": [
+        "가짜 근거",
+        "개인 사유 공개",
+        "임의 승인",
+        "확정 조건 변경"
+      ],
+      "changed_condition": null
+    },
+    {
+      "id": "holdout-8",
+      "stage": "PLAN",
+      "domain": "HABIT-holdout",
+      "holdout": true,
+      "pair": null,
+      "request": {
+        "action": "PLAN",
+        "goal": {
+          "title": "10분 걷기 습관",
+          "start_date": "2026-11-09",
+          "end_date": "2026-11-22",
+          "completion_criteria": [
+            "각자 주2회 10분 걷기를 2주간 총4회 완료하고 기록한다."
+          ],
+          "execution_method": "역할별로 준비 후 함께 검토",
+          "verification_method": "결과 기록",
+          "privacy_scope": "OBJECTIVE_ONLY",
+          "roles": {
+            "u0": "본인 걷기 기록",
+            "u1": "본인 걷기 기록",
+            "u2": "본인 걷기 기록"
+          }
+        },
+        "owner_member_id": "u0",
+        "conversation": [
+          {
+            "message_id": "p0",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "처음 해봄",
+            "created_at": "2026-11-06T11:00:00+09:00"
+          },
+          {
+            "message_id": "p1",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "60",
+            "created_at": "2026-11-06T11:00:00+09:00"
+          },
+          {
+            "message_id": "p2",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "본인 걷기 기록의 담당 결과물",
+            "created_at": "2026-11-06T11:00:00+09:00"
+          },
+          {
+            "message_id": "p3",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "['주말']",
+            "created_at": "2026-11-06T11:00:00+09:00"
+          },
+          {
+            "message_id": "p4",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "[]",
+            "created_at": "2026-11-06T11:00:00+09:00"
+          },
+          {
+            "message_id": "holdout-change",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "도구는 아직 결정하지 못했어요. 추가 비용이 드는 도구는 피하고 싶어요. 그 조건에서 가능한 실행안을 제안해주세요.",
+            "created_at": "2026-11-06T12:00:00+09:00"
+          }
+        ],
+        "state": {
+          "fields": {
+            "level": {
+              "value": "처음 해봄",
+              "status": "KNOWN",
+              "evidence_refs": [
+                "p0"
+              ]
+            },
+            "weekly_minutes": {
+              "value": 60,
+              "status": "KNOWN",
+              "evidence_refs": [
+                "p1"
+              ]
+            },
+            "scope": {
+              "value": "본인 걷기 기록의 담당 결과물",
+              "status": "KNOWN",
+              "evidence_refs": [
+                "p2"
+              ]
+            },
+            "preferred_times": {
+              "value": [
+                "주말"
+              ],
+              "status": "KNOWN",
+              "evidence_refs": [
+                "p3"
+              ]
+            },
+            "constraints": {
+              "value": [],
+              "status": "KNOWN",
+              "evidence_refs": [
+                "p4"
+              ]
+            }
+          }
+        },
+        "reference_date": "2026-11-06"
+      },
+      "expected": [
+        "확인된 사실과 제안 분리",
+        "역할·기간·개인 조건 반영",
+        "필요한 이유·대안 설명",
+        "새 일정·수정·모호한 답변에 적응"
+      ],
+      "forbidden": [
+        "가짜 근거",
+        "개인 사유 공개",
+        "임의 승인",
+        "확정 조건 변경"
+      ],
+      "changed_condition": null
+    },
+    {
+      "id": "holdout-9",
+      "stage": "E2E",
+      "domain": "UI-holdout",
+      "holdout": true,
+      "pair": null,
+      "request": {
+        "action": "PROPOSE",
+        "members": [
+          {
+            "member_id": "u0",
+            "nickname": "검증자1"
+          },
+          {
+            "member_id": "u1",
+            "nickname": "검증자2"
+          },
+          {
+            "member_id": "u2",
+            "nickname": "검증자3"
+          }
+        ],
+        "conversation": [
+          {
+            "message_id": "m0",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "공동 목표는 행사 안내 화면 3개 시연 준비야. 완료 기준은 메인·상세·일정 화면을 시연하고 오류2건 이상을 점검한다.",
+            "created_at": "2026-11-06T10:00:00+09:00"
+          },
+          {
+            "message_id": "m1",
+            "speaker_id": "u1",
+            "role": "user",
+            "text": "2026-11-09부터 2026-11-22까지 진행하자. 인증은 결과 기록으로 하고 완료 여부와 달성률만 공개하자.",
+            "created_at": "2026-11-06T10:01:00+09:00"
+          },
+          {
+            "message_id": "m2",
+            "speaker_id": "u2",
+            "role": "user",
+            "text": "역할은 검증자1=메인 화면, 검증자2=상세·일정 화면, 검증자3=시연 검증",
+            "created_at": "2026-11-06T10:02:00+09:00"
+          },
+          {
+            "message_id": "m3",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "화요일 체크인은 좋지만 시간은 미정이야. AI가 실행 방법2개와 포기할 점을 설명해주면 고르자.",
+            "created_at": "2026-11-06T10:03:00+09:00"
+          },
+          {
+            "message_id": "m4",
+            "speaker_id": "u1",
+            "role": "user",
+            "text": "좋아. 제안은 듣고 결정하자. 개인 시간과 제약은 개인 상담에서 이야기할게.",
+            "created_at": "2026-11-06T10:04:00+09:00"
+          },
+          {
+            "message_id": "holdout-change",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "기능을 늘리지 말고 시연에 필요한 최소 범위부터 정하자. 동의하지 않은 부분은 확정하지 마.",
+            "created_at": "2026-11-06T12:00:00+09:00"
+          }
+        ],
+        "reference_date": "2026-11-06",
+        "timezone": "Asia/Seoul"
+      },
+      "expected": [
+        "확인된 사실과 제안 분리",
+        "역할·기간·개인 조건 반영",
+        "필요한 이유·대안 설명",
+        "새 일정·수정·모호한 답변에 적응"
+      ],
+      "forbidden": [
+        "가짜 근거",
+        "개인 사유 공개",
+        "임의 승인",
+        "확정 조건 변경"
+      ],
+      "changed_condition": "경험·가능 시간 증가",
+      "confirmed_fields": {
+        "level": {
+          "value": "유사 활동을 독립 수행한 경험 있음",
+          "status": "KNOWN"
+        },
+        "weekly_minutes": {
+          "value": 300,
+          "status": "KNOWN"
+        },
+        "scope": {
+          "value": "메인 화면의 담당 결과물",
+          "status": "KNOWN"
+        },
+        "preferred_times": {
+          "value": [
+            "주말"
+          ],
+          "status": "KNOWN"
+        },
+        "constraints": {
+          "value": [],
+          "status": "KNOWN"
+        }
+      }
+    },
+    {
+      "id": "holdout-10",
+      "stage": "E2E",
+      "domain": "CREATIVE-holdout",
+      "holdout": true,
+      "pair": null,
+      "request": {
+        "action": "PROPOSE",
+        "members": [
+          {
+            "member_id": "u0",
+            "nickname": "검증자1"
+          },
+          {
+            "member_id": "u1",
+            "nickname": "검증자2"
+          },
+          {
+            "member_id": "u2",
+            "nickname": "검증자3"
+          }
+        ],
+        "conversation": [
+          {
+            "message_id": "m0",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "공동 목표는 동아리 소개 영상 기획야. 완료 기준은 60초 소개 영상의 장면 구성·촬영 목록·편집 검토를 완성한다.",
+            "created_at": "2026-11-06T10:00:00+09:00"
+          },
+          {
+            "message_id": "m1",
+            "speaker_id": "u1",
+            "role": "user",
+            "text": "2026-11-09부터 2026-11-22까지 진행하자. 인증은 결과 기록으로 하고 완료 여부와 달성률만 공개하자.",
+            "created_at": "2026-11-06T10:01:00+09:00"
+          },
+          {
+            "message_id": "m2",
+            "speaker_id": "u2",
+            "role": "user",
+            "text": "역할은 검증자1=구성안, 검증자2=촬영 목록, 검증자3=편집 검토",
+            "created_at": "2026-11-06T10:02:00+09:00"
+          },
+          {
+            "message_id": "m3",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "화요일 체크인은 좋지만 시간은 미정이야. AI가 실행 방법2개와 포기할 점을 설명해주면 고르자.",
+            "created_at": "2026-11-06T10:03:00+09:00"
+          },
+          {
+            "message_id": "m4",
+            "speaker_id": "u1",
+            "role": "user",
+            "text": "좋아. 제안은 듣고 결정하자. 개인 시간과 제약은 개인 상담에서 이야기할게.",
+            "created_at": "2026-11-06T10:04:00+09:00"
+          },
+          {
+            "message_id": "holdout-change",
+            "speaker_id": "u0",
+            "role": "user",
+            "text": "기능을 늘리지 말고 시연에 필요한 최소 범위부터 정하자. 동의하지 않은 부분은 확정하지 마.",
+            "created_at": "2026-11-06T12:00:00+09:00"
+          }
+        ],
+        "reference_date": "2026-11-06",
+        "timezone": "Asia/Seoul"
+      },
+      "expected": [
+        "확인된 사실과 제안 분리",
+        "역할·기간·개인 조건 반영",
+        "필요한 이유·대안 설명",
+        "새 일정·수정·모호한 답변에 적응"
+      ],
+      "forbidden": [
+        "가짜 근거",
+        "개인 사유 공개",
+        "임의 승인",
+        "확정 조건 변경"
+      ],
+      "changed_condition": null,
+      "confirmed_fields": {
+        "level": {
+          "value": "처음 해봄",
+          "status": "KNOWN"
+        },
+        "weekly_minutes": {
+          "value": 60,
+          "status": "KNOWN"
+        },
+        "scope": {
+          "value": "구성안의 담당 결과물",
+          "status": "KNOWN"
+        },
+        "preferred_times": {
+          "value": [
+            "주말"
+          ],
+          "status": "KNOWN"
+        },
+        "constraints": {
+          "value": [],
+          "status": "KNOWN"
+        }
+      }
+    }
+  ]
+}

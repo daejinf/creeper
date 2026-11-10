@@ -1,0 +1,98 @@
+{
+  "label": "AUTHORED_FIXTURE_NOT_LIVE",
+  "module": "D",
+  "request": {
+    "goal": "온라인 교류회 진행안 만들기",
+    "role": "참여 설계",
+    "start_date": "2026-12-01",
+    "end_date": "2026-12-21",
+    "completion_criteria": [
+      "참여 방식 선택 가능",
+      "강제 지목 없음"
+    ],
+    "verification_method": "진행안 문서",
+    "privacy_scope": "OBJECTIVE_ONLY",
+    "execution_method": "공유 문서에서 역할별 작성",
+    "members": [
+      {
+        "member_id": "u1",
+        "nickname": "도윤"
+      },
+      {
+        "member_id": "u2",
+        "nickname": "서연"
+      }
+    ],
+    "confirmed": true,
+    "evidence": [
+      {
+        "source": "SW_CONFIRMED",
+        "source_id": "review-example-1"
+      }
+    ]
+  },
+  "response": {
+    "status": "OK",
+    "data": {
+      "plan_version_id": "f972845e-5803-4da2-83e4-526b0d6349ee",
+      "previous_plan_version_id": null,
+      "status": "DRAFT",
+      "goal": "온라인 교류회 진행안 만들기",
+      "start_date": "2026-12-01",
+      "end_date": "2026-12-21",
+      "owner_member_id": null,
+      "milestones": [
+        {
+          "title": "진행안 검토",
+          "due_date": "2026-12-15",
+          "description": ""
+        }
+      ],
+      "weekly_outcomes": [
+        "참여 방식 후보와 수집 문구 작성"
+      ],
+      "tasks": [
+        {
+          "task_id": "895d2740-7523-4c74-a913-4ba0886a4c50",
+          "owner_member_id": null,
+          "title": "참여 방식 초안 작성",
+          "deliverable": "선택형 참여 방식과 수집 문구 한 장",
+          "completion_criteria": [
+            "익명/공개 중 선택 가능",
+            "강제 지목 없음"
+          ],
+          "due_date": "2026-12-05",
+          "estimated_minutes": 20,
+          "difficulty": "MEDIUM",
+          "dependencies": []
+        }
+      ],
+      "adaptation_rules": [
+        "시간이 부족하면 주제 후보를 줄이고 문구부터 공유"
+      ],
+      "suggestions": []
+    },
+    "needed_inputs": [],
+    "warnings": [],
+    "error": null,
+    "meta": {
+      "run_id": "2413f9c6-8f91-41d0-8f99-63e1334d16de",
+      "task": "D",
+      "prompt_version": "D-0.12.1-v2",
+      "model": "AUTHORED FIXTURE · AI 미실행",
+      "usage": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "latency_ms": 0,
+      "transport_attempts": 0,
+      "repair_attempts": 0,
+      "provider_request_ids": [],
+      "execution_source": "REPLAY",
+      "source_run_id": null,
+      "cached_usage": null,
+      "cache_hit": false
+    }
+  }
+}

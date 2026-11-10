@@ -1,0 +1,5234 @@
+[
+  {
+    "old_path": "ai-core/HISTORY.md",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/LEGACY_README.md",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/PUBLIC_API.md",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/pyproject.toml",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/README.md",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/run.ps1",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/Scenario.schema.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/SCENARIOS.md",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/SW_INTEGRATION.md",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/SW_M2_CONTRACT.md",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/VERIFICATION.md",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/.pytest_cache/.gitignore",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/.pytest_cache/CACHEDIR.TAG",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/.pytest_cache/README.md",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/data_authoring/build.py",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/data_authoring/seeds.py",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/demo-output-local/group-public.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/demo-output-local/report.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/demo-output-local/run-manifest.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/evaluations/developer_acceptance.py",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/examples/goal_setup_quickstart.py",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/examples/package_handoff.py",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/examples/recheck_saved.py",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/examples/sw_m0_m1_end_to_end.py",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/examples/sw_quickstart.py",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/analysis-v2-cli.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/browser-design-review-live-before-retry.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/browser-design-review-live.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/browser-dialogue-v9.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/browser-draft-edit.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/browser-example-menu-report.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/browser-goal-setup-v10.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/browser-missing.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/browser-personal.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/browser-scenarios-report.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/browser-smoke.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/browser-sw-v101.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/browser-v2-failed.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/browser-v2.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/browser-v6-failures.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/browser-v6-proposal-editor.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/browser-v6-resume.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/browser-v6.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/browser-v8-report.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/cli-v2-trace.jsonl",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/contracts-v10.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/contracts-v101.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/contracts-v2.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/contracts-v3.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/contracts-v4.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/contracts-v5.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/contracts-v6.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/contracts-v8.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/contracts-v9.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/contracts.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/design-conversation.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/design-group-retry-input.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/design-review-live-failed.png",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/design-review-live.png",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-evaluation-baseline.xml",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/draft-edit-failed.png",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/draft-edit.png",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/draft-v2-cli.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/live-dialogue-bc-current-attempt.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/live-dialogue-bc-recovered-analysis.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/live-dialogue-bc-recovered-draft.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/live-dialogue-flow-v9-first-attempt.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/live-dialogue-flow-v9.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/live-evaluation.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/live-final.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/live-runs.jsonl",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/live-v2-coach.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/live-v6-contrast.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/live-verified.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/missing-flow.png",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/openapi-v101.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/personal-flow.png",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/personal-group-export.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/personal-live-session.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/production-v6-probe.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/project-input.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/project-spec.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/public-api-v101.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/scenario-audit.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/scenario-job-id.txt",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/scenario-library.png",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/scenario-progress.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/scenario-server.err.log",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/scenario-server.out.log",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/scenarios-live.sqlite3",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/server-live.err.log",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/server-live.out.log",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/server-local.stderr.log",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/server-local.stdout.log",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/server-open.stderr.log",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/server-open.stdout.log",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/server-v10.1.err.log",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/server-v10.1.out.log",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/server-v10.2.err.log",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/server-v10.2.out.log",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/server-v10.err.log",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/server-v10.out.log",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/server-v101.err.log",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/server-v101.out.log",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/server-v6.stderr.log",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/server-v6.stdout.log",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/server-v7.err.log",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/server-v7.out.log",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/server-v8-test.err.log",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/server-v8-test.out.log",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/server-v8.err.log",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/server-v8.out.log",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/server-v9.err.log",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/server-v9.out.log",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v10-bundle-check.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v10-calendar-recheck.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v10-final-report.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v10-review-to-plan.png",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-before-restart.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-bundle-check.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-C-1024.png",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-C-1440.png",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-C-390.png",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-C-768.png",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-clean-install.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-E-1024.png",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-E-1440.png",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-E-390.png",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-E-768.png",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-live-coach.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-release-report.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-server-restart.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-stored-recheck.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-tests.xml",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v6-final.stderr.log",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v6-final.stdout.log",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v6-live.png",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v6-live.sqlite3",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v6-live.sqlite3-shm",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v6-live.sqlite3-wal",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v6-live.stderr.log",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v6-live.stdout.log",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v6-restart.stderr.log",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v6-restart.stdout.log",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v8-browser-r2.sqlite3",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v8-browser-r2.sqlite3-shm",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v8-browser-r2.sqlite3-wal",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v8-browser.sqlite3",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v8-browser.sqlite3-shm",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v8-browser.sqlite3-wal",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v8-C-1024.png",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v8-C-1440.png",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v8-C-390.png",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v8-C-768.png",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v8-E-1024.png",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v8-E-1440.png",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v8-E-390.png",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v8-E-768.png",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v8-handoff-audit.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v8-stored-recheck.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v9-A-chat.png",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v9-bundle-check.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v9-evaluation-progress.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v9-job.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v9-live-evaluation-report.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v9-local-ep.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/web-smoke.png",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/web-v2-failed.png",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/web-v2-group.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/web-v2-private-j.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/web-v2.png",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/workspace.sqlite3",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/tests/browser_design_review_live.cjs",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/tests/browser_dialogue.cjs",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/tests/browser_draft_edit.cjs",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/tests/browser_example_menu.cjs",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/tests/browser_goal_setup.cjs",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/tests/browser_missing.cjs",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/tests/browser_personal.cjs",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/tests/browser_scenarios.cjs",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/tests/browser_smoke.cjs",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/tests/browser_sw_acceptance.cjs",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/tests/browser_v2.cjs",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/tests/browser_v6.cjs",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/tests/browser_v6_failures.cjs",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/tests/browser_v6_resume.cjs",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/tests/browser_v8.cjs",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/tests/live_dialogue_flow.py",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/tests/live_goal_setup.py",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/tests/live_v2.py",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/tests/live_v6_contrast.py",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/tests/test_core.py",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/tests/test_dialogue_grounded.py",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/tests/test_draft_validation.py",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/tests/test_goal_setup.py",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/tests/test_interactions.py",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/tests/test_missing_flow.py",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/tests/test_personal.py",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/tests/test_scenarios.py",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/tests/test_sw_acceptance.py",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/tests/test_v6.py",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/tests/test_v8.py",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/.pytest_cache/v/cache/lastfailed",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/.pytest_cache/v/cache/nodeids",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/demo-output-local/group/01-coach.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/demo-output-local/group/02-review.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/demo-output-local/group/03-needs-review.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/demo-output-local/group/04-simulated-accept.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/demo-output-local/group/05-confirm.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/demo-output-local/group/06-duplicate-confirm.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/demo-output-local/group/07-group-timeout.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/demo-output-local/group/08-group-resumed.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/demo-output-local/group/m2-coding.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/demo-output-local/group/m2-design.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/demo-output-local/group/saved-state.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/demo-output-local/private/member-results.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/demo-output-local/private/coding/09-intake-0.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/demo-output-local/private/coding/09-intake-1.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/demo-output-local/private/coding/09-intake-2.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/demo-output-local/private/coding/10-member-draft.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/demo-output-local/private/coding/11-member-plan.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/demo-output-local/private/coding/12-member-resumed.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/demo-output-local/private/coding/baseline-private.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/demo-output-local/private/coding/handoff-private.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/demo-output-local/private/coding/reviewed-intake.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/demo-output-local/private/design/09-intake-0.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/demo-output-local/private/design/09-intake-1.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/demo-output-local/private/design/09-intake-2.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/demo-output-local/private/design/10-member-draft.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/demo-output-local/private/design/11-member-plan.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/demo-output-local/private/design/baseline-private.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/demo-output-local/private/design/handoff-private.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/demo-output-local/private/design/reviewed-intake.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/demo-output-local/private/_service/13-validate.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/demo-output-local/private/_service/14-handoff.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v1/data-audit.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v1/live-inputs-and-judge-expectations.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v1/live-manifest.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v1/local-checks.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v1/stored-recheck.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v1/summary.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v2/data-audit.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v2/live-inputs-and-judge-expectations.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v2/live-manifest.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v2/local-checks.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v2/stored-recheck.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v2/summary.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/sw-quickstart/A-coach.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/sw-quickstart/B-analysis.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/sw-quickstart/C-draft.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/sw-quickstart/C-reviewed-spec.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/sw-quickstart/D-group.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/sw-quickstart/E-cache-reuse.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/sw-quickstart/E-personal-coach.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/sw-quickstart/E-personal-plan.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/sw-quickstart/F-validate.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/sw-quickstart/group-public.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/sw-quickstart/m2-reference.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/sw-quickstart/personal-private.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/sw-quickstart/report.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/sw-quickstart-v9/A-coach.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/sw-quickstart-v9/B-analysis.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/sw-quickstart-v9/C-draft.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/sw-quickstart-v9/C-reviewed-spec.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/sw-quickstart-v9/D-group.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/sw-quickstart-v9/E-cache-reuse.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/sw-quickstart-v9/E-personal-coach.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/sw-quickstart-v9/E-personal-plan.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/sw-quickstart-v9/F-validate.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/sw-quickstart-v9/group-public.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/sw-quickstart-v9/m2-reference.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/sw-quickstart-v9/personal-private.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/sw-quickstart-v9/report.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v10-clean-setup/01-coach.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v10-clean-setup/02-review.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v10-clean-setup/03-respond.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v10-clean-setup/04-confirm.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v10-clean-setup/report.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v10-clean-sw/A-coach.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v10-clean-sw/B-analysis.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v10-clean-sw/C-draft.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v10-clean-sw/C-reviewed-spec.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v10-clean-sw/D-group.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v10-clean-sw/E-cache-reuse.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v10-clean-sw/E-personal-coach.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v10-clean-sw/E-personal-plan.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v10-clean-sw/F-validate.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v10-clean-sw/group-public.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v10-clean-sw/m2-reference.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v10-clean-sw/personal-private.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v10-clean-sw/report.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v10-live/design-initial.json.bak",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v10-live/design.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v10-live/milestones.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v10-live/sparse-initial.json.bak",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v10-live/sparse.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v10-sw-setup/01-coach.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v10-sw-setup/02-review.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v10-sw-setup/03-respond.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v10-sw-setup/04-confirm.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v10-sw-setup/report.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v10-venv/pyvenv.cfg",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-bundled-demo/group-public.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-bundled-demo/report.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-bundled-demo/run-manifest.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-clean-demo/group-public.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-clean-demo/report.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-clean-demo/run-manifest.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-clean-demo-final/group-public.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-clean-demo-final/report.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-clean-demo-final/run-manifest.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e/group-public.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e/report.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e/run-manifest.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e-final/group-public.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e-final/report.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e-final/run-manifest.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e-release/group-public.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e-release/report.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e-release/run-manifest.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-handoff-check/contracts.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-handoff-check/HISTORY.md",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-handoff-check/MANIFEST.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-handoff-check/openapi.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-handoff-check/public-api.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-handoff-check/PUBLIC_API.md",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-handoff-check/README.md",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-handoff-check/SCENARIOS.md",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-handoff-check/START_HERE.md",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-handoff-check/SW_INTEGRATION.md",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-handoff-check/SW_M2_CONTRACT.md",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-handoff-check/VERIFICATION.md",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-samples/FAILED.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-samples/M2_REFERENCE.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-samples/NEEDS_INPUT.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-samples/OK.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v8-clean-demo/A-coach.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v8-clean-demo/B-analysis.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v8-clean-demo/C-draft.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v8-clean-demo/C-reviewed-spec.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v8-clean-demo/D-group.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v8-clean-demo/E-cache-reuse.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v8-clean-demo/E-personal-coach.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v8-clean-demo/E-personal-plan.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v8-clean-demo/F-validate.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v8-clean-demo/group-public.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v8-clean-demo/m2-reference.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v8-clean-demo/personal-private.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v8-clean-demo/report.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v8-dist/wemeet_ai_core-0.8.0-py3-none-any.whl",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v8-venv/pyvenv.cfg",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v9-clean-demo/A-coach.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v9-clean-demo/B-analysis.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v9-clean-demo/C-draft.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v9-clean-demo/C-reviewed-spec.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v9-clean-demo/D-group.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v9-clean-demo/E-cache-reuse.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v9-clean-demo/E-personal-coach.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v9-clean-demo/E-personal-plan.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v9-clean-demo/F-validate.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v9-clean-demo/group-public.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v9-clean-demo/m2-reference.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v9-clean-demo/personal-private.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v9-clean-demo/report.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v9-dist/wemeet_ai_core-0.9.0-py3-none-any.whl",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v9-venv/pyvenv.cfg",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v1/evidence/M0-CACHE-007.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v1/evidence/M0-CONCURRENCY-005.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v1/evidence/M0-DIRECT-METRICS-006.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v1/evidence/M0-SECRET-008.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v1/evidence/M0-TRANSPORT-401.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v1/evidence/M0-TRANSPORT-403.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v1/evidence/M0-TRANSPORT-429-recover.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v1/evidence/M0-TRANSPORT-500-recover.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v1/evidence/M0-TRANSPORT-bad-usage.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v1/evidence/M0-TRANSPORT-empty.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v1/evidence/M0-TRANSPORT-timeout-recover.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v1/evidence/M0-TRANSPORT-truncated.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v1/evidence/M1-ALTERNATIVE-002.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v1/evidence/M1-PRIVACY-004.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v1/evidence/M1-RECOVERY-003.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v1/evidence/M1-STATE-001.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v1/sw-mock/group-public.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v1/sw-mock/report.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v1/sw-mock/run-manifest.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v1/sw-mock/group/01-coach.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v1/sw-mock/group/02-review.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v1/sw-mock/group/03-needs-review.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v1/sw-mock/group/04-simulated-accept.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v1/sw-mock/group/05-confirm.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v1/sw-mock/group/06-duplicate-confirm.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v1/sw-mock/group/07-group-timeout.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v1/sw-mock/group/08-group-resumed.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v1/sw-mock/group/m2-coding.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v1/sw-mock/group/m2-design.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v1/sw-mock/group/saved-state.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v1/sw-mock/private/member-results.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v1/sw-mock/private/coding/09-intake-0.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v1/sw-mock/private/coding/09-intake-1.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v1/sw-mock/private/coding/09-intake-2.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v1/sw-mock/private/coding/10-member-draft.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v1/sw-mock/private/coding/11-member-plan.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v1/sw-mock/private/coding/12-member-resumed.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v1/sw-mock/private/coding/baseline-private.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v1/sw-mock/private/coding/handoff-private.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v1/sw-mock/private/coding/reviewed-intake.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v1/sw-mock/private/design/09-intake-0.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v1/sw-mock/private/design/09-intake-1.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v1/sw-mock/private/design/09-intake-2.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v1/sw-mock/private/design/10-member-draft.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v1/sw-mock/private/design/11-member-plan.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v1/sw-mock/private/design/baseline-private.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v1/sw-mock/private/design/handoff-private.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v1/sw-mock/private/design/reviewed-intake.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v1/sw-mock/private/_service/13-validate.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v1/sw-mock/private/_service/14-handoff.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v2/evidence/M0-CACHE-007.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v2/evidence/M0-CONCURRENCY-005.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v2/evidence/M0-DIRECT-METRICS-006.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v2/evidence/M0-SECRET-008.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v2/evidence/M0-TRANSPORT-401.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v2/evidence/M0-TRANSPORT-403.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v2/evidence/M0-TRANSPORT-429-recover.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v2/evidence/M0-TRANSPORT-500-recover.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v2/evidence/M0-TRANSPORT-bad-usage.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v2/evidence/M0-TRANSPORT-empty.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v2/evidence/M0-TRANSPORT-timeout-recover.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v2/evidence/M0-TRANSPORT-truncated.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v2/evidence/M1-ALTERNATIVE-002.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v2/evidence/M1-PRIVACY-004.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v2/evidence/M1-RECOVERY-003.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v2/evidence/M1-STATE-001.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v2/sw-mock/group-public.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v2/sw-mock/report.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v2/sw-mock/run-manifest.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v2/sw-mock/group/01-coach.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v2/sw-mock/group/02-review.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v2/sw-mock/group/03-needs-review.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v2/sw-mock/group/04-simulated-accept.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v2/sw-mock/group/05-confirm.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v2/sw-mock/group/06-duplicate-confirm.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v2/sw-mock/group/07-group-timeout.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v2/sw-mock/group/08-group-resumed.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v2/sw-mock/group/m2-coding.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v2/sw-mock/group/m2-design.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v2/sw-mock/group/saved-state.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v2/sw-mock/private/member-results.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v2/sw-mock/private/coding/09-intake-0.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v2/sw-mock/private/coding/09-intake-1.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v2/sw-mock/private/coding/09-intake-2.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v2/sw-mock/private/coding/10-member-draft.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v2/sw-mock/private/coding/11-member-plan.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v2/sw-mock/private/coding/12-member-resumed.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v2/sw-mock/private/coding/baseline-private.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v2/sw-mock/private/coding/handoff-private.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v2/sw-mock/private/coding/reviewed-intake.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v2/sw-mock/private/design/09-intake-0.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v2/sw-mock/private/design/09-intake-1.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v2/sw-mock/private/design/09-intake-2.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v2/sw-mock/private/design/10-member-draft.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v2/sw-mock/private/design/11-member-plan.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v2/sw-mock/private/design/baseline-private.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v2/sw-mock/private/design/handoff-private.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v2/sw-mock/private/design/reviewed-intake.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v2/sw-mock/private/_service/13-validate.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/developer-acceptance-v2/sw-mock/private/_service/14-handoff.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/pytest-check/test_logs_omit_private_inputs_0/runs.jsonl",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/pytest-complete-df446ec257594062b278509da57843de/test_cli_prepares_group_withou0/input.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/pytest-complete-df446ec257594062b278509da57843de/test_cli_prepares_group_withou0/spec.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/pytest-complete-df446ec257594062b278509da57843de/test_logs_omit_private_inputs_0/runs.jsonl",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/pytest-delivery/test_logs_omit_private_inputs_0/runs.jsonl",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/pytest-final/test_logs_omit_private_inputs_0/runs.jsonl",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/pytest-independent/test_logs_omit_private_inputs_0/runs.jsonl",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/pytest-personal-2af6e47502524e2f85ad821c29728a92/test_logs_omit_private_inputs_0/runs.jsonl",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/pytest-personal-b5626f9acf6946f4a07c2ef0195eaee7/test_logs_omit_private_inputs_0/runs.jsonl",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/pytest-release/test_logs_omit_private_inputs_0/runs.jsonl",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/pytest-review-3accf7068cfc409ab3c8f8f78e83208b/test_cli_prepares_group_withou0/input.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/pytest-review-3accf7068cfc409ab3c8f8f78e83208b/test_cli_prepares_group_withou0/spec.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/pytest-review-3accf7068cfc409ab3c8f8f78e83208b/test_logs_omit_private_inputs_0/runs.jsonl",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/pytest-review-642e4009ac884cf2ae45e9834682f55c/test_cli_prepares_group_withou0/input.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/pytest-review-642e4009ac884cf2ae45e9834682f55c/test_cli_prepares_group_withou0/spec.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/pytest-review-642e4009ac884cf2ae45e9834682f55c/test_logs_omit_private_inputs_0/runs.jsonl",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/pytest-review-d110bff6297347c5af93692d921cc075/test_cli_prepares_group_withou0/input.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/pytest-review-d110bff6297347c5af93692d921cc075/test_cli_prepares_group_withou0/spec.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/pytest-review-d110bff6297347c5af93692d921cc075/test_logs_omit_private_inputs_0/runs.jsonl",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/pytest-review-eea85e7be7134e77b6e9d7faa73a336b/test_cli_prepares_group_withou0/input.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/pytest-review-eea85e7be7134e77b6e9d7faa73a336b/test_cli_prepares_group_withou0/spec.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/pytest-review-eea85e7be7134e77b6e9d7faa73a336b/test_logs_omit_private_inputs_0/runs.jsonl",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/pytest-v2-contracts/test_logs_omit_private_inputs_0/runs.jsonl",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/pytest-v2-early/test_logs_omit_private_inputs_0/runs.jsonl",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/pytest-v2-final/test_logs_omit_private_inputs_0/runs.jsonl",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/pytest-v6-2b486b54015a48748fcf1436b81839a7/test_baseline_is_versioned_ide0/db.sqlite3",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/pytest-v6-2b486b54015a48748fcf1436b81839a7/test_cli_prepares_group_withou0/input.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/pytest-v6-2b486b54015a48748fcf1436b81839a7/test_cli_prepares_group_withou0/spec.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/pytest-v6-2b486b54015a48748fcf1436b81839a7/test_logs_omit_private_inputs_0/runs.jsonl",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/pytest-v6-2b486b54015a48748fcf1436b81839a7/test_provider_accounting_count0/db.sqlite3",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/pytest-v6-2b486b54015a48748fcf1436b81839a7/test_repository_does_not_store0/db.sqlite3",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/pytest-v6-2b486b54015a48748fcf1436b81839a7/test_repository_restores_priva0/workspace.sqlite3",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/pytest-v6-7d9852356d11482da2303426d2edcf91/test_baseline_is_versioned_ide0/db.sqlite3",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/pytest-v6-7d9852356d11482da2303426d2edcf91/test_cli_prepares_group_withou0/input.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/pytest-v6-7d9852356d11482da2303426d2edcf91/test_cli_prepares_group_withou0/spec.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/pytest-v6-7d9852356d11482da2303426d2edcf91/test_cli_workspace_roundtrip0/created.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/pytest-v6-7d9852356d11482da2303426d2edcf91/test_cli_workspace_roundtrip0/db.sqlite3",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/pytest-v6-7d9852356d11482da2303426d2edcf91/test_cli_workspace_roundtrip0/loaded.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/pytest-v6-7d9852356d11482da2303426d2edcf91/test_cli_workspace_roundtrip0/state.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/pytest-v6-7d9852356d11482da2303426d2edcf91/test_logs_omit_private_inputs_0/runs.jsonl",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/pytest-v6-7d9852356d11482da2303426d2edcf91/test_provider_accounting_count0/db.sqlite3",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/pytest-v6-7d9852356d11482da2303426d2edcf91/test_provider_total_is_not_lim0/db.sqlite3",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/pytest-v6-7d9852356d11482da2303426d2edcf91/test_repository_does_not_store0/db.sqlite3",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/pytest-v6-7d9852356d11482da2303426d2edcf91/test_repository_restores_priva0/workspace.sqlite3",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/pytest-v6-859b2c36de1947729a5d104d3d77df4d/test_baseline_is_versioned_ide0/db.sqlite3",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/pytest-v6-859b2c36de1947729a5d104d3d77df4d/test_cli_prepares_group_withou0/input.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/pytest-v6-859b2c36de1947729a5d104d3d77df4d/test_cli_prepares_group_withou0/spec.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/pytest-v6-859b2c36de1947729a5d104d3d77df4d/test_cli_workspace_roundtrip0/created.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/pytest-v6-859b2c36de1947729a5d104d3d77df4d/test_cli_workspace_roundtrip0/db.sqlite3",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/pytest-v6-859b2c36de1947729a5d104d3d77df4d/test_cli_workspace_roundtrip0/loaded.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/pytest-v6-859b2c36de1947729a5d104d3d77df4d/test_cli_workspace_roundtrip0/state.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/pytest-v6-859b2c36de1947729a5d104d3d77df4d/test_logs_omit_private_inputs_0/runs.jsonl",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/pytest-v6-859b2c36de1947729a5d104d3d77df4d/test_provider_accounting_count0/db.sqlite3",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/pytest-v6-859b2c36de1947729a5d104d3d77df4d/test_provider_total_is_not_lim0/db.sqlite3",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/pytest-v6-859b2c36de1947729a5d104d3d77df4d/test_repository_does_not_store0/db.sqlite3",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/pytest-v6-859b2c36de1947729a5d104d3d77df4d/test_repository_restores_priva0/workspace.sqlite3",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/pytest-v6-e957bd544c984d15a2aba50008dc1d46/test_cli_prepares_group_withou0/input.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/pytest-v6-e957bd544c984d15a2aba50008dc1d46/test_cli_prepares_group_withou0/spec.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/pytest-v6-e957bd544c984d15a2aba50008dc1d46/test_logs_omit_private_inputs_0/runs.jsonl",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v10-venv/Scripts/activate",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v10-venv/Scripts/activate.bat",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v10-venv/Scripts/Activate.ps1",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v10-venv/Scripts/deactivate.bat",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v10-venv/Scripts/python.exe",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v10-venv/Scripts/pythonw.exe",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v10-venv/Scripts/wemeet-ai.exe",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-bundled-demo/group/01-coach.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-bundled-demo/group/02-review.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-bundled-demo/group/03-needs-review.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-bundled-demo/group/04-simulated-accept.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-bundled-demo/group/05-confirm.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-bundled-demo/group/06-duplicate-confirm.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-bundled-demo/group/07-group-timeout.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-bundled-demo/group/08-group-resumed.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-bundled-demo/group/m2-coding.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-bundled-demo/group/m2-design.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-bundled-demo/group/saved-state.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-bundled-demo/private/member-results.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-bundled-demo/private/coding/09-intake-0.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-bundled-demo/private/coding/09-intake-1.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-bundled-demo/private/coding/09-intake-2.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-bundled-demo/private/coding/10-member-draft.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-bundled-demo/private/coding/11-member-plan.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-bundled-demo/private/coding/12-member-resumed.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-bundled-demo/private/coding/baseline-private.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-bundled-demo/private/coding/handoff-private.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-bundled-demo/private/coding/reviewed-intake.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-bundled-demo/private/design/09-intake-0.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-bundled-demo/private/design/09-intake-1.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-bundled-demo/private/design/09-intake-2.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-bundled-demo/private/design/10-member-draft.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-bundled-demo/private/design/11-member-plan.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-bundled-demo/private/design/baseline-private.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-bundled-demo/private/design/handoff-private.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-bundled-demo/private/design/reviewed-intake.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-bundled-demo/private/_service/13-validate.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-bundled-demo/private/_service/14-handoff.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-clean-demo/group/01-coach.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-clean-demo/group/02-review.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-clean-demo/group/03-needs-review.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-clean-demo/group/04-simulated-accept.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-clean-demo/group/05-confirm.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-clean-demo/group/06-duplicate-confirm.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-clean-demo/group/07-group-timeout.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-clean-demo/group/08-group-resumed.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-clean-demo/group/13-validate.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-clean-demo/group/14-handoff.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-clean-demo/group/m2-coding.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-clean-demo/group/m2-design.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-clean-demo/group/saved-state.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-clean-demo/private/member-results.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-clean-demo/private/coding/09-intake-0.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-clean-demo/private/coding/09-intake-1.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-clean-demo/private/coding/09-intake-2.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-clean-demo/private/coding/10-member-draft.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-clean-demo/private/coding/11-member-plan.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-clean-demo/private/coding/12-member-resumed.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-clean-demo/private/coding/baseline-private.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-clean-demo/private/coding/handoff-private.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-clean-demo/private/coding/reviewed-intake.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-clean-demo/private/design/09-intake-0.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-clean-demo/private/design/09-intake-1.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-clean-demo/private/design/09-intake-2.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-clean-demo/private/design/10-member-draft.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-clean-demo/private/design/11-member-plan.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-clean-demo/private/design/baseline-private.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-clean-demo/private/design/handoff-private.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-clean-demo/private/design/reviewed-intake.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-clean-demo-final/group/01-coach.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-clean-demo-final/group/02-review.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-clean-demo-final/group/03-needs-review.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-clean-demo-final/group/04-simulated-accept.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-clean-demo-final/group/05-confirm.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-clean-demo-final/group/06-duplicate-confirm.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-clean-demo-final/group/07-group-timeout.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-clean-demo-final/group/08-group-resumed.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-clean-demo-final/group/m2-coding.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-clean-demo-final/group/m2-design.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-clean-demo-final/group/saved-state.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-clean-demo-final/private/member-results.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-clean-demo-final/private/coding/09-intake-0.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-clean-demo-final/private/coding/09-intake-1.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-clean-demo-final/private/coding/09-intake-2.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-clean-demo-final/private/coding/10-member-draft.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-clean-demo-final/private/coding/11-member-plan.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-clean-demo-final/private/coding/12-member-resumed.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-clean-demo-final/private/coding/baseline-private.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-clean-demo-final/private/coding/handoff-private.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-clean-demo-final/private/coding/reviewed-intake.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-clean-demo-final/private/design/09-intake-0.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-clean-demo-final/private/design/09-intake-1.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-clean-demo-final/private/design/09-intake-2.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-clean-demo-final/private/design/10-member-draft.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-clean-demo-final/private/design/11-member-plan.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-clean-demo-final/private/design/baseline-private.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-clean-demo-final/private/design/handoff-private.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-clean-demo-final/private/design/reviewed-intake.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-clean-demo-final/private/_service/13-validate.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-clean-demo-final/private/_service/14-handoff.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e/group/01-coach.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e/group/02-review.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e/group/03-needs-review.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e/group/04-simulated-accept.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e/group/05-confirm.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e/group/06-duplicate-confirm.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e/group/07-group-timeout.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e/group/08-group-resumed.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e/group/13-validate.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e/group/14-handoff.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e/group/m2-coding.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e/group/m2-design.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e/group/saved-state.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e/private/member-results.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e/private/coding/09-intake-0.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e/private/coding/09-intake-1.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e/private/coding/09-intake-2.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e/private/coding/10-member-draft.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e/private/coding/11-member-plan.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e/private/coding/12-member-resumed.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e/private/coding/baseline-private.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e/private/coding/handoff-private.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e/private/coding/reviewed-intake.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e/private/design/09-intake-0.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e/private/design/09-intake-1.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e/private/design/09-intake-2.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e/private/design/10-member-draft.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e/private/design/11-member-plan.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e/private/design/baseline-private.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e/private/design/handoff-private.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e/private/design/reviewed-intake.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e-final/group/01-coach.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e-final/group/02-review.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e-final/group/03-needs-review.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e-final/group/04-simulated-accept.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e-final/group/05-confirm.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e-final/group/06-duplicate-confirm.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e-final/group/07-group-timeout.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e-final/group/08-group-resumed.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e-final/group/m2-coding.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e-final/group/m2-design.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e-final/group/saved-state.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e-final/private/member-results.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e-final/private/coding/09-intake-0.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e-final/private/coding/09-intake-1.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e-final/private/coding/09-intake-2.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e-final/private/coding/10-member-draft.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e-final/private/coding/11-member-plan.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e-final/private/coding/12-member-resumed.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e-final/private/coding/baseline-private.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e-final/private/coding/handoff-private.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e-final/private/coding/reviewed-intake.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e-final/private/design/09-intake-0.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e-final/private/design/09-intake-1.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e-final/private/design/09-intake-2.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e-final/private/design/10-member-draft.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e-final/private/design/11-member-plan.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e-final/private/design/baseline-private.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e-final/private/design/handoff-private.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e-final/private/design/reviewed-intake.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e-final/private/_service/13-validate.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e-final/private/_service/14-handoff.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e-release/group/01-coach.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e-release/group/02-review.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e-release/group/03-needs-review.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e-release/group/04-simulated-accept.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e-release/group/05-confirm.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e-release/group/06-duplicate-confirm.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e-release/group/07-group-timeout.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e-release/group/08-group-resumed.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e-release/group/m2-coding.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e-release/group/m2-design.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e-release/group/saved-state.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e-release/private/member-results.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e-release/private/coding/09-intake-0.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e-release/private/coding/09-intake-1.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e-release/private/coding/09-intake-2.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e-release/private/coding/10-member-draft.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e-release/private/coding/11-member-plan.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e-release/private/coding/12-member-resumed.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e-release/private/coding/baseline-private.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e-release/private/coding/handoff-private.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e-release/private/coding/reviewed-intake.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e-release/private/design/09-intake-0.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e-release/private/design/09-intake-1.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e-release/private/design/09-intake-2.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e-release/private/design/10-member-draft.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e-release/private/design/11-member-plan.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e-release/private/design/baseline-private.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e-release/private/design/handoff-private.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e-release/private/design/reviewed-intake.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e-release/private/_service/13-validate.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-e2e-release/private/_service/14-handoff.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-handoff-check/examples/goal_setup_quickstart.py",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-handoff-check/examples/recheck_saved.py",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-handoff-check/examples/sw_m0_m1_end_to_end.py",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-handoff-check/examples/sw_quickstart.py",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-handoff-check/samples/FAILED.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-handoff-check/samples/M2_REFERENCE.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-handoff-check/samples/NEEDS_INPUT.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v101-handoff-check/samples/OK.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v8-venv/Scripts/activate",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v8-venv/Scripts/activate.bat",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v8-venv/Scripts/Activate.ps1",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v8-venv/Scripts/deactivate.bat",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v8-venv/Scripts/python.exe",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v8-venv/Scripts/pythonw.exe",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v8-venv/Scripts/wemeet-ai.exe",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v9-venv/Scripts/activate",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v9-venv/Scripts/activate.bat",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v9-venv/Scripts/Activate.ps1",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v9-venv/Scripts/deactivate.bat",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v9-venv/Scripts/python.exe",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v9-venv/Scripts/pythonw.exe",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/v9-venv/Scripts/wemeet-ai.exe",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/wheel-install/bin/wemeet-ai.exe",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/wheel-install/wemeet_ai/analysis.py",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/wheel-install/wemeet_ai/cli.py",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/wheel-install/wemeet_ai/client.py",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/wheel-install/wemeet_ai/contracts.py",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/wheel-install/wemeet_ai/evaluation.py",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/wheel-install/wemeet_ai/examples.py",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/wheel-install/wemeet_ai/privacy.py",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/wheel-install/wemeet_ai/records.py",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/wheel-install/wemeet_ai/service.py",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/wheel-install/wemeet_ai/validation.py",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/wheel-install/wemeet_ai/__init__.py",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/wheel-install/wemeet_ai/__main__.py",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/wheel-install/wemeet_ai_core-0.1.0.dist-info/direct_url.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/wheel-install/wemeet_ai_core-0.1.0.dist-info/entry_points.txt",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/wheel-install/wemeet_ai_core-0.1.0.dist-info/INSTALLER",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/wheel-install/wemeet_ai_core-0.1.0.dist-info/METADATA",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/wheel-install/wemeet_ai_core-0.1.0.dist-info/RECORD",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/wheel-install/wemeet_ai_core-0.1.0.dist-info/REQUESTED",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/wheel-install/wemeet_ai_core-0.1.0.dist-info/top_level.txt",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/wheel-install/wemeet_ai_core-0.1.0.dist-info/WHEEL",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/wheel-install/wemeet_ai/adapters/index.html",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/wheel-install/wemeet_ai/adapters/web.py",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/runs/wheel-install/wemeet_ai/adapters/__init__.py",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/src/wemeet_ai/analysis.py",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/src/wemeet_ai/api.py",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/src/wemeet_ai/baseline.py",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/src/wemeet_ai/cache.py",
+    "decision": "EXTRACTED_AND_REPLACED",
+    "category": "구형 구현/문서/검사",
+    "reason": "M0/공통 규칙 또는 200개 데이터로 추출. 구형 결합과 서비스 래퍼만 제거."
+  },
+  {
+    "old_path": "ai-core/src/wemeet_ai/calendar_context.py",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/src/wemeet_ai/cli.py",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/src/wemeet_ai/client.py",
+    "decision": "EXTRACTED_AND_REPLACED",
+    "category": "구형 구현/문서/검사",
+    "reason": "M0/공통 규칙 또는 200개 데이터로 추출. 구형 결합과 서비스 래퍼만 제거."
+  },
+  {
+    "old_path": "ai-core/src/wemeet_ai/contracts.py",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/src/wemeet_ai/draft_validation.py",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/src/wemeet_ai/evaluation.py",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/src/wemeet_ai/examples.py",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/src/wemeet_ai/goal_setup.py",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/src/wemeet_ai/grounding.py",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/src/wemeet_ai/interactions.py",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/src/wemeet_ai/personal.py",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/src/wemeet_ai/privacy.py",
+    "decision": "EXTRACTED_AND_REPLACED",
+    "category": "구형 구현/문서/검사",
+    "reason": "M0/공통 규칙 또는 200개 데이터로 추출. 구형 결합과 서비스 래퍼만 제거."
+  },
+  {
+    "old_path": "ai-core/src/wemeet_ai/proactive.py",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/src/wemeet_ai/records.py",
+    "decision": "EXTRACTED_AND_REPLACED",
+    "category": "구형 구현/문서/검사",
+    "reason": "M0/공통 규칙 또는 200개 데이터로 추출. 구형 결합과 서비스 래퍼만 제거."
+  },
+  {
+    "old_path": "ai-core/src/wemeet_ai/references.py",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/src/wemeet_ai/scenarios.py",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/src/wemeet_ai/scenario_inputs.py",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/src/wemeet_ai/service.py",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/src/wemeet_ai/tracing.py",
+    "decision": "EXTRACTED_AND_REPLACED",
+    "category": "구형 구현/문서/검사",
+    "reason": "M0/공통 규칙 또는 200개 데이터로 추출. 구형 결합과 서비스 래퍼만 제거."
+  },
+  {
+    "old_path": "ai-core/src/wemeet_ai/validation.py",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/src/wemeet_ai/workflows.py",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/src/wemeet_ai/__init__.py",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/src/wemeet_ai/__main__.py",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/src/wemeet_ai_core.egg-info/dependency_links.txt",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/src/wemeet_ai_core.egg-info/entry_points.txt",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/src/wemeet_ai_core.egg-info/PKG-INFO",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/src/wemeet_ai_core.egg-info/requires.txt",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/src/wemeet_ai_core.egg-info/SOURCES.txt",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/src/wemeet_ai_core.egg-info/top_level.txt",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/src/wemeet_ai/adapters/bench.css",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/src/wemeet_ai/adapters/bench.js",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/src/wemeet_ai/adapters/draft_editor.js",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/src/wemeet_ai/adapters/goal_setup.js",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/src/wemeet_ai/adapters/index.html",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/src/wemeet_ai/adapters/library.html",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/src/wemeet_ai/adapters/personal.js",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/src/wemeet_ai/adapters/proactive.js",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/src/wemeet_ai/adapters/repository.py",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/src/wemeet_ai/adapters/result_cache.py",
+    "decision": "EXTRACTED_AND_REPLACED",
+    "category": "구형 구현/문서/검사",
+    "reason": "M0/공통 규칙 또는 200개 데이터로 추출. 구형 결합과 서비스 래퍼만 제거."
+  },
+  {
+    "old_path": "ai-core/src/wemeet_ai/adapters/scenarios.js",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/src/wemeet_ai/adapters/scenario_api.py",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/src/wemeet_ai/adapters/scenario_eval.py",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/src/wemeet_ai/adapters/scenario_report.py",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/src/wemeet_ai/adapters/scenario_store.py",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/src/wemeet_ai/adapters/telemetry.py",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/src/wemeet_ai/adapters/web.py",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/src/wemeet_ai/adapters/workspace.js",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/src/wemeet_ai/adapters/__init__.py",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "구형 구현/문서/검사",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "ai-core/src/wemeet_ai/data/scenarios.v1.jsonl",
+    "decision": "EXTRACTED_AND_REPLACED",
+    "category": "구형 구현/문서/검사",
+    "reason": "M0/공통 규칙 또는 200개 데이터로 추출. 구형 결합과 서비스 래퍼만 제거."
+  },
+  {
+    "old_path": "backend/alembic.ini",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "기존 서비스",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "backend/pyproject.toml",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "기존 서비스",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "backend/requirements-lock.txt",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "기존 서비스",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "backend/we_meet.db",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "기존 서비스",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "backend/.pytest_cache/.gitignore",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "기존 서비스",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "backend/.pytest_cache/CACHEDIR.TAG",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "기존 서비스",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "backend/.pytest_cache/README.md",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "기존 서비스",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "backend/alembic/env.py",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "기존 서비스",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "backend/alembic/script.py.mako",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "기존 서비스",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "backend/app/api.py",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "기존 서비스",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "backend/app/coaching.py",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "기존 서비스",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "backend/app/config.py",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "기존 서비스",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "backend/app/conversation_evaluation.py",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "기존 서비스",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "backend/app/database.py",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "기존 서비스",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "backend/app/evaluation.py",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "기존 서비스",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "backend/app/main.py",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "기존 서비스",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "backend/app/models.py",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "기존 서비스",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "backend/app/planner.py",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "기존 서비스",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "backend/app/privacy.py",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "기존 서비스",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "backend/app/providers.py",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "기존 서비스",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "backend/app/scheduler.py",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "기존 서비스",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "backend/app/schemas.py",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "기존 서비스",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "backend/app/__init__.py",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "기존 서비스",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "backend/data/coaching_eval_cases.jsonl",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "기존 서비스",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "backend/data/eval_cases.jsonl",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "기존 서비스",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "backend/tests/conftest.py",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "기존 서비스",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "backend/tests/test_conversation_evaluation.py",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "기존 서비스",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "backend/tests/test_plans.py",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "기존 서비스",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "backend/wemeet_ai.egg-info/dependency_links.txt",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "기존 서비스",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "backend/wemeet_ai.egg-info/PKG-INFO",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "기존 서비스",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "backend/wemeet_ai.egg-info/requires.txt",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "기존 서비스",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "backend/wemeet_ai.egg-info/SOURCES.txt",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "기존 서비스",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "backend/wemeet_ai.egg-info/top_level.txt",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "기존 서비스",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "backend/.pytest_cache/v/cache/lastfailed",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "기존 서비스",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "backend/.pytest_cache/v/cache/nodeids",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "기존 서비스",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "backend/alembic/versions/0001_initial.py",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "기존 서비스",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "backend/alembic/versions/0002_coaching_sessions.py",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "기존 서비스",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "backend/alembic/versions/0003_conversation_evaluation.py",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "기존 서비스",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "backend/alembic/versions/0004_hybrid_evaluation.py",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "기존 서비스",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "frontend/.nvmrc",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "기존 서비스",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "frontend/index.html",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "기존 서비스",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "frontend/package-lock.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "기존 서비스",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "frontend/package.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "기존 서비스",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "frontend/tsconfig.app.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "기존 서비스",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "frontend/tsconfig.app.tsbuildinfo",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "기존 서비스",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "frontend/tsconfig.json",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "기존 서비스",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "frontend/vite.config.ts",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "기존 서비스",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "frontend/src/api.ts",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "기존 서비스",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "frontend/src/App.tsx",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "기존 서비스",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "frontend/src/demo.ts",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "기존 서비스",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "frontend/src/main.tsx",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "기존 서비스",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "frontend/src/styles.css",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "기존 서비스",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "frontend/src/types.ts",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "기존 서비스",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "frontend/src/vite-env.d.ts",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "기존 서비스",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  },
+  {
+    "old_path": "runs/workspace.sqlite3",
+    "decision": "DELETE_AFTER_BACKUP",
+    "category": "실행 기록",
+    "reason": "0.11 독립 모듈 계약으로 대체; 이력/원본은 저장소 밖 보관"
+  }
+]

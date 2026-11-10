@@ -1,0 +1,39 @@
+[
+  {
+    "source": "m0/client.py",
+    "sha256": "d46ea55cb7b0affe8185d24377cba971e51e04be69cfb693acf0608f7449035f",
+    "copy": "m0/client.py"
+  },
+  {
+    "source": "m0/tracing.py",
+    "sha256": "176af7220b1d8f013cce4743eed16b0eb897543912e035c700ec341a03f7e9d4",
+    "copy": "m0/tracing.py"
+  },
+  {
+    "source": "m0/records.py",
+    "sha256": "b5b8e167c1b63ed255b7427575905ab62a16633b1a0b76f2ee87278fa151ba9e",
+    "copy": "m0/records.py",
+    "disposition": "0.1.1 audit: merged into JsonlTraceSink, wrapper deleted"
+  },
+  {
+    "source": "m0/cache.py",
+    "sha256": "e230d4d219cf615b8e0f8bb787359c225f36ac2f56946330a089db4a4c98accf",
+    "copy": "m0/cache.py",
+    "disposition": "0.1.1 audit: unused copy deleted"
+  },
+  {
+    "source": "shared/privacy.py",
+    "sha256": "52d2792cea33a9cfd18891c38ea5e92cb5b85f548e18a8ed14fff3da1a70cf82",
+    "copy": "shared/privacy.py"
+  },
+  {
+    "source": "persistence/recovery.py",
+    "sha256": "45bda4cc42bfedfb6d495bbb6648b204ea492b6f62df59fce12a9c03f9bd96a9",
+    "copy": "persistence/recovery.py"
+  },
+  {
+    "source": "m1/f_validation/service.py",
+    "kind": "adapted algorithms, no runtime import",
+    "copy": "validation.py"
+  }
+]

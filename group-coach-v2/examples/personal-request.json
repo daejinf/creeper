@@ -1,0 +1,21 @@
+{
+  "action": "TALK",
+  "owner_member_id": "member-a",
+  "reference_date": "2026-11-07",
+  "goal": {
+    "title": "행사 안내 화면의 설계와 시연 준비",
+    "start_date": "2026-11-10",
+    "end_date": "2026-11-24",
+    "completion_criteria": [
+      "화면 이동 흐름을 검토하고 수정 기록을 남긴다"
+    ],
+    "execution_method": "역할별 초안을 검토한다",
+    "verification_method": "결과 화면과 짧은 설명",
+    "privacy_scope": "OBJECTIVE_ONLY",
+    "roles": {
+      "member-a": "메인 화면 초안과 시연 설명"
+    }
+  },
+  "conversation": [],
+  "state": {}
+}

@@ -1,0 +1,215 @@
+{
+  "version": "0.1.1",
+  "rounds": [
+    {
+      "round": 1,
+      "tests_passed": 35,
+      "source_sha256": {
+        "src\\wemeet_coach\\group.py": "a9e053f6a6c855c52fa867729380f9d4c1bd922780e259e1232f7f2cb7c0de4e",
+        "src\\wemeet_coach\\personal.py": "e14f72c119e4d760c9fe7b58c2b4dd4ae6035332eddcb024f3cbb9d9fe5d5f03",
+        "src\\wemeet_coach\\validation.py": "7d02450cf679db29e869f515b579cce53489fe83288d5cfb68796bdd3bc97d81",
+        "src\\wemeet_coach\\__init__.py": "41362a5ea4931c546433d4c48290c5707bf02dbbea1c3aafa9f43d1225e47003",
+        "src\\wemeet_coach\\m0\\client.py": "5558b8921121d2e8a4f1e7f76b55656c729ceffba213891c9cd3fe79ff67f2ac",
+        "src\\wemeet_coach\\m0\\runtime.py": "167843ba53fd4ffb33ed3d800548f5d014da040a4218fa48bae909b7c0665983",
+        "src\\wemeet_coach\\m0\\tracing.py": "47c0d711728fecaebeee790aa041c5b56f524d688669ec20f048f5b75cf64b2d",
+        "src\\wemeet_coach\\m0\\__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "src\\wemeet_coach\\persistence\\recovery.py": "54ded720cc409b0e7fb415b1d5e94c7c54bfe4ec898a5ec38c231e12fd7c7448",
+        "src\\wemeet_coach\\persistence\\schema.py": "86dc3cac781c7d98aab3c16de1b88364d5d2755f6b09156dca77583458e4afa1",
+        "src\\wemeet_coach\\persistence\\store.py": "d7fa7ff1d24f51795e5b06990ae79795a952475515903d2b917a8013169aa567",
+        "src\\wemeet_coach\\persistence\\__init__.py": "5e103e7ec5bede41180a847f71bcdb07fca3c14dc7ef077d12ba41048fabe606",
+        "src\\wemeet_coach\\shared\\contracts.py": "f6a3d1856e5e284101c0b20533fb58c33c3111c410cbb614b0a1067e4da200dc",
+        "src\\wemeet_coach\\shared\\privacy.py": "bb6998b93e14262059766f0ae25107e2fa5750a83eca22233d1ae464ce93e910",
+        "src\\wemeet_coach\\shared\\__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "test_output": "...................................                                      [100%]\n============================== warnings summary ===============================\n.venv\\Lib\\site-packages\\fastapi\\testclient.py:1\n  C:\\Users\\user\\Desktop\\크리퍼\\group-coach-v2\\.venv\\Lib\\site-packages\\fastapi\\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.\n    from starlette.testclient import TestClient as TestClient  # noqa\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n35 passed, 1 warning in 10.33s\n"
+    },
+    {
+      "round": 2,
+      "tests_passed": 43,
+      "source_sha256": {
+        "src\\wemeet_coach\\group.py": "eedb4ad1ce579744df1eacc6dd6a8ac60531b74094f5ae1202df3b7fcb6e214a",
+        "src\\wemeet_coach\\personal.py": "4e8151e247acc7a967740a1eb6bcc7a46eb70a2c2a9579e755671005c75e231e",
+        "src\\wemeet_coach\\validation.py": "060ee1e2b5a4f069510cf7c34117390aa00c12c9549fbfa461b9ff0dd843e842",
+        "src\\wemeet_coach\\__init__.py": "41362a5ea4931c546433d4c48290c5707bf02dbbea1c3aafa9f43d1225e47003",
+        "src\\wemeet_coach\\m0\\client.py": "5558b8921121d2e8a4f1e7f76b55656c729ceffba213891c9cd3fe79ff67f2ac",
+        "src\\wemeet_coach\\m0\\runtime.py": "167843ba53fd4ffb33ed3d800548f5d014da040a4218fa48bae909b7c0665983",
+        "src\\wemeet_coach\\m0\\tracing.py": "47c0d711728fecaebeee790aa041c5b56f524d688669ec20f048f5b75cf64b2d",
+        "src\\wemeet_coach\\m0\\__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "src\\wemeet_coach\\persistence\\recovery.py": "54ded720cc409b0e7fb415b1d5e94c7c54bfe4ec898a5ec38c231e12fd7c7448",
+        "src\\wemeet_coach\\persistence\\schema.py": "86dc3cac781c7d98aab3c16de1b88364d5d2755f6b09156dca77583458e4afa1",
+        "src\\wemeet_coach\\persistence\\store.py": "d7fa7ff1d24f51795e5b06990ae79795a952475515903d2b917a8013169aa567",
+        "src\\wemeet_coach\\persistence\\__init__.py": "5e103e7ec5bede41180a847f71bcdb07fca3c14dc7ef077d12ba41048fabe606",
+        "src\\wemeet_coach\\shared\\contracts.py": "18ec6567920017302e7c17ea343d0cf123a057bc1082744372bb9cf4d92c66c6",
+        "src\\wemeet_coach\\shared\\privacy.py": "bb6998b93e14262059766f0ae25107e2fa5750a83eca22233d1ae464ce93e910",
+        "src\\wemeet_coach\\shared\\__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "test_output": "...........................................                              [100%]\n============================== warnings summary ===============================\n.venv\\Lib\\site-packages\\fastapi\\testclient.py:1\n  C:\\Users\\user\\Desktop\\크리퍼\\group-coach-v2\\.venv\\Lib\\site-packages\\fastapi\\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.\n    from starlette.testclient import TestClient as TestClient  # noqa\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n43 passed, 1 warning in 10.28s\n"
+    },
+    {
+      "round": 3,
+      "tests_passed": 46,
+      "source_sha256": {
+        "src\\wemeet_coach\\group.py": "eedb4ad1ce579744df1eacc6dd6a8ac60531b74094f5ae1202df3b7fcb6e214a",
+        "src\\wemeet_coach\\personal.py": "4e8151e247acc7a967740a1eb6bcc7a46eb70a2c2a9579e755671005c75e231e",
+        "src\\wemeet_coach\\validation.py": "060ee1e2b5a4f069510cf7c34117390aa00c12c9549fbfa461b9ff0dd843e842",
+        "src\\wemeet_coach\\__init__.py": "41362a5ea4931c546433d4c48290c5707bf02dbbea1c3aafa9f43d1225e47003",
+        "src\\wemeet_coach\\m0\\client.py": "5558b8921121d2e8a4f1e7f76b55656c729ceffba213891c9cd3fe79ff67f2ac",
+        "src\\wemeet_coach\\m0\\runtime.py": "167843ba53fd4ffb33ed3d800548f5d014da040a4218fa48bae909b7c0665983",
+        "src\\wemeet_coach\\m0\\tracing.py": "47c0d711728fecaebeee790aa041c5b56f524d688669ec20f048f5b75cf64b2d",
+        "src\\wemeet_coach\\m0\\__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "src\\wemeet_coach\\persistence\\recovery.py": "54ded720cc409b0e7fb415b1d5e94c7c54bfe4ec898a5ec38c231e12fd7c7448",
+        "src\\wemeet_coach\\persistence\\schema.py": "86dc3cac781c7d98aab3c16de1b88364d5d2755f6b09156dca77583458e4afa1",
+        "src\\wemeet_coach\\persistence\\store.py": "ad9483f20c127484cafa6bb38aebcbb3302c244d92c572652b48f43953fa5ab6",
+        "src\\wemeet_coach\\persistence\\__init__.py": "5e103e7ec5bede41180a847f71bcdb07fca3c14dc7ef077d12ba41048fabe606",
+        "src\\wemeet_coach\\shared\\contracts.py": "18ec6567920017302e7c17ea343d0cf123a057bc1082744372bb9cf4d92c66c6",
+        "src\\wemeet_coach\\shared\\privacy.py": "bb6998b93e14262059766f0ae25107e2fa5750a83eca22233d1ae464ce93e910",
+        "src\\wemeet_coach\\shared\\__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "test_output": "..............................................                           [100%]\n============================== warnings summary ===============================\n.venv\\Lib\\site-packages\\fastapi\\testclient.py:1\n  C:\\Users\\user\\Desktop\\크리퍼\\group-coach-v2\\.venv\\Lib\\site-packages\\fastapi\\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.\n    from starlette.testclient import TestClient as TestClient  # noqa\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n46 passed, 1 warning in 11.61s\n"
+    },
+    {
+      "round": 4,
+      "tests_passed": 47,
+      "source_sha256": {
+        "src\\wemeet_coach\\group.py": "eedb4ad1ce579744df1eacc6dd6a8ac60531b74094f5ae1202df3b7fcb6e214a",
+        "src\\wemeet_coach\\personal.py": "4e8151e247acc7a967740a1eb6bcc7a46eb70a2c2a9579e755671005c75e231e",
+        "src\\wemeet_coach\\validation.py": "060ee1e2b5a4f069510cf7c34117390aa00c12c9549fbfa461b9ff0dd843e842",
+        "src\\wemeet_coach\\__init__.py": "bed98d1f96f6828d6b3bc489f7f6de6a87001f6dd625cdda972a8025ddd00c81",
+        "src\\wemeet_coach\\m0\\client.py": "5558b8921121d2e8a4f1e7f76b55656c729ceffba213891c9cd3fe79ff67f2ac",
+        "src\\wemeet_coach\\m0\\runtime.py": "167843ba53fd4ffb33ed3d800548f5d014da040a4218fa48bae909b7c0665983",
+        "src\\wemeet_coach\\m0\\tracing.py": "47c0d711728fecaebeee790aa041c5b56f524d688669ec20f048f5b75cf64b2d",
+        "src\\wemeet_coach\\m0\\__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "src\\wemeet_coach\\persistence\\recovery.py": "54ded720cc409b0e7fb415b1d5e94c7c54bfe4ec898a5ec38c231e12fd7c7448",
+        "src\\wemeet_coach\\persistence\\schema.py": "86dc3cac781c7d98aab3c16de1b88364d5d2755f6b09156dca77583458e4afa1",
+        "src\\wemeet_coach\\persistence\\store.py": "51adfb83655d24ec37664d69d6dadbff43d0a8a23c806483c4dca5d0627ced8f",
+        "src\\wemeet_coach\\persistence\\__init__.py": "5e103e7ec5bede41180a847f71bcdb07fca3c14dc7ef077d12ba41048fabe606",
+        "src\\wemeet_coach\\shared\\contracts.py": "18ec6567920017302e7c17ea343d0cf123a057bc1082744372bb9cf4d92c66c6",
+        "src\\wemeet_coach\\shared\\privacy.py": "bb6998b93e14262059766f0ae25107e2fa5750a83eca22233d1ae464ce93e910",
+        "src\\wemeet_coach\\shared\\__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "test_output": "...............................................                          [100%]\n============================== warnings summary ===============================\n.venv\\Lib\\site-packages\\fastapi\\testclient.py:1\n  C:\\Users\\user\\Desktop\\크리퍼\\group-coach-v2\\.venv\\Lib\\site-packages\\fastapi\\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.\n    from starlette.testclient import TestClient as TestClient  # noqa\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n47 passed, 1 warning in 7.95s\n"
+    }
+  ],
+  "round3_reproduction": "FFF                                                                      [100%]\n================================== FAILURES ===================================\n___________________ test_button_fact_survives_model_failure ___________________\ntests\\test_review.py:49: in test_button_fact_survives_model_failure\n    assert state['fields']['level']['value']=='일부 경험'\n           ^^^^^^^^^^^^^^^^^^^^^^^^\nE   KeyError: 'level'\n___________________ test_python_vote_requires_real_boolean ____________________\ntests\\test_review.py:57: in test_python_vote_requires_real_boolean\n    store.vote(gid,pid,'u0','false','','',str(uuid4()))\nsrc\\wemeet_coach\\persistence\\store.py:159: in vote\n    return self.action(gid,action_id,params,run)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nsrc\\wemeet_coach\\persistence\\store.py:92: in action\n    result=runner(c,row)\n           ^^^^^^^^^^^^^\nsrc\\wemeet_coach\\persistence\\store.py:146: in run\n    if not p or p['state']!='VOTING' or p['membership_revision']!=row['membership_revision']:raise Conflict('현재 투표할 수 있는 제안이 아닙니다.')\n                                                                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE   wemeet_coach.persistence.store.Conflict: 현재 투표할 수 있는 제안이 아닙니다.\n\nDuring handling of the above exception, another exception occurred:\ntests\\test_review.py:56: in test_python_vote_requires_real_boolean\n    with pytest.raises(ValueError,match='bool'):\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE   AssertionError: Regex pattern did not match.\nE    Regex: 'bool'\nE    Input: '현재 투표할 수 있는 제안이 아닙니다.'\n________ test_manual_plan_edit_requires_all_confirmed_core_conditions _________\ntests\\test_review.py:66: in test_manual_plan_edit_requires_all_confirmed_core_conditions\n    with pytest.raises(ValueError,match='수준|필수'):\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE   Failed: DID NOT RAISE <class 'ValueError'>\n============================== warnings summary ===============================\ntests/test_review.py::test_manual_plan_edit_requires_all_confirmed_core_conditions\n  C:\\Users\\user\\Desktop\\크리퍼\\group-coach-v2\\.venv\\Lib\\site-packages\\fastapi\\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.\n    from starlette.testclient import TestClient as TestClient  # noqa\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n=========================== short test summary info ===========================\nFAILED tests/test_review.py::test_button_fact_survives_model_failure - KeyErr...\nFAILED tests/test_review.py::test_python_vote_requires_real_boolean - Asserti...\nFAILED tests/test_review.py::test_manual_plan_edit_requires_all_confirmed_core_conditions\n3 failed, 8 deselected, 1 warning in 2.70s\n",
+  "live": {
+    "confirmation": "ANONYMOUS_SIMULATED",
+    "group_id": "7d4d559a-7a5b-4b5e-9268-3fc5b82f0a1e",
+    "runs": [
+      {
+        "module": "group.COACH",
+        "status": "OK",
+        "meta": {
+          "run_id": "04185d25-4c1c-48e9-b371-e7aa2070d207",
+          "task": "group.coach",
+          "prompt_version": "coach-0.1-v2",
+          "model": "openai/gpt-5.6-luna",
+          "usage": {
+            "prompt_tokens": 530,
+            "completion_tokens": 1322,
+            "total_tokens": 1852
+          },
+          "transport_attempts": 1,
+          "repair_attempts": 0,
+          "provider_request_ids": [
+            "gen-1793895702-MiLMVPgIBqqMYqfQnNdY"
+          ],
+          "latency_ms": 15285,
+          "execution_source": "LIVE"
+        },
+        "error": null
+      },
+      {
+        "module": "personal.TALK",
+        "status": "OK",
+        "meta": {
+          "run_id": "500e9e34-ca96-423d-ab31-cc2dfb2c5574",
+          "task": "personal.talk",
+          "prompt_version": "personal-0.1-v3",
+          "model": "openai/gpt-5.6-luna",
+          "usage": {
+            "prompt_tokens": 1732,
+            "completion_tokens": 496,
+            "total_tokens": 2228
+          },
+          "transport_attempts": 1,
+          "repair_attempts": 0,
+          "provider_request_ids": [
+            "gen-1793895717-bkmosXGMafQI0HWXAlS8"
+          ],
+          "latency_ms": 6002,
+          "execution_source": "LIVE"
+        },
+        "error": null,
+        "saved_level": {
+          "value": "일부 경험",
+          "status": "KNOWN",
+          "evidence_refs": [
+            "dcac3533-365b-4553-b3b3-6192b1fd943d"
+          ]
+        },
+        "next_question": {
+          "text": "반복문 문제 풀이와 오답 기록에 일주일에 몇 분을 쓸 수 있나요?",
+          "field": "weekly_minutes",
+          "reason": "6문제 풀이와 오답 기록을 현실적인 날짜별 작업으로 나누기 위해 필요합니다.",
+          "options": [
+            {
+              "label": "주 60분",
+              "value": 60,
+              "action": "VALUE",
+              "option_id": "mins-60"
+            },
+            {
+              "label": "주 120분",
+              "value": 120,
+              "action": "VALUE",
+              "option_id": "mins-120"
+            },
+            {
+              "label": "주 180분",
+              "value": 180,
+              "action": "VALUE",
+              "option_id": "mins-180"
+            },
+            {
+              "label": "주 240분 이상",
+              "value": 240,
+              "action": "VALUE",
+              "option_id": "mins-240"
+            },
+            {
+              "label": "잘 모르겠어요",
+              "value": null,
+              "action": "UNKNOWN",
+              "option_id": "mins-unknown"
+            },
+            {
+              "label": "이 조건은 건너뛸게요",
+              "value": null,
+              "action": "SKIP",
+              "option_id": "mins-skip"
+            }
+          ],
+          "question_id": "2533faa4-7491-472a-b0c6-bfd43e304ff7"
+        }
+      }
+    ],
+    "http": 2,
+    "tokens": 4080
+  },
+  "live_note": "4차 최초 빌드의 공동·개인 smoke. 최종 공개/개인 입력 의존성 분리는 이후 코드 재검사로 검증.",
+  "package": {
+    "files": 15,
+    "lines": 1103,
+    "matches_source": true,
+    "removed_modules_absent": true,
+    "installed_without_web_database_old_project": true
+  },
+  "scenario_contracts": {
+    "count": 200,
+    "invalid": 0,
+    "live": false
+  },
+  "old_source_changed": [],
+  "old_db_equal_to_initial_baseline": true,
+  "secret_scan_matches": []
+}

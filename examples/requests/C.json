@@ -1,0 +1,87 @@
+{
+  "facts": {
+    "goal": {
+      "value": "온라인 교류회 진행안 만들기",
+      "origin": "EXTRACTED",
+      "evidence": [
+        {
+          "source": "SW_CONFIRMED",
+          "source_id": "manual-review"
+        }
+      ]
+    },
+    "start_date": {
+      "value": "2026-12-01",
+      "origin": "EXTRACTED",
+      "evidence": [
+        {
+          "source": "SW_CONFIRMED",
+          "source_id": "manual-review"
+        }
+      ]
+    },
+    "end_date": {
+      "value": "2026-12-21",
+      "origin": "EXTRACTED",
+      "evidence": [
+        {
+          "source": "SW_CONFIRMED",
+          "source_id": "manual-review"
+        }
+      ]
+    },
+    "completion_criteria": {
+      "value": [
+        "참여 방식 선택 가능",
+        "강제 지목 없음"
+      ],
+      "origin": "EXTRACTED",
+      "evidence": [
+        {
+          "source": "SW_CONFIRMED",
+          "source_id": "manual-review"
+        }
+      ]
+    },
+    "verification_method": {
+      "value": "진행안 문서",
+      "origin": "EXTRACTED",
+      "evidence": [
+        {
+          "source": "SW_CONFIRMED",
+          "source_id": "manual-review"
+        }
+      ]
+    },
+    "privacy_scope": {
+      "value": "OBJECTIVE_ONLY",
+      "origin": "EXTRACTED",
+      "evidence": [
+        {
+          "source": "SW_CONFIRMED",
+          "source_id": "manual-review"
+        }
+      ]
+    },
+    "execution_method": {
+      "value": "공유 문서에서 역할별 작성",
+      "origin": "EXTRACTED",
+      "evidence": [
+        {
+          "source": "SW_CONFIRMED",
+          "source_id": "manual-review"
+        }
+      ]
+    }
+  },
+  "members": [
+    {
+      "member_id": "u1",
+      "nickname": "도윤"
+    },
+    {
+      "member_id": "u2",
+      "nickname": "서연"
+    }
+  ]
+}

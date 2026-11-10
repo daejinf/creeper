@@ -1,0 +1,3525 @@
+{
+  "schema_version": "0.14.0",
+  "requests": {
+    "A": {
+      "$defs": {
+        "GoalContext": {
+          "additionalProperties": false,
+          "properties": {
+            "goal": {
+              "default": "",
+              "title": "Goal",
+              "type": "string"
+            },
+            "role": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Role"
+            },
+            "start_date": {
+              "anyOf": [
+                {
+                  "format": "date",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Start Date"
+            },
+            "end_date": {
+              "anyOf": [
+                {
+                  "format": "date",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "End Date"
+            },
+            "completion_criteria": {
+              "items": {
+                "type": "string"
+              },
+              "title": "Completion Criteria",
+              "type": "array"
+            },
+            "milestones": {
+              "items": {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              "title": "Milestones",
+              "type": "array"
+            },
+            "verification_method": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Verification Method"
+            },
+            "privacy_scope": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "OBJECTIVE_ONLY",
+                    "PRIVATE",
+                    "CUSTOM"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Privacy Scope"
+            }
+          },
+          "title": "GoalContext",
+          "type": "object"
+        },
+        "Member": {
+          "additionalProperties": false,
+          "properties": {
+            "member_id": {
+              "minLength": 1,
+              "title": "Member Id",
+              "type": "string"
+            },
+            "nickname": {
+              "minLength": 1,
+              "title": "Nickname",
+              "type": "string"
+            }
+          },
+          "required": [
+            "member_id",
+            "nickname"
+          ],
+          "title": "Member",
+          "type": "object"
+        },
+        "Message": {
+          "additionalProperties": false,
+          "properties": {
+            "message_id": {
+              "minLength": 1,
+              "title": "Message Id",
+              "type": "string"
+            },
+            "speaker_id": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Speaker Id"
+            },
+            "role": {
+              "default": "user",
+              "enum": [
+                "user",
+                "assistant"
+              ],
+              "title": "Role",
+              "type": "string"
+            },
+            "text": {
+              "maxLength": 12000,
+              "minLength": 1,
+              "title": "Text",
+              "type": "string"
+            },
+            "created_at": {
+              "format": "date-time",
+              "title": "Created At",
+              "type": "string"
+            }
+          },
+          "required": [
+            "message_id",
+            "text",
+            "created_at"
+          ],
+          "title": "Message",
+          "type": "object"
+        }
+      },
+      "additionalProperties": false,
+      "properties": {
+        "conversation": {
+          "items": {
+            "$ref": "#/$defs/Message"
+          },
+          "maxItems": 200,
+          "title": "Conversation",
+          "type": "array"
+        },
+        "members": {
+          "items": {
+            "$ref": "#/$defs/Member"
+          },
+          "title": "Members",
+          "type": "array"
+        },
+        "reference_date": {
+          "format": "date",
+          "title": "Reference Date",
+          "type": "string"
+        },
+        "timezone": {
+          "default": "Asia/Seoul",
+          "title": "Timezone",
+          "type": "string"
+        },
+        "context": {
+          "$ref": "#/$defs/GoalContext"
+        }
+      },
+      "title": "CoachRequest",
+      "type": "object"
+    },
+    "B": {
+      "$defs": {
+        "Member": {
+          "additionalProperties": false,
+          "properties": {
+            "member_id": {
+              "minLength": 1,
+              "title": "Member Id",
+              "type": "string"
+            },
+            "nickname": {
+              "minLength": 1,
+              "title": "Nickname",
+              "type": "string"
+            }
+          },
+          "required": [
+            "member_id",
+            "nickname"
+          ],
+          "title": "Member",
+          "type": "object"
+        },
+        "Message": {
+          "additionalProperties": false,
+          "properties": {
+            "message_id": {
+              "minLength": 1,
+              "title": "Message Id",
+              "type": "string"
+            },
+            "speaker_id": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Speaker Id"
+            },
+            "role": {
+              "default": "user",
+              "enum": [
+                "user",
+                "assistant"
+              ],
+              "title": "Role",
+              "type": "string"
+            },
+            "text": {
+              "maxLength": 12000,
+              "minLength": 1,
+              "title": "Text",
+              "type": "string"
+            },
+            "created_at": {
+              "format": "date-time",
+              "title": "Created At",
+              "type": "string"
+            }
+          },
+          "required": [
+            "message_id",
+            "text",
+            "created_at"
+          ],
+          "title": "Message",
+          "type": "object"
+        }
+      },
+      "additionalProperties": false,
+      "properties": {
+        "conversation": {
+          "items": {
+            "$ref": "#/$defs/Message"
+          },
+          "maxItems": 200,
+          "title": "Conversation",
+          "type": "array"
+        },
+        "members": {
+          "items": {
+            "$ref": "#/$defs/Member"
+          },
+          "title": "Members",
+          "type": "array"
+        },
+        "reference_date": {
+          "format": "date",
+          "title": "Reference Date",
+          "type": "string"
+        },
+        "timezone": {
+          "default": "Asia/Seoul",
+          "title": "Timezone",
+          "type": "string"
+        }
+      },
+      "title": "ConversationInput",
+      "type": "object"
+    },
+    "C": {
+      "$defs": {
+        "Evidence": {
+          "additionalProperties": false,
+          "properties": {
+            "source": {
+              "enum": [
+                "USER_MESSAGE",
+                "SW_CONFIRMED",
+                "AI_SUGGESTED"
+              ],
+              "title": "Source",
+              "type": "string"
+            },
+            "source_id": {
+              "minLength": 1,
+              "title": "Source Id",
+              "type": "string"
+            }
+          },
+          "required": [
+            "source",
+            "source_id"
+          ],
+          "title": "Evidence",
+          "type": "object"
+        },
+        "GoalDraft": {
+          "additionalProperties": false,
+          "properties": {
+            "fields": {
+              "additionalProperties": {
+                "$ref": "#/$defs/ReviewField"
+              },
+              "title": "Fields",
+              "type": "object"
+            },
+            "conflicts": {
+              "items": {
+                "type": "string"
+              },
+              "title": "Conflicts",
+              "type": "array"
+            }
+          },
+          "title": "GoalDraft",
+          "type": "object"
+        },
+        "Member": {
+          "additionalProperties": false,
+          "properties": {
+            "member_id": {
+              "minLength": 1,
+              "title": "Member Id",
+              "type": "string"
+            },
+            "nickname": {
+              "minLength": 1,
+              "title": "Nickname",
+              "type": "string"
+            }
+          },
+          "required": [
+            "member_id",
+            "nickname"
+          ],
+          "title": "Member",
+          "type": "object"
+        },
+        "ReviewField": {
+          "additionalProperties": false,
+          "properties": {
+            "value": {
+              "default": null,
+              "title": "Value"
+            },
+            "origin": {
+              "default": "UNRESOLVED",
+              "enum": [
+                "EXTRACTED",
+                "AI_SUGGESTED",
+                "UNRESOLVED"
+              ],
+              "title": "Origin",
+              "type": "string"
+            },
+            "evidence": {
+              "items": {
+                "$ref": "#/$defs/Evidence"
+              },
+              "title": "Evidence",
+              "type": "array"
+            },
+            "reason": {
+              "default": "",
+              "title": "Reason",
+              "type": "string"
+            },
+            "review_status": {
+              "default": "PENDING",
+              "enum": [
+                "PENDING",
+                "ACCEPTED",
+                "EDITED",
+                "REVIEW_REQUIRED"
+              ],
+              "title": "Review Status",
+              "type": "string"
+            },
+            "previous_value": {
+              "default": null,
+              "title": "Previous Value"
+            },
+            "conflicted": {
+              "default": false,
+              "title": "Conflicted",
+              "type": "boolean"
+            }
+          },
+          "title": "ReviewField",
+          "type": "object"
+        }
+      },
+      "additionalProperties": false,
+      "properties": {
+        "facts": {
+          "additionalProperties": {
+            "$ref": "#/$defs/ReviewField"
+          },
+          "title": "Facts",
+          "type": "object"
+        },
+        "previous": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/GoalDraft"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "members": {
+          "items": {
+            "$ref": "#/$defs/Member"
+          },
+          "title": "Members",
+          "type": "array"
+        },
+        "reference_date": {
+          "format": "date",
+          "title": "Reference Date",
+          "type": "string"
+        },
+        "mode": {
+          "default": "ASSISTED",
+          "enum": [
+            "ASSISTED",
+            "GROUNDED",
+            "SUGGEST"
+          ],
+          "title": "Mode",
+          "type": "string"
+        },
+        "target_fields": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Target Fields",
+          "type": "array"
+        },
+        "conflicted_fields": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Conflicted Fields",
+          "type": "array"
+        }
+      },
+      "title": "DraftRequest",
+      "type": "object"
+    },
+    "D": {
+      "$defs": {
+        "Evidence": {
+          "additionalProperties": false,
+          "properties": {
+            "source": {
+              "enum": [
+                "USER_MESSAGE",
+                "SW_CONFIRMED",
+                "AI_SUGGESTED"
+              ],
+              "title": "Source",
+              "type": "string"
+            },
+            "source_id": {
+              "minLength": 1,
+              "title": "Source Id",
+              "type": "string"
+            }
+          },
+          "required": [
+            "source",
+            "source_id"
+          ],
+          "title": "Evidence",
+          "type": "object"
+        },
+        "Member": {
+          "additionalProperties": false,
+          "properties": {
+            "member_id": {
+              "minLength": 1,
+              "title": "Member Id",
+              "type": "string"
+            },
+            "nickname": {
+              "minLength": 1,
+              "title": "Nickname",
+              "type": "string"
+            }
+          },
+          "required": [
+            "member_id",
+            "nickname"
+          ],
+          "title": "Member",
+          "type": "object"
+        }
+      },
+      "additionalProperties": false,
+      "properties": {
+        "goal": {
+          "default": "",
+          "title": "Goal",
+          "type": "string"
+        },
+        "role": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Role"
+        },
+        "start_date": {
+          "anyOf": [
+            {
+              "format": "date",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Start Date"
+        },
+        "end_date": {
+          "anyOf": [
+            {
+              "format": "date",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "End Date"
+        },
+        "completion_criteria": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Completion Criteria",
+          "type": "array"
+        },
+        "milestones": {
+          "items": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "title": "Milestones",
+          "type": "array"
+        },
+        "verification_method": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Verification Method"
+        },
+        "privacy_scope": {
+          "anyOf": [
+            {
+              "enum": [
+                "OBJECTIVE_ONLY",
+                "PRIVATE",
+                "CUSTOM"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Privacy Scope"
+        },
+        "members": {
+          "items": {
+            "$ref": "#/$defs/Member"
+          },
+          "title": "Members",
+          "type": "array"
+        },
+        "execution_method": {
+          "default": "",
+          "title": "Execution Method",
+          "type": "string"
+        },
+        "confirmed": {
+          "default": false,
+          "title": "Confirmed",
+          "type": "boolean"
+        },
+        "evidence": {
+          "items": {
+            "$ref": "#/$defs/Evidence"
+          },
+          "title": "Evidence",
+          "type": "array"
+        },
+        "roles": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Roles",
+          "type": "object"
+        },
+        "checkins": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Checkins",
+          "type": "array"
+        },
+        "frequency_per_week": {
+          "anyOf": [
+            {
+              "maximum": 7,
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Frequency Per Week"
+        }
+      },
+      "title": "ConfirmedGoal",
+      "type": "object"
+    },
+    "E.coach": {
+      "$defs": {
+        "AnswerOption": {
+          "additionalProperties": false,
+          "properties": {
+            "option_id": {
+              "title": "Option Id",
+              "type": "string"
+            },
+            "label": {
+              "title": "Label",
+              "type": "string"
+            },
+            "value": {
+              "default": null,
+              "title": "Value"
+            },
+            "action": {
+              "default": "VALUE",
+              "enum": [
+                "VALUE",
+                "UNKNOWN",
+                "SKIP"
+              ],
+              "title": "Action",
+              "type": "string"
+            }
+          },
+          "required": [
+            "option_id",
+            "label"
+          ],
+          "title": "AnswerOption",
+          "type": "object"
+        },
+        "ButtonAnswer": {
+          "additionalProperties": false,
+          "properties": {
+            "question_id": {
+              "title": "Question Id",
+              "type": "string"
+            },
+            "option_id": {
+              "title": "Option Id",
+              "type": "string"
+            },
+            "message_id": {
+              "title": "Message Id",
+              "type": "string"
+            }
+          },
+          "required": [
+            "question_id",
+            "option_id",
+            "message_id"
+          ],
+          "title": "ButtonAnswer",
+          "type": "object"
+        },
+        "Dimension": {
+          "additionalProperties": false,
+          "properties": {
+            "field": {
+              "enum": [
+                "current_level",
+                "weekly_available_minutes",
+                "scope",
+                "current_progress",
+                "tools",
+                "preferred_times",
+                "constraints",
+                "support_needed"
+              ],
+              "title": "Field",
+              "type": "string"
+            },
+            "label": {
+              "title": "Label",
+              "type": "string"
+            },
+            "reason": {
+              "title": "Reason",
+              "type": "string"
+            },
+            "required": {
+              "default": false,
+              "title": "Required",
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "field",
+            "label",
+            "reason"
+          ],
+          "title": "Dimension",
+          "type": "object"
+        },
+        "Evidence": {
+          "additionalProperties": false,
+          "properties": {
+            "source": {
+              "enum": [
+                "USER_MESSAGE",
+                "SW_CONFIRMED",
+                "AI_SUGGESTED"
+              ],
+              "title": "Source",
+              "type": "string"
+            },
+            "source_id": {
+              "minLength": 1,
+              "title": "Source Id",
+              "type": "string"
+            }
+          },
+          "required": [
+            "source",
+            "source_id"
+          ],
+          "title": "Evidence",
+          "type": "object"
+        },
+        "GoalContext": {
+          "additionalProperties": false,
+          "properties": {
+            "goal": {
+              "default": "",
+              "title": "Goal",
+              "type": "string"
+            },
+            "role": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Role"
+            },
+            "start_date": {
+              "anyOf": [
+                {
+                  "format": "date",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Start Date"
+            },
+            "end_date": {
+              "anyOf": [
+                {
+                  "format": "date",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "End Date"
+            },
+            "completion_criteria": {
+              "items": {
+                "type": "string"
+              },
+              "title": "Completion Criteria",
+              "type": "array"
+            },
+            "milestones": {
+              "items": {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              "title": "Milestones",
+              "type": "array"
+            },
+            "verification_method": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Verification Method"
+            },
+            "privacy_scope": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "OBJECTIVE_ONLY",
+                    "PRIVATE",
+                    "CUSTOM"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Privacy Scope"
+            }
+          },
+          "title": "GoalContext",
+          "type": "object"
+        },
+        "MemberState": {
+          "additionalProperties": false,
+          "properties": {
+            "owner_member_id": {
+              "default": "",
+              "title": "Owner Member Id",
+              "type": "string"
+            },
+            "context_key": {
+              "default": "",
+              "title": "Context Key",
+              "type": "string"
+            },
+            "fields": {
+              "additionalProperties": {
+                "$ref": "#/$defs/ReviewField"
+              },
+              "title": "Fields",
+              "type": "object"
+            },
+            "answer_states": {
+              "additionalProperties": {
+                "enum": [
+                  "KNOWN",
+                  "UNKNOWN",
+                  "SKIPPED"
+                ],
+                "type": "string"
+              },
+              "title": "Answer States",
+              "type": "object"
+            },
+            "dimensions": {
+              "items": {
+                "$ref": "#/$defs/Dimension"
+              },
+              "title": "Dimensions",
+              "type": "array"
+            },
+            "question": {
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/Question"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null
+            },
+            "answered_question_ids": {
+              "items": {
+                "type": "string"
+              },
+              "title": "Answered Question Ids",
+              "type": "array"
+            },
+            "answered_topics": {
+              "items": {
+                "type": "string"
+              },
+              "title": "Answered Topics",
+              "type": "array"
+            },
+            "answered_since_summary": {
+              "default": 0,
+              "title": "Answered Since Summary",
+              "type": "integer"
+            },
+            "refinements": {
+              "additionalProperties": {
+                "$ref": "#/$defs/ReviewField"
+              },
+              "title": "Refinements",
+              "type": "object"
+            },
+            "refinement_states": {
+              "additionalProperties": {
+                "enum": [
+                  "KNOWN",
+                  "UNKNOWN",
+                  "SKIPPED"
+                ],
+                "type": "string"
+              },
+              "title": "Refinement States",
+              "type": "object"
+            }
+          },
+          "title": "MemberState",
+          "type": "object"
+        },
+        "Message": {
+          "additionalProperties": false,
+          "properties": {
+            "message_id": {
+              "minLength": 1,
+              "title": "Message Id",
+              "type": "string"
+            },
+            "speaker_id": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Speaker Id"
+            },
+            "role": {
+              "default": "user",
+              "enum": [
+                "user",
+                "assistant"
+              ],
+              "title": "Role",
+              "type": "string"
+            },
+            "text": {
+              "maxLength": 12000,
+              "minLength": 1,
+              "title": "Text",
+              "type": "string"
+            },
+            "created_at": {
+              "format": "date-time",
+              "title": "Created At",
+              "type": "string"
+            }
+          },
+          "required": [
+            "message_id",
+            "text",
+            "created_at"
+          ],
+          "title": "Message",
+          "type": "object"
+        },
+        "Question": {
+          "additionalProperties": false,
+          "properties": {
+            "question_id": {
+              "default": "",
+              "title": "Question Id",
+              "type": "string"
+            },
+            "field": {
+              "enum": [
+                "current_level",
+                "weekly_available_minutes",
+                "scope",
+                "current_progress",
+                "tools",
+                "preferred_times",
+                "constraints",
+                "support_needed"
+              ],
+              "title": "Field",
+              "type": "string"
+            },
+            "text": {
+              "title": "Text",
+              "type": "string"
+            },
+            "reason": {
+              "title": "Reason",
+              "type": "string"
+            },
+            "topic_id": {
+              "default": "",
+              "title": "Topic Id",
+              "type": "string"
+            },
+            "refinement_reason": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Refinement Reason"
+            },
+            "options": {
+              "items": {
+                "$ref": "#/$defs/AnswerOption"
+              },
+              "maxItems": 6,
+              "title": "Options",
+              "type": "array"
+            }
+          },
+          "required": [
+            "field",
+            "text",
+            "reason"
+          ],
+          "title": "Question",
+          "type": "object"
+        },
+        "ReviewField": {
+          "additionalProperties": false,
+          "properties": {
+            "value": {
+              "default": null,
+              "title": "Value"
+            },
+            "origin": {
+              "default": "UNRESOLVED",
+              "enum": [
+                "EXTRACTED",
+                "AI_SUGGESTED",
+                "UNRESOLVED"
+              ],
+              "title": "Origin",
+              "type": "string"
+            },
+            "evidence": {
+              "items": {
+                "$ref": "#/$defs/Evidence"
+              },
+              "title": "Evidence",
+              "type": "array"
+            },
+            "reason": {
+              "default": "",
+              "title": "Reason",
+              "type": "string"
+            },
+            "review_status": {
+              "default": "PENDING",
+              "enum": [
+                "PENDING",
+                "ACCEPTED",
+                "EDITED",
+                "REVIEW_REQUIRED"
+              ],
+              "title": "Review Status",
+              "type": "string"
+            },
+            "previous_value": {
+              "default": null,
+              "title": "Previous Value"
+            },
+            "conflicted": {
+              "default": false,
+              "title": "Conflicted",
+              "type": "boolean"
+            }
+          },
+          "title": "ReviewField",
+          "type": "object"
+        }
+      },
+      "additionalProperties": false,
+      "properties": {
+        "context": {
+          "$ref": "#/$defs/GoalContext"
+        },
+        "owner_member_id": {
+          "title": "Owner Member Id",
+          "type": "string"
+        },
+        "conversation": {
+          "items": {
+            "$ref": "#/$defs/Message"
+          },
+          "title": "Conversation",
+          "type": "array"
+        },
+        "state": {
+          "$ref": "#/$defs/MemberState"
+        },
+        "answer": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ButtonAnswer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "reference_date": {
+          "format": "date",
+          "title": "Reference Date",
+          "type": "string"
+        }
+      },
+      "required": [
+        "context",
+        "owner_member_id"
+      ],
+      "title": "MemberCoachRequest",
+      "type": "object"
+    },
+    "E.draft": {
+      "$defs": {
+        "AnswerOption": {
+          "additionalProperties": false,
+          "properties": {
+            "option_id": {
+              "title": "Option Id",
+              "type": "string"
+            },
+            "label": {
+              "title": "Label",
+              "type": "string"
+            },
+            "value": {
+              "default": null,
+              "title": "Value"
+            },
+            "action": {
+              "default": "VALUE",
+              "enum": [
+                "VALUE",
+                "UNKNOWN",
+                "SKIP"
+              ],
+              "title": "Action",
+              "type": "string"
+            }
+          },
+          "required": [
+            "option_id",
+            "label"
+          ],
+          "title": "AnswerOption",
+          "type": "object"
+        },
+        "ButtonAnswer": {
+          "additionalProperties": false,
+          "properties": {
+            "question_id": {
+              "title": "Question Id",
+              "type": "string"
+            },
+            "option_id": {
+              "title": "Option Id",
+              "type": "string"
+            },
+            "message_id": {
+              "title": "Message Id",
+              "type": "string"
+            }
+          },
+          "required": [
+            "question_id",
+            "option_id",
+            "message_id"
+          ],
+          "title": "ButtonAnswer",
+          "type": "object"
+        },
+        "Dimension": {
+          "additionalProperties": false,
+          "properties": {
+            "field": {
+              "enum": [
+                "current_level",
+                "weekly_available_minutes",
+                "scope",
+                "current_progress",
+                "tools",
+                "preferred_times",
+                "constraints",
+                "support_needed"
+              ],
+              "title": "Field",
+              "type": "string"
+            },
+            "label": {
+              "title": "Label",
+              "type": "string"
+            },
+            "reason": {
+              "title": "Reason",
+              "type": "string"
+            },
+            "required": {
+              "default": false,
+              "title": "Required",
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "field",
+            "label",
+            "reason"
+          ],
+          "title": "Dimension",
+          "type": "object"
+        },
+        "Evidence": {
+          "additionalProperties": false,
+          "properties": {
+            "source": {
+              "enum": [
+                "USER_MESSAGE",
+                "SW_CONFIRMED",
+                "AI_SUGGESTED"
+              ],
+              "title": "Source",
+              "type": "string"
+            },
+            "source_id": {
+              "minLength": 1,
+              "title": "Source Id",
+              "type": "string"
+            }
+          },
+          "required": [
+            "source",
+            "source_id"
+          ],
+          "title": "Evidence",
+          "type": "object"
+        },
+        "GoalContext": {
+          "additionalProperties": false,
+          "properties": {
+            "goal": {
+              "default": "",
+              "title": "Goal",
+              "type": "string"
+            },
+            "role": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Role"
+            },
+            "start_date": {
+              "anyOf": [
+                {
+                  "format": "date",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Start Date"
+            },
+            "end_date": {
+              "anyOf": [
+                {
+                  "format": "date",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "End Date"
+            },
+            "completion_criteria": {
+              "items": {
+                "type": "string"
+              },
+              "title": "Completion Criteria",
+              "type": "array"
+            },
+            "milestones": {
+              "items": {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              "title": "Milestones",
+              "type": "array"
+            },
+            "verification_method": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Verification Method"
+            },
+            "privacy_scope": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "OBJECTIVE_ONLY",
+                    "PRIVATE",
+                    "CUSTOM"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Privacy Scope"
+            }
+          },
+          "title": "GoalContext",
+          "type": "object"
+        },
+        "MemberState": {
+          "additionalProperties": false,
+          "properties": {
+            "owner_member_id": {
+              "default": "",
+              "title": "Owner Member Id",
+              "type": "string"
+            },
+            "context_key": {
+              "default": "",
+              "title": "Context Key",
+              "type": "string"
+            },
+            "fields": {
+              "additionalProperties": {
+                "$ref": "#/$defs/ReviewField"
+              },
+              "title": "Fields",
+              "type": "object"
+            },
+            "answer_states": {
+              "additionalProperties": {
+                "enum": [
+                  "KNOWN",
+                  "UNKNOWN",
+                  "SKIPPED"
+                ],
+                "type": "string"
+              },
+              "title": "Answer States",
+              "type": "object"
+            },
+            "dimensions": {
+              "items": {
+                "$ref": "#/$defs/Dimension"
+              },
+              "title": "Dimensions",
+              "type": "array"
+            },
+            "question": {
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/Question"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null
+            },
+            "answered_question_ids": {
+              "items": {
+                "type": "string"
+              },
+              "title": "Answered Question Ids",
+              "type": "array"
+            },
+            "answered_topics": {
+              "items": {
+                "type": "string"
+              },
+              "title": "Answered Topics",
+              "type": "array"
+            },
+            "answered_since_summary": {
+              "default": 0,
+              "title": "Answered Since Summary",
+              "type": "integer"
+            },
+            "refinements": {
+              "additionalProperties": {
+                "$ref": "#/$defs/ReviewField"
+              },
+              "title": "Refinements",
+              "type": "object"
+            },
+            "refinement_states": {
+              "additionalProperties": {
+                "enum": [
+                  "KNOWN",
+                  "UNKNOWN",
+                  "SKIPPED"
+                ],
+                "type": "string"
+              },
+              "title": "Refinement States",
+              "type": "object"
+            }
+          },
+          "title": "MemberState",
+          "type": "object"
+        },
+        "Message": {
+          "additionalProperties": false,
+          "properties": {
+            "message_id": {
+              "minLength": 1,
+              "title": "Message Id",
+              "type": "string"
+            },
+            "speaker_id": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Speaker Id"
+            },
+            "role": {
+              "default": "user",
+              "enum": [
+                "user",
+                "assistant"
+              ],
+              "title": "Role",
+              "type": "string"
+            },
+            "text": {
+              "maxLength": 12000,
+              "minLength": 1,
+              "title": "Text",
+              "type": "string"
+            },
+            "created_at": {
+              "format": "date-time",
+              "title": "Created At",
+              "type": "string"
+            }
+          },
+          "required": [
+            "message_id",
+            "text",
+            "created_at"
+          ],
+          "title": "Message",
+          "type": "object"
+        },
+        "Question": {
+          "additionalProperties": false,
+          "properties": {
+            "question_id": {
+              "default": "",
+              "title": "Question Id",
+              "type": "string"
+            },
+            "field": {
+              "enum": [
+                "current_level",
+                "weekly_available_minutes",
+                "scope",
+                "current_progress",
+                "tools",
+                "preferred_times",
+                "constraints",
+                "support_needed"
+              ],
+              "title": "Field",
+              "type": "string"
+            },
+            "text": {
+              "title": "Text",
+              "type": "string"
+            },
+            "reason": {
+              "title": "Reason",
+              "type": "string"
+            },
+            "topic_id": {
+              "default": "",
+              "title": "Topic Id",
+              "type": "string"
+            },
+            "refinement_reason": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Refinement Reason"
+            },
+            "options": {
+              "items": {
+                "$ref": "#/$defs/AnswerOption"
+              },
+              "maxItems": 6,
+              "title": "Options",
+              "type": "array"
+            }
+          },
+          "required": [
+            "field",
+            "text",
+            "reason"
+          ],
+          "title": "Question",
+          "type": "object"
+        },
+        "ReviewField": {
+          "additionalProperties": false,
+          "properties": {
+            "value": {
+              "default": null,
+              "title": "Value"
+            },
+            "origin": {
+              "default": "UNRESOLVED",
+              "enum": [
+                "EXTRACTED",
+                "AI_SUGGESTED",
+                "UNRESOLVED"
+              ],
+              "title": "Origin",
+              "type": "string"
+            },
+            "evidence": {
+              "items": {
+                "$ref": "#/$defs/Evidence"
+              },
+              "title": "Evidence",
+              "type": "array"
+            },
+            "reason": {
+              "default": "",
+              "title": "Reason",
+              "type": "string"
+            },
+            "review_status": {
+              "default": "PENDING",
+              "enum": [
+                "PENDING",
+                "ACCEPTED",
+                "EDITED",
+                "REVIEW_REQUIRED"
+              ],
+              "title": "Review Status",
+              "type": "string"
+            },
+            "previous_value": {
+              "default": null,
+              "title": "Previous Value"
+            },
+            "conflicted": {
+              "default": false,
+              "title": "Conflicted",
+              "type": "boolean"
+            }
+          },
+          "title": "ReviewField",
+          "type": "object"
+        }
+      },
+      "additionalProperties": false,
+      "properties": {
+        "context": {
+          "$ref": "#/$defs/GoalContext"
+        },
+        "owner_member_id": {
+          "title": "Owner Member Id",
+          "type": "string"
+        },
+        "conversation": {
+          "items": {
+            "$ref": "#/$defs/Message"
+          },
+          "title": "Conversation",
+          "type": "array"
+        },
+        "state": {
+          "$ref": "#/$defs/MemberState"
+        },
+        "answer": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ButtonAnswer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "reference_date": {
+          "format": "date",
+          "title": "Reference Date",
+          "type": "string"
+        }
+      },
+      "required": [
+        "context",
+        "owner_member_id"
+      ],
+      "title": "MemberCoachRequest",
+      "type": "object"
+    },
+    "E.plan": {
+      "$defs": {
+        "Contribution": {
+          "additionalProperties": false,
+          "properties": {
+            "title": {
+              "title": "Title",
+              "type": "string"
+            },
+            "deliverable": {
+              "title": "Deliverable",
+              "type": "string"
+            },
+            "completion_criteria": {
+              "items": {
+                "type": "string"
+              },
+              "title": "Completion Criteria",
+              "type": "array"
+            },
+            "confirmed": {
+              "default": false,
+              "title": "Confirmed",
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "title",
+            "deliverable"
+          ],
+          "title": "Contribution",
+          "type": "object"
+        },
+        "GoalContext": {
+          "additionalProperties": false,
+          "properties": {
+            "goal": {
+              "default": "",
+              "title": "Goal",
+              "type": "string"
+            },
+            "role": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Role"
+            },
+            "start_date": {
+              "anyOf": [
+                {
+                  "format": "date",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Start Date"
+            },
+            "end_date": {
+              "anyOf": [
+                {
+                  "format": "date",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "End Date"
+            },
+            "completion_criteria": {
+              "items": {
+                "type": "string"
+              },
+              "title": "Completion Criteria",
+              "type": "array"
+            },
+            "milestones": {
+              "items": {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              "title": "Milestones",
+              "type": "array"
+            },
+            "verification_method": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Verification Method"
+            },
+            "privacy_scope": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "OBJECTIVE_ONLY",
+                    "PRIVATE",
+                    "CUSTOM"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Privacy Scope"
+            }
+          },
+          "title": "GoalContext",
+          "type": "object"
+        },
+        "MemberProfile": {
+          "additionalProperties": false,
+          "properties": {
+            "current_level": {
+              "default": "",
+              "title": "Current Level",
+              "type": "string"
+            },
+            "weekly_available_minutes": {
+              "anyOf": [
+                {
+                  "exclusiveMinimum": 0,
+                  "maximum": 10080,
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Weekly Available Minutes"
+            },
+            "confirmed": {
+              "default": false,
+              "title": "Confirmed",
+              "type": "boolean"
+            },
+            "constraints": {
+              "items": {
+                "type": "string"
+              },
+              "title": "Constraints",
+              "type": "array"
+            },
+            "private_notes": {
+              "items": {
+                "type": "string"
+              },
+              "title": "Private Notes",
+              "type": "array"
+            }
+          },
+          "title": "MemberProfile",
+          "type": "object"
+        }
+      },
+      "additionalProperties": false,
+      "properties": {
+        "context": {
+          "$ref": "#/$defs/GoalContext"
+        },
+        "owner_member_id": {
+          "title": "Owner Member Id",
+          "type": "string"
+        },
+        "contribution": {
+          "$ref": "#/$defs/Contribution"
+        },
+        "profile": {
+          "$ref": "#/$defs/MemberProfile"
+        }
+      },
+      "required": [
+        "context",
+        "owner_member_id",
+        "contribution",
+        "profile"
+      ],
+      "title": "MemberPlanRequest",
+      "type": "object"
+    },
+    "F": {
+      "$defs": {
+        "GoalContext": {
+          "additionalProperties": false,
+          "properties": {
+            "goal": {
+              "default": "",
+              "title": "Goal",
+              "type": "string"
+            },
+            "role": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Role"
+            },
+            "start_date": {
+              "anyOf": [
+                {
+                  "format": "date",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Start Date"
+            },
+            "end_date": {
+              "anyOf": [
+                {
+                  "format": "date",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "End Date"
+            },
+            "completion_criteria": {
+              "items": {
+                "type": "string"
+              },
+              "title": "Completion Criteria",
+              "type": "array"
+            },
+            "milestones": {
+              "items": {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              "title": "Milestones",
+              "type": "array"
+            },
+            "verification_method": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Verification Method"
+            },
+            "privacy_scope": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "OBJECTIVE_ONLY",
+                    "PRIVATE",
+                    "CUSTOM"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Privacy Scope"
+            }
+          },
+          "title": "GoalContext",
+          "type": "object"
+        },
+        "Milestone": {
+          "additionalProperties": false,
+          "properties": {
+            "title": {
+              "title": "Title",
+              "type": "string"
+            },
+            "due_date": {
+              "format": "date",
+              "title": "Due Date",
+              "type": "string"
+            },
+            "description": {
+              "default": "",
+              "title": "Description",
+              "type": "string"
+            }
+          },
+          "required": [
+            "title",
+            "due_date"
+          ],
+          "title": "Milestone",
+          "type": "object"
+        },
+        "Plan": {
+          "additionalProperties": false,
+          "properties": {
+            "plan_version_id": {
+              "default": "",
+              "title": "Plan Version Id",
+              "type": "string"
+            },
+            "previous_plan_version_id": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Previous Plan Version Id"
+            },
+            "status": {
+              "const": "DRAFT",
+              "default": "DRAFT",
+              "title": "Status",
+              "type": "string"
+            },
+            "goal": {
+              "title": "Goal",
+              "type": "string"
+            },
+            "start_date": {
+              "format": "date",
+              "title": "Start Date",
+              "type": "string"
+            },
+            "end_date": {
+              "format": "date",
+              "title": "End Date",
+              "type": "string"
+            },
+            "owner_member_id": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Owner Member Id"
+            },
+            "milestones": {
+              "items": {
+                "$ref": "#/$defs/Milestone"
+              },
+              "title": "Milestones",
+              "type": "array"
+            },
+            "weekly_outcomes": {
+              "items": {
+                "type": "string"
+              },
+              "title": "Weekly Outcomes",
+              "type": "array"
+            },
+            "tasks": {
+              "items": {
+                "$ref": "#/$defs/Task"
+              },
+              "minItems": 1,
+              "title": "Tasks",
+              "type": "array"
+            },
+            "adaptation_rules": {
+              "items": {
+                "type": "string"
+              },
+              "title": "Adaptation Rules",
+              "type": "array"
+            },
+            "suggestions": {
+              "items": {
+                "type": "string"
+              },
+              "title": "Suggestions",
+              "type": "array"
+            }
+          },
+          "required": [
+            "goal",
+            "start_date",
+            "end_date",
+            "tasks"
+          ],
+          "title": "Plan",
+          "type": "object"
+        },
+        "Task": {
+          "additionalProperties": false,
+          "properties": {
+            "task_id": {
+              "default": "",
+              "title": "Task Id",
+              "type": "string"
+            },
+            "owner_member_id": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Owner Member Id"
+            },
+            "title": {
+              "minLength": 1,
+              "title": "Title",
+              "type": "string"
+            },
+            "deliverable": {
+              "minLength": 1,
+              "title": "Deliverable",
+              "type": "string"
+            },
+            "completion_criteria": {
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1,
+              "title": "Completion Criteria",
+              "type": "array"
+            },
+            "due_date": {
+              "format": "date",
+              "title": "Due Date",
+              "type": "string"
+            },
+            "estimated_minutes": {
+              "exclusiveMinimum": 0,
+              "title": "Estimated Minutes",
+              "type": "integer"
+            },
+            "difficulty": {
+              "default": "MEDIUM",
+              "enum": [
+                "EASY",
+                "MEDIUM",
+                "HARD"
+              ],
+              "title": "Difficulty",
+              "type": "string"
+            },
+            "dependencies": {
+              "items": {
+                "type": "string"
+              },
+              "title": "Dependencies",
+              "type": "array"
+            }
+          },
+          "required": [
+            "title",
+            "deliverable",
+            "completion_criteria",
+            "due_date",
+            "estimated_minutes"
+          ],
+          "title": "Task",
+          "type": "object"
+        }
+      },
+      "additionalProperties": false,
+      "properties": {
+        "scope": {
+          "default": "GROUP",
+          "title": "Scope",
+          "type": "string"
+        },
+        "group_plan": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Plan"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "member_plans": {
+          "items": {
+            "$ref": "#/$defs/Plan"
+          },
+          "title": "Member Plans",
+          "type": "array"
+        },
+        "context": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/GoalContext"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "weekly_budgets": {
+          "additionalProperties": {
+            "type": "integer"
+          },
+          "title": "Weekly Budgets",
+          "type": "object"
+        },
+        "expected_members": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Expected Members",
+          "type": "array"
+        }
+      },
+      "title": "ValidationRequest",
+      "type": "object"
+    },
+    "F.revise": {
+      "$defs": {
+        "GoalContext": {
+          "additionalProperties": false,
+          "properties": {
+            "goal": {
+              "default": "",
+              "title": "Goal",
+              "type": "string"
+            },
+            "role": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Role"
+            },
+            "start_date": {
+              "anyOf": [
+                {
+                  "format": "date",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Start Date"
+            },
+            "end_date": {
+              "anyOf": [
+                {
+                  "format": "date",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "End Date"
+            },
+            "completion_criteria": {
+              "items": {
+                "type": "string"
+              },
+              "title": "Completion Criteria",
+              "type": "array"
+            },
+            "milestones": {
+              "items": {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              "title": "Milestones",
+              "type": "array"
+            },
+            "verification_method": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Verification Method"
+            },
+            "privacy_scope": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "OBJECTIVE_ONLY",
+                    "PRIVATE",
+                    "CUSTOM"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Privacy Scope"
+            }
+          },
+          "title": "GoalContext",
+          "type": "object"
+        },
+        "Milestone": {
+          "additionalProperties": false,
+          "properties": {
+            "title": {
+              "title": "Title",
+              "type": "string"
+            },
+            "due_date": {
+              "format": "date",
+              "title": "Due Date",
+              "type": "string"
+            },
+            "description": {
+              "default": "",
+              "title": "Description",
+              "type": "string"
+            }
+          },
+          "required": [
+            "title",
+            "due_date"
+          ],
+          "title": "Milestone",
+          "type": "object"
+        },
+        "Plan": {
+          "additionalProperties": false,
+          "properties": {
+            "plan_version_id": {
+              "default": "",
+              "title": "Plan Version Id",
+              "type": "string"
+            },
+            "previous_plan_version_id": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Previous Plan Version Id"
+            },
+            "status": {
+              "const": "DRAFT",
+              "default": "DRAFT",
+              "title": "Status",
+              "type": "string"
+            },
+            "goal": {
+              "title": "Goal",
+              "type": "string"
+            },
+            "start_date": {
+              "format": "date",
+              "title": "Start Date",
+              "type": "string"
+            },
+            "end_date": {
+              "format": "date",
+              "title": "End Date",
+              "type": "string"
+            },
+            "owner_member_id": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Owner Member Id"
+            },
+            "milestones": {
+              "items": {
+                "$ref": "#/$defs/Milestone"
+              },
+              "title": "Milestones",
+              "type": "array"
+            },
+            "weekly_outcomes": {
+              "items": {
+                "type": "string"
+              },
+              "title": "Weekly Outcomes",
+              "type": "array"
+            },
+            "tasks": {
+              "items": {
+                "$ref": "#/$defs/Task"
+              },
+              "minItems": 1,
+              "title": "Tasks",
+              "type": "array"
+            },
+            "adaptation_rules": {
+              "items": {
+                "type": "string"
+              },
+              "title": "Adaptation Rules",
+              "type": "array"
+            },
+            "suggestions": {
+              "items": {
+                "type": "string"
+              },
+              "title": "Suggestions",
+              "type": "array"
+            }
+          },
+          "required": [
+            "goal",
+            "start_date",
+            "end_date",
+            "tasks"
+          ],
+          "title": "Plan",
+          "type": "object"
+        },
+        "Task": {
+          "additionalProperties": false,
+          "properties": {
+            "task_id": {
+              "default": "",
+              "title": "Task Id",
+              "type": "string"
+            },
+            "owner_member_id": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Owner Member Id"
+            },
+            "title": {
+              "minLength": 1,
+              "title": "Title",
+              "type": "string"
+            },
+            "deliverable": {
+              "minLength": 1,
+              "title": "Deliverable",
+              "type": "string"
+            },
+            "completion_criteria": {
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1,
+              "title": "Completion Criteria",
+              "type": "array"
+            },
+            "due_date": {
+              "format": "date",
+              "title": "Due Date",
+              "type": "string"
+            },
+            "estimated_minutes": {
+              "exclusiveMinimum": 0,
+              "title": "Estimated Minutes",
+              "type": "integer"
+            },
+            "difficulty": {
+              "default": "MEDIUM",
+              "enum": [
+                "EASY",
+                "MEDIUM",
+                "HARD"
+              ],
+              "title": "Difficulty",
+              "type": "string"
+            },
+            "dependencies": {
+              "items": {
+                "type": "string"
+              },
+              "title": "Dependencies",
+              "type": "array"
+            }
+          },
+          "required": [
+            "title",
+            "deliverable",
+            "completion_criteria",
+            "due_date",
+            "estimated_minutes"
+          ],
+          "title": "Task",
+          "type": "object"
+        }
+      },
+      "additionalProperties": false,
+      "properties": {
+        "plan": {
+          "$ref": "#/$defs/Plan"
+        },
+        "context": {
+          "$ref": "#/$defs/GoalContext"
+        },
+        "feedback": {
+          "minLength": 1,
+          "title": "Feedback",
+          "type": "string"
+        },
+        "weekly_budget": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Weekly Budget"
+        }
+      },
+      "required": [
+        "plan",
+        "context",
+        "feedback"
+      ],
+      "title": "RevisionRequest",
+      "type": "object"
+    }
+  },
+  "record_view": {
+    "$defs": {
+      "Artifact": {
+        "additionalProperties": false,
+        "properties": {
+          "artifact_id": {
+            "title": "Artifact Id",
+            "type": "string"
+          },
+          "action_id": {
+            "title": "Action Id",
+            "type": "string"
+          },
+          "module": {
+            "title": "Module",
+            "type": "string"
+          },
+          "scope": {
+            "default": "PUBLIC",
+            "enum": [
+              "PUBLIC",
+              "PRIVATE",
+              "SERVICE"
+            ],
+            "title": "Scope",
+            "type": "string"
+          },
+          "owner_member_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Owner Member Id"
+          },
+          "request": {
+            "additionalProperties": true,
+            "title": "Request",
+            "type": "object"
+          },
+          "response": {
+            "additionalProperties": true,
+            "title": "Response",
+            "type": "object"
+          },
+          "dependencies": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "title": "Dependencies",
+            "type": "object"
+          },
+          "revision": {
+            "default": 0,
+            "title": "Revision",
+            "type": "integer"
+          },
+          "created_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Created At"
+          }
+        },
+        "required": [
+          "artifact_id",
+          "action_id",
+          "module"
+        ],
+        "title": "Artifact",
+        "type": "object"
+      },
+      "Member": {
+        "additionalProperties": false,
+        "properties": {
+          "member_id": {
+            "minLength": 1,
+            "title": "Member Id",
+            "type": "string"
+          },
+          "nickname": {
+            "minLength": 1,
+            "title": "Nickname",
+            "type": "string"
+          }
+        },
+        "required": [
+          "member_id",
+          "nickname"
+        ],
+        "title": "Member",
+        "type": "object"
+      },
+      "Message": {
+        "additionalProperties": false,
+        "properties": {
+          "message_id": {
+            "minLength": 1,
+            "title": "Message Id",
+            "type": "string"
+          },
+          "speaker_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Speaker Id"
+          },
+          "role": {
+            "default": "user",
+            "enum": [
+              "user",
+              "assistant"
+            ],
+            "title": "Role",
+            "type": "string"
+          },
+          "text": {
+            "maxLength": 12000,
+            "minLength": 1,
+            "title": "Text",
+            "type": "string"
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          }
+        },
+        "required": [
+          "message_id",
+          "text",
+          "created_at"
+        ],
+        "title": "Message",
+        "type": "object"
+      }
+    },
+    "additionalProperties": false,
+    "properties": {
+      "schema_version": {
+        "const": "1.0",
+        "default": "1.0",
+        "title": "Schema Version",
+        "type": "string"
+      },
+      "record_id": {
+        "title": "Record Id",
+        "type": "string"
+      },
+      "title": {
+        "default": "새 목표 대화",
+        "title": "Title",
+        "type": "string"
+      },
+      "revision": {
+        "default": 0,
+        "title": "Revision",
+        "type": "integer"
+      },
+      "members": {
+        "items": {
+          "$ref": "#/$defs/Member"
+        },
+        "title": "Members",
+        "type": "array"
+      },
+      "reference_date": {
+        "format": "date",
+        "title": "Reference Date",
+        "type": "string"
+      },
+      "timezone": {
+        "default": "Asia/Seoul",
+        "title": "Timezone",
+        "type": "string"
+      },
+      "conversation": {
+        "items": {
+          "$ref": "#/$defs/Message"
+        },
+        "title": "Conversation",
+        "type": "array"
+      },
+      "owner_member_id": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Owner Member Id"
+      },
+      "private_conversation": {
+        "items": {
+          "$ref": "#/$defs/Message"
+        },
+        "title": "Private Conversation",
+        "type": "array"
+      },
+      "inputs": {
+        "additionalProperties": {
+          "additionalProperties": true,
+          "type": "object"
+        },
+        "title": "Inputs",
+        "type": "object"
+      },
+      "input_dependencies": {
+        "additionalProperties": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "type": "object"
+        },
+        "title": "Input Dependencies",
+        "type": "object"
+      },
+      "pending": {
+        "additionalProperties": {
+          "type": "string"
+        },
+        "title": "Pending",
+        "type": "object"
+      },
+      "artifacts": {
+        "items": {
+          "$ref": "#/$defs/Artifact"
+        },
+        "title": "Artifacts",
+        "type": "array"
+      },
+      "selected_module": {
+        "default": "A",
+        "title": "Selected Module",
+        "type": "string"
+      },
+      "execution_mode": {
+        "default": "LIVE",
+        "enum": [
+          "LIVE",
+          "FIXTURE"
+        ],
+        "title": "Execution Mode",
+        "type": "string"
+      },
+      "selected_owner_member_id": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Selected Owner Member Id"
+      },
+      "internal": {
+        "default": false,
+        "title": "Internal",
+        "type": "boolean"
+      },
+      "service_source_tokens": {
+        "additionalProperties": {
+          "type": "string"
+        },
+        "title": "Service Source Tokens",
+        "type": "object"
+      }
+    },
+    "required": [
+      "record_id"
+    ],
+    "title": "RecordView",
+    "type": "object"
+  },
+  "prepared_input": {
+    "additionalProperties": false,
+    "properties": {
+      "module": {
+        "title": "Module",
+        "type": "string"
+      },
+      "request": {
+        "additionalProperties": true,
+        "title": "Request",
+        "type": "object"
+      },
+      "source_revision": {
+        "title": "Source Revision",
+        "type": "integer"
+      },
+      "dependencies": {
+        "additionalProperties": {
+          "type": "string"
+        },
+        "title": "Dependencies",
+        "type": "object"
+      },
+      "needed_inputs": {
+        "items": {
+          "type": "string"
+        },
+        "title": "Needed Inputs",
+        "type": "array"
+      },
+      "stale": {
+        "default": false,
+        "title": "Stale",
+        "type": "boolean"
+      },
+      "stale_reasons": {
+        "items": {
+          "type": "string"
+        },
+        "title": "Stale Reasons",
+        "type": "array"
+      },
+      "ready": {
+        "default": false,
+        "title": "Ready",
+        "type": "boolean"
+      }
+    },
+    "required": [
+      "module",
+      "source_revision"
+    ],
+    "title": "PreparedInput",
+    "type": "object"
+  },
+  "artifact": {
+    "additionalProperties": false,
+    "properties": {
+      "artifact_id": {
+        "title": "Artifact Id",
+        "type": "string"
+      },
+      "action_id": {
+        "title": "Action Id",
+        "type": "string"
+      },
+      "module": {
+        "title": "Module",
+        "type": "string"
+      },
+      "scope": {
+        "default": "PUBLIC",
+        "enum": [
+          "PUBLIC",
+          "PRIVATE",
+          "SERVICE"
+        ],
+        "title": "Scope",
+        "type": "string"
+      },
+      "owner_member_id": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Owner Member Id"
+      },
+      "request": {
+        "additionalProperties": true,
+        "title": "Request",
+        "type": "object"
+      },
+      "response": {
+        "additionalProperties": true,
+        "title": "Response",
+        "type": "object"
+      },
+      "dependencies": {
+        "additionalProperties": {
+          "type": "string"
+        },
+        "title": "Dependencies",
+        "type": "object"
+      },
+      "revision": {
+        "default": 0,
+        "title": "Revision",
+        "type": "integer"
+      },
+      "created_at": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Created At"
+      }
+    },
+    "required": [
+      "artifact_id",
+      "action_id",
+      "module"
+    ],
+    "title": "Artifact",
+    "type": "object"
+  },
+  "common_result": {
+    "$defs": {
+      "Error": {
+        "additionalProperties": false,
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          },
+          "retryable": {
+            "default": false,
+            "title": "Retryable",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ],
+        "title": "Error",
+        "type": "object"
+      },
+      "Meta": {
+        "additionalProperties": false,
+        "properties": {
+          "run_id": {
+            "title": "Run Id",
+            "type": "string"
+          },
+          "task": {
+            "title": "Task",
+            "type": "string"
+          },
+          "prompt_version": {
+            "default": "0.13.1",
+            "title": "Prompt Version",
+            "type": "string"
+          },
+          "source_revision": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Source Revision"
+          },
+          "model": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Model"
+          },
+          "usage": {
+            "$ref": "#/$defs/Usage"
+          },
+          "latency_ms": {
+            "default": 0,
+            "title": "Latency Ms",
+            "type": "integer"
+          },
+          "transport_attempts": {
+            "default": 0,
+            "title": "Transport Attempts",
+            "type": "integer"
+          },
+          "repair_attempts": {
+            "default": 0,
+            "title": "Repair Attempts",
+            "type": "integer"
+          },
+          "provider_request_ids": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Provider Request Ids",
+            "type": "array"
+          },
+          "execution_source": {
+            "default": "CODE",
+            "enum": [
+              "LIVE",
+              "CACHE",
+              "CODE",
+              "REPLAY"
+            ],
+            "title": "Execution Source",
+            "type": "string"
+          },
+          "source_run_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Source Run Id"
+          },
+          "cached_usage": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/Usage"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null
+          },
+          "cache_hit": {
+            "default": false,
+            "title": "Cache Hit",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "run_id",
+          "task"
+        ],
+        "title": "Meta",
+        "type": "object"
+      },
+      "Usage": {
+        "additionalProperties": false,
+        "properties": {
+          "prompt_tokens": {
+            "default": 0,
+            "minimum": 0,
+            "title": "Prompt Tokens",
+            "type": "integer"
+          },
+          "completion_tokens": {
+            "default": 0,
+            "minimum": 0,
+            "title": "Completion Tokens",
+            "type": "integer"
+          },
+          "total_tokens": {
+            "default": 0,
+            "minimum": 0,
+            "title": "Total Tokens",
+            "type": "integer"
+          }
+        },
+        "title": "Usage",
+        "type": "object"
+      }
+    },
+    "additionalProperties": false,
+    "properties": {
+      "status": {
+        "enum": [
+          "OK",
+          "NEEDS_INPUT",
+          "FAILED"
+        ],
+        "title": "Status",
+        "type": "string"
+      },
+      "data": {
+        "anyOf": [
+          {},
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Data"
+      },
+      "needed_inputs": {
+        "items": {
+          "type": "string"
+        },
+        "title": "Needed Inputs",
+        "type": "array"
+      },
+      "warnings": {
+        "items": {
+          "type": "string"
+        },
+        "title": "Warnings",
+        "type": "array"
+      },
+      "error": {
+        "anyOf": [
+          {
+            "$ref": "#/$defs/Error"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "meta": {
+        "$ref": "#/$defs/Meta"
+      }
+    },
+    "required": [
+      "status",
+      "meta"
+    ],
+    "title": "Result",
+    "type": "object"
+  },
+  "plan": {
+    "$defs": {
+      "Milestone": {
+        "additionalProperties": false,
+        "properties": {
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "due_date": {
+            "format": "date",
+            "title": "Due Date",
+            "type": "string"
+          },
+          "description": {
+            "default": "",
+            "title": "Description",
+            "type": "string"
+          }
+        },
+        "required": [
+          "title",
+          "due_date"
+        ],
+        "title": "Milestone",
+        "type": "object"
+      },
+      "Task": {
+        "additionalProperties": false,
+        "properties": {
+          "task_id": {
+            "default": "",
+            "title": "Task Id",
+            "type": "string"
+          },
+          "owner_member_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Owner Member Id"
+          },
+          "title": {
+            "minLength": 1,
+            "title": "Title",
+            "type": "string"
+          },
+          "deliverable": {
+            "minLength": 1,
+            "title": "Deliverable",
+            "type": "string"
+          },
+          "completion_criteria": {
+            "items": {
+              "type": "string"
+            },
+            "minItems": 1,
+            "title": "Completion Criteria",
+            "type": "array"
+          },
+          "due_date": {
+            "format": "date",
+            "title": "Due Date",
+            "type": "string"
+          },
+          "estimated_minutes": {
+            "exclusiveMinimum": 0,
+            "title": "Estimated Minutes",
+            "type": "integer"
+          },
+          "difficulty": {
+            "default": "MEDIUM",
+            "enum": [
+              "EASY",
+              "MEDIUM",
+              "HARD"
+            ],
+            "title": "Difficulty",
+            "type": "string"
+          },
+          "dependencies": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Dependencies",
+            "type": "array"
+          }
+        },
+        "required": [
+          "title",
+          "deliverable",
+          "completion_criteria",
+          "due_date",
+          "estimated_minutes"
+        ],
+        "title": "Task",
+        "type": "object"
+      }
+    },
+    "additionalProperties": false,
+    "properties": {
+      "plan_version_id": {
+        "default": "",
+        "title": "Plan Version Id",
+        "type": "string"
+      },
+      "previous_plan_version_id": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Previous Plan Version Id"
+      },
+      "status": {
+        "const": "DRAFT",
+        "default": "DRAFT",
+        "title": "Status",
+        "type": "string"
+      },
+      "goal": {
+        "title": "Goal",
+        "type": "string"
+      },
+      "start_date": {
+        "format": "date",
+        "title": "Start Date",
+        "type": "string"
+      },
+      "end_date": {
+        "format": "date",
+        "title": "End Date",
+        "type": "string"
+      },
+      "owner_member_id": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Owner Member Id"
+      },
+      "milestones": {
+        "items": {
+          "$ref": "#/$defs/Milestone"
+        },
+        "title": "Milestones",
+        "type": "array"
+      },
+      "weekly_outcomes": {
+        "items": {
+          "type": "string"
+        },
+        "title": "Weekly Outcomes",
+        "type": "array"
+      },
+      "tasks": {
+        "items": {
+          "$ref": "#/$defs/Task"
+        },
+        "minItems": 1,
+        "title": "Tasks",
+        "type": "array"
+      },
+      "adaptation_rules": {
+        "items": {
+          "type": "string"
+        },
+        "title": "Adaptation Rules",
+        "type": "array"
+      },
+      "suggestions": {
+        "items": {
+          "type": "string"
+        },
+        "title": "Suggestions",
+        "type": "array"
+      }
+    },
+    "required": [
+      "goal",
+      "start_date",
+      "end_date",
+      "tasks"
+    ],
+    "title": "Plan",
+    "type": "object"
+  },
+  "validation": {
+    "$defs": {
+      "Issue": {
+        "additionalProperties": false,
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "string"
+          },
+          "field_path": {
+            "title": "Field Path",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "field_path",
+          "message"
+        ],
+        "title": "Issue",
+        "type": "object"
+      }
+    },
+    "additionalProperties": false,
+    "properties": {
+      "valid": {
+        "title": "Valid",
+        "type": "boolean"
+      },
+      "scope": {
+        "enum": [
+          "GROUP",
+          "MEMBER",
+          "BUNDLE"
+        ],
+        "title": "Scope",
+        "type": "string"
+      },
+      "issues": {
+        "items": {
+          "$ref": "#/$defs/Issue"
+        },
+        "title": "Issues",
+        "type": "array"
+      },
+      "not_checked": {
+        "items": {
+          "type": "string"
+        },
+        "title": "Not Checked",
+        "type": "array"
+      },
+      "integration_ready": {
+        "default": false,
+        "title": "Integration Ready",
+        "type": "boolean"
+      }
+    },
+    "required": [
+      "valid",
+      "scope"
+    ],
+    "title": "ValidationReport",
+    "type": "object"
+  }
+}

@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>WE·MEET · 모임 계획 코치</title>
+    <link rel="stylesheet" href="/assets/style.css" />
+  </head>
+  <body>
+    <header>
+      <a href="/" class="brand"
+        >WE<span>·</span>MEET <small>GROUP COACH</small></a
+      ><span id="connection">연결 확인 중</span>
+    </header>
+    <div class="shell">
+      <aside class="sidebar">
+        <h2>우리 모임</h2>
+        <button id="newGroup" class="primary">＋ 새 모임</button>
+        <div id="groups"></div>
+        <button id="examples">대화 예제 둘러보기 · 200개</button>
+        <p class="quiet">
+          실제 AI는 요청할 때만 호출합니다.<br />예제는 대화 입력이며 답변이
+          아닙니다.
+        </p>
+        <details>
+          <summary>테스트 안내</summary>
+          <p>
+            로컬 검증 도구입니다. 아래 발언자 선택은 실제 로그인·권한이
+            아닙니다. 기존 8010 프로젝트와 DB는 분리돼 있습니다.
+          </p>
+          <label
+            ><input type="checkbox" id="showValidation" /> 검증용 모임
+            표시</label
+          >
+        </details>
+      </aside>
+      <main>
+        <section class="welcome" id="welcome">
+          <span class="eyebrow">모임에서 대화하고, 함께 결정하세요</span>
+          <h1>계획은 채팅에서.<br />결정은 모두 함께.</h1>
+          <p>
+            AI와 공동 계획을 다듬고 전원 찬성으로 정하세요.<br />개인 조건은
+            비공개 상담에서만 확인합니다.
+          </p>
+          <button id="start" class="primary">새 모임 만들기</button>
+        </section>
+        <section id="workspace" hidden>
+          <div class="roomhead">
+            <div>
+              <span class="eyebrow">GROUP CONVERSATION</span>
+              <h1 id="roomTitle"></h1>
+              <p id="roomMembers"></p>
+            </div>
+            <div class="toolbar">
+              <button id="addMember">＋ 사람 추가</button
+              ><button id="personal" class="dark">내 기여 계획</button>
+            </div>
+          </div>
+          <div class="identity">
+            <label
+              >테스트 발언자
+              <select id="actor"></select></label
+            ><span id="saved">PostgreSQL</span>
+          </div>
+          <div id="notice" role="status" hidden></div>
+          <div id="chat" class="chat" aria-live="polite"></div>
+          <div class="composer">
+            <div class="aiActions">
+              <button id="coach">✦ AI에게 코칭 요청</button
+              ><button id="propose">공동 계획 제안받기</button
+              ><span id="progress"></span>
+            </div>
+            <form id="send">
+              <textarea
+                id="text"
+                placeholder="우리 모임이 함께 이루고 싶은 일을 이야기해주세요. @AI로 코치를 부를 수도 있어요."
+                rows="2"
+                aria-label="모임 메시지"
+              ></textarea
+              ><button class="primary" type="submit">보내기</button>
+            </form>
+            <p class="quiet">
+              Enter로 전송 · Shift+Enter로 줄바꿈 · 개인 사정은 내 기여 계획에서
+              상담하세요.
+            </p>
+          </div>
+          <details class="developer">
+            <summary>개발자 · SW 연결과 실제 실행</summary>
+            <p id="usage">아직 AI를 실행하지 않았습니다.</p>
+            <h3>Python 호출</h3>
+            <pre>
+from wemeet_coach.group import group_coach
+from wemeet_coach.shared.contracts import GroupRequest
+result = group_coach(GroupRequest.model_validate(payload))
+# 결과 표시·투표·저장은 별도 PostgreSQL 어댑터에 연결합니다.</pre
+            >
+            <h3>코어에 전달한 요청</h3>
+            <pre id="requestJson">아직 실행하지 않음</pre>
+            <h3>실제 응답</h3>
+            <pre id="response">아직 실행하지 않음</pre>
+            <a href="/docs">HTTP 계약 보기</a>
+          </details>
+        </section>
+      </main>
+    </div>
+    <dialog id="setup">
+      <form id="create">
+        <div class="dialogHead">
+          <h2>새 모임</h2>
+          <button type="button" data-close="setup">닫기</button>
+        </div>
+        <label>모임 이름<input id="title" required value="새 모임" /></label>
+        <h3>함께할 사람</h3>
+        <div id="names"></div>
+        <button id="addName" type="button">＋ 구성원 추가</button>
+        <p class="quiet">
+          인원은 고정되어 있지 않습니다. 혼자 시작하거나 여러 명을 추가하세요.
+        </p>
+        <button class="primary" type="submit">모임 채팅 시작</button>
+      </form>
+    </dialog>
+    <dialog id="memberDialog">
+      <form id="memberForm">
+        <div class="dialogHead">
+          <h2>사람 추가</h2>
+          <button type="button" data-close="memberDialog">닫기</button>
+        </div>
+        <label>닉네임<input id="nickname" required /></label>
+        <p>
+          구성원이 바뀌면 새 구성원으로 공동 계획을 다시 합의합니다. 이전 기록은
+          보존합니다.
+        </p>
+        <button type="submit" class="primary">추가하기</button>
+      </form>
+    </dialog>
+    <dialog id="voteDialog">
+      <form id="reject">
+        <div class="dialogHead">
+          <h2>어떤 부분을 바꾸면 좋을까요?</h2>
+          <button type="button" data-close="voteDialog">닫기</button>
+        </div>
+        <label
+          >문제 항목<select id="issue">
+            <option>목표·완료 기준</option>
+            <option>일정</option>
+            <option>역할</option>
+            <option>작업량</option>
+            <option>인증·공개 범위</option>
+            <option>기타</option>
+          </select></label
+        ><label
+          >반대 이유·원하는 변경<textarea
+            id="reason"
+            required
+            rows="4"
+          ></textarea>
+        </label>
+        <p class="quiet">
+          진행 중에는 익명으로 표시하고 종료 후 작성자를 공개합니다. 민감한 개인
+          사유는 개인 상담을 이용하세요.
+        </p>
+        <button type="submit" class="primary">반대와 수정 의견 저장</button>
+      </form>
+    </dialog>
+    <dialog id="editor">
+      <form id="edit">
+        <div class="dialogHead">
+          <h2 id="editorTitle">공동 계획 직접 수정</h2>
+          <button type="button" data-close="editor">닫기</button>
+        </div>
+        <div id="editFields"></div>
+        <p id="editorHint">
+          수정하면 새 버전을 게시하고 전원이 다시 투표합니다. 이 동작은 AI를
+          호출하지 않습니다.
+        </p>
+        <p id="editorError" role="alert"></p>
+        <button type="submit" class="primary">수정안 저장</button>
+      </form>
+    </dialog>
+    <dialog id="library">
+      <div class="dialogHead">
+        <h2>대화 예제 200개</h2>
+        <button data-close="library">닫기</button>
+      </div>
+      <input id="search" placeholder="제목·분야 검색" aria-label="예제 검색" />
+      <div id="scenarioList"></div>
+      <div id="scenarioPreview"></div>
+    </dialog>
+    <dialog id="privateDialog" class="private">
+      <div class="dialogHead">
+        <div>
+          <span class="eyebrow">PRIVATE COACH</span>
+          <h2 id="privateTitle">내 기여 계획</h2>
+        </div>
+        <button data-close="privateDialog">닫기</button>
+      </div>
+      <p class="privacy">이 대화와 수준·시간·제약은 본인에게만 보입니다.</p>
+      <div id="privateContext"></div>
+      <div id="question" aria-live="polite"></div>
+      <details id="personalSummary">
+        <summary>AI가 정리한 현재 조건과 실행안</summary>
+        <div id="personalAdvice" aria-live="polite"></div>
+        <div id="privateDetails"></div>
+      </details>
+      <details id="personalHistory">
+        <summary>이전 대화·확인한 조건 보기</summary>
+        <div id="privateChat" class="privateChat"></div>
+        <div id="conditions"></div>
+      </details>
+      <form id="privateForm">
+        <textarea
+          id="privateText"
+          placeholder="직접 답하고 싶다면 입력하세요 (선택)"
+          aria-label="개인 메시지"
+          rows="2"
+        ></textarea
+        ><button type="submit" class="primary">AI와 대화</button>
+      </form>
+      <div class="toolbar">
+        <button id="beginPrivate">AI에게 다음 질문 받기</button
+        ><button id="makePlan" class="dark">
+          답변한 조건으로 개인 계획 만들기
+        </button>
+      </div>
+      <p id="privateStatus" role="status"></p>
+      <div id="personalPlans"></div>
+      <details>
+        <summary>본인 전용 · 실제 실행 응답</summary>
+        <pre id="privateResponse">아직 실행하지 않음</pre>
+      </details>
+    </dialog>
+    <dialog id="conditionDialog">
+      <form id="conditionForm">
+        <div class="dialogHead">
+          <h2 id="conditionTitle">개인 조건 수정</h2>
+          <button type="button" data-close="conditionDialog">닫기</button>
+        </div>
+        <label
+          >상태<select id="conditionState">
+            <option value="KNOWN">직접 확인한 값</option>
+            <option value="UNKNOWN">아직 모르겠음</option>
+            <option value="SKIPPED">건너뛰기</option>
+          </select></label
+        ><label>내용<textarea id="conditionValue" rows="3"></textarea></label>
+        <p class="quiet">
+          목록은 줄마다 하나씩, 주간 가능 시간은 분 단위로 입력하세요. 빈 목록과
+          모름은 다르게 보관됩니다.
+        </p>
+        <button type="submit" class="primary">
+          개인 조건 저장 · AI 호출 없음
+        </button>
+      </form>
+    </dialog>
+    <dialog id="shareConfirmDialog">
+      <form id="shareConfirmForm">
+        <div class="dialogHead">
+          <h2>모임에 공개할 내용을 확인하세요</h2>
+          <button type="button" data-close="shareConfirmDialog">취소</button>
+        </div>
+        <p>
+          아래 기여 목표·작업·기한만 모임에 게시됩니다. 개인
+          대화·수준·시간·제약은 공개하지 않습니다.
+        </p>
+        <div id="shareConfirmPreview"></div>
+        <button type="submit" class="primary">
+          공개 요약을 확인했고 모임에 알립니다
+        </button>
+      </form>
+    </dialog>
+    <script src="/assets/app.js"></script>
+  </body>
+</html>

@@ -1,0 +1,31 @@
+{
+  "phase": 2,
+  "full_regression_tests": 142,
+  "focused_regression_tests": 5,
+  "features": [
+    "editable_goal_review",
+    "confirmed_group_context",
+    "private_button_coaching",
+    "inline_member_add"
+  ],
+  "live_http": 4,
+  "live_tokens": 17140,
+  "modules": [
+    "B",
+    "C",
+    "E.coach",
+    "E.coach"
+  ],
+  "confirmed_goal_restored": true,
+  "private_60_minutes_restored": true,
+  "private_ids_excluded_from_group_response": true,
+  "other_member_history_empty": true,
+  "unchanged_review_reused_without_model_call": true,
+  "server_restart": "PASS",
+  "reviewer": "LIMITED_AGENT_REVIEW_NOT_HUMAN_ACCEPTANCE",
+  "not_implemented": [
+    "embedded group/member plan generation",
+    "service authentication and cross-origin SW embedding"
+  ],
+  "secret_scan": "PASS"
+}

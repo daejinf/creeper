@@ -1,0 +1,49 @@
+{
+  "scope": "embedded kickoff UI only; AI core and database unchanged",
+  "regression_passed": 156,
+  "paid_http": 0,
+  "screens": [
+    {
+      "width": 390,
+      "height": 844,
+      "reply_height": 461,
+      "horizontal_overflow": false,
+      "actions_visible": true
+    },
+    {
+      "width": 768,
+      "height": 900,
+      "reply_height": 491,
+      "horizontal_overflow": false,
+      "actions_visible": true
+    },
+    {
+      "width": 1024,
+      "height": 768,
+      "reply_height": 348,
+      "horizontal_overflow": false,
+      "actions_visible": true
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "reply_height": 474,
+      "horizontal_overflow": false,
+      "actions_visible": true
+    }
+  ],
+  "interactions": {
+    "expand_and_split": "PASS",
+    "mobile_chat_toggle": "PASS",
+    "unsent_input_preserved_and_restored": "PASS",
+    "answer_keyboard_scroll": "PASS",
+    "fixed_actions_while_scrolling": "PASS",
+    "developer_overlay": "PASS",
+    "review_personal_plans_tabs": "PASS"
+  },
+  "limits": [
+    "Saved real responses were used; no new model quality evaluation",
+    "Existing goal review was stale due to new user messages; no approvals changed",
+    "No formal accessibility certification"
+  ]
+}

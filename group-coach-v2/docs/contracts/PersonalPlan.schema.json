@@ -1,0 +1,158 @@
+{
+  "$defs": {
+    "Task": {
+      "additionalProperties": false,
+      "properties": {
+        "task_id": {
+          "default": "",
+          "description": "이 응답 안의 고유한 임시 작업 ID(예: t1). 서버가 정식 ID로 변환합니다.",
+          "title": "Task Id",
+          "type": "string"
+        },
+        "owner_member_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Owner Member Id"
+        },
+        "title": {
+          "minLength": 1,
+          "title": "Title",
+          "type": "string"
+        },
+        "deliverable": {
+          "minLength": 1,
+          "title": "Deliverable",
+          "type": "string"
+        },
+        "due_date": {
+          "description": "결과물을 완료해야 하는 기한",
+          "format": "date",
+          "title": "Due Date",
+          "type": "string"
+        },
+        "scheduled_date": {
+          "anyOf": [
+            {
+              "format": "date",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "실제 수행 예정일. 미지정인 기존 계획은 due_date를 수행일로 해석합니다. 수행일은 기한을 넘을 수 없습니다.",
+          "title": "Scheduled Date"
+        },
+        "estimated_minutes": {
+          "exclusiveMinimum": 0,
+          "title": "Estimated Minutes",
+          "type": "integer"
+        },
+        "completion_criteria": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Completion Criteria",
+          "type": "array"
+        },
+        "difficulty": {
+          "default": "MEDIUM",
+          "enum": [
+            "EASY",
+            "MEDIUM",
+            "HARD"
+          ],
+          "title": "Difficulty",
+          "type": "string"
+        },
+        "dependencies": {
+          "description": "이 응답 tasks에 실제 존재하는 task_id만 참조합니다. 공동 원본 작업 ID나 제목을 넣지 않습니다.",
+          "items": {
+            "type": "string"
+          },
+          "title": "Dependencies",
+          "type": "array"
+        }
+      },
+      "required": [
+        "title",
+        "deliverable",
+        "due_date",
+        "estimated_minutes",
+        "completion_criteria"
+      ],
+      "title": "Task",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "plan_version_id": {
+      "default": "",
+      "title": "Plan Version Id",
+      "type": "string"
+    },
+    "contribution": {
+      "title": "Contribution",
+      "type": "string"
+    },
+    "deliverable": {
+      "title": "Deliverable",
+      "type": "string"
+    },
+    "completion_criteria": {
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "title": "Completion Criteria",
+      "type": "array"
+    },
+    "tasks": {
+      "items": {
+        "$ref": "#/$defs/Task"
+      },
+      "minItems": 1,
+      "title": "Tasks",
+      "type": "array"
+    },
+    "adaptation_rules": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Adaptation Rules",
+      "type": "array"
+    },
+    "weekly_outcomes": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Weekly Outcomes",
+      "type": "array"
+    },
+    "private_notes": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Private Notes",
+      "type": "array"
+    }
+  },
+  "required": [
+    "contribution",
+    "deliverable",
+    "completion_criteria",
+    "tasks"
+  ],
+  "title": "PersonalPlan",
+  "type": "object"
+}

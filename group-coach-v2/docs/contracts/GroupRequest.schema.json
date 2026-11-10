@@ -1,0 +1,412 @@
+{
+  "$defs": {
+    "Goal": {
+      "additionalProperties": false,
+      "properties": {
+        "title": {
+          "minLength": 1,
+          "title": "Title",
+          "type": "string"
+        },
+        "start_date": {
+          "format": "date",
+          "title": "Start Date",
+          "type": "string"
+        },
+        "end_date": {
+          "format": "date",
+          "title": "End Date",
+          "type": "string"
+        },
+        "completion_criteria": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Completion Criteria",
+          "type": "array"
+        },
+        "execution_method": {
+          "minLength": 1,
+          "title": "Execution Method",
+          "type": "string"
+        },
+        "verification_method": {
+          "minLength": 1,
+          "title": "Verification Method",
+          "type": "string"
+        },
+        "privacy_scope": {
+          "default": "OBJECTIVE_ONLY",
+          "enum": [
+            "OBJECTIVE_ONLY",
+            "PRIVATE"
+          ],
+          "title": "Privacy Scope",
+          "type": "string"
+        },
+        "roles": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Roles",
+          "type": "object"
+        }
+      },
+      "required": [
+        "title",
+        "start_date",
+        "end_date",
+        "completion_criteria",
+        "execution_method",
+        "verification_method",
+        "roles"
+      ],
+      "title": "Goal",
+      "type": "object"
+    },
+    "GroupProposal": {
+      "additionalProperties": false,
+      "properties": {
+        "goal": {
+          "$ref": "#/$defs/Goal"
+        },
+        "milestones": {
+          "items": {
+            "$ref": "#/$defs/Milestone"
+          },
+          "title": "Milestones",
+          "type": "array"
+        },
+        "tasks": {
+          "items": {
+            "$ref": "#/$defs/Task"
+          },
+          "minItems": 1,
+          "title": "Tasks",
+          "type": "array"
+        },
+        "evidence_refs": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Refs",
+          "type": "array"
+        },
+        "recommendations": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Recommendations",
+          "type": "array"
+        },
+        "change_summary": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Change Summary",
+          "type": "array"
+        }
+      },
+      "required": [
+        "goal",
+        "tasks"
+      ],
+      "title": "GroupProposal",
+      "type": "object"
+    },
+    "Member": {
+      "additionalProperties": false,
+      "properties": {
+        "member_id": {
+          "minLength": 1,
+          "title": "Member Id",
+          "type": "string"
+        },
+        "nickname": {
+          "maxLength": 60,
+          "minLength": 1,
+          "title": "Nickname",
+          "type": "string"
+        },
+        "external_user_id": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "External User Id"
+        }
+      },
+      "required": [
+        "member_id",
+        "nickname"
+      ],
+      "title": "Member",
+      "type": "object"
+    },
+    "Message": {
+      "additionalProperties": false,
+      "properties": {
+        "message_id": {
+          "title": "Message Id",
+          "type": "string"
+        },
+        "speaker_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Speaker Id"
+        },
+        "role": {
+          "default": "user",
+          "enum": [
+            "user",
+            "assistant"
+          ],
+          "title": "Role",
+          "type": "string"
+        },
+        "text": {
+          "maxLength": 12000,
+          "minLength": 1,
+          "title": "Text",
+          "type": "string"
+        },
+        "created_at": {
+          "format": "date-time",
+          "title": "Created At",
+          "type": "string"
+        }
+      },
+      "required": [
+        "message_id",
+        "text"
+      ],
+      "title": "Message",
+      "type": "object"
+    },
+    "Milestone": {
+      "additionalProperties": false,
+      "properties": {
+        "title": {
+          "title": "Title",
+          "type": "string"
+        },
+        "due_date": {
+          "format": "date",
+          "title": "Due Date",
+          "type": "string"
+        }
+      },
+      "required": [
+        "title",
+        "due_date"
+      ],
+      "title": "Milestone",
+      "type": "object"
+    },
+    "Task": {
+      "additionalProperties": false,
+      "properties": {
+        "task_id": {
+          "default": "",
+          "description": "이 응답 안의 고유한 임시 작업 ID(예: t1). 서버가 정식 ID로 변환합니다.",
+          "title": "Task Id",
+          "type": "string"
+        },
+        "owner_member_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Owner Member Id"
+        },
+        "title": {
+          "minLength": 1,
+          "title": "Title",
+          "type": "string"
+        },
+        "deliverable": {
+          "minLength": 1,
+          "title": "Deliverable",
+          "type": "string"
+        },
+        "due_date": {
+          "description": "결과물을 완료해야 하는 기한",
+          "format": "date",
+          "title": "Due Date",
+          "type": "string"
+        },
+        "scheduled_date": {
+          "anyOf": [
+            {
+              "format": "date",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "실제 수행 예정일. 미지정인 기존 계획은 due_date를 수행일로 해석합니다. 수행일은 기한을 넘을 수 없습니다.",
+          "title": "Scheduled Date"
+        },
+        "estimated_minutes": {
+          "exclusiveMinimum": 0,
+          "title": "Estimated Minutes",
+          "type": "integer"
+        },
+        "completion_criteria": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Completion Criteria",
+          "type": "array"
+        },
+        "difficulty": {
+          "default": "MEDIUM",
+          "enum": [
+            "EASY",
+            "MEDIUM",
+            "HARD"
+          ],
+          "title": "Difficulty",
+          "type": "string"
+        },
+        "dependencies": {
+          "description": "이 응답 tasks에 실제 존재하는 task_id만 참조합니다. 공동 원본 작업 ID나 제목을 넣지 않습니다.",
+          "items": {
+            "type": "string"
+          },
+          "title": "Dependencies",
+          "type": "array"
+        }
+      },
+      "required": [
+        "title",
+        "deliverable",
+        "due_date",
+        "estimated_minutes",
+        "completion_criteria"
+      ],
+      "title": "Task",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "action": {
+      "default": "COACH",
+      "enum": [
+        "COACH",
+        "PROPOSE",
+        "REVISE"
+      ],
+      "title": "Action",
+      "type": "string"
+    },
+    "conversation": {
+      "items": {
+        "$ref": "#/$defs/Message"
+      },
+      "title": "Conversation",
+      "type": "array"
+    },
+    "members": {
+      "items": {
+        "$ref": "#/$defs/Member"
+      },
+      "minItems": 1,
+      "title": "Members",
+      "type": "array"
+    },
+    "reference_date": {
+      "format": "date",
+      "title": "Reference Date",
+      "type": "string"
+    },
+    "timezone": {
+      "default": "Asia/Seoul",
+      "title": "Timezone",
+      "type": "string"
+    },
+    "previous": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/GroupProposal"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "approval_status": {
+      "default": "UNCONFIRMED",
+      "enum": [
+        "UNCONFIRMED",
+        "VOTING",
+        "APPROVED",
+        "REJECTED",
+        "SUPERSEDED"
+      ],
+      "title": "Approval Status",
+      "type": "string"
+    },
+    "objections": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Objections",
+      "type": "array"
+    },
+    "revision_fields": {
+      "anyOf": [
+        {
+          "items": {
+            "enum": [
+              "title",
+              "start_date",
+              "end_date",
+              "completion_criteria",
+              "execution_method",
+              "verification_method",
+              "privacy_scope",
+              "roles"
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Revision Fields"
+    }
+  },
+  "required": [
+    "members"
+  ],
+  "title": "GroupRequest",
+  "type": "object"
+}

@@ -1,0 +1,341 @@
+{
+  "src/wemeet_coach/group.py": {
+    "classification": "M1_CORE",
+    "action": "KEEP"
+  },
+  "src/wemeet_coach/personal.py": {
+    "classification": "M1_CORE",
+    "action": "KEEP"
+  },
+  "src/wemeet_coach/validation.py": {
+    "classification": "M1_CORE",
+    "action": "KEEP"
+  },
+  "src/wemeet_coach/__init__.py": {
+    "classification": "M1_CORE",
+    "action": "KEEP"
+  },
+  "src/wemeet_coach/m0/client.py": {
+    "classification": "M0_CORE",
+    "action": "KEEP"
+  },
+  "src/wemeet_coach/m0/runtime.py": {
+    "classification": "M0_CORE",
+    "action": "KEEP"
+  },
+  "src/wemeet_coach/m0/tracing.py": {
+    "classification": "M0_CORE",
+    "action": "KEEP"
+  },
+  "src/wemeet_coach/m0/__init__.py": {
+    "classification": "M0_CORE",
+    "action": "KEEP"
+  },
+  "src/wemeet_coach/persistence/reader.py": {
+    "classification": "POSTGRES_ADAPTER",
+    "action": "KEEP"
+  },
+  "src/wemeet_coach/persistence/recovery.py": {
+    "classification": "POSTGRES_ADAPTER",
+    "action": "KEEP"
+  },
+  "src/wemeet_coach/persistence/schema.py": {
+    "classification": "POSTGRES_ADAPTER",
+    "action": "KEEP"
+  },
+  "src/wemeet_coach/persistence/store.py": {
+    "classification": "POSTGRES_ADAPTER",
+    "action": "KEEP"
+  },
+  "src/wemeet_coach/persistence/__init__.py": {
+    "classification": "POSTGRES_ADAPTER",
+    "action": "KEEP"
+  },
+  "src/wemeet_coach/shared/contracts.py": {
+    "classification": "PUBLIC_CONTRACT",
+    "action": "KEEP"
+  },
+  "src/wemeet_coach/shared/privacy.py": {
+    "classification": "PUBLIC_CONTRACT",
+    "action": "KEEP"
+  },
+  "src/wemeet_coach/shared/__init__.py": {
+    "classification": "PUBLIC_CONTRACT",
+    "action": "KEEP"
+  },
+  "tools/config.py": {
+    "classification": "OPTIONAL_ADAPTER",
+    "action": "KEEP"
+  },
+  "tools/db_maintenance.py": {
+    "classification": "OPTIONAL_ADAPTER",
+    "action": "KEEP"
+  },
+  "tools/provision.py": {
+    "classification": "OPTIONAL_ADAPTER",
+    "action": "KEEP"
+  },
+  "tools/web.py": {
+    "classification": "OPTIONAL_ADAPTER",
+    "action": "KEEP"
+  },
+  "examples/core.py": {
+    "classification": "SW_EXAMPLE",
+    "action": "KEEP"
+  },
+  "examples/group-request.json": {
+    "classification": "SW_EXAMPLE",
+    "action": "KEEP"
+  },
+  "examples/read_goals.py": {
+    "classification": "SW_EXAMPLE",
+    "action": "KEEP"
+  },
+  "examples/stored_flow.py": {
+    "classification": "SW_EXAMPLE",
+    "action": "KEEP"
+  },
+  "docs/AUDIT.md": {
+    "classification": "SW_DOCUMENTATION",
+    "action": "KEEP"
+  },
+  "docs/DATABASE.md": {
+    "classification": "SW_DOCUMENTATION",
+    "action": "KEEP"
+  },
+  "docs/INTEGRATION.md": {
+    "classification": "SW_DOCUMENTATION",
+    "action": "KEEP"
+  },
+  "docs/manifest.json": {
+    "classification": "SW_DOCUMENTATION",
+    "action": "KEEP"
+  },
+  "docs/REVIEW_020.md": {
+    "classification": "SW_DOCUMENTATION",
+    "action": "KEEP"
+  },
+  "docs/USER_STORAGE.md": {
+    "classification": "SW_DOCUMENTATION",
+    "action": "KEEP"
+  },
+  "docs/VERIFICATION.md": {
+    "classification": "SW_DOCUMENTATION",
+    "action": "KEEP"
+  },
+  "docs/audit/results.json": {
+    "classification": "SW_DOCUMENTATION",
+    "action": "KEEP"
+  },
+  "docs/contracts/ActorContext.schema.json": {
+    "classification": "PUBLIC_SCHEMA",
+    "action": "KEEP"
+  },
+  "docs/contracts/GroupReply.schema.json": {
+    "classification": "PUBLIC_SCHEMA",
+    "action": "KEEP"
+  },
+  "docs/contracts/GroupRequest.schema.json": {
+    "classification": "PUBLIC_SCHEMA",
+    "action": "KEEP"
+  },
+  "docs/contracts/openapi.json": {
+    "classification": "PUBLIC_SCHEMA",
+    "action": "KEEP"
+  },
+  "docs/contracts/PersonalReply.schema.json": {
+    "classification": "PUBLIC_SCHEMA",
+    "action": "KEEP"
+  },
+  "docs/contracts/PersonalRequest.schema.json": {
+    "classification": "PUBLIC_SCHEMA",
+    "action": "KEEP"
+  },
+  "docs/contracts/Result.schema.json": {
+    "classification": "PUBLIC_SCHEMA",
+    "action": "KEEP"
+  },
+  "docs/evidence/browser-result.png": {
+    "classification": "EVALUATION_EVIDENCE",
+    "action": "KEEP"
+  },
+  "docs/evidence/clarity-check.json": {
+    "classification": "EVALUATION_EVIDENCE",
+    "action": "KEEP"
+  },
+  "docs/evidence/coaching-clarity.png": {
+    "classification": "EVALUATION_EVIDENCE",
+    "action": "KEEP"
+  },
+  "docs/evidence/copied-code.json": {
+    "classification": "EVALUATION_EVIDENCE",
+    "action": "KEEP"
+  },
+  "docs/evidence/file-review-020.json": {
+    "classification": "EVALUATION_EVIDENCE",
+    "action": "KEEP"
+  },
+  "docs/evidence/isolation-check.json": {
+    "classification": "EVALUATION_EVIDENCE",
+    "action": "KEEP"
+  },
+  "docs/evidence/live-summary.json": {
+    "classification": "EVALUATION_EVIDENCE",
+    "action": "KEEP"
+  },
+  "docs/evidence/original-files.json": {
+    "classification": "EVALUATION_EVIDENCE",
+    "action": "KEEP"
+  },
+  "docs/evidence/personal-buttons.png": {
+    "classification": "EVALUATION_EVIDENCE",
+    "action": "KEEP"
+  },
+  "docs/evidence/restart-check.json": {
+    "classification": "EVALUATION_EVIDENCE",
+    "action": "KEEP"
+  },
+  "docs/evidence/review-020-details.json": {
+    "classification": "EVALUATION_EVIDENCE",
+    "action": "KEEP"
+  },
+  "docs/evidence/review-020.json": {
+    "classification": "EVALUATION_EVIDENCE",
+    "action": "KEEP"
+  },
+  "evaluations/module-review.json": {
+    "classification": "ANONYMOUS_EVALUATION",
+    "action": "KEEP"
+  },
+  "evaluations/review_modules.py": {
+    "classification": "ANONYMOUS_EVALUATION",
+    "action": "KEEP"
+  },
+  "evaluations/scenarios.jsonl": {
+    "classification": "ANONYMOUS_EVALUATION",
+    "action": "KEEP"
+  },
+  "web/app.js": {
+    "classification": "OPTIONAL_DEMO",
+    "action": "KEEP"
+  },
+  "web/index.html": {
+    "classification": "OPTIONAL_DEMO",
+    "action": "KEEP"
+  },
+  "web/style.css": {
+    "classification": "OPTIONAL_DEMO",
+    "action": "KEEP"
+  },
+  "migrations/env.py": {
+    "classification": "MIGRATION_HISTORY",
+    "action": "KEEP"
+  },
+  "migrations/versions/0001_coach.py": {
+    "classification": "MIGRATION_HISTORY",
+    "action": "KEEP"
+  },
+  "migrations/versions/0002_reference_date.py": {
+    "classification": "MIGRATION_HISTORY",
+    "action": "KEEP"
+  },
+  "migrations/versions/0003_identity_baselines.py": {
+    "classification": "MIGRATION_HISTORY",
+    "action": "KEEP"
+  },
+  "migrations/versions/0004_task_provenance.py": {
+    "classification": "MIGRATION_HISTORY",
+    "action": "KEEP"
+  },
+  "migrations/versions/0005_current_personal_plan.py": {
+    "classification": "MIGRATION_HISTORY",
+    "action": "KEEP"
+  },
+  "tests/conftest.py": {
+    "classification": "REGRESSION",
+    "action": "KEEP"
+  },
+  "tests/test_capacity_contracts.py": {
+    "classification": "REGRESSION",
+    "action": "KEEP"
+  },
+  "tests/test_coaching_clarity.py": {
+    "classification": "REGRESSION",
+    "action": "KEEP"
+  },
+  "tests/test_core.py": {
+    "classification": "REGRESSION",
+    "action": "KEEP"
+  },
+  "tests/test_identity_reader.py": {
+    "classification": "REGRESSION",
+    "action": "KEEP"
+  },
+  "tests/test_integration.py": {
+    "classification": "REGRESSION",
+    "action": "KEEP"
+  },
+  "tests/test_process_storage.py": {
+    "classification": "REGRESSION",
+    "action": "KEEP"
+  },
+  "tests/test_public.py": {
+    "classification": "REGRESSION",
+    "action": "KEEP"
+  },
+  "tests/test_review.py": {
+    "classification": "REGRESSION",
+    "action": "KEEP"
+  },
+  "tests/test_store.py": {
+    "classification": "REGRESSION",
+    "action": "KEEP"
+  },
+  "README.md": {
+    "classification": "INSTALLATION",
+    "action": "KEEP"
+  },
+  "pyproject.toml": {
+    "classification": "INSTALLATION",
+    "action": "KEEP"
+  },
+  "start.ps1": {
+    "classification": "INSTALLATION",
+    "action": "KEEP"
+  },
+  "tools/live_verify.py": {
+    "classification": "OBSOLETE_RUNNER",
+    "action": "DELETE",
+    "reason": "Replaced by common evaluator or verified 0.2.0 wheel; database/history/recovery files preserved"
+  },
+  "dist/wemeet_coach-0.1.2-py3-none-any.whl": {
+    "classification": "GENERATED_ARTIFACT",
+    "action": "DELETE",
+    "reason": "Replaced by common evaluator or verified 0.2.0 wheel; database/history/recovery files preserved"
+  },
+  "build/": {
+    "classification": "GENERATED_ARTIFACT",
+    "action": "DELETE",
+    "reason": "Replaced by common evaluator or verified 0.2.0 wheel; database/history/recovery files preserved"
+  },
+  ".pytest_cache/": {
+    "classification": "GENERATED_ARTIFACT",
+    "action": "DELETE",
+    "reason": "Replaced by common evaluator or verified 0.2.0 wheel; database/history/recovery files preserved"
+  },
+  "runtime/review3/install-020/": {
+    "classification": "GENERATED_ARTIFACT",
+    "action": "DELETE",
+    "reason": "Replaced by common evaluator or verified 0.2.0 wheel; database/history/recovery files preserved"
+  },
+  "runtime/review3/install-020-final/": {
+    "classification": "GENERATED_ARTIFACT",
+    "action": "DELETE",
+    "reason": "Replaced by common evaluator or verified 0.2.0 wheel; database/history/recovery files preserved"
+  },
+  "src/wemeet_coach.egg-info/": {
+    "classification": "GENERATED_ARTIFACT",
+    "action": "DELETE",
+    "reason": "Replaced by common evaluator or verified 0.2.0 wheel; database/history/recovery files preserved"
+  }
+}

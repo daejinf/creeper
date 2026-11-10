@@ -1,0 +1,1971 @@
+{
+  "version": "0.3.0",
+  "source_files": {
+    "src\\wemeet_coach\\__init__.py": {
+      "sha256": "c650a4b4af5c5dfd46d5427bc6197fb22fc5bb5b125cf826a270750dc13478e6",
+      "imports": [
+        "from .group import group_coach",
+        "from .personal import personal_coach",
+        "from .validation import validate_plan",
+        "from .shared.contracts import GroupRequest, PersonalRequest, Result, ActorContext"
+      ],
+      "lines": 17,
+      "syntactic_calls": []
+    },
+    "src\\wemeet_coach\\group.py": {
+      "sha256": "5b7450114b61d5ae95687ac1f71d001d1305115592c7eb1c485f22dbbfaaaa14",
+      "imports": [
+        "from .shared.contracts import Contract, GroupRequest, GroupReply, CoachingTurn",
+        "from datetime import date",
+        "from pydantic import Field",
+        "import re",
+        "from .m0.runtime import Runtime, code_result, input_error",
+        "from pydantic import ValidationError",
+        "from .validation import validate_plan, assign_ids"
+      ],
+      "lines": 195,
+      "syntactic_calls": [
+        "Field",
+        "GroupReply",
+        "Runtime",
+        "ValueError",
+        "all",
+        "any",
+        "apply",
+        "as_text",
+        "assign_ids",
+        "bool",
+        "code_result",
+        "deadline_only",
+        "getattr",
+        "input_error",
+        "int",
+        "isdecimal",
+        "items",
+        "join",
+        "len",
+        "lower",
+        "model_copy",
+        "model_dump",
+        "model_validate",
+        "revise_deadline",
+        "run",
+        "search",
+        "set",
+        "sorted",
+        "type",
+        "update",
+        "validate_plan"
+      ]
+    },
+    "src\\wemeet_coach\\m0\\__init__.py": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "imports": [],
+      "lines": 0,
+      "syntactic_calls": []
+    },
+    "src\\wemeet_coach\\m0\\client.py": {
+      "sha256": "db7266327acdff0caf70d638e39123e322f9c0cfc0fd5ab30712d6dba9c8f693",
+      "imports": [
+        "import json",
+        "import os",
+        "import time",
+        "from uuid import uuid4",
+        "from dataclasses import dataclass, field",
+        "from typing import Any",
+        "import requests",
+        "from pydantic import BaseModel, ValidationError",
+        "from ..shared.contracts import Usage",
+        "from .tracing import emit"
+      ],
+      "lines": 332,
+      "syntactic_calls": [
+        "AIError",
+        "AssertionError",
+        "Completion",
+        "RunStats",
+        "Session",
+        "Usage",
+        "ValueError",
+        "__init__",
+        "_request",
+        "any",
+        "append",
+        "dict",
+        "dumps",
+        "emit",
+        "errors",
+        "field",
+        "get",
+        "getattr",
+        "getenv",
+        "int",
+        "isdecimal",
+        "isinstance",
+        "items",
+        "json",
+        "list",
+        "loads",
+        "min",
+        "model_copy",
+        "model_dump",
+        "model_json_schema",
+        "model_validate",
+        "perf_counter",
+        "post",
+        "range",
+        "reserve",
+        "rstrip",
+        "setattr",
+        "sleeper",
+        "str",
+        "strip",
+        "super",
+        "type",
+        "uuid4",
+        "values"
+      ]
+    },
+    "src\\wemeet_coach\\m0\\runtime.py": {
+      "sha256": "071f7c039dfd8b15ca3878f57071af346c5644935a503c854b26ceb933d0d693",
+      "imports": [
+        "import time",
+        "import json",
+        "from uuid import uuid4",
+        "from pydantic import ValidationError",
+        "from .client import TimelyClient, RunStats, AIError",
+        "from .tracing import scope, emit",
+        "from ..shared.contracts import Result, Meta, Error",
+        "from ..shared.privacy import sanitize"
+      ],
+      "lines": 138,
+      "syntactic_calls": [
+        "AIError",
+        "Error",
+        "Meta",
+        "Result",
+        "RunStats",
+        "TimelyClient",
+        "check",
+        "code_result",
+        "complete_json",
+        "complete_text",
+        "dumps",
+        "emit",
+        "errors",
+        "get",
+        "int",
+        "join",
+        "list",
+        "model_dump",
+        "model_dump_json",
+        "output_type",
+        "perf_counter",
+        "pop",
+        "range",
+        "sanitize",
+        "scope",
+        "startswith",
+        "str",
+        "uuid4"
+      ]
+    },
+    "src\\wemeet_coach\\m0\\tracing.py": {
+      "sha256": "29c2efcd744b0afa176c5637cb791fb91c3087f86b0e57e247e38b4790fddff5",
+      "imports": [
+        "from contextlib import contextmanager",
+        "from contextvars import ContextVar",
+        "from datetime import datetime, timezone",
+        "from typing import Protocol",
+        "from ..shared.privacy import sanitize",
+        "from pathlib import Path",
+        "from threading import Lock",
+        "import json"
+      ],
+      "lines": 100,
+      "syntactic_calls": [
+        "ContextVar",
+        "Lock",
+        "Path",
+        "append",
+        "dumps",
+        "emit",
+        "get",
+        "isinstance",
+        "isoformat",
+        "items",
+        "lower",
+        "mkdir",
+        "now",
+        "open",
+        "reset",
+        "sanitize",
+        "scrub",
+        "set",
+        "write"
+      ]
+    },
+    "src\\wemeet_coach\\persistence\\__init__.py": {
+      "sha256": "704fce67358c3ded81df33bb60a85da55326977e644c5f540b3d6be61da60924",
+      "imports": [
+        "from .store import Store, Conflict, NotFound"
+      ],
+      "lines": 5,
+      "syntactic_calls": []
+    },
+    "src\\wemeet_coach\\persistence\\reader.py": {
+      "sha256": "984a06e4f92a87ff159e33ceeaf3bbc35adb4950ec7ca3973b57edd0f8167eb8",
+      "imports": [
+        "import sqlalchemy as sa",
+        "from . import schema as d",
+        "from ..shared.contracts import ActorContext",
+        "from ..validation import validate_plan, confirmed_weekdays"
+      ],
+      "lines": 489,
+      "syntactic_calls": [
+        "PermissionError",
+        "ValueError",
+        "_group",
+        "_personal_view",
+        "_plan",
+        "add",
+        "any",
+        "append",
+        "bool",
+        "confirmed_weekdays",
+        "desc",
+        "dict",
+        "execute",
+        "extend",
+        "first",
+        "get",
+        "is_",
+        "isoformat",
+        "items",
+        "join",
+        "label",
+        "mappings",
+        "member",
+        "model_validate",
+        "next",
+        "one",
+        "order_by",
+        "outerjoin",
+        "read",
+        "scalar",
+        "select",
+        "set",
+        "str",
+        "update",
+        "validate_plan",
+        "where"
+      ]
+    },
+    "src\\wemeet_coach\\persistence\\recovery.py": {
+      "sha256": "670be47aa8ee0b177776901a4913ed92a7dd9aa0044277efaf46f3c78a1fe2f8",
+      "imports": [
+        "import json",
+        "import os",
+        "from pathlib import Path",
+        "from uuid import uuid4",
+        "from cryptography.fernet import Fernet",
+        "from uuid import UUID"
+      ],
+      "lines": 53,
+      "syntactic_calls": [
+        "Fernet",
+        "Path",
+        "UUID",
+        "ValueError",
+        "decode",
+        "decrypt",
+        "dumps",
+        "encode",
+        "encrypt",
+        "exists",
+        "filename",
+        "fileno",
+        "flush",
+        "fsync",
+        "get",
+        "isinstance",
+        "loads",
+        "mkdir",
+        "open",
+        "read_bytes",
+        "replace",
+        "str",
+        "unlink",
+        "uuid4",
+        "write"
+      ]
+    },
+    "src\\wemeet_coach\\persistence\\schema.py": {
+      "sha256": "56cc33fc84feb995585176cafd13ee8843a7736c9563362942580ef1f5d80f7f",
+      "imports": [
+        "import sqlalchemy as sa",
+        "from sqlalchemy.dialects.postgresql import JSONB"
+      ],
+      "lines": 307,
+      "syntactic_calls": [
+        "CheckConstraint",
+        "Column",
+        "DateTime",
+        "ForeignKey",
+        "ForeignKeyConstraint",
+        "Identity",
+        "Index",
+        "MetaData",
+        "Table",
+        "UniqueConstraint",
+        "append_column",
+        "append_constraint",
+        "col",
+        "current_date",
+        "is_",
+        "now",
+        "stamp"
+      ]
+    },
+    "src\\wemeet_coach\\persistence\\store.py": {
+      "sha256": "320fa843166d668194076ecff34250c2bba36362ea7f1be2dec801066b6f7522",
+      "imports": [
+        "import json",
+        "import hashlib",
+        "from contextlib import contextmanager",
+        "from datetime import datetime, timezone, timedelta",
+        "from uuid import uuid4",
+        "import sqlalchemy as sa",
+        "from sqlalchemy.dialects.postgresql import insert",
+        "from . import schema as d",
+        "from .recovery import EncryptedRecoveryStore",
+        "from ..shared.contracts import GroupRequest, GroupProposal, PersonalRequest, PersonalState, PersonalPlan, PersonalReply, Message, Member, Error",
+        "from ..shared.privacy import sanitize",
+        "from ..m0.runtime import code_result",
+        "from ..group import group_coach",
+        "from ..personal import personal_coach",
+        "from ..validation import validate_plan, assign_ids, confirmed_weekdays",
+        "from sqlalchemy.engine import make_url",
+        "from .reader import GoalReader",
+        "from ..personal import normalize, FIELDS",
+        "from ..shared.contracts import PersonalField",
+        "from datetime import date",
+        "from ..personal import opening_question",
+        "from ..shared.contracts import Goal",
+        "from ..shared.contracts import Goal",
+        "from ..shared.contracts import Goal",
+        "from ..personal import apply_answer"
+      ],
+      "lines": 1803,
+      "syntactic_calls": [
+        "Conflict",
+        "EncryptedRecoveryStore",
+        "Error",
+        "GoalReader",
+        "Message",
+        "NotFound",
+        "PersonalState",
+        "ValueError",
+        "_personal_view",
+        "action",
+        "add",
+        "all",
+        "any",
+        "append",
+        "apply_answer",
+        "approved",
+        "assign_ids",
+        "begin",
+        "bool",
+        "checked_result",
+        "close_votes",
+        "code_result",
+        "commit_group",
+        "confirmed_weekdays",
+        "connect",
+        "create_engine",
+        "delete",
+        "desc",
+        "dialogue",
+        "dict",
+        "digest",
+        "dumps",
+        "encode",
+        "event",
+        "exec_driver_sql",
+        "execute",
+        "execution_options",
+        "finish",
+        "first",
+        "fromisoformat",
+        "get",
+        "group_coach",
+        "hasattr",
+        "hexdigest",
+        "insert",
+        "is_",
+        "is_not",
+        "isinstance",
+        "isoformat",
+        "items",
+        "iter",
+        "join",
+        "len",
+        "limit",
+        "make_url",
+        "mappings",
+        "max",
+        "member",
+        "members",
+        "model_dump",
+        "model_validate",
+        "next",
+        "normalize",
+        "not_in",
+        "now",
+        "on_conflict_do_nothing",
+        "on_conflict_do_update",
+        "one",
+        "opening_question",
+        "order_by",
+        "personal_coach",
+        "personal_view",
+        "pop",
+        "private_row",
+        "proposal",
+        "proposal_view",
+        "public_dependencies",
+        "publish_proposal",
+        "put",
+        "read",
+        "replace",
+        "runner",
+        "sanitize",
+        "scalar",
+        "select",
+        "set",
+        "sha256",
+        "split",
+        "stale",
+        "startswith",
+        "str",
+        "strip",
+        "timedelta",
+        "today",
+        "touch",
+        "transaction",
+        "tx",
+        "type",
+        "uid",
+        "update",
+        "uuid4",
+        "validate_plan",
+        "values",
+        "view",
+        "where",
+        "with_for_update"
+      ]
+    },
+    "src\\wemeet_coach\\personal.py": {
+      "sha256": "a1dee24d8d5e1aa42ea3442bba7c67481062b3ec8166d64d5767c82a85a5b1ad",
+      "imports": [
+        "from .shared.contracts import Contract, PersonalRequest, PersonalReply, PersonalField, PersonalPlan, Question, Option, CoachingSummary",
+        "from pydantic import Field, ValidationError",
+        "from .m0.runtime import Runtime, code_result, input_error",
+        "from .validation import validate_plan, assign_ids, confirmed_weekdays, time_allocation",
+        "from uuid import uuid4",
+        "import re",
+        "from .m0.tracing import emit",
+        "from datetime import timedelta"
+      ],
+      "lines": 452,
+      "syntactic_calls": [
+        "Field",
+        "Option",
+        "PersonalField",
+        "PersonalReply",
+        "Question",
+        "Runtime",
+        "ValueError",
+        "any",
+        "append",
+        "apply_answer",
+        "assign_ids",
+        "code_result",
+        "confirmed_weekdays",
+        "emit",
+        "extend",
+        "float",
+        "fromkeys",
+        "fullmatch",
+        "get",
+        "input_error",
+        "int",
+        "intersection",
+        "is_integer",
+        "isinstance",
+        "isoformat",
+        "items",
+        "join",
+        "len",
+        "list",
+        "lower",
+        "model_copy",
+        "model_validate",
+        "next",
+        "normalize",
+        "range",
+        "run",
+        "set",
+        "sorted",
+        "str",
+        "strip",
+        "time_allocation",
+        "timedelta",
+        "type",
+        "uuid4",
+        "validate_plan",
+        "values",
+        "weekday"
+      ]
+    },
+    "src\\wemeet_coach\\shared\\__init__.py": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "imports": [],
+      "lines": 0,
+      "syntactic_calls": []
+    },
+    "src\\wemeet_coach\\shared\\contracts.py": {
+      "sha256": "f0e7f4f82fe9c77fd9303366b8d3e39efcd627633c5165687543ceaf22db8492",
+      "imports": [
+        "from datetime import date, datetime, timezone",
+        "from typing import Any, Literal",
+        "from pydantic import BaseModel, ConfigDict, Field, model_validator"
+      ],
+      "lines": 285,
+      "syntactic_calls": [
+        "ConfigDict",
+        "Field",
+        "ValueError",
+        "any",
+        "join",
+        "len",
+        "model_validator",
+        "now",
+        "set"
+      ]
+    },
+    "src\\wemeet_coach\\shared\\privacy.py": {
+      "sha256": "f0d9c6afcc2484f23700a93aa70bc23ec138ee8e27dc3a92204d44064fcd035c",
+      "imports": [
+        "import re",
+        "import os",
+        "from copy import deepcopy"
+      ],
+      "lines": 46,
+      "syntactic_calls": [
+        "deepcopy",
+        "getenv",
+        "isinstance",
+        "items",
+        "lower",
+        "redact",
+        "replace",
+        "sanitize",
+        "sub"
+      ]
+    },
+    "src\\wemeet_coach\\validation.py": {
+      "sha256": "359bd9dce52b9176538fc2494f4d8c4376c91989dba4c3d422e25a31fcfe3be8",
+      "imports": [
+        "from collections import defaultdict",
+        "from .shared.contracts import PersonalPlan, GroupProposal, Goal",
+        "from pydantic import ValidationError",
+        "from uuid import uuid4"
+      ],
+      "lines": 131,
+      "syntactic_calls": [
+        "ValueError",
+        "add",
+        "any",
+        "append",
+        "bool",
+        "cycle",
+        "defaultdict",
+        "enumerate",
+        "errors",
+        "get",
+        "getattr",
+        "isinstance",
+        "items",
+        "join",
+        "len",
+        "map",
+        "model_dump",
+        "model_validate",
+        "range",
+        "remove",
+        "set",
+        "sorted",
+        "str",
+        "sum",
+        "type",
+        "uuid4",
+        "values",
+        "weekday"
+      ]
+    }
+  },
+  "functions": [
+    {
+      "file": "src\\wemeet_coach\\group.py",
+      "function": "deadline_only",
+      "line": 35,
+      "end_line": 45,
+      "role": "모델 요청·부분 수정·근거 보호",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": [
+        "src\\wemeet_coach\\group.py"
+      ]
+    },
+    {
+      "file": "src\\wemeet_coach\\group.py",
+      "function": "revise_deadline",
+      "line": 48,
+      "end_line": 94,
+      "role": "모델 요청·부분 수정·근거 보호",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": [
+        "src\\wemeet_coach\\group.py"
+      ]
+    },
+    {
+      "file": "src\\wemeet_coach\\group.py",
+      "function": "group_coach",
+      "line": 97,
+      "end_line": 195,
+      "role": "모델 요청·부분 수정·근거 보호",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": [
+        "src\\wemeet_coach\\persistence\\store.py"
+      ]
+    },
+    {
+      "file": "src\\wemeet_coach\\group.py",
+      "function": "apply",
+      "line": 51,
+      "end_line": 73,
+      "role": "모델 요청·부분 수정·근거 보호",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": [
+        "src\\wemeet_coach\\group.py"
+      ]
+    },
+    {
+      "file": "src\\wemeet_coach\\group.py",
+      "function": "check",
+      "line": 142,
+      "end_line": 167,
+      "role": "모델 요청·부분 수정·근거 보호",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": [
+        "src\\wemeet_coach\\m0\\runtime.py"
+      ]
+    },
+    {
+      "file": "src\\wemeet_coach\\m0\\client.py",
+      "function": "AIError.__init__",
+      "line": 18,
+      "end_line": 20,
+      "role": "통신·실행·계약 검증",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": [
+        "src\\wemeet_coach\\m0\\client.py"
+      ]
+    },
+    {
+      "file": "src\\wemeet_coach\\m0\\client.py",
+      "function": "TimelyClient.__init__",
+      "line": 46,
+      "end_line": 53,
+      "role": "통신·실행·계약 검증",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": [
+        "src\\wemeet_coach\\m0\\client.py"
+      ]
+    },
+    {
+      "file": "src\\wemeet_coach\\m0\\client.py",
+      "function": "TimelyClient.complete_text",
+      "line": 55,
+      "end_line": 66,
+      "role": "통신·실행·계약 검증",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": [
+        "src\\wemeet_coach\\m0\\runtime.py"
+      ]
+    },
+    {
+      "file": "src\\wemeet_coach\\m0\\client.py",
+      "function": "TimelyClient.complete_json",
+      "line": 68,
+      "end_line": 143,
+      "role": "통신·실행·계약 검증",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": [
+        "src\\wemeet_coach\\m0\\runtime.py"
+      ]
+    },
+    {
+      "file": "src\\wemeet_coach\\m0\\client.py",
+      "function": "TimelyClient._request",
+      "line": 145,
+      "end_line": 332,
+      "role": "통신·실행·계약 검증",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": [
+        "src\\wemeet_coach\\m0\\client.py"
+      ]
+    },
+    {
+      "file": "src\\wemeet_coach\\m0\\runtime.py",
+      "function": "code_result",
+      "line": 13,
+      "end_line": 20,
+      "role": "통신·실행·계약 검증",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": [
+        "src\\wemeet_coach\\group.py",
+        "src\\wemeet_coach\\m0\\runtime.py",
+        "src\\wemeet_coach\\persistence\\store.py",
+        "src\\wemeet_coach\\personal.py"
+      ]
+    },
+    {
+      "file": "src\\wemeet_coach\\m0\\runtime.py",
+      "function": "input_error",
+      "line": 23,
+      "end_line": 33,
+      "role": "Explain invalid request paths without exposing their supplied values.",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": [
+        "src\\wemeet_coach\\group.py",
+        "src\\wemeet_coach\\personal.py"
+      ]
+    },
+    {
+      "file": "src\\wemeet_coach\\m0\\runtime.py",
+      "function": "Runtime.__init__",
+      "line": 37,
+      "end_line": 39,
+      "role": "통신·실행·계약 검증",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": [
+        "src\\wemeet_coach\\m0\\client.py"
+      ]
+    },
+    {
+      "file": "src\\wemeet_coach\\m0\\runtime.py",
+      "function": "Runtime.run",
+      "line": 41,
+      "end_line": 138,
+      "role": "통신·실행·계약 검증",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": [
+        "src\\wemeet_coach\\group.py",
+        "src\\wemeet_coach\\personal.py"
+      ]
+    },
+    {
+      "file": "src\\wemeet_coach\\m0\\tracing.py",
+      "function": "scrub",
+      "line": 45,
+      "end_line": 67,
+      "role": "통신·실행·계약 검증",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": [
+        "src\\wemeet_coach\\m0\\tracing.py"
+      ]
+    },
+    {
+      "file": "src\\wemeet_coach\\m0\\tracing.py",
+      "function": "scope",
+      "line": 71,
+      "end_line": 76,
+      "role": "통신·실행·계약 검증",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": [
+        "src\\wemeet_coach\\m0\\runtime.py"
+      ]
+    },
+    {
+      "file": "src\\wemeet_coach\\m0\\tracing.py",
+      "function": "emit",
+      "line": 79,
+      "end_line": 100,
+      "role": "통신·실행·계약 검증",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": [
+        "src\\wemeet_coach\\m0\\client.py",
+        "src\\wemeet_coach\\m0\\runtime.py",
+        "src\\wemeet_coach\\m0\\tracing.py",
+        "src\\wemeet_coach\\personal.py"
+      ]
+    },
+    {
+      "file": "src\\wemeet_coach\\m0\\tracing.py",
+      "function": "TraceSink.emit",
+      "line": 12,
+      "end_line": 12,
+      "role": "통신·실행·계약 검증",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": [
+        "src\\wemeet_coach\\m0\\client.py",
+        "src\\wemeet_coach\\m0\\runtime.py",
+        "src\\wemeet_coach\\m0\\tracing.py",
+        "src\\wemeet_coach\\personal.py"
+      ]
+    },
+    {
+      "file": "src\\wemeet_coach\\m0\\tracing.py",
+      "function": "MemoryTraceSink.__init__",
+      "line": 16,
+      "end_line": 17,
+      "role": "통신·실행·계약 검증",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": [
+        "src\\wemeet_coach\\m0\\client.py"
+      ]
+    },
+    {
+      "file": "src\\wemeet_coach\\m0\\tracing.py",
+      "function": "MemoryTraceSink.emit",
+      "line": 19,
+      "end_line": 20,
+      "role": "통신·실행·계약 검증",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": [
+        "src\\wemeet_coach\\m0\\client.py",
+        "src\\wemeet_coach\\m0\\runtime.py",
+        "src\\wemeet_coach\\m0\\tracing.py",
+        "src\\wemeet_coach\\personal.py"
+      ]
+    },
+    {
+      "file": "src\\wemeet_coach\\m0\\tracing.py",
+      "function": "JsonlTraceSink.__init__",
+      "line": 24,
+      "end_line": 29,
+      "role": "통신·실행·계약 검증",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": [
+        "src\\wemeet_coach\\m0\\client.py"
+      ]
+    },
+    {
+      "file": "src\\wemeet_coach\\m0\\tracing.py",
+      "function": "JsonlTraceSink.emit",
+      "line": 31,
+      "end_line": 39,
+      "role": "통신·실행·계약 검증",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": [
+        "src\\wemeet_coach\\m0\\client.py",
+        "src\\wemeet_coach\\m0\\runtime.py",
+        "src\\wemeet_coach\\m0\\tracing.py",
+        "src\\wemeet_coach\\personal.py"
+      ]
+    },
+    {
+      "file": "src\\wemeet_coach\\persistence\\reader.py",
+      "function": "GoalReader.__init__",
+      "line": 9,
+      "end_line": 11,
+      "role": "저장·권한 범위·버전 무결성",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": [
+        "src\\wemeet_coach\\m0\\client.py"
+      ]
+    },
+    {
+      "file": "src\\wemeet_coach\\persistence\\reader.py",
+      "function": "GoalReader.member",
+      "line": 13,
+      "end_line": 26,
+      "role": "저장·권한 범위·버전 무결성",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": [
+        "src\\wemeet_coach\\persistence\\reader.py",
+        "src\\wemeet_coach\\persistence\\store.py"
+      ]
+    },
+    {
+      "file": "src\\wemeet_coach\\persistence\\reader.py",
+      "function": "GoalReader.groups",
+      "line": 28,
+      "end_line": 47,
+      "role": "저장·권한 범위·버전 무결성",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": []
+    },
+    {
+      "file": "src\\wemeet_coach\\persistence\\reader.py",
+      "function": "GoalReader.group",
+      "line": 49,
+      "end_line": 51,
+      "role": "저장·권한 범위·버전 무결성",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": []
+    },
+    {
+      "file": "src\\wemeet_coach\\persistence\\reader.py",
+      "function": "GoalReader._group",
+      "line": 53,
+      "end_line": 146,
+      "role": "저장·권한 범위·버전 무결성",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": [
+        "src\\wemeet_coach\\persistence\\reader.py"
+      ]
+    },
+    {
+      "file": "src\\wemeet_coach\\persistence\\reader.py",
+      "function": "GoalReader.personal",
+      "line": 148,
+      "end_line": 175,
+      "role": "저장·권한 범위·버전 무결성",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": []
+    },
+    {
+      "file": "src\\wemeet_coach\\persistence\\reader.py",
+      "function": "GoalReader.plan",
+      "line": 177,
+      "end_line": 179,
+      "role": "저장·권한 범위·버전 무결성",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": []
+    },
+    {
+      "file": "src\\wemeet_coach\\persistence\\reader.py",
+      "function": "GoalReader._plan",
+      "line": 181,
+      "end_line": 244,
+      "role": "저장·권한 범위·버전 무결성",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": [
+        "src\\wemeet_coach\\persistence\\reader.py"
+      ]
+    },
+    {
+      "file": "src\\wemeet_coach\\persistence\\reader.py",
+      "function": "GoalReader.baseline",
+      "line": 246,
+      "end_line": 284,
+      "role": "저장·권한 범위·버전 무결성",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": []
+    },
+    {
+      "file": "src\\wemeet_coach\\persistence\\reader.py",
+      "function": "GoalReader.context",
+      "line": 286,
+      "end_line": 489,
+      "role": "Minimal downstream input, never a raw conversation or developer log.\n\nscope is mandatory. PERSONAL always resolves to the authenticated caller.\nAn explicit historical version is returned with REVIEW_REQUIRED.",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": []
+    },
+    {
+      "file": "src\\wemeet_coach\\persistence\\recovery.py",
+      "function": "EncryptedRecoveryStore.__init__",
+      "line": 11,
+      "end_line": 16,
+      "role": "저장·권한 범위·버전 무결성",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": [
+        "src\\wemeet_coach\\m0\\client.py"
+      ]
+    },
+    {
+      "file": "src\\wemeet_coach\\persistence\\recovery.py",
+      "function": "EncryptedRecoveryStore.filename",
+      "line": 18,
+      "end_line": 21,
+      "role": "저장·권한 범위·버전 무결성",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": [
+        "src\\wemeet_coach\\persistence\\recovery.py"
+      ]
+    },
+    {
+      "file": "src\\wemeet_coach\\persistence\\recovery.py",
+      "function": "EncryptedRecoveryStore.get",
+      "line": 23,
+      "end_line": 27,
+      "role": "저장·권한 범위·버전 무결성",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": [
+        "src\\wemeet_coach\\m0\\client.py",
+        "src\\wemeet_coach\\m0\\runtime.py",
+        "src\\wemeet_coach\\m0\\tracing.py",
+        "src\\wemeet_coach\\persistence\\reader.py",
+        "src\\wemeet_coach\\persistence\\recovery.py",
+        "src\\wemeet_coach\\persistence\\store.py",
+        "src\\wemeet_coach\\personal.py",
+        "src\\wemeet_coach\\validation.py"
+      ]
+    },
+    {
+      "file": "src\\wemeet_coach\\persistence\\recovery.py",
+      "function": "EncryptedRecoveryStore.put",
+      "line": 29,
+      "end_line": 50,
+      "role": "저장·권한 범위·버전 무결성",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": [
+        "src\\wemeet_coach\\persistence\\store.py"
+      ]
+    },
+    {
+      "file": "src\\wemeet_coach\\persistence\\recovery.py",
+      "function": "EncryptedRecoveryStore.delete",
+      "line": 52,
+      "end_line": 53,
+      "role": "저장·권한 범위·버전 무결성",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": [
+        "src\\wemeet_coach\\persistence\\store.py"
+      ]
+    },
+    {
+      "file": "src\\wemeet_coach\\persistence\\schema.py",
+      "function": "col",
+      "line": 8,
+      "end_line": 9,
+      "role": "저장·권한 범위·버전 무결성",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": [
+        "src\\wemeet_coach\\persistence\\schema.py"
+      ]
+    },
+    {
+      "file": "src\\wemeet_coach\\persistence\\schema.py",
+      "function": "stamp",
+      "line": 12,
+      "end_line": 18,
+      "role": "저장·권한 범위·버전 무결성",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": [
+        "src\\wemeet_coach\\persistence\\schema.py"
+      ]
+    },
+    {
+      "file": "src\\wemeet_coach\\persistence\\store.py",
+      "function": "uid",
+      "line": 38,
+      "end_line": 39,
+      "role": "저장·권한 범위·버전 무결성",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": [
+        "src\\wemeet_coach\\persistence\\store.py"
+      ]
+    },
+    {
+      "file": "src\\wemeet_coach\\persistence\\store.py",
+      "function": "digest",
+      "line": 42,
+      "end_line": 45,
+      "role": "저장·권한 범위·버전 무결성",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": [
+        "src\\wemeet_coach\\persistence\\store.py"
+      ]
+    },
+    {
+      "file": "src\\wemeet_coach\\persistence\\store.py",
+      "function": "Store.__init__",
+      "line": 49,
+      "end_line": 66,
+      "role": "저장·권한 범위·버전 무결성",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": [
+        "src\\wemeet_coach\\m0\\client.py"
+      ]
+    },
+    {
+      "file": "src\\wemeet_coach\\persistence\\store.py",
+      "function": "Store.tx",
+      "line": 69,
+      "end_line": 86,
+      "role": "저장·권한 범위·버전 무결성",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": [
+        "src\\wemeet_coach\\persistence\\store.py"
+      ]
+    },
+    {
+      "file": "src\\wemeet_coach\\persistence\\store.py",
+      "function": "Store.read",
+      "line": 89,
+      "end_line": 105,
+      "role": "One non-blocking, consistent snapshot. No writes or row locks.",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": [
+        "src\\wemeet_coach\\persistence\\reader.py",
+        "src\\wemeet_coach\\persistence\\store.py"
+      ]
+    },
+    {
+      "file": "src\\wemeet_coach\\persistence\\store.py",
+      "function": "Store.touch",
+      "line": 107,
+      "end_line": 112,
+      "role": "저장·권한 범위·버전 무결성",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": [
+        "src\\wemeet_coach\\persistence\\store.py"
+      ]
+    },
+    {
+      "file": "src\\wemeet_coach\\persistence\\store.py",
+      "function": "Store.member",
+      "line": 114,
+      "end_line": 120,
+      "role": "저장·권한 범위·버전 무결성",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": [
+        "src\\wemeet_coach\\persistence\\reader.py",
+        "src\\wemeet_coach\\persistence\\store.py"
+      ]
+    },
+    {
+      "file": "src\\wemeet_coach\\persistence\\store.py",
+      "function": "Store.members",
+      "line": 122,
+      "end_line": 130,
+      "role": "저장·권한 범위·버전 무결성",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": [
+        "src\\wemeet_coach\\persistence\\store.py"
+      ]
+    },
+    {
+      "file": "src\\wemeet_coach\\persistence\\store.py",
+      "function": "Store.event",
+      "line": 132,
+      "end_line": 160,
+      "role": "저장·권한 범위·버전 무결성",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": [
+        "src\\wemeet_coach\\persistence\\store.py"
+      ]
+    },
+    {
+      "file": "src\\wemeet_coach\\persistence\\store.py",
+      "function": "Store.create",
+      "line": 162,
+      "end_line": 219,
+      "role": "저장·권한 범위·버전 무결성",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": []
+    },
+    {
+      "file": "src\\wemeet_coach\\persistence\\store.py",
+      "function": "Store.list",
+      "line": 221,
+      "end_line": 233,
+      "role": "저장·권한 범위·버전 무결성",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": [
+        "src\\wemeet_coach\\m0\\client.py",
+        "src\\wemeet_coach\\m0\\runtime.py",
+        "src\\wemeet_coach\\personal.py"
+      ]
+    },
+    {
+      "file": "src\\wemeet_coach\\persistence\\store.py",
+      "function": "Store.add_member",
+      "line": 235,
+      "end_line": 291,
+      "role": "저장·권한 범위·버전 무결성",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": []
+    },
+    {
+      "file": "src\\wemeet_coach\\persistence\\store.py",
+      "function": "Store.message",
+      "line": 293,
+      "end_line": 312,
+      "role": "저장·권한 범위·버전 무결성",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": []
+    },
+    {
+      "file": "src\\wemeet_coach\\persistence\\store.py",
+      "function": "Store.action",
+      "line": 314,
+      "end_line": 341,
+      "role": "저장·권한 범위·버전 무결성",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": [
+        "src\\wemeet_coach\\persistence\\store.py"
+      ]
+    },
+    {
+      "file": "src\\wemeet_coach\\persistence\\store.py",
+      "function": "Store.proposal",
+      "line": 343,
+      "end_line": 353,
+      "role": "저장·권한 범위·버전 무결성",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": [
+        "src\\wemeet_coach\\persistence\\store.py"
+      ]
+    },
+    {
+      "file": "src\\wemeet_coach\\persistence\\store.py",
+      "function": "Store.proposal_view",
+      "line": 355,
+      "end_line": 396,
+      "role": "저장·권한 범위·버전 무결성",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": [
+        "src\\wemeet_coach\\persistence\\store.py"
+      ]
+    },
+    {
+      "file": "src\\wemeet_coach\\persistence\\store.py",
+      "function": "Store.close_votes",
+      "line": 398,
+      "end_line": 417,
+      "role": "저장·권한 범위·버전 무결성",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": [
+        "src\\wemeet_coach\\persistence\\store.py"
+      ]
+    },
+    {
+      "file": "src\\wemeet_coach\\persistence\\store.py",
+      "function": "Store.publish_proposal",
+      "line": 419,
+      "end_line": 463,
+      "role": "저장·권한 범위·버전 무결성",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": [
+        "src\\wemeet_coach\\persistence\\store.py"
+      ]
+    },
+    {
+      "file": "src\\wemeet_coach\\persistence\\store.py",
+      "function": "Store.edit_proposal",
+      "line": 465,
+      "end_line": 473,
+      "role": "저장·권한 범위·버전 무결성",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": []
+    },
+    {
+      "file": "src\\wemeet_coach\\persistence\\store.py",
+      "function": "Store.vote",
+      "line": 475,
+      "end_line": 569,
+      "role": "저장·권한 범위·버전 무결성",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": []
+    },
+    {
+      "file": "src\\wemeet_coach\\persistence\\store.py",
+      "function": "Store.commit_group",
+      "line": 571,
+      "end_line": 609,
+      "role": "저장·권한 범위·버전 무결성",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": [
+        "src\\wemeet_coach\\persistence\\store.py"
+      ]
+    },
+    {
+      "file": "src\\wemeet_coach\\persistence\\store.py",
+      "function": "Store.link_user",
+      "line": 611,
+      "end_line": 660,
+      "role": "Trusted SW provisioning only; never infer identity from a nickname.",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": []
+    },
+    {
+      "file": "src\\wemeet_coach\\persistence\\store.py",
+      "function": "Store.reader",
+      "line": 662,
+      "end_line": 665,
+      "role": "저장·권한 범위·버전 무결성",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": []
+    },
+    {
+      "file": "src\\wemeet_coach\\persistence\\store.py",
+      "function": "Store.approved",
+      "line": 667,
+      "end_line": 677,
+      "role": "저장·권한 범위·버전 무결성",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": [
+        "src\\wemeet_coach\\persistence\\store.py"
+      ]
+    },
+    {
+      "file": "src\\wemeet_coach\\persistence\\store.py",
+      "function": "Store.private_row",
+      "line": 679,
+      "end_line": 696,
+      "role": "저장·권한 범위·버전 무결성",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": [
+        "src\\wemeet_coach\\persistence\\store.py"
+      ]
+    },
+    {
+      "file": "src\\wemeet_coach\\persistence\\store.py",
+      "function": "Store.dialogue",
+      "line": 698,
+      "end_line": 720,
+      "role": "저장·권한 범위·버전 무결성",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": [
+        "src\\wemeet_coach\\persistence\\store.py"
+      ]
+    },
+    {
+      "file": "src\\wemeet_coach\\persistence\\store.py",
+      "function": "Store.view",
+      "line": 722,
+      "end_line": 762,
+      "role": "저장·권한 범위·버전 무결성",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": [
+        "src\\wemeet_coach\\persistence\\store.py"
+      ]
+    },
+    {
+      "file": "src\\wemeet_coach\\persistence\\store.py",
+      "function": "Store.personal_view",
+      "line": 764,
+      "end_line": 767,
+      "role": "저장·권한 범위·버전 무결성",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": [
+        "src\\wemeet_coach\\persistence\\store.py"
+      ]
+    },
+    {
+      "file": "src\\wemeet_coach\\persistence\\store.py",
+      "function": "Store._personal_view",
+      "line": 769,
+      "end_line": 880,
+      "role": "저장·권한 범위·버전 무결성",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": [
+        "src\\wemeet_coach\\persistence\\reader.py",
+        "src\\wemeet_coach\\persistence\\store.py"
+      ]
+    },
+    {
+      "file": "src\\wemeet_coach\\persistence\\store.py",
+      "function": "Store.public_dependencies",
+      "line": 883,
+      "end_line": 901,
+      "role": "저장·권한 범위·버전 무결성",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": [
+        "src\\wemeet_coach\\persistence\\store.py"
+      ]
+    },
+    {
+      "file": "src\\wemeet_coach\\persistence\\store.py",
+      "function": "Store.execute",
+      "line": 903,
+      "end_line": 1176,
+      "role": "저장·권한 범위·버전 무결성",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": [
+        "src\\wemeet_coach\\persistence\\reader.py",
+        "src\\wemeet_coach\\persistence\\store.py"
+      ]
+    },
+    {
+      "file": "src\\wemeet_coach\\persistence\\store.py",
+      "function": "Store.finish",
+      "line": 1178,
+      "end_line": 1387,
+      "role": "저장·권한 범위·버전 무결성",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": [
+        "src\\wemeet_coach\\persistence\\store.py"
+      ]
+    },
+    {
+      "file": "src\\wemeet_coach\\persistence\\store.py",
+      "function": "Store.retry_save",
+      "line": 1389,
+      "end_line": 1422,
+      "role": "Never has a model runner: replay a durable response, not the AI call.",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": []
+    },
+    {
+      "file": "src\\wemeet_coach\\persistence\\store.py",
+      "function": "Store.checked_result",
+      "line": 1424,
+      "end_line": 1473,
+      "role": "저장·권한 범위·버전 무결성",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": [
+        "src\\wemeet_coach\\persistence\\store.py"
+      ]
+    },
+    {
+      "file": "src\\wemeet_coach\\persistence\\store.py",
+      "function": "Store.publish_personal",
+      "line": 1475,
+      "end_line": 1610,
+      "role": "저장·권한 범위·버전 무결성",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": []
+    },
+    {
+      "file": "src\\wemeet_coach\\persistence\\store.py",
+      "function": "Store.evaluation_context",
+      "line": 1612,
+      "end_line": 1646,
+      "role": "저장·권한 범위·버전 무결성",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": []
+    },
+    {
+      "file": "src\\wemeet_coach\\persistence\\store.py",
+      "function": "Store.review_conditions",
+      "line": 1648,
+      "end_line": 1693,
+      "role": "저장·권한 범위·버전 무결성",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": []
+    },
+    {
+      "file": "src\\wemeet_coach\\persistence\\store.py",
+      "function": "Store.edit_personal",
+      "line": 1695,
+      "end_line": 1803,
+      "role": "저장·권한 범위·버전 무결성",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": []
+    },
+    {
+      "file": "src\\wemeet_coach\\persistence\\store.py",
+      "function": "run",
+      "line": 238,
+      "end_line": 289,
+      "role": "저장·권한 범위·버전 무결성",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": [
+        "src\\wemeet_coach\\group.py",
+        "src\\wemeet_coach\\personal.py"
+      ]
+    },
+    {
+      "file": "src\\wemeet_coach\\persistence\\store.py",
+      "function": "run",
+      "line": 466,
+      "end_line": 471,
+      "role": "저장·권한 범위·버전 무결성",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": [
+        "src\\wemeet_coach\\group.py",
+        "src\\wemeet_coach\\personal.py"
+      ]
+    },
+    {
+      "file": "src\\wemeet_coach\\persistence\\store.py",
+      "function": "run",
+      "line": 488,
+      "end_line": 567,
+      "role": "저장·권한 범위·버전 무결성",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": [
+        "src\\wemeet_coach\\group.py",
+        "src\\wemeet_coach\\personal.py"
+      ]
+    },
+    {
+      "file": "src\\wemeet_coach\\persistence\\store.py",
+      "function": "run",
+      "line": 616,
+      "end_line": 653,
+      "role": "저장·권한 범위·버전 무결성",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": [
+        "src\\wemeet_coach\\group.py",
+        "src\\wemeet_coach\\personal.py"
+      ]
+    },
+    {
+      "file": "src\\wemeet_coach\\persistence\\store.py",
+      "function": "stale",
+      "line": 825,
+      "end_line": 844,
+      "role": "저장·권한 범위·버전 무결성",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": [
+        "src\\wemeet_coach\\persistence\\store.py"
+      ]
+    },
+    {
+      "file": "src\\wemeet_coach\\persistence\\store.py",
+      "function": "run",
+      "line": 1476,
+      "end_line": 1608,
+      "role": "저장·권한 범위·버전 무결성",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": [
+        "src\\wemeet_coach\\group.py",
+        "src\\wemeet_coach\\personal.py"
+      ]
+    },
+    {
+      "file": "src\\wemeet_coach\\persistence\\store.py",
+      "function": "run",
+      "line": 1652,
+      "end_line": 1691,
+      "role": "저장·권한 범위·버전 무결성",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": [
+        "src\\wemeet_coach\\group.py",
+        "src\\wemeet_coach\\personal.py"
+      ]
+    },
+    {
+      "file": "src\\wemeet_coach\\persistence\\store.py",
+      "function": "run",
+      "line": 1696,
+      "end_line": 1799,
+      "role": "저장·권한 범위·버전 무결성",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": [
+        "src\\wemeet_coach\\group.py",
+        "src\\wemeet_coach\\personal.py"
+      ]
+    },
+    {
+      "file": "src\\wemeet_coach\\personal.py",
+      "function": "opening_question",
+      "line": 59,
+      "end_line": 76,
+      "role": "Immediate onboarding, labelled as a form question, not a model response.",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": [
+        "src\\wemeet_coach\\persistence\\store.py"
+      ]
+    },
+    {
+      "file": "src\\wemeet_coach\\personal.py",
+      "function": "normalize",
+      "line": 79,
+      "end_line": 106,
+      "role": "모델 요청·부분 수정·근거 보호",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": [
+        "src\\wemeet_coach\\persistence\\store.py",
+        "src\\wemeet_coach\\personal.py"
+      ]
+    },
+    {
+      "file": "src\\wemeet_coach\\personal.py",
+      "function": "apply_answer",
+      "line": 109,
+      "end_line": 152,
+      "role": "모델 요청·부분 수정·근거 보호",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": [
+        "src\\wemeet_coach\\persistence\\store.py",
+        "src\\wemeet_coach\\personal.py"
+      ]
+    },
+    {
+      "file": "src\\wemeet_coach\\personal.py",
+      "function": "personal_coach",
+      "line": 155,
+      "end_line": 452,
+      "role": "모델 요청·부분 수정·근거 보호",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": [
+        "src\\wemeet_coach\\persistence\\store.py"
+      ]
+    },
+    {
+      "file": "src\\wemeet_coach\\personal.py",
+      "function": "check",
+      "line": 247,
+      "end_line": 386,
+      "role": "모델 요청·부분 수정·근거 보호",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": [
+        "src\\wemeet_coach\\m0\\runtime.py"
+      ]
+    },
+    {
+      "file": "src\\wemeet_coach\\shared\\contracts.py",
+      "function": "Goal.dates",
+      "line": 104,
+      "end_line": 107,
+      "role": "통신·실행·계약 검증",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": []
+    },
+    {
+      "file": "src\\wemeet_coach\\shared\\contracts.py",
+      "function": "GroupRequest.sources",
+      "line": 147,
+      "end_line": 156,
+      "role": "통신·실행·계약 검증",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": []
+    },
+    {
+      "file": "src\\wemeet_coach\\shared\\contracts.py",
+      "function": "CoachingSummary.as_text",
+      "line": 165,
+      "end_line": 178,
+      "role": "통신·실행·계약 검증",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": [
+        "src\\wemeet_coach\\group.py"
+      ]
+    },
+    {
+      "file": "src\\wemeet_coach\\shared\\contracts.py",
+      "function": "PersonalRequest.owner",
+      "line": 259,
+      "end_line": 275,
+      "role": "통신·실행·계약 검증",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": []
+    },
+    {
+      "file": "src\\wemeet_coach\\shared\\privacy.py",
+      "function": "redact",
+      "line": 6,
+      "end_line": 24,
+      "role": "통신·실행·계약 검증",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": [
+        "src\\wemeet_coach\\shared\\privacy.py"
+      ]
+    },
+    {
+      "file": "src\\wemeet_coach\\shared\\privacy.py",
+      "function": "sanitize",
+      "line": 27,
+      "end_line": 46,
+      "role": "통신·실행·계약 검증",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": [
+        "src\\wemeet_coach\\m0\\runtime.py",
+        "src\\wemeet_coach\\m0\\tracing.py",
+        "src\\wemeet_coach\\persistence\\store.py",
+        "src\\wemeet_coach\\shared\\privacy.py"
+      ]
+    },
+    {
+      "file": "src\\wemeet_coach\\validation.py",
+      "function": "confirmed_weekdays",
+      "line": 8,
+      "end_line": 14,
+      "role": "Explicit availability only. Preferences are never scheduling prohibitions.",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": [
+        "src\\wemeet_coach\\persistence\\reader.py",
+        "src\\wemeet_coach\\persistence\\store.py",
+        "src\\wemeet_coach\\personal.py"
+      ]
+    },
+    {
+      "file": "src\\wemeet_coach\\validation.py",
+      "function": "validate_plan",
+      "line": 17,
+      "end_line": 104,
+      "role": "통신·실행·계약 검증",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": [
+        "src\\wemeet_coach\\group.py",
+        "src\\wemeet_coach\\persistence\\reader.py",
+        "src\\wemeet_coach\\persistence\\store.py",
+        "src\\wemeet_coach\\personal.py"
+      ]
+    },
+    {
+      "file": "src\\wemeet_coach\\validation.py",
+      "function": "assign_ids",
+      "line": 107,
+      "end_line": 115,
+      "role": "통신·실행·계약 검증",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": [
+        "src\\wemeet_coach\\group.py",
+        "src\\wemeet_coach\\persistence\\store.py",
+        "src\\wemeet_coach\\personal.py"
+      ]
+    },
+    {
+      "file": "src\\wemeet_coach\\validation.py",
+      "function": "time_allocation",
+      "line": 118,
+      "end_line": 131,
+      "role": "Authoritative arithmetic for adapters; model prose is not an accounting source.",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": [
+        "src\\wemeet_coach\\personal.py"
+      ]
+    },
+    {
+      "file": "src\\wemeet_coach\\validation.py",
+      "function": "cycle",
+      "line": 86,
+      "end_line": 96,
+      "role": "통신·실행·계약 검증",
+      "decision": "KEEP",
+      "reason": "공개 진입점 또는 현재 실행 경로·회귀 검사에서 사용하는 보조 기능",
+      "review": "AGENT_SOURCE_REVIEW_NOT_HUMAN",
+      "syntactic_call_sites": [
+        "src\\wemeet_coach\\validation.py"
+      ]
+    }
+  ],
+  "scope": "core, public contracts, persistence, reader, recovery",
+  "note": "AST 호출 후보는 동적 호출·외부 SW 사용을 모두 증명하는 도구가 아닙니다. 호출 후보가 없다는 이유만으로 공개 API를 삭제하지 않았습니다.",
+  "removed": [
+    {
+      "path": "evaluations/review_modules.py",
+      "reason": "현재 improvement.py와 중복되는 과거 회차 실행기; 원본 비공개 runtime에 보존, 과거 결과 유지"
+    },
+    {
+      "path": "m0/tracing.py legacy member_profiles/member_plans/private_payloads transformations",
+      "reason": "새 프로젝트에 해당 계약·호출자가 없음. 현재 private_notes·비밀 제거·소유자 추적은 유지"
+    },
+    {
+      "path": "personal.PersonalReply_validate",
+      "reason": "중복 검증 래퍼; 실제 두 호출자를 PersonalReply.model_validate로 통합"
+    },
+    {
+      "path": "M0 undocumented OFFLINE branch",
+      "reason": "LIVE 호출을 숨겨 막는 미사용 환경 분기 제거. 테스트는 명시적 통신 주입만 사용"
+    }
+  ],
+  "retained_guards": [
+    "불변 스냅샷 트리거",
+    "실제 메시지 근거·확인값 보존",
+    "모임·담당자·계획 관계 검사",
+    "암호화 복구 기록",
+    "HTTP 재시도 한도와 출력 잘림 판정",
+    "실패 재현 테스트와 200개 시나리오",
+    "기존 마이그레이션 이력"
+  ]
+}

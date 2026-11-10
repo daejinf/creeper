@@ -1,0 +1,33 @@
+{
+  "phase": 1,
+  "scope": "LOCAL_EMBED_PUBLIC_CHAT_AND_A_COACHING",
+  "tests_passed": 137,
+  "member_counts_tested": [
+    1,
+    3,
+    7,
+    25
+  ],
+  "browser_member_addition": "3_TO_4_PASS",
+  "browser_refresh_restored": true,
+  "viewport_checked": [
+    "default desktop",
+    "390x844"
+  ],
+  "live_http": 2,
+  "live_tokens": 5230,
+  "latencies_ms": [
+    9907,
+    8417
+  ],
+  "semantic_issue": "First response misattributed experience; targeted prompt repair corrected the attribution in second response",
+  "agent_review": "LIMITED_SYNTHETIC_CASE_NOT_HUMAN_ACCEPTANCE",
+  "not_implemented": [
+    "SW authentication and cross-origin embedding",
+    "private E coaching in embedded panel",
+    "plan review and handoff in embedded panel"
+  ],
+  "existing_database_preserved": true,
+  "source_matches_wheel": true,
+  "secret_scan": "PASS"
+}

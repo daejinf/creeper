@@ -1,0 +1,142 @@
+{
+  "schema_version": "1.0",
+  "scope": "PERSONAL",
+  "group_id": "8b95ede5-2a55-48ab-adbc-169c4bb0f677",
+  "owner_member_id": "one",
+  "record_revision": 8,
+  "goal_id": "c8aeead3-dcd7-42ae-b547-b91bdf0418f2",
+  "personal_goal_id": "27654c33-b1b1-4477-8907-d6c6067008a8",
+  "plan_version_id": "8e090dca-66bd-48bc-ad7b-634a793ca4e5",
+  "baseline_id": "ccb0f481-7580-4091-a764-faac272d3e67",
+  "goal": {
+    "roles": {
+      "one": "행사 안내 메인 화면 초안 작성, 메뉴 및 이동 흐름 자체 검토, 수정 기록 정리와 완료 인증"
+    },
+    "title": "행사 안내 메인 화면 설계 및 이동 흐름 검토",
+    "end_date": "2026-11-24",
+    "start_date": "2026-11-10",
+    "privacy_scope": "OBJECTIVE_ONLY",
+    "execution_method": "11월 10일부터 24일까지 메인 화면 설계, 메뉴·이동 흐름 자체 검토, 수정 기록 정리의 3단계로 진행한다. 각 단계의 결과를 다음 단계의 입력으로 사용한다.",
+    "completion_criteria": [
+      "행사 안내 메인 화면 1개의 메뉴 구성이 확인되어 있다.",
+      "메인 화면에서 이어지는 이동 흐름이 확인되어 있다.",
+      "자체 검토 결과와 수정 기록이 남아 있다.",
+      "결과 화면과 짧은 설명으로 완료를 인증할 수 있다."
+    ],
+    "verification_method": "최종 결과 화면과 짧은 설명을 인증 자료로 제출하고, 모임에는 원문 자료 대신 완료 여부와 달성률만 공개한다."
+  },
+  "contribution": {
+    "deliverable": "행사 안내 메인 화면 1개, 메뉴별 이동 흐름 설명, 자체 검토 및 수정 기록, 최종 결과 화면과 짧은 인증 설명",
+    "contribution": "Figma로 행사 안내 메인 화면 초안을 작성하고, 메뉴 및 이동 흐름을 자체 검토한 뒤 수정 기록과 완료 인증 자료를 정리한다.",
+    "completion_criteria": [
+      "행사 안내 메인 화면 1개의 메뉴 구성이 확인되어 있다.",
+      "메인 화면에서 이어지는 이동 흐름이 메뉴별로 확인되어 있다.",
+      "자체 검토 결과와 수정 또는 유지 판단의 근거가 기록되어 있다.",
+      "최종 결과 화면과 짧은 설명으로 완료 여부를 인증할 수 있다."
+    ]
+  },
+  "confirmed_conditions": {
+    "level": {
+      "value": "일부 경험",
+      "status": "KNOWN",
+      "evidence_refs": [
+        "03f092c7-230f-4dea-8a91-fc81c31dacd1"
+      ]
+    },
+    "scope": {
+      "value": "행사 안내 메인 화면 초안 작성, 메뉴 및 이동 흐름 자체 검토, 수정 기록 정리와 완료 인증",
+      "status": "KNOWN",
+      "evidence_refs": [
+        "03f092c7-230f-4dea-8a91-fc81c31dacd1"
+      ]
+    },
+    "tools": {
+      "value": [
+        "Figma"
+      ],
+      "status": "KNOWN",
+      "evidence_refs": [
+        "03f092c7-230f-4dea-8a91-fc81c31dacd1"
+      ]
+    },
+    "progress": {
+      "value": "자료는 있고 초안 작성 전",
+      "status": "KNOWN",
+      "evidence_refs": [
+        "03f092c7-230f-4dea-8a91-fc81c31dacd1"
+      ]
+    },
+    "weekly_minutes": {
+      "value": 120,
+      "status": "KNOWN",
+      "evidence_refs": [
+        "03f092c7-230f-4dea-8a91-fc81c31dacd1"
+      ]
+    }
+  },
+  "tasks": [
+    {
+      "task_id": "f19ddf89-9f4b-4538-9beb-bcc93b5e6ecc",
+      "title": "행사 안내 메인 화면 초안 작성",
+      "due_date": "2026-11-14",
+      "difficulty": "MEDIUM",
+      "deliverable": "Figma 메인 화면 초안 1개, 화면에 포함된 메뉴 목록, 각 메뉴의 목적지 또는 다음 단계 설명",
+      "dependencies": [],
+      "scheduled_date": "2026-11-10",
+      "owner_member_id": "one",
+      "estimated_minutes": 60,
+      "completion_criteria": [
+        "Figma에 행사 안내 메인 화면 1개가 초안으로 정리되어 있다.",
+        "화면에 포함된 메뉴가 별도 목록으로 확인된다.",
+        "각 메뉴에 대해 이동 목적지 또는 다음 단계가 설명되어 있다.",
+        "초안에 사용한 행사 자료의 핵심 내용이 화면 구조에 반영되어 있다."
+      ]
+    },
+    {
+      "task_id": "a589042e-22bf-4e4d-b400-6d64d2f80e67",
+      "title": "메뉴와 이동 흐름 자체 검토",
+      "due_date": "2026-11-20",
+      "difficulty": "MEDIUM",
+      "deliverable": "메뉴별 접근 순서와 이동 흐름을 처음부터 끝까지 확인한 검토 기록, 혼동 항목과 수정 항목 목록",
+      "dependencies": [
+        "f19ddf89-9f4b-4538-9beb-bcc93b5e6ecc"
+      ],
+      "scheduled_date": "2026-11-15",
+      "owner_member_id": "one",
+      "estimated_minutes": 45,
+      "completion_criteria": [
+        "t1의 메인 화면과 메뉴별 흐름을 순서대로 확인한 기록이 있다.",
+        "각 메뉴의 진입 위치와 다음 이동 단계가 끊기지 않는지 기록되어 있다.",
+        "혼동되거나 수정이 필요한 항목과 문제 없는 항목이 구분되어 있다.",
+        "수정한 내용 또는 수정하지 않은 판단의 근거가 기록되어 있다."
+      ]
+    },
+    {
+      "task_id": "82d84afe-632f-4adb-868d-375f62c3c38f",
+      "title": "최종 결과와 수정 기록 정리",
+      "due_date": "2026-11-24",
+      "difficulty": "EASY",
+      "deliverable": "검토 후 최종 Figma 화면과 수정 기록을 연결한 짧은 완료 인증 설명",
+      "dependencies": [
+        "a589042e-22bf-4e4d-b400-6d64d2f80e67"
+      ],
+      "scheduled_date": "2026-11-21",
+      "owner_member_id": "one",
+      "estimated_minutes": 30,
+      "completion_criteria": [
+        "검토 결과를 반영한 최종 화면 상태가 Figma에서 확인된다.",
+        "검토 항목별 수정 또는 유지 판단이 최종 화면과 연결되어 있다.",
+        "수정 기록이 누락 없이 정리되어 있다.",
+        "결과 화면과 짧은 설명만으로 완료 기준 충족 여부를 확인할 수 있다."
+      ]
+    }
+  ],
+  "input_versions": {
+    "proposal_id": "0e6e3f04-3ca4-46b5-9ab3-bc6a4710ddbf",
+    "private_revision": 2
+  },
+  "is_current": true,
+  "requires_review": false,
+  "readiness": "READY",
+  "needed_inputs": []
+}

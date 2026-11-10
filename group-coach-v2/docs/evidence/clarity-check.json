@@ -1,0 +1,125 @@
+{
+  "version": "0.1.2",
+  "http": 4,
+  "runs": [
+    {
+      "module": "personal.PLAN",
+      "status": "OK",
+      "error": null,
+      "meta": {
+        "run_id": "d3e2118a-aaf1-4c6e-85fe-7029c9205d69",
+        "task": "personal.plan",
+        "prompt_version": "personal-0.1-v4",
+        "model": "openai/gpt-5.6-luna",
+        "usage": {
+          "prompt_tokens": 3562,
+          "completion_tokens": 2726,
+          "total_tokens": 6288
+        },
+        "transport_attempts": 1,
+        "repair_attempts": 0,
+        "provider_request_ids": [
+          "gen-1793897413-8jRhpsZzq3g5TFatbpMB"
+        ],
+        "latency_ms": 28581,
+        "execution_source": "LIVE"
+      },
+      "saved": {
+        "operation_id": "2809b571-324f-4899-8056-4af4b29d11b2",
+        "state": "COMPLETE",
+        "record_revision": 48,
+        "retry_action": "NONE"
+      },
+      "automatic_publish": false
+    },
+    {
+      "module": "group.COACH",
+      "status": "OK",
+      "error": null,
+      "meta": {
+        "run_id": "01bfef39-efcf-4d56-bf10-5cfe107344fd",
+        "task": "group.coach",
+        "prompt_version": "coach-0.1-v3",
+        "model": "openai/gpt-5.6-luna",
+        "usage": {
+          "prompt_tokens": 1121,
+          "completion_tokens": 423,
+          "total_tokens": 1544
+        },
+        "transport_attempts": 1,
+        "repair_attempts": 0,
+        "provider_request_ids": [
+          "gen-1793897442-CXQaGuwcD0A19EvID442"
+        ],
+        "latency_ms": 6182,
+        "execution_source": "LIVE"
+      },
+      "reply": "## 정해진 내용\n- 2026년 11월 10~26일, 식별정보를 수집하지 않는 익명 설문 분석 보고서를 추진합니다.\n- 가람은 분석, 나래는 자료 확인, 다온은 결과 검증을 맡는 안이 제안되었습니다.\n- AI 추천 기본 기술통계안을 가람·나래가 선호했지만, 모임 전체 공식 승인은 아직 아닙니다.\n\n## 결정할 내용\n- 화요일 체크인 시각을 정해야 합니다.\n- 기본 기술통계안과 역할·기간을 공동 제안 카드에서 전원 찬성으로 확정해야 합니다.\n\n## 더 구체화하면 좋은 내용\n- 보고서에 표본 수, 결측 처리·현황, 주요 결과, 해석의 한계를 포함합니다.\n- 인증은 자료·결과 확인으로 하되, 원자료나 사진은 공개하지 않고 완료 여부·달성률만 공유합니다.\n\n## 다음 행동\n- 공동 제안 카드에 기간·역할·기본 분석안·공개 범위를 올리고 전원 찬성을 확인하세요.\n- 화요일 체크인 시각을 제안해 주세요. 가능한 시각을 개인 사정이 아닌 모임 운영 기준으로 정할까요?",
+      "group_id": "77309bce-2b79-4fda-839c-5d6d89175c4f"
+    },
+    {
+      "module": "personal.PLAN.schedule_correction",
+      "status": "OK",
+      "error": null,
+      "meta": {
+        "run_id": "2a67067e-4851-45b7-8dd3-610dc8c227e4",
+        "task": "personal.plan",
+        "prompt_version": "personal-0.1-v4",
+        "model": "openai/gpt-5.6-luna",
+        "usage": {
+          "prompt_tokens": 3652,
+          "completion_tokens": 1932,
+          "total_tokens": 5584
+        },
+        "transport_attempts": 1,
+        "repair_attempts": 0,
+        "provider_request_ids": [
+          "gen-1793897721-L8lcNCLQhekOWTzNj3no"
+        ],
+        "latency_ms": 20095,
+        "execution_source": "LIVE"
+      },
+      "saved": {
+        "operation_id": "c00013af-bc51-465f-b162-2bfd1235e317",
+        "state": "COMPLETE",
+        "record_revision": 49,
+        "retry_action": "NONE"
+      },
+      "automatic_publish": false
+    },
+    {
+      "module": "group.COACH.speaker_correction",
+      "status": "OK",
+      "error": null,
+      "meta": {
+        "run_id": "8b5d6932-7fd4-4aa4-b246-79e7d4a031c2",
+        "task": "group.coach",
+        "prompt_version": "coach-0.1-v3",
+        "model": "openai/gpt-5.6-luna",
+        "usage": {
+          "prompt_tokens": 1550,
+          "completion_tokens": 446,
+          "total_tokens": 1996
+        },
+        "transport_attempts": 1,
+        "repair_attempts": 0,
+        "provider_request_ids": [
+          "gen-1793897813-sIKSfdKBSMoSdpBcpArV"
+        ],
+        "latency_ms": 6132,
+        "execution_source": "LIVE"
+      },
+      "reply": "## 정해진 내용\n- 2026년 11월 10~26일 익명 설문 분석 보고서를 추진합니다.\n- 역할은 가람 분석, 나래 자료 확인, 다온 결과 검증으로 제안되었습니다.\n\n## 결정할 내용\n- AI 추천 기본 기술통계안·역할·기간은 공동 제안 카드에서 전원 찬성으로 확정해야 합니다.\n- 화요일 체크인 시각이 아직 미정입니다. 해당 기간의 화요일은 11/10, 11/17, 11/24입니다.\n\n## 더 구체화하면 좋은 내용\n- 완료 기준은 표본 수·결측 현황 및 처리·주요 결과·해석의 한계가 보고서에 포함되고 검증까지 끝난 상태로 둡니다.\n- 세부 자료와 인증 원문은 공개하지 않고, 완료 여부·달성률만 공유하는 방식으로 유지합니다.\n\n## 다음 행동\n- 공동 제안 카드에 기본안과 완료 기준을 올려 공식 승인을 확인하세요.\n- 화요일 체크인은 세 날짜 모두 같은 시각으로 운영하는 안을 제안합니다. 모임 공통 운영 시간으로 몇 시를 잡을까요?",
+      "group_id": "77309bce-2b79-4fda-839c-5d6d89175c4f"
+    }
+  ],
+  "plan_checks": {
+    "valid": true,
+    "stale": false,
+    "tasks": 4,
+    "conditions": 8,
+    "published": false
+  },
+  "reviewer": "AGENT_NOT_HUMAN",
+  "private_plan_shared": false
+}

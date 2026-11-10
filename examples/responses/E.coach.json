@@ -1,0 +1,120 @@
+{
+  "label": "AUTHORED_FIXTURE_NOT_LIVE",
+  "module": "E.coach",
+  "request": {
+    "context": {
+      "goal": "온라인 교류회 진행안 만들기",
+      "role": "참여 설계",
+      "start_date": "2026-12-01",
+      "end_date": "2026-12-21",
+      "completion_criteria": [
+        "참여 방식 선택 가능",
+        "강제 지목 없음"
+      ],
+      "verification_method": "진행안 문서",
+      "privacy_scope": "OBJECTIVE_ONLY"
+    },
+    "owner_member_id": "u1",
+    "reference_date": "2026-11-20",
+    "conversation": []
+  },
+  "response": {
+    "status": "OK",
+    "data": {
+      "reply": "지금까지 알려주신 조건에 맞춰 작업 범위를 조정하고 있어요. 초기에는 경험·시간·진척·도구를 확인합니다.",
+      "state": {
+        "owner_member_id": "u1",
+        "context_key": "c7e5d6ac1ea25e5880721516bfe7681bfaae3772e80d32ea90a01f3476fb7677",
+        "fields": {},
+        "answer_states": {},
+        "dimensions": [
+          {
+            "field": "current_level",
+            "label": "현재 경험",
+            "reason": "중복 작업과 시간 초과를 피하기 위해 확인합니다.",
+            "required": true
+          },
+          {
+            "field": "weekly_available_minutes",
+            "label": "주간 가능 시간",
+            "reason": "중복 작업과 시간 초과를 피하기 위해 확인합니다.",
+            "required": true
+          },
+          {
+            "field": "current_progress",
+            "label": "현재 진척",
+            "reason": "중복 작업과 시간 초과를 피하기 위해 확인합니다.",
+            "required": false
+          },
+          {
+            "field": "tools",
+            "label": "사용 도구",
+            "reason": "중복 작업과 시간 초과를 피하기 위해 확인합니다.",
+            "required": false
+          }
+        ],
+        "question": {
+          "question_id": "33ef14fd-17ea-4855-979b-48050b65d0ea",
+          "field": "current_level",
+          "text": "현재 경험은 어떤가요?",
+          "reason": "실행할 작업 범위를 맞추기 위해 필요합니다.",
+          "topic_id": "",
+          "refinement_reason": null,
+          "options": [
+            {
+              "option_id": "yes",
+              "label": "일부 경험",
+              "value": "일부 경험",
+              "action": "VALUE"
+            },
+            {
+              "option_id": "unknown",
+              "label": "아직 모르겠어요",
+              "value": null,
+              "action": "UNKNOWN"
+            }
+          ]
+        },
+        "answered_question_ids": [],
+        "answered_topics": [],
+        "answered_since_summary": 0,
+        "refinements": {},
+        "refinement_states": {}
+      },
+      "remaining_core": [
+        "current_level",
+        "weekly_available_minutes",
+        "scope"
+      ],
+      "remaining_optional": [
+        "current_progress",
+        "tools"
+      ],
+      "can_draft": true,
+      "can_generate_plan": false,
+      "summary_checkpoint": false
+    },
+    "needed_inputs": [],
+    "warnings": [],
+    "error": null,
+    "meta": {
+      "run_id": "8c7e8763-949a-4b67-ba71-6440d5cb2956",
+      "task": "E.coach",
+      "prompt_version": "E.coach-0.12.1-v2",
+      "model": "AUTHORED FIXTURE · AI 미실행",
+      "usage": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "latency_ms": 0,
+      "transport_attempts": 0,
+      "repair_attempts": 0,
+      "provider_request_ids": [],
+      "execution_source": "REPLAY",
+      "source_run_id": null,
+      "cached_usage": null,
+      "cache_hit": false
+    }
+  }
+}

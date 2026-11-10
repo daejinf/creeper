@@ -1,0 +1,214 @@
+{
+  "verification_http": 60,
+  "cases": {
+    "project": {
+      "members": 3,
+      "unanimous": true,
+      "title": "동아리 행사 안내 프로토타입 준비",
+      "start": "2026-11-09",
+      "end": "2026-11-22",
+      "plans": [
+        {
+          "nickname": "검증project1",
+          "contribution": "행사 등록·조회 메인 화면과 사용자 이동 흐름을 구성하고, API 연결 전후의 화면 상태를 확인하여 실제 등록·조회 시연이 가능한 결과물을 제공한다.",
+          "tasks": 8,
+          "weekly_budget": 90,
+          "check": true,
+          "stale": false,
+          "baseline_id": "bd377f14-7334-4392-8785-d467387dbe41"
+        },
+        {
+          "nickname": "검증project2",
+          "contribution": "행사 데이터 구조를 정의하고 행사 등록·조회 API를 구성하여 화면 흐름에서 등록 결과와 조회 결과를 확인할 수 있도록 연결한다.",
+          "tasks": 6,
+          "weekly_budget": 240,
+          "check": true,
+          "stale": false,
+          "baseline_id": "9c19f231-da6b-42aa-8bae-dae452210699"
+        },
+        {
+          "nickname": "검증project3",
+          "contribution": "행사 등록·조회 흐름과 오류 조건을 포함한 기능 테스트 5건을 설계·실행하고, 각 테스트의 시나리오·예상 결과·실제 결과·판정·후속 조치를 기록한다.",
+          "tasks": 6,
+          "weekly_budget": 120,
+          "check": true,
+          "stale": false,
+          "baseline_id": "c849f96f-3cf5-4b38-b275-f069c2ffe850"
+        }
+      ],
+      "public_private_marker_leaks": false,
+      "manual_recovery": {
+        "reason": "AI가 명시된 기여 범위를 UNKNOWN으로 남김",
+        "scope": "메인 화면 결과물",
+        "confirmation": "ANONYMOUS_SIMULATED",
+        "method": "code-only owner review"
+      }
+    },
+    "study": {
+      "members": 1,
+      "unanimous": true,
+      "title": "파이썬 반복문 문제 풀이 및 오답 분석",
+      "start": "2026-11-09",
+      "end": "2026-11-22",
+      "plans": [
+        {
+          "nickname": "검증study1",
+          "contribution": "파이썬 반복문 문제 6개를 풀이하고 각 문제의 오답 이유를 기록한다.",
+          "tasks": 6,
+          "weekly_budget": 90,
+          "check": true,
+          "stale": false,
+          "baseline_id": "c4cb8b82-112a-4d72-9db8-db91d9b66661"
+        }
+      ],
+      "public_private_marker_leaks": false,
+      "manual_recovery": null
+    },
+    "design": {
+      "members": 5,
+      "unanimous": true,
+      "title": "학교 축제 안내 화면 3개와 발표자료 초안 준비",
+      "start": "2026-11-09",
+      "end": "2026-11-22",
+      "plans": [
+        {
+          "nickname": "검증design1",
+          "contribution": "메인 화면의 정보 우선순위와 안내 흐름을 정리하고 메인 화면 초안을 준비한다.",
+          "tasks": 4,
+          "weekly_budget": 90,
+          "check": true,
+          "stale": false,
+          "baseline_id": "69ff7ec4-0e3e-4655-877e-e493ab363fa7"
+        },
+        {
+          "nickname": "검증design2",
+          "contribution": "상세 화면과 일정 화면의 초안을 작성하고, 각 화면의 목적·필수 정보·이동 흐름을 기록하며 정보 정확성과 흐름을 자체 검증한다.",
+          "tasks": 6,
+          "weekly_budget": 240,
+          "check": true,
+          "stale": false,
+          "baseline_id": "dfd66ea8-f6a1-4ac7-abf9-d0462c78f393"
+        },
+        {
+          "nickname": "검증design3",
+          "contribution": "학교 축제 안내 화면의 메인·상세·일정 3개 화면을 대상으로 가독성, 색상 대비, 정보 이해 가능성, 이용 흐름을 검토하고 수정·보류 항목을 기록한다.",
+          "tasks": 6,
+          "weekly_budget": 120,
+          "check": true,
+          "stale": false,
+          "baseline_id": "4bf19943-b46f-4988-87e5-a46fe26c576b"
+        },
+        {
+          "nickname": "검증design4",
+          "contribution": "학교 축제 안내 화면 3개를 소개하는 발표자료 초안을 구성하고, 발표 목적·접근성 검토 결과·시연 순서·마무리 메시지를 통합한다.",
+          "tasks": 6,
+          "weekly_budget": 180,
+          "check": true,
+          "stale": false,
+          "baseline_id": "088fbff2-e27c-4c28-9cb1-22082a38ab77"
+        },
+        {
+          "nickname": "검증design5",
+          "contribution": "학교 축제 안내 화면 3개의 전환 순서와 발표 시연 흐름을 정리하고, 시연 점검 결과·수정 사항·최종 완료 여부를 기록한다.",
+          "tasks": 7,
+          "weekly_budget": 300,
+          "check": true,
+          "stale": false,
+          "baseline_id": "d2373a22-81ae-4991-91bf-b03d705aef23"
+        }
+      ],
+      "public_private_marker_leaks": false,
+      "manual_recovery": null
+    },
+    "habit": {
+      "members": 8,
+      "unanimous": true,
+      "title": "부담 없는 걷기 습관 만들기",
+      "start": "2026-11-09",
+      "end": "2026-11-22",
+      "plans": [
+        {
+          "nickname": "검증habit1",
+          "contribution": "2026-11-09~2026-11-22 동안 본인 걷기 실행을 주차별 2회씩 수행하고 각 회차의 완료 여부를 비공개로 기록한다.",
+          "tasks": 4,
+          "weekly_budget": 90,
+          "check": true,
+          "stale": false,
+          "baseline_id": "cb1d24b1-6d38-41ec-a79e-e79df82812f2"
+        },
+        {
+          "nickname": "검증habit2",
+          "contribution": "2026-11-09부터 2026-11-22까지 주차별 10분 걷기 2회를 실행하고, 각 회차의 완료 여부를 개인 기록으로 남긴다.",
+          "tasks": 4,
+          "weekly_budget": 240,
+          "check": true,
+          "stale": false,
+          "baseline_id": "bcdabe56-47f8-4e95-a922-1536699dbfd5"
+        },
+        {
+          "nickname": "검증habit3",
+          "contribution": "2026-11-09~2026-11-22 동안 본인 10분 걷기를 주차별 2회씩 실행하고, 각 실행의 완료 여부를 스마트폰 메모에 비공개 기록한다.",
+          "tasks": 2,
+          "weekly_budget": 120,
+          "check": true,
+          "stale": false,
+          "baseline_id": "6447b095-802c-4ad3-9b10-42ad5a43759f"
+        },
+        {
+          "nickname": "검증habit4",
+          "contribution": "2026-11-09부터 2026-11-22까지 주차별 10분 걷기 2회를 실행하고, 각 회차의 완료 여부를 스마트폰 메모에 비공개로 기록한다.",
+          "tasks": 4,
+          "weekly_budget": 180,
+          "check": true,
+          "stale": false,
+          "baseline_id": "fc5ff55a-86e0-4027-96ac-92302f92f922"
+        },
+        {
+          "nickname": "검증habit5",
+          "contribution": "2026-11-09~2026-11-22 동안 본인의 주차별 10분 걷기 2회 실행과 비공개 완료 기록을 담당합니다.",
+          "tasks": 4,
+          "weekly_budget": 300,
+          "check": true,
+          "stale": false,
+          "baseline_id": "683aaf82-0bab-4b55-8a84-37bd251c7806"
+        },
+        {
+          "nickname": "검증habit6",
+          "contribution": "2026-11-09~2026-11-22 동안 본인 10분 걷기를 주차별 2회씩 실행하고, 각 회차의 완료 여부를 비공개로 기록한다.",
+          "tasks": 4,
+          "weekly_budget": 100,
+          "check": true,
+          "stale": false,
+          "baseline_id": "46f65043-45c6-4fe2-8611-e1605b26743c"
+        },
+        {
+          "nickname": "검증habit7",
+          "contribution": "2026-11-09~2026-11-22 동안 본인 10분 걷기를 매주 2회 실행하고, 각 완료 사실을 비공개로 기록하여 본인별 집계에 사용할 수 있게 한다.",
+          "tasks": 4,
+          "weekly_budget": 160,
+          "check": true,
+          "stale": false,
+          "baseline_id": "c65ee047-3621-475b-9f8d-19f1d71c8eab"
+        },
+        {
+          "nickname": "검증habit8",
+          "contribution": "2026-11-09~2026-11-22 동안 본인 10분 걷기를 주차별 2회씩 실행하고, 각 완료 사실을 비공개로 기록한다.",
+          "tasks": 4,
+          "weekly_budget": 75,
+          "check": true,
+          "stale": false,
+          "baseline_id": "e7074a3e-95de-47ae-9b74-212de631a701"
+        }
+      ],
+      "public_private_marker_leaks": false,
+      "manual_recovery": null
+    }
+  },
+  "reviewer": "AGENT_NOT_HUMAN",
+  "browser_live": {
+    "http": 5,
+    "tokens": 19342,
+    "operations": 5
+  },
+  "verification_tokens": 299543
+}

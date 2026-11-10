@@ -1,0 +1,45 @@
+{
+  "version": "0.14.0",
+  "backend": "PostgreSQL",
+  "schema": "wemeet_goal",
+  "migration": "0002_sync_attempts",
+  "table_count": 12,
+  "regression_tests_passed": 165,
+  "real_postgresql_tests": 9,
+  "paid_ai_http": 0,
+  "fresh_wheel_install": "PASS",
+  "sw_example_transaction": "PASS; fixture rolled back",
+  "core_without_database_web_imports": "PASS",
+  "source_matches_wheel": true,
+  "secret_scan": "PASS",
+  "browser_goal_and_member_task_read": "PASS",
+  "backup_restore": {
+    "postgres_restart_preserved_counts": true,
+    "pg_dump_restore_verified": true,
+    "tables": {
+      "shared_goals": 5,
+      "member_goals": 3,
+      "private_profiles": 3,
+      "plan_versions": 6,
+      "tasks": 44,
+      "milestones": 18,
+      "evaluation_baselines": 0
+    },
+    "backup_sha256": "2d5508d8f750318d80766d50324c12f9af75098594525e9ab38d2a2aab826ea0",
+    "backup_outside_repository": true,
+    "paid_http": 0
+  },
+  "legacy_import": {
+    "records": 11,
+    "saved": 9,
+    "rejected_and_original_preserved": 2
+  },
+  "account_separation": "NOT_APPLIED: automatic approval review rejected creation of an additional login and persistent grants; pending explicit approval",
+  "limitations": [
+    "Local demo identity selection is not authentication",
+    "SQLite conversation journal preserved; PostgreSQL is authoritative for normalized goal snapshots",
+    "Two inconsistent legacy test records were not silently repaired",
+    "M2 evaluation itself not implemented",
+    "Production identity/permissions and actual team approval remain SW responsibilities"
+  ]
+}

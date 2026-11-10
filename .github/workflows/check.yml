@@ -1,0 +1,16 @@
+name: AI core
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install '.[test,web]'
+      - run: python -m pytest
+      - run: python evaluations/check_data.py
+      - run: python examples/d_group_plan.py
+      - run: python examples/e_member_plan.py
+      - run: python -m examples.continue_record

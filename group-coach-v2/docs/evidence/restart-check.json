@@ -1,0 +1,16 @@
+{
+  "8010": {
+    "status": 200,
+    "version": "0.15.0"
+  },
+  "8020": {
+    "status": 200,
+    "version": "0.1.0"
+  },
+  "restored": {
+    "project": "APPROVED",
+    "study": "APPROVED",
+    "design": "APPROVED",
+    "habit": "APPROVED"
+  }
+}

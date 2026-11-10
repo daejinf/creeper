@@ -1,0 +1,836 @@
+[
+  {
+    "old_test": "test_core.py::test_no_web_or_database_import_in_core",
+    "disposition": "PROPERTY_RETESTED_NEW_CONTRACT",
+    "new_suite": "tests/test_modules.py",
+    "note": "새 독립 계약의 근거·검토·날짜·시간·개인정보·직접 호출 속성 검사. 의미적 품질은 별도 평가."
+  },
+  {
+    "old_test": "test_core.py::test_missing_key_never_uses_fallback",
+    "disposition": "PROPERTY_RETESTED_NEW_CONTRACT",
+    "new_suite": "tests/test_m0.py",
+    "note": "새 계약의 통신·보정·4회 한도·캐시·키·사용량 속성 검사. 이전 테스트와 1:1 동일하다고 집계하지 않음."
+  },
+  {
+    "old_test": "test_core.py::test_transport_errors",
+    "disposition": "PROPERTY_RETESTED_NEW_CONTRACT",
+    "new_suite": "tests/test_m0.py",
+    "note": "새 계약의 통신·보정·4회 한도·캐시·키·사용량 속성 검사. 이전 테스트와 1:1 동일하다고 집계하지 않음."
+  },
+  {
+    "old_test": "test_core.py::test_successful_retry_and_real_http_contract",
+    "disposition": "PROPERTY_RETESTED_NEW_CONTRACT",
+    "new_suite": "tests/test_m0.py",
+    "note": "새 계약의 통신·보정·4회 한도·캐시·키·사용량 속성 검사. 이전 테스트와 1:1 동일하다고 집계하지 않음."
+  },
+  {
+    "old_test": "test_core.py::test_json_repair_is_separate_from_transport_retry",
+    "disposition": "PROPERTY_RETESTED_NEW_CONTRACT",
+    "new_suite": "tests/test_m0.py",
+    "note": "새 계약의 통신·보정·4회 한도·캐시·키·사용량 속성 검사. 이전 테스트와 1:1 동일하다고 집계하지 않음."
+  },
+  {
+    "old_test": "test_core.py::test_persistent_invalid_json_fails",
+    "disposition": "PROPERTY_RETESTED_NEW_CONTRACT",
+    "new_suite": "tests/test_m0.py",
+    "note": "새 계약의 통신·보정·4회 한도·캐시·키·사용량 속성 검사. 이전 테스트와 1:1 동일하다고 집계하지 않음."
+  },
+  {
+    "old_test": "test_core.py::test_malformed_provider_envelope_is_typed_error",
+    "disposition": "PROPERTY_RETESTED_NEW_CONTRACT",
+    "new_suite": "tests/test_m0.py",
+    "note": "새 계약의 통신·보정·4회 한도·캐시·키·사용량 속성 검사. 이전 테스트와 1:1 동일하다고 집계하지 않음."
+  },
+  {
+    "old_test": "test_core.py::test_schema_repair_failure_uses_safe_error",
+    "disposition": "NOT_CLAIMED_ONE_TO_ONE",
+    "new_suite": null,
+    "note": "이전 개별 보정/모드와 동일한 동작은 보장하지 않음. 새 공개 계약의 테스트 목록을 기준으로 판단."
+  },
+  {
+    "old_test": "test_core.py::test_coach_preserves_history_and_masks_contact",
+    "disposition": "NOT_CLAIMED_ONE_TO_ONE",
+    "new_suite": null,
+    "note": "이전 개별 보정/모드와 동일한 동작은 보장하지 않음. 새 공개 계약의 테스트 목록을 기준으로 판단."
+  },
+  {
+    "old_test": "test_core.py::test_private_coaching_rejects_other_members",
+    "disposition": "PROPERTY_RETESTED_NEW_CONTRACT",
+    "new_suite": "tests/test_modules.py",
+    "note": "새 독립 계약의 근거·검토·날짜·시간·개인정보·직접 호출 속성 검사. 의미적 품질은 별도 평가."
+  },
+  {
+    "old_test": "test_core.py::test_actual_user_conversation_regression",
+    "disposition": "NOT_CLAIMED_ONE_TO_ONE",
+    "new_suite": null,
+    "note": "이전 개별 보정/모드와 동일한 동작은 보장하지 않음. 새 공개 계약의 테스트 목록을 기준으로 판단."
+  },
+  {
+    "old_test": "test_core.py::test_unknown_evidence_rejected",
+    "disposition": "NOT_CLAIMED_ONE_TO_ONE",
+    "new_suite": null,
+    "note": "이전 개별 보정/모드와 동일한 동작은 보장하지 않음. 새 공개 계약의 테스트 목록을 기준으로 판단."
+  },
+  {
+    "old_test": "test_core.py::test_prepare_collects_all_missing_values_without_ai_calls",
+    "disposition": "PROPERTY_RETESTED_NEW_CONTRACT",
+    "new_suite": "tests/test_modules.py",
+    "note": "새 독립 계약의 근거·검토·날짜·시간·개인정보·직접 호출 속성 검사. 의미적 품질은 별도 평가."
+  },
+  {
+    "old_test": "test_core.py::test_non_numeric_project_never_receives_invented_metric",
+    "disposition": "NOT_CLAIMED_ONE_TO_ONE",
+    "new_suite": null,
+    "note": "이전 개별 보정/모드와 동일한 동작은 보장하지 않음. 새 공개 계약의 테스트 목록을 기준으로 판단."
+  },
+  {
+    "old_test": "test_core.py::test_group_prompt_contains_no_private_profiles",
+    "disposition": "PROPERTY_RETESTED_NEW_CONTRACT",
+    "new_suite": "tests/test_modules.py",
+    "note": "새 독립 계약의 근거·검토·날짜·시간·개인정보·직접 호출 속성 검사. 의미적 품질은 별도 평가."
+  },
+  {
+    "old_test": "test_core.py::test_semantic_plan_errors_are_repaired_once_and_counted_separately",
+    "disposition": "PROPERTY_RETESTED_NEW_CONTRACT",
+    "new_suite": "tests/test_modules.py",
+    "note": "새 독립 계약의 근거·검토·날짜·시간·개인정보·직접 호출 속성 검사. 의미적 품질은 별도 평가."
+  },
+  {
+    "old_test": "test_core.py::test_confirmed_values_cannot_be_silently_changed_after_repair",
+    "disposition": "PROPERTY_RETESTED_NEW_CONTRACT",
+    "new_suite": "tests/test_modules.py",
+    "note": "새 독립 계약의 근거·검토·날짜·시간·개인정보·직접 호출 속성 검사. 의미적 품질은 별도 평가."
+  },
+  {
+    "old_test": "test_core.py::test_member_prompt_contains_only_owner_profile",
+    "disposition": "PROPERTY_RETESTED_NEW_CONTRACT",
+    "new_suite": "tests/test_modules.py",
+    "note": "새 독립 계약의 근거·검토·날짜·시간·개인정보·직접 호출 속성 검사. 의미적 품질은 별도 평가."
+  },
+  {
+    "old_test": "test_core.py::test_validator_reports_time_date_privacy_coverage_and_unknown_refs",
+    "disposition": "PROPERTY_RETESTED_NEW_CONTRACT",
+    "new_suite": "tests/test_modules.py",
+    "note": "새 독립 계약의 근거·검토·날짜·시간·개인정보·직접 호출 속성 검사. 의미적 품질은 별도 평가."
+  },
+  {
+    "old_test": "test_core.py::test_success_and_failed_member_are_preserved_for_resume",
+    "disposition": "PROPERTY_RETESTED_NEW_CONTRACT",
+    "new_suite": "tests/test_modules.py",
+    "note": "새 독립 계약의 근거·검토·날짜·시간·개인정보·직접 호출 속성 검사. 의미적 품질은 별도 평가."
+  },
+  {
+    "old_test": "test_core.py::test_revision_is_immutable_and_increments_version",
+    "disposition": "NOT_CLAIMED_ONE_TO_ONE",
+    "new_suite": null,
+    "note": "이전 개별 보정/모드와 동일한 동작은 보장하지 않음. 새 공개 계약의 테스트 목록을 기준으로 판단."
+  },
+  {
+    "old_test": "test_core.py::test_logs_omit_private_inputs_and_keys",
+    "disposition": "PROPERTY_RETESTED_NEW_CONTRACT",
+    "new_suite": "tests/test_m0.py",
+    "note": "새 계약의 통신·보정·4회 한도·캐시·키·사용량 속성 검사. 이전 테스트와 1:1 동일하다고 집계하지 않음."
+  },
+  {
+    "old_test": "test_core.py::test_log_failure_does_not_destroy_result",
+    "disposition": "NOT_CLAIMED_ONE_TO_ONE",
+    "new_suite": null,
+    "note": "이전 개별 보정/모드와 동일한 동작은 보장하지 않음. 새 공개 계약의 테스트 목록을 기준으로 판단."
+  },
+  {
+    "old_test": "test_core.py::test_web_is_thin_typed_adapter",
+    "disposition": "NOT_CLAIMED_ONE_TO_ONE",
+    "new_suite": null,
+    "note": "이전 개별 보정/모드와 동일한 동작은 보장하지 않음. 새 공개 계약의 테스트 목록을 기준으로 판단."
+  },
+  {
+    "old_test": "test_dialogue_grounded.py::test_dialogue_plain_text_never_returns_form_cards_or_changes_stage",
+    "disposition": "PROPERTY_RETESTED_NEW_CONTRACT",
+    "new_suite": "tests/test_modules.py",
+    "note": "새 독립 계약의 근거·검토·날짜·시간·개인정보·직접 호출 속성 검사. 의미적 품질은 별도 평가."
+  },
+  {
+    "old_test": "test_dialogue_grounded.py::test_dialogue_one_question_only_once_in_reply_and_state_kept",
+    "disposition": "PROPERTY_RETESTED_NEW_CONTRACT",
+    "new_suite": "tests/test_modules.py",
+    "note": "새 독립 계약의 근거·검토·날짜·시간·개인정보·직접 호출 속성 검사. 의미적 품질은 별도 평가."
+  },
+  {
+    "old_test": "test_dialogue_grounded.py::test_grounded_ignores_model_invented_dates_and_privacy",
+    "disposition": "PROPERTY_RETESTED_NEW_CONTRACT",
+    "new_suite": "tests/test_modules.py",
+    "note": "새 독립 계약의 근거·검토·날짜·시간·개인정보·직접 호출 속성 검사. 의미적 품질은 별도 평가."
+  },
+  {
+    "old_test": "test_dialogue_grounded.py::test_explicit_suggestion_only_requested_field_and_preserves_confirmed",
+    "disposition": "PROPERTY_RETESTED_NEW_CONTRACT",
+    "new_suite": "tests/test_modules.py",
+    "note": "새 독립 계약의 근거·검토·날짜·시간·개인정보·직접 호출 속성 검사. 의미적 품질은 별도 평가."
+  },
+  {
+    "old_test": "test_dialogue_grounded.py::test_ambiguous_agreement_after_two_alternatives_is_not_selected",
+    "disposition": "PROPERTY_RETESTED_NEW_CONTRACT",
+    "new_suite": "tests/test_modules.py",
+    "note": "새 독립 계약의 근거·검토·날짜·시간·개인정보·직접 호출 속성 검사. 의미적 품질은 별도 평가."
+  },
+  {
+    "old_test": "test_dialogue_grounded.py::test_clear_choice_and_rejection_keep_actual_source",
+    "disposition": "PROPERTY_RETESTED_NEW_CONTRACT",
+    "new_suite": "tests/test_modules.py",
+    "note": "새 독립 계약의 근거·검토·날짜·시간·개인정보·직접 호출 속성 검사. 의미적 품질은 별도 평가."
+  },
+  {
+    "old_test": "test_dialogue_grounded.py::test_coaching_note_cannot_cite_human_as_ai_or_future_user_as_past",
+    "disposition": "PROPERTY_RETESTED_NEW_CONTRACT",
+    "new_suite": "tests/test_modules.py",
+    "note": "새 독립 계약의 근거·검토·날짜·시간·개인정보·직접 호출 속성 검사. 의미적 품질은 별도 평가."
+  },
+  {
+    "old_test": "test_dialogue_grounded.py::test_suggest_mode_without_targets_fails_before_http",
+    "disposition": "PROPERTY_RETESTED_NEW_CONTRACT",
+    "new_suite": "tests/test_modules.py",
+    "note": "새 독립 계약의 근거·검토·날짜·시간·개인정보·직접 호출 속성 검사. 의미적 품질은 별도 평가."
+  },
+  {
+    "old_test": "test_dialogue_grounded.py::test_explicit_objective_privacy_is_not_a_conflicting_custom_policy",
+    "disposition": "PROPERTY_RETESTED_NEW_CONTRACT",
+    "new_suite": "tests/test_modules.py",
+    "note": "새 독립 계약의 근거·검토·날짜·시간·개인정보·직접 호출 속성 검사. 의미적 품질은 별도 평가."
+  },
+  {
+    "old_test": "test_dialogue_grounded.py::test_short_member_ids_do_not_corrupt_technical_words",
+    "disposition": "PROPERTY_RETESTED_NEW_CONTRACT",
+    "new_suite": "tests/test_modules.py",
+    "note": "새 독립 계약의 근거·검토·날짜·시간·개인정보·직접 호출 속성 검사. 의미적 품질은 별도 평가."
+  },
+  {
+    "old_test": "test_dialogue_grounded.py::test_explicit_from_to_dates_survive_model_duration_projection",
+    "disposition": "PROPERTY_RETESTED_NEW_CONTRACT",
+    "new_suite": "tests/test_modules.py",
+    "note": "새 독립 계약의 근거·검토·날짜·시간·개인정보·직접 호출 속성 검사. 의미적 품질은 별도 평가."
+  },
+  {
+    "old_test": "test_draft_validation.py::test_reported_object_checkin_is_canonical_without_invented_time",
+    "disposition": "PROPERTY_RETESTED_NEW_CONTRACT",
+    "new_suite": "tests/test_modules.py",
+    "note": "새 독립 계약의 근거·검토·날짜·시간·개인정보·직접 호출 속성 검사. 의미적 품질은 별도 평가."
+  },
+  {
+    "old_test": "test_draft_validation.py::test_string_checkins_empty_optional_and_explicit_time_are_preserved",
+    "disposition": "PROPERTY_RETESTED_NEW_CONTRACT",
+    "new_suite": "tests/test_modules.py",
+    "note": "새 독립 계약의 근거·검토·날짜·시간·개인정보·직접 호출 속성 검사. 의미적 품질은 별도 평가."
+  },
+  {
+    "old_test": "test_draft_validation.py::test_unknown_or_ambiguous_objects_remain_inline_errors",
+    "disposition": "PROPERTY_RETESTED_NEW_CONTRACT",
+    "new_suite": "tests/test_modules.py",
+    "note": "새 독립 계약의 근거·검토·날짜·시간·개인정보·직접 호출 속성 검사. 의미적 품질은 별도 평가."
+  },
+  {
+    "old_test": "test_draft_validation.py::test_typed_field_validation_preserves_unrelated_cards",
+    "disposition": "PROPERTY_RETESTED_NEW_CONTRACT",
+    "new_suite": "tests/test_modules.py",
+    "note": "새 독립 계약의 근거·검토·날짜·시간·개인정보·직접 호출 속성 검사. 의미적 품질은 별도 평가."
+  },
+  {
+    "old_test": "test_draft_validation.py::test_checkin_frequency_is_preserved_without_becoming_execution_frequency",
+    "disposition": "PROPERTY_RETESTED_NEW_CONTRACT",
+    "new_suite": "tests/test_modules.py",
+    "note": "새 독립 계약의 근거·검토·날짜·시간·개인정보·직접 호출 속성 검사. 의미적 품질은 별도 평가."
+  },
+  {
+    "old_test": "test_draft_validation.py::test_dates_and_milestones_produce_card_errors_instead_of_exceptions",
+    "disposition": "PROPERTY_RETESTED_NEW_CONTRACT",
+    "new_suite": "tests/test_modules.py",
+    "note": "새 독립 계약의 근거·검토·날짜·시간·개인정보·직접 호출 속성 검사. 의미적 품질은 별도 평가."
+  },
+  {
+    "old_test": "test_draft_validation.py::test_normalization_runs_after_reviewed_card_restoration",
+    "disposition": "PROPERTY_RETESTED_NEW_CONTRACT",
+    "new_suite": "tests/test_modules.py",
+    "note": "새 독립 계약의 근거·검토·날짜·시간·개인정보·직접 호출 속성 검사. 의미적 품질은 별도 평가."
+  },
+  {
+    "old_test": "test_draft_validation.py::test_legacy_reviewed_object_and_next_request_match_after_normalization",
+    "disposition": "PROPERTY_RETESTED_NEW_CONTRACT",
+    "new_suite": "tests/test_modules.py",
+    "note": "새 독립 계약의 근거·검토·날짜·시간·개인정보·직접 호출 속성 검사. 의미적 품질은 별도 평가."
+  },
+  {
+    "old_test": "test_draft_validation.py::test_targeted_ai_supplement_cannot_restore_pre_edit_value",
+    "disposition": "PROPERTY_RETESTED_NEW_CONTRACT",
+    "new_suite": "tests/test_modules.py",
+    "note": "새 독립 계약의 근거·검토·날짜·시간·개인정보·직접 호출 속성 검사. 의미적 품질은 별도 평가."
+  },
+  {
+    "old_test": "test_draft_validation.py::test_draft_validation_endpoint_is_pure_and_records_actual_normalization",
+    "disposition": "PROPERTY_RETESTED_NEW_CONTRACT",
+    "new_suite": "tests/test_modules.py",
+    "note": "새 독립 계약의 근거·검토·날짜·시간·개인정보·직접 호출 속성 검사. 의미적 품질은 별도 평가."
+  },
+  {
+    "old_test": "test_draft_validation.py::test_design_period_sends_explicit_start_anchored_weeks",
+    "disposition": "PROPERTY_RETESTED_NEW_CONTRACT",
+    "new_suite": "tests/test_modules.py",
+    "note": "새 독립 계약의 근거·검토·날짜·시간·개인정보·직접 호출 속성 검사. 의미적 품질은 별도 평가."
+  },
+  {
+    "old_test": "test_goal_setup.py::test_reported_design_dates_are_project_and_checkpoint_not_conflict",
+    "disposition": "PROPERTY_RETESTED_NEW_CONTRACT",
+    "new_suite": "tests/test_modules.py",
+    "note": "새 독립 계약의 근거·검토·날짜·시간·개인정보·직접 호출 속성 검사. 의미적 품질은 별도 평가."
+  },
+  {
+    "old_test": "test_goal_setup.py::test_review_proposes_missing_required_values_and_confirm_needs_acceptance",
+    "disposition": "PROPERTY_RETESTED_NEW_CONTRACT",
+    "new_suite": "tests/test_modules.py",
+    "note": "새 독립 계약의 근거·검토·날짜·시간·개인정보·직접 호출 속성 검사. 의미적 품질은 별도 평가."
+  },
+  {
+    "old_test": "test_goal_setup.py::test_sw_only_action_state_to_review_accept_confirm_no_extra_http",
+    "disposition": "NOT_CLAIMED_ONE_TO_ONE",
+    "new_suite": null,
+    "note": "이전 개별 보정/모드와 동일한 동작은 보장하지 않음. 새 공개 계약의 테스트 목록을 기준으로 판단."
+  },
+  {
+    "old_test": "test_goal_setup.py::test_invalid_inline_date_keeps_previous_state_and_submitted_value",
+    "disposition": "PROPERTY_RETESTED_NEW_CONTRACT",
+    "new_suite": "tests/test_modules.py",
+    "note": "새 독립 계약의 근거·검토·날짜·시간·개인정보·직접 호출 속성 검사. 의미적 품질은 별도 평가."
+  },
+  {
+    "old_test": "test_goal_setup.py::test_inline_answer_can_edit_without_returning_to_A",
+    "disposition": "PROPERTY_RETESTED_NEW_CONTRACT",
+    "new_suite": "tests/test_modules.py",
+    "note": "새 독립 계약의 근거·검토·날짜·시간·개인정보·직접 호출 속성 검사. 의미적 품질은 별도 평가."
+  },
+  {
+    "old_test": "test_goal_setup.py::test_changed_conversation_does_not_confirm_stale_draft",
+    "disposition": "PROPERTY_RETESTED_NEW_CONTRACT",
+    "new_suite": "tests/test_modules.py",
+    "note": "새 독립 계약의 근거·검토·날짜·시간·개인정보·직접 호출 속성 검사. 의미적 품질은 별도 평가."
+  },
+  {
+    "old_test": "test_goal_setup.py::test_review_failure_retains_successful_analysis_for_resume",
+    "disposition": "NOT_CLAIMED_ONE_TO_ONE",
+    "new_suite": null,
+    "note": "이전 개별 보정/모드와 동일한 동작은 보장하지 않음. 새 공개 계약의 테스트 목록을 기준으로 판단."
+  },
+  {
+    "old_test": "test_goal_setup.py::test_assisted_without_a_meaningful_goal_does_not_create_project",
+    "disposition": "NOT_CLAIMED_ONE_TO_ONE",
+    "new_suite": null,
+    "note": "이전 개별 보정/모드와 동일한 동작은 보장하지 않음. 새 공개 계약의 테스트 목록을 기준으로 판단."
+  },
+  {
+    "old_test": "test_goal_setup.py::test_coach_facade_duplicate_input_is_code_only_and_does_not_append_twice",
+    "disposition": "NOT_CLAIMED_ONE_TO_ONE",
+    "new_suite": null,
+    "note": "이전 개별 보정/모드와 동일한 동작은 보장하지 않음. 새 공개 계약의 테스트 목록을 기준으로 판단."
+  },
+  {
+    "old_test": "test_goal_setup.py::test_natural_date_answer_is_interpreted_but_needs_human_review",
+    "disposition": "PROPERTY_RETESTED_NEW_CONTRACT",
+    "new_suite": "tests/test_modules.py",
+    "note": "새 독립 계약의 근거·검토·날짜·시간·개인정보·직접 호출 속성 검사. 의미적 품질은 별도 평가."
+  },
+  {
+    "old_test": "test_goal_setup.py::test_description_alias_and_goal_with_trailing_question_still_meaningful",
+    "disposition": "NOT_CLAIMED_ONE_TO_ONE",
+    "new_suite": null,
+    "note": "이전 개별 보정/모드와 동일한 동작은 보장하지 않음. 새 공개 계약의 테스트 목록을 기준으로 판단."
+  },
+  {
+    "old_test": "test_goal_setup.py::test_paraphrased_coaching_note_dropped_without_discarding_human_facts",
+    "disposition": "NOT_CLAIMED_ONE_TO_ONE",
+    "new_suite": null,
+    "note": "이전 개별 보정/모드와 동일한 동작은 보장하지 않음. 새 공개 계약의 테스트 목록을 기준으로 판단."
+  },
+  {
+    "old_test": "test_goal_setup.py::test_goal_setup_http_thin_wrapper",
+    "disposition": "NOT_CLAIMED_ONE_TO_ONE",
+    "new_suite": null,
+    "note": "이전 개별 보정/모드와 동일한 동작은 보장하지 않음. 새 공개 계약의 테스트 목록을 기준으로 판단."
+  },
+  {
+    "old_test": "test_goal_setup.py::test_calendar_flags_wrong_weekday_without_inventing_a_date",
+    "disposition": "PROPERTY_RETESTED_NEW_CONTRACT",
+    "new_suite": "tests/test_modules.py",
+    "note": "새 독립 계약의 근거·검토·날짜·시간·개인정보·직접 호출 속성 검사. 의미적 품질은 별도 평가."
+  },
+  {
+    "old_test": "test_goal_setup.py::test_reviewed_goal_can_seed_assisted_completion_after_inline_answer",
+    "disposition": "NOT_CLAIMED_ONE_TO_ONE",
+    "new_suite": null,
+    "note": "이전 개별 보정/모드와 동일한 동작은 보장하지 않음. 새 공개 계약의 테스트 목록을 기준으로 판단."
+  },
+  {
+    "old_test": "test_interactions.py::test_plan_request_proposes_without_another_question",
+    "disposition": "PROPERTY_RETESTED_NEW_CONTRACT",
+    "new_suite": "tests/test_modules.py",
+    "note": "새 독립 계약의 근거·검토·날짜·시간·개인정보·직접 호출 속성 검사. 의미적 품질은 별도 평가."
+  },
+  {
+    "old_test": "test_interactions.py::test_question_budget_repairs_once_then_returns_advice",
+    "disposition": "NOT_CLAIMED_ONE_TO_ONE",
+    "new_suite": null,
+    "note": "이전 개별 보정/모드와 동일한 동작은 보장하지 않음. 새 공개 계약의 테스트 목록을 기준으로 판단."
+  },
+  {
+    "old_test": "test_interactions.py::test_repeated_policy_failure_is_not_appended_as_success",
+    "disposition": "NOT_CLAIMED_ONE_TO_ONE",
+    "new_suite": null,
+    "note": "이전 개별 보정/모드와 동일한 동작은 보장하지 않음. 새 공개 계약의 테스트 목록을 기준으로 판단."
+  },
+  {
+    "old_test": "test_interactions.py::test_milestone_dates_are_not_treated_as_one_conflict",
+    "disposition": "PROPERTY_RETESTED_NEW_CONTRACT",
+    "new_suite": "tests/test_modules.py",
+    "note": "새 독립 계약의 근거·검토·날짜·시간·개인정보·직접 호출 속성 검사. 의미적 품질은 별도 평가."
+  },
+  {
+    "old_test": "test_interactions.py::test_pasted_ai_proposal_is_not_human_confirmation",
+    "disposition": "RETIRED_FEATURE",
+    "new_suite": null,
+    "note": "참고 검색/서비스형 승인/강제 워크플로/배치 화면 등 삭제한 계약. 과거 실행 결과는 외부 보관."
+  },
+  {
+    "old_test": "test_interactions.py::test_ai_draft_preserves_reviewed_edits_and_never_auto_confirms",
+    "disposition": "PROPERTY_RETESTED_NEW_CONTRACT",
+    "new_suite": "tests/test_modules.py",
+    "note": "새 독립 계약의 근거·검토·날짜·시간·개인정보·직접 호출 속성 검사. 의미적 품질은 별도 평가."
+  },
+  {
+    "old_test": "test_interactions.py::test_private_analysis_contains_only_owners_input",
+    "disposition": "PROPERTY_RETESTED_NEW_CONTRACT",
+    "new_suite": "tests/test_modules.py",
+    "note": "새 독립 계약의 근거·검토·날짜·시간·개인정보·직접 호출 속성 검사. 의미적 품질은 별도 평가."
+  },
+  {
+    "old_test": "test_interactions.py::test_trace_contains_actual_provider_request_and_response_but_no_key",
+    "disposition": "PROPERTY_RETESTED_NEW_CONTRACT",
+    "new_suite": "tests/test_m0.py",
+    "note": "새 계약의 통신·보정·4회 한도·캐시·키·사용량 속성 검사. 이전 테스트와 1:1 동일하다고 집계하지 않음."
+  },
+  {
+    "old_test": "test_interactions.py::test_workflow_links_analysis_and_draft_runs",
+    "disposition": "RETIRED_FEATURE",
+    "new_suite": null,
+    "note": "참고 검색/서비스형 승인/강제 워크플로/배치 화면 등 삭제한 계약. 과거 실행 결과는 외부 보관."
+  },
+  {
+    "old_test": "test_interactions.py::test_handoff_separates_public_and_owner_private_payloads",
+    "disposition": "RETIRED_FEATURE",
+    "new_suite": null,
+    "note": "참고 검색/서비스형 승인/강제 워크플로/배치 화면 등 삭제한 계약. 과거 실행 결과는 외부 보관."
+  },
+  {
+    "old_test": "test_interactions.py::test_stale_or_incomplete_handoff_is_diagnostic_only",
+    "disposition": "RETIRED_FEATURE",
+    "new_suite": null,
+    "note": "참고 검색/서비스형 승인/강제 워크플로/배치 화면 등 삭제한 계약. 과거 실행 결과는 외부 보관."
+  },
+  {
+    "old_test": "test_interactions.py::test_handoff_rejects_reviewed_value_different_from_spec",
+    "disposition": "RETIRED_FEATURE",
+    "new_suite": null,
+    "note": "참고 검색/서비스형 승인/강제 워크플로/배치 화면 등 삭제한 계약. 과거 실행 결과는 외부 보관."
+  },
+  {
+    "old_test": "test_interactions.py::test_invalid_confirmed_milestone_is_caught_before_provider_call",
+    "disposition": "PROPERTY_RETESTED_NEW_CONTRACT",
+    "new_suite": "tests/test_modules.py",
+    "note": "새 독립 계약의 근거·검토·날짜·시간·개인정보·직접 호출 속성 검사. 의미적 품질은 별도 평가."
+  },
+  {
+    "old_test": "test_interactions.py::test_reported_long_interview_history_stops_asking_and_remembers_answers",
+    "disposition": "PROPERTY_RETESTED_NEW_CONTRACT",
+    "new_suite": "tests/test_modules.py",
+    "note": "새 독립 계약의 근거·검토·날짜·시간·개인정보·직접 호출 속성 검사. 의미적 품질은 별도 평가."
+  },
+  {
+    "old_test": "test_missing_flow.py::test_missing_and_zero_profiles_allow_confirmed_group_spec",
+    "disposition": "PROPERTY_RETESTED_NEW_CONTRACT",
+    "new_suite": "tests/test_modules.py",
+    "note": "새 독립 계약의 근거·검토·날짜·시간·개인정보·직접 호출 속성 검사. 의미적 품질은 별도 평가."
+  },
+  {
+    "old_test": "test_missing_flow.py::test_group_generation_and_group_validation_need_no_private_profiles",
+    "disposition": "PROPERTY_RETESTED_NEW_CONTRACT",
+    "new_suite": "tests/test_modules.py",
+    "note": "새 독립 계약의 근거·검토·날짜·시간·개인정보·직접 호출 속성 검사. 의미적 품질은 별도 평가."
+  },
+  {
+    "old_test": "test_missing_flow.py::test_individual_plan_uses_only_selected_confirmed_profile",
+    "disposition": "PROPERTY_RETESTED_NEW_CONTRACT",
+    "new_suite": "tests/test_modules.py",
+    "note": "새 독립 계약의 근거·검토·날짜·시간·개인정보·직접 호출 속성 검사. 의미적 품질은 별도 평가."
+  },
+  {
+    "old_test": "test_missing_flow.py::test_unknown_person_cannot_generate_individual_plan",
+    "disposition": "PROPERTY_RETESTED_NEW_CONTRACT",
+    "new_suite": "tests/test_modules.py",
+    "note": "새 독립 계약의 근거·검토·날짜·시간·개인정보·직접 호출 속성 검사. 의미적 품질은 별도 평가."
+  },
+  {
+    "old_test": "test_missing_flow.py::test_group_only_handoff_is_diagnostic_then_all_members_becomes_ready",
+    "disposition": "RETIRED_FEATURE",
+    "new_suite": null,
+    "note": "참고 검색/서비스형 승인/강제 워크플로/배치 화면 등 삭제한 계약. 과거 실행 결과는 외부 보관."
+  },
+  {
+    "old_test": "test_missing_flow.py::test_pending_required_suggestions_block_but_optional_missing_does_not",
+    "disposition": "PROPERTY_RETESTED_NEW_CONTRACT",
+    "new_suite": "tests/test_modules.py",
+    "note": "새 독립 계약의 근거·검토·날짜·시간·개인정보·직접 호출 속성 검사. 의미적 품질은 별도 평가."
+  },
+  {
+    "old_test": "test_missing_flow.py::test_targeted_supplement_preserves_other_and_reviewed_cards_and_traces",
+    "disposition": "PROPERTY_RETESTED_NEW_CONTRACT",
+    "new_suite": "tests/test_modules.py",
+    "note": "새 독립 계약의 근거·검토·날짜·시간·개인정보·직접 호출 속성 검사. 의미적 품질은 별도 평가."
+  },
+  {
+    "old_test": "test_missing_flow.py::test_group_api_and_legacy_api_coexist",
+    "disposition": "PROPERTY_RETESTED_NEW_CONTRACT",
+    "new_suite": "tests/test_modules.py",
+    "note": "새 독립 계약의 근거·검토·날짜·시간·개인정보·직접 호출 속성 검사. 의미적 품질은 별도 평가."
+  },
+  {
+    "old_test": "test_missing_flow.py::test_cli_prepares_group_without_private_profiles",
+    "disposition": "PROPERTY_RETESTED_NEW_CONTRACT",
+    "new_suite": "tests/test_modules.py",
+    "note": "새 독립 계약의 근거·검토·날짜·시간·개인정보·직접 호출 속성 검사. 의미적 품질은 별도 평가."
+  },
+  {
+    "old_test": "test_missing_flow.py::test_undecided_goal_remains_actionable_input_not_generic_confirmed_goal",
+    "disposition": "PROPERTY_RETESTED_NEW_CONTRACT",
+    "new_suite": "tests/test_modules.py",
+    "note": "새 독립 계약의 근거·검토·날짜·시간·개인정보·직접 호출 속성 검사. 의미적 품질은 별도 평가."
+  },
+  {
+    "old_test": "test_missing_flow.py::test_group_revision_without_personal_profile_is_supported",
+    "disposition": "PROPERTY_RETESTED_NEW_CONTRACT",
+    "new_suite": "tests/test_modules.py",
+    "note": "새 독립 계약의 근거·검토·날짜·시간·개인정보·직접 호출 속성 검사. 의미적 품질은 별도 평가."
+  },
+  {
+    "old_test": "test_personal.py::test_ai_question_options_get_code_ids_and_unknown_control",
+    "disposition": "PROPERTY_RETESTED_NEW_CONTRACT",
+    "new_suite": "tests/test_modules.py",
+    "note": "새 독립 계약의 근거·검토·날짜·시간·개인정보·직접 호출 속성 검사. 의미적 품질은 별도 평가."
+  },
+  {
+    "old_test": "test_personal.py::test_button_and_free_text_have_same_minutes_and_explicit_values_win",
+    "disposition": "PROPERTY_RETESTED_NEW_CONTRACT",
+    "new_suite": "tests/test_modules.py",
+    "note": "새 독립 계약의 근거·검토·날짜·시간·개인정보·직접 호출 속성 검사. 의미적 품질은 별도 평가."
+  },
+  {
+    "old_test": "test_personal.py::test_unknown_skip_and_no_constraints_remain_distinct",
+    "disposition": "PROPERTY_RETESTED_NEW_CONTRACT",
+    "new_suite": "tests/test_modules.py",
+    "note": "새 독립 계약의 근거·검토·날짜·시간·개인정보·직접 호출 속성 검사. 의미적 품질은 별도 평가."
+  },
+  {
+    "old_test": "test_personal.py::test_duplicate_button_is_noop_without_new_provider_call",
+    "disposition": "PROPERTY_RETESTED_NEW_CONTRACT",
+    "new_suite": "tests/test_modules.py",
+    "note": "새 독립 계약의 근거·검토·날짜·시간·개인정보·직접 호출 속성 검사. 의미적 품질은 별도 평가."
+  },
+  {
+    "old_test": "test_personal.py::test_invalid_selections_fail_before_provider",
+    "disposition": "PROPERTY_RETESTED_NEW_CONTRACT",
+    "new_suite": "tests/test_modules.py",
+    "note": "새 독립 계약의 근거·검토·날짜·시간·개인정보·직접 호출 속성 검사. 의미적 품질은 별도 평가."
+  },
+  {
+    "old_test": "test_personal.py::test_two_question_budget_repairs_into_proposal_and_does_not_repeat_answer",
+    "disposition": "RETIRED_FEATURE",
+    "new_suite": null,
+    "note": "참고 검색/서비스형 승인/강제 워크플로/배치 화면 등 삭제한 계약. 과거 실행 결과는 외부 보관."
+  },
+  {
+    "old_test": "test_personal.py::test_plan_request_cannot_ask_question",
+    "disposition": "PROPERTY_RETESTED_NEW_CONTRACT",
+    "new_suite": "tests/test_modules.py",
+    "note": "새 독립 계약의 근거·검토·날짜·시간·개인정보·직접 호출 속성 검사. 의미적 품질은 별도 평가."
+  },
+  {
+    "old_test": "test_personal.py::test_private_state_and_messages_cannot_cross_members",
+    "disposition": "PROPERTY_RETESTED_NEW_CONTRACT",
+    "new_suite": "tests/test_modules.py",
+    "note": "새 독립 계약의 근거·검토·날짜·시간·개인정보·직접 호출 속성 검사. 의미적 품질은 별도 평가."
+  },
+  {
+    "old_test": "test_personal.py::test_legacy_spec_other_private_profiles_never_enter_provider_payload",
+    "disposition": "PROPERTY_RETESTED_NEW_CONTRACT",
+    "new_suite": "tests/test_modules.py",
+    "note": "새 독립 계약의 근거·검토·날짜·시간·개인정보·직접 호출 속성 검사. 의미적 품질은 별도 평가."
+  },
+  {
+    "old_test": "test_personal.py::test_personal_draft_and_reviewed_contribution_feed_plan_and_handoff",
+    "disposition": "RETIRED_FEATURE",
+    "new_suite": null,
+    "note": "참고 검색/서비스형 승인/강제 워크플로/배치 화면 등 삭제한 계약. 과거 실행 결과는 외부 보관."
+  },
+  {
+    "old_test": "test_personal.py::test_group_change_preserves_personal_facts_and_resets_old_question",
+    "disposition": "PROPERTY_RETESTED_NEW_CONTRACT",
+    "new_suite": "tests/test_modules.py",
+    "note": "새 독립 계약의 근거·검토·날짜·시간·개인정보·직접 호출 속성 검사. 의미적 품질은 별도 평가."
+  },
+  {
+    "old_test": "test_personal.py::test_personal_apis_and_cli_schema_are_available",
+    "disposition": "PROPERTY_RETESTED_NEW_CONTRACT",
+    "new_suite": "tests/test_modules.py",
+    "note": "새 독립 계약의 근거·검토·날짜·시간·개인정보·직접 호출 속성 검사. 의미적 품질은 별도 평가."
+  },
+  {
+    "old_test": "test_personal.py::test_missing_essential_conditions_take_priority_over_contribution_question",
+    "disposition": "PROPERTY_RETESTED_NEW_CONTRACT",
+    "new_suite": "tests/test_modules.py",
+    "note": "새 독립 계약의 근거·검토·날짜·시간·개인정보·직접 호출 속성 검사. 의미적 품질은 별도 평가."
+  },
+  {
+    "old_test": "test_personal.py::test_unknown_required_field_is_not_immediately_asked_again",
+    "disposition": "PROPERTY_RETESTED_NEW_CONTRACT",
+    "new_suite": "tests/test_modules.py",
+    "note": "새 독립 계약의 근거·검토·날짜·시간·개인정보·직접 호출 속성 검사. 의미적 품질은 별도 평가."
+  },
+  {
+    "old_test": "test_scenarios.py::test_200_real_briefs_pairs_and_partition",
+    "disposition": "NOT_CLAIMED_ONE_TO_ONE",
+    "new_suite": null,
+    "note": "이전 개별 보정/모드와 동일한 동작은 보장하지 않음. 새 공개 계약의 테스트 목록을 기준으로 판단."
+  },
+  {
+    "old_test": "test_scenarios.py::test_all_examples_have_private_public_separation_and_uncalled_reference",
+    "disposition": "PROPERTY_RETESTED_NEW_CONTRACT",
+    "new_suite": "tests/test_modules.py",
+    "note": "새 독립 계약의 근거·검토·날짜·시간·개인정보·직접 호출 속성 검사. 의미적 품질은 별도 평가."
+  },
+  {
+    "old_test": "test_scenarios.py::test_reference_approval_requires_human_and_forbids_eval_leak",
+    "disposition": "RETIRED_FEATURE",
+    "new_suite": null,
+    "note": "참고 검색/서비스형 승인/강제 워크플로/배치 화면 등 삭제한 계약. 과거 실행 결과는 외부 보관."
+  },
+  {
+    "old_test": "test_scenarios.py::test_reference_lookup_max_two_no_family_no_answer_keys",
+    "disposition": "RETIRED_FEATURE",
+    "new_suite": null,
+    "note": "참고 검색/서비스형 승인/강제 워크플로/배치 화면 등 삭제한 계약. 과거 실행 결과는 외부 보관."
+  },
+  {
+    "old_test": "test_scenarios.py::test_live_found_role_array_normalization_is_unambiguous",
+    "disposition": "PROPERTY_RETESTED_NEW_CONTRACT",
+    "new_suite": "tests/test_modules.py",
+    "note": "새 독립 계약의 근거·검토·날짜·시간·개인정보·직접 호출 속성 검사. 의미적 품질은 별도 평가."
+  },
+  {
+    "old_test": "test_scenarios.py::test_resume_cache_and_retry_only_failure",
+    "disposition": "PROPERTY_RETESTED_NEW_CONTRACT",
+    "new_suite": "tests/test_m0.py",
+    "note": "새 계약의 통신·보정·4회 한도·캐시·키·사용량 속성 검사. 이전 테스트와 1:1 동일하다고 집계하지 않음."
+  },
+  {
+    "old_test": "test_scenarios.py::test_api_gallery_loading_never_calls_provider",
+    "disposition": "RETIRED_FEATURE",
+    "new_suite": null,
+    "note": "참고 검색/서비스형 승인/강제 워크플로/배치 화면 등 삭제한 계약. 과거 실행 결과는 외부 보관."
+  },
+  {
+    "old_test": "test_sw_acceptance.py::test_supported_public_imports_do_not_import_test_adapters",
+    "disposition": "PROPERTY_RETESTED_NEW_CONTRACT",
+    "new_suite": "tests/test_modules.py",
+    "note": "새 독립 계약의 근거·검토·날짜·시간·개인정보·직접 호출 속성 검사. 의미적 품질은 별도 평가."
+  },
+  {
+    "old_test": "test_sw_acceptance.py::test_sw_entire_flow_failure_recovery_and_private_separation",
+    "disposition": "PROPERTY_RETESTED_NEW_CONTRACT",
+    "new_suite": "tests/test_modules.py",
+    "note": "새 독립 계약의 근거·검토·날짜·시간·개인정보·직접 호출 속성 검사. 의미적 품질은 별도 평가."
+  },
+  {
+    "old_test": "test_v6.py::test_proactive_coaching_produces_unapproved_typed_recommendation",
+    "disposition": "NOT_CLAIMED_ONE_TO_ONE",
+    "new_suite": null,
+    "note": "이전 개별 보정/모드와 동일한 동작은 보장하지 않음. 새 공개 계약의 테스트 목록을 기준으로 판단."
+  },
+  {
+    "old_test": "test_v6.py::test_adaptive_diagnosis_pauses_then_can_continue_beyond_two_questions",
+    "disposition": "NOT_CLAIMED_ONE_TO_ONE",
+    "new_suite": null,
+    "note": "이전 개별 보정/모드와 동일한 동작은 보장하지 않음. 새 공개 계약의 테스트 목록을 기준으로 판단."
+  },
+  {
+    "old_test": "test_v6.py::test_adaptive_dimensions_cannot_be_invented_ui_commands",
+    "disposition": "NOT_CLAIMED_ONE_TO_ONE",
+    "new_suite": null,
+    "note": "이전 개별 보정/모드와 동일한 동작은 보장하지 않음. 새 공개 계약의 테스트 목록을 기준으로 판단."
+  },
+  {
+    "old_test": "test_v6.py::test_repository_restores_private_dialogue_versions_and_optimistic_revision",
+    "disposition": "PROPERTY_RETESTED_NEW_CONTRACT",
+    "new_suite": "tests/test_modules.py",
+    "note": "새 독립 계약의 근거·검토·날짜·시간·개인정보·직접 호출 속성 검사. 의미적 품질은 별도 평가."
+  },
+  {
+    "old_test": "test_v6.py::test_repository_does_not_store_credentials",
+    "disposition": "NOT_CLAIMED_ONE_TO_ONE",
+    "new_suite": null,
+    "note": "이전 개별 보정/모드와 동일한 동작은 보장하지 않음. 새 공개 계약의 테스트 목록을 기준으로 판단."
+  },
+  {
+    "old_test": "test_v6.py::test_provider_accounting_counts_http_calls_not_parent_workflow_twice",
+    "disposition": "RETIRED_FEATURE",
+    "new_suite": null,
+    "note": "참고 검색/서비스형 승인/강제 워크플로/배치 화면 등 삭제한 계약. 과거 실행 결과는 외부 보관."
+  },
+  {
+    "old_test": "test_v6.py::test_baseline_is_versioned_idempotent_and_rejects_unknown_activity",
+    "disposition": "RETIRED_FEATURE",
+    "new_suite": null,
+    "note": "참고 검색/서비스형 승인/강제 워크플로/배치 화면 등 삭제한 계약. 과거 실행 결과는 외부 보관."
+  },
+  {
+    "old_test": "test_v6.py::test_provider_total_is_not_limited_to_display_page",
+    "disposition": "NOT_CLAIMED_ONE_TO_ONE",
+    "new_suite": null,
+    "note": "이전 개별 보정/모드와 동일한 동작은 보장하지 않음. 새 공개 계약의 테스트 목록을 기준으로 판단."
+  },
+  {
+    "old_test": "test_v6.py::test_cli_workspace_roundtrip",
+    "disposition": "NOT_CLAIMED_ONE_TO_ONE",
+    "new_suite": null,
+    "note": "이전 개별 보정/모드와 동일한 동작은 보장하지 않음. 새 공개 계약의 테스트 목록을 기준으로 판단."
+  },
+  {
+    "old_test": "test_v6.py::test_stale_evaluation_baseline_is_not_delivered_as_current",
+    "disposition": "RETIRED_FEATURE",
+    "new_suite": null,
+    "note": "참고 검색/서비스형 승인/강제 워크플로/배치 화면 등 삭제한 계약. 과거 실행 결과는 외부 보관."
+  },
+  {
+    "old_test": "test_v6.py::test_telemetry_storage_failure_warns_without_destroying_ai_reply",
+    "disposition": "NOT_CLAIMED_ONE_TO_ONE",
+    "new_suite": null,
+    "note": "이전 개별 보정/모드와 동일한 동작은 보장하지 않음. 새 공개 계약의 테스트 목록을 기준으로 판단."
+  },
+  {
+    "old_test": "test_v6.py::test_legacy_task_ids_are_stable_in_baseline_and_handoff",
+    "disposition": "RETIRED_FEATURE",
+    "new_suite": null,
+    "note": "참고 검색/서비스형 승인/강제 워크플로/배치 화면 등 삭제한 계약. 과거 실행 결과는 외부 보관."
+  },
+  {
+    "old_test": "test_v6.py::test_ai_estimate_is_not_promoted_to_personal_fact_before_confirmation",
+    "disposition": "PROPERTY_RETESTED_NEW_CONTRACT",
+    "new_suite": "tests/test_modules.py",
+    "note": "새 독립 계약의 근거·검토·날짜·시간·개인정보·직접 호출 속성 검사. 의미적 품질은 별도 평가."
+  },
+  {
+    "old_test": "test_v8.py::test_success_cache_typed_result_zero_new_tokens_and_force_idempotency",
+    "disposition": "PROPERTY_RETESTED_NEW_CONTRACT",
+    "new_suite": "tests/test_m0.py",
+    "note": "새 계약의 통신·보정·4회 한도·캐시·키·사용량 속성 검사. 이전 테스트와 1:1 동일하다고 집계하지 않음."
+  },
+  {
+    "old_test": "test_v8.py::test_concurrent_identical_requests_only_one_http",
+    "disposition": "NOT_CLAIMED_ONE_TO_ONE",
+    "new_suite": null,
+    "note": "이전 개별 보정/모드와 동일한 동작은 보장하지 않음. 새 공개 계약의 테스트 목록을 기준으로 판단."
+  },
+  {
+    "old_test": "test_v8.py::test_different_workspace_and_changed_prompt_do_not_share",
+    "disposition": "NOT_CLAIMED_ONE_TO_ONE",
+    "new_suite": null,
+    "note": "이전 개별 보정/모드와 동일한 동작은 보장하지 않음. 새 공개 계약의 테스트 목록을 기준으로 판단."
+  },
+  {
+    "old_test": "test_v8.py::test_partial_proposal_preserves_good_fields_but_is_not_cached",
+    "disposition": "RETIRED_FEATURE",
+    "new_suite": null,
+    "note": "참고 검색/서비스형 승인/강제 워크플로/배치 화면 등 삭제한 계약. 과거 실행 결과는 외부 보관."
+  },
+  {
+    "old_test": "test_v8.py::test_unresolved_privacy_not_custom_even_when_model_says_custom",
+    "disposition": "NOT_CLAIMED_ONE_TO_ONE",
+    "new_suite": null,
+    "note": "이전 개별 보정/모드와 동일한 동작은 보장하지 않음. 새 공개 계약의 테스트 목록을 기준으로 판단."
+  },
+  {
+    "old_test": "test_v8.py::test_personal_time_known_shapes",
+    "disposition": "PROPERTY_RETESTED_NEW_CONTRACT",
+    "new_suite": "tests/test_modules.py",
+    "note": "새 독립 계약의 근거·검토·날짜·시간·개인정보·직접 호출 속성 검사. 의미적 품질은 별도 평가."
+  },
+  {
+    "old_test": "test_v8.py::test_bad_personal_buttons_keep_verified_state_after_bounded_repair",
+    "disposition": "PROPERTY_RETESTED_NEW_CONTRACT",
+    "new_suite": "tests/test_modules.py",
+    "note": "새 독립 계약의 근거·검토·날짜·시간·개인정보·직접 호출 속성 검사. 의미적 품질은 별도 평가."
+  },
+  {
+    "old_test": "test_v8.py::test_no_live_when_explicitly_paused",
+    "disposition": "NOT_CLAIMED_ONE_TO_ONE",
+    "new_suite": null,
+    "note": "이전 개별 보정/모드와 동일한 동작은 보장하지 않음. 새 공개 계약의 테스트 목록을 기준으로 판단."
+  },
+  {
+    "old_test": "test_v8.py::test_combined_transport_budget_never_exceeds_four_calls",
+    "disposition": "PROPERTY_RETESTED_NEW_CONTRACT",
+    "new_suite": "tests/test_m0.py",
+    "note": "새 계약의 통신·보정·4회 한도·캐시·키·사용량 속성 검사. 이전 테스트와 1:1 동일하다고 집계하지 않음."
+  },
+  {
+    "old_test": "test_v8.py::test_api_response_and_sqlite_omit_key_identifiers",
+    "disposition": "PROPERTY_RETESTED_NEW_CONTRACT",
+    "new_suite": "tests/test_m0.py",
+    "note": "새 계약의 통신·보정·4회 한도·캐시·키·사용량 속성 검사. 이전 테스트와 1:1 동일하다고 집계하지 않음."
+  },
+  {
+    "old_test": "test_v8.py::test_sqlite_cache_survives_instance_reload_and_expires",
+    "disposition": "PROPERTY_RETESTED_NEW_CONTRACT",
+    "new_suite": "tests/test_m0.py",
+    "note": "새 계약의 통신·보정·4회 한도·캐시·키·사용량 속성 검사. 이전 테스트와 1:1 동일하다고 집계하지 않음."
+  },
+  {
+    "old_test": "test_v8.py::test_api_cache_returns_same_typed_output_and_zero_new_calls",
+    "disposition": "PROPERTY_RETESTED_NEW_CONTRACT",
+    "new_suite": "tests/test_m0.py",
+    "note": "새 계약의 통신·보정·4회 한도·캐시·키·사용량 속성 검사. 이전 테스트와 1:1 동일하다고 집계하지 않음."
+  },
+  {
+    "old_test": "test_v8.py::test_new_database_concurrent_initialization",
+    "disposition": "NOT_CLAIMED_ONE_TO_ONE",
+    "new_suite": null,
+    "note": "이전 개별 보정/모드와 동일한 동작은 보장하지 않음. 새 공개 계약의 테스트 목록을 기준으로 판단."
+  },
+  {
+    "old_test": "test_v8.py::test_cached_intent_survives_later_generation_and_failure_never_cached",
+    "disposition": "PROPERTY_RETESTED_NEW_CONTRACT",
+    "new_suite": "tests/test_m0.py",
+    "note": "새 계약의 통신·보정·4회 한도·캐시·키·사용량 속성 검사. 이전 테스트와 1:1 동일하다고 집계하지 않음."
+  },
+  {
+    "old_test": "test_v8.py::test_cache_read_failure_does_not_trigger_paid_call",
+    "disposition": "PROPERTY_RETESTED_NEW_CONTRACT",
+    "new_suite": "tests/test_m0.py",
+    "note": "새 계약의 통신·보정·4회 한도·캐시·키·사용량 속성 검사. 이전 테스트와 1:1 동일하다고 집계하지 않음."
+  },
+  {
+    "old_test": "test_v8.py::test_different_member_and_public_profile_change_cache_keys",
+    "disposition": "PROPERTY_RETESTED_NEW_CONTRACT",
+    "new_suite": "tests/test_m0.py",
+    "note": "새 계약의 통신·보정·4회 한도·캐시·키·사용량 속성 검사. 이전 테스트와 1:1 동일하다고 집계하지 않음."
+  },
+  {
+    "old_test": "test_v8.py::test_key_echo_is_redacted_in_python_output_and_default_log",
+    "disposition": "PROPERTY_RETESTED_NEW_CONTRACT",
+    "new_suite": "tests/test_m0.py",
+    "note": "새 계약의 통신·보정·4회 한도·캐시·키·사용량 속성 검사. 이전 테스트와 1:1 동일하다고 집계하지 않음."
+  }
+]

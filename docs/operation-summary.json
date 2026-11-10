@@ -1,0 +1,39 @@
+{
+  "version": "0.12.1",
+  "reviewer": "AGENT_NOT_HUMAN",
+  "exact_operating_sessions": 4,
+  "new_live_http": 26,
+  "configured_safety_limit": 40,
+  "preserved_http_results": 25,
+  "known_tokens_lower_bound": 96013,
+  "paid_output_metadata_missing_http": 1,
+  "recorder_incident": "action ID reused by evaluator; response1 lost; corrected to persist output first; original input/messages retained",
+  "tests": 121,
+  "test_failures": 0,
+  "records_visible_in_bench": 4,
+  "final_status": "CONDITIONAL_DEVELOPER_INTEGRATION",
+  "human_acceptance": false,
+  "source_sha256": "396bcf45bd44bf011c461fd26ae659bba5c1bdb651fa5d0af8463051e280294c",
+  "changes": [
+    "lossless B/C role and checkin normalization",
+    "invalid card does not discard whole draft",
+    "required personal extraction plus explicit time evidence fallback",
+    "unknown refinement separate from known parent fact",
+    "actual seven-day budget windows supplied to planner",
+    "Korean weekday validation and computed calendar",
+    "versioned no-store web assets and readable labels",
+    "unresolved placeholders remain null; original retained"
+  ],
+  "limits": [
+    "Only4 synthetic operational cases; not200-case LIVE acceptance",
+    "Real authentication/disk outage not caused;401 injected",
+    "Private free-text semantic leakage not completely proved by marker test",
+    "Production authorization/group approval still SW responsibility",
+    "Public scope enum is coarse; SW must preserve exact consent fields",
+    "Response metadata for1 paid evaluator attempt was not retained"
+  ],
+  "browser_status": "FIXED: versioned/no-store assets; four saved results inspected in IAB; owner switching conceals old data",
+  "browser_owner_switch": "PASS: old form/result immediately hidden, only selected owner then shown",
+  "clean_wheel_install": "PASS: six modules and continuity without FastAPI/source path",
+  "independent_E_to_F_context": "PASS with known goal/date comparison"
+}

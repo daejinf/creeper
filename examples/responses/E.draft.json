@@ -1,0 +1,59 @@
+{
+  "label": "AUTHORED_FIXTURE_NOT_LIVE",
+  "module": "E.draft",
+  "request": {
+    "context": {
+      "goal": "온라인 교류회 진행안 만들기",
+      "role": "참여 설계",
+      "start_date": "2026-12-01",
+      "end_date": "2026-12-21",
+      "completion_criteria": [
+        "참여 방식 선택 가능",
+        "강제 지목 없음"
+      ],
+      "verification_method": "진행안 문서",
+      "privacy_scope": "OBJECTIVE_ONLY"
+    },
+    "owner_member_id": "u1",
+    "reference_date": "2026-11-20",
+    "conversation": []
+  },
+  "response": {
+    "status": "OK",
+    "data": {
+      "contribution": {
+        "title": "참여 설계",
+        "deliverable": "안내 문서 한 장",
+        "completion_criteria": [
+          "참여 방식 선택 가능",
+          "강제 지목 없음"
+        ],
+        "confirmed": false
+      },
+      "profile_fields": {},
+      "unanswered": []
+    },
+    "needed_inputs": [],
+    "warnings": [],
+    "error": null,
+    "meta": {
+      "run_id": "2625d7ec-5393-4b3e-a7b4-c1a4fcb2cab6",
+      "task": "E.draft",
+      "prompt_version": "E.draft-0.12.1-v2",
+      "model": "AUTHORED FIXTURE · AI 미실행",
+      "usage": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "latency_ms": 0,
+      "transport_attempts": 0,
+      "repair_attempts": 0,
+      "provider_request_ids": [],
+      "execution_source": "REPLAY",
+      "source_run_id": null,
+      "cached_usage": null,
+      "cache_hit": false
+    }
+  }
+}

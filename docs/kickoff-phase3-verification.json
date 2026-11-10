@@ -1,0 +1,37 @@
+{
+  "phase": 3,
+  "full_regression_tests": 148,
+  "focused_plan_tests": 6,
+  "live_http": 3,
+  "live_tokens": 9961,
+  "live_tasks": [
+    "D",
+    "E.draft",
+    "E.plan"
+  ],
+  "live_latencies_ms": [
+    19458,
+    7864,
+    12150
+  ],
+  "group_plan_valid": true,
+  "personal_plan_valid": true,
+  "personal_weekly_minutes": {
+    "1": 60,
+    "2": 60
+  },
+  "reviewed_budget_minutes": 60,
+  "restart_restoration": "PASS",
+  "durable_plan_reuse_without_model_calls": "PASS",
+  "personal_plan_excluded_from_public_response": true,
+  "other_member_has_no_plan": true,
+  "profile_sync": "PASS",
+  "review_label": "AUTHORED_ANONYMOUS_REVIEW_NOT_REAL_USER_APPROVAL",
+  "semantic_review": "LIMITED_AGENT_REVIEW_NOT_HUMAN_ACCEPTANCE",
+  "not_implemented": [
+    "production SW identity/cross-origin integration",
+    "service activation/group vote",
+    "whole-team completion and M2 evaluation"
+  ],
+  "secret_scan": "PASS"
+}

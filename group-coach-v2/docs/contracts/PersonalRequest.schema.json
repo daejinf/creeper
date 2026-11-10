@@ -1,0 +1,431 @@
+{
+  "$defs": {
+    "Goal": {
+      "additionalProperties": false,
+      "properties": {
+        "title": {
+          "minLength": 1,
+          "title": "Title",
+          "type": "string"
+        },
+        "start_date": {
+          "format": "date",
+          "title": "Start Date",
+          "type": "string"
+        },
+        "end_date": {
+          "format": "date",
+          "title": "End Date",
+          "type": "string"
+        },
+        "completion_criteria": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Completion Criteria",
+          "type": "array"
+        },
+        "execution_method": {
+          "minLength": 1,
+          "title": "Execution Method",
+          "type": "string"
+        },
+        "verification_method": {
+          "minLength": 1,
+          "title": "Verification Method",
+          "type": "string"
+        },
+        "privacy_scope": {
+          "default": "OBJECTIVE_ONLY",
+          "enum": [
+            "OBJECTIVE_ONLY",
+            "PRIVATE"
+          ],
+          "title": "Privacy Scope",
+          "type": "string"
+        },
+        "roles": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Roles",
+          "type": "object"
+        }
+      },
+      "required": [
+        "title",
+        "start_date",
+        "end_date",
+        "completion_criteria",
+        "execution_method",
+        "verification_method",
+        "roles"
+      ],
+      "title": "Goal",
+      "type": "object"
+    },
+    "Message": {
+      "additionalProperties": false,
+      "properties": {
+        "message_id": {
+          "title": "Message Id",
+          "type": "string"
+        },
+        "speaker_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Speaker Id"
+        },
+        "role": {
+          "default": "user",
+          "enum": [
+            "user",
+            "assistant"
+          ],
+          "title": "Role",
+          "type": "string"
+        },
+        "text": {
+          "maxLength": 12000,
+          "minLength": 1,
+          "title": "Text",
+          "type": "string"
+        },
+        "created_at": {
+          "format": "date-time",
+          "title": "Created At",
+          "type": "string"
+        }
+      },
+      "required": [
+        "message_id",
+        "text"
+      ],
+      "title": "Message",
+      "type": "object"
+    },
+    "Option": {
+      "additionalProperties": false,
+      "properties": {
+        "option_id": {
+          "title": "Option Id",
+          "type": "string"
+        },
+        "label": {
+          "title": "Label",
+          "type": "string"
+        },
+        "value": {
+          "default": null,
+          "title": "Value"
+        },
+        "action": {
+          "default": "VALUE",
+          "enum": [
+            "VALUE",
+            "UNKNOWN",
+            "SKIP"
+          ],
+          "title": "Action",
+          "type": "string"
+        }
+      },
+      "required": [
+        "option_id",
+        "label"
+      ],
+      "title": "Option",
+      "type": "object"
+    },
+    "PersonalField": {
+      "additionalProperties": false,
+      "properties": {
+        "value": {
+          "default": null,
+          "title": "Value"
+        },
+        "status": {
+          "default": "UNKNOWN",
+          "enum": [
+            "KNOWN",
+            "UNKNOWN",
+            "SKIPPED",
+            "SUGGESTED"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "evidence_refs": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Refs",
+          "type": "array"
+        }
+      },
+      "title": "PersonalField",
+      "type": "object"
+    },
+    "PersonalState": {
+      "additionalProperties": false,
+      "properties": {
+        "fields": {
+          "additionalProperties": {
+            "$ref": "#/$defs/PersonalField"
+          },
+          "title": "Fields",
+          "type": "object"
+        },
+        "question": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Question"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "answered_questions": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Answered Questions",
+          "type": "array"
+        },
+        "answers_since_summary": {
+          "default": 0,
+          "title": "Answers Since Summary",
+          "type": "integer"
+        },
+        "processed_message_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Processed Message Ids",
+          "type": "array"
+        }
+      },
+      "title": "PersonalState",
+      "type": "object"
+    },
+    "Question": {
+      "additionalProperties": false,
+      "properties": {
+        "question_id": {
+          "default": "",
+          "title": "Question Id",
+          "type": "string"
+        },
+        "field": {
+          "enum": [
+            "level",
+            "weekly_minutes",
+            "scope",
+            "progress",
+            "tools",
+            "preferred_times",
+            "available_weekdays",
+            "constraints",
+            "support"
+          ],
+          "title": "Field",
+          "type": "string"
+        },
+        "text": {
+          "title": "Text",
+          "type": "string"
+        },
+        "reason": {
+          "title": "Reason",
+          "type": "string"
+        },
+        "options": {
+          "items": {
+            "$ref": "#/$defs/Option"
+          },
+          "maxItems": 6,
+          "title": "Options",
+          "type": "array"
+        }
+      },
+      "required": [
+        "field",
+        "text",
+        "reason"
+      ],
+      "title": "Question",
+      "type": "object"
+    },
+    "Task": {
+      "additionalProperties": false,
+      "properties": {
+        "task_id": {
+          "default": "",
+          "description": "이 응답 안의 고유한 임시 작업 ID(예: t1). 서버가 정식 ID로 변환합니다.",
+          "title": "Task Id",
+          "type": "string"
+        },
+        "owner_member_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Owner Member Id"
+        },
+        "title": {
+          "minLength": 1,
+          "title": "Title",
+          "type": "string"
+        },
+        "deliverable": {
+          "minLength": 1,
+          "title": "Deliverable",
+          "type": "string"
+        },
+        "due_date": {
+          "description": "결과물을 완료해야 하는 기한",
+          "format": "date",
+          "title": "Due Date",
+          "type": "string"
+        },
+        "scheduled_date": {
+          "anyOf": [
+            {
+              "format": "date",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "실제 수행 예정일. 미지정인 기존 계획은 due_date를 수행일로 해석합니다. 수행일은 기한을 넘을 수 없습니다.",
+          "title": "Scheduled Date"
+        },
+        "estimated_minutes": {
+          "exclusiveMinimum": 0,
+          "title": "Estimated Minutes",
+          "type": "integer"
+        },
+        "completion_criteria": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Completion Criteria",
+          "type": "array"
+        },
+        "difficulty": {
+          "default": "MEDIUM",
+          "enum": [
+            "EASY",
+            "MEDIUM",
+            "HARD"
+          ],
+          "title": "Difficulty",
+          "type": "string"
+        },
+        "dependencies": {
+          "description": "이 응답 tasks에 실제 존재하는 task_id만 참조합니다. 공동 원본 작업 ID나 제목을 넣지 않습니다.",
+          "items": {
+            "type": "string"
+          },
+          "title": "Dependencies",
+          "type": "array"
+        }
+      },
+      "required": [
+        "title",
+        "deliverable",
+        "due_date",
+        "estimated_minutes",
+        "completion_criteria"
+      ],
+      "title": "Task",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "action": {
+      "default": "TALK",
+      "enum": [
+        "TALK",
+        "PLAN"
+      ],
+      "title": "Action",
+      "type": "string"
+    },
+    "goal": {
+      "$ref": "#/$defs/Goal"
+    },
+    "owner_member_id": {
+      "title": "Owner Member Id",
+      "type": "string"
+    },
+    "assigned_tasks": {
+      "items": {
+        "$ref": "#/$defs/Task"
+      },
+      "title": "Assigned Tasks",
+      "type": "array"
+    },
+    "public_dependencies": {
+      "description": "본인 담당 작업에 필요한 공개 선행 작업. 다른 사람의 개인 조건이 아닙니다.",
+      "items": {
+        "$ref": "#/$defs/Task"
+      },
+      "title": "Public Dependencies",
+      "type": "array"
+    },
+    "conversation": {
+      "items": {
+        "$ref": "#/$defs/Message"
+      },
+      "title": "Conversation",
+      "type": "array"
+    },
+    "state": {
+      "$ref": "#/$defs/PersonalState"
+    },
+    "answer": {
+      "anyOf": [
+        {
+          "additionalProperties": true,
+          "type": "object"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Answer"
+    },
+    "reference_date": {
+      "format": "date",
+      "title": "Reference Date",
+      "type": "string"
+    }
+  },
+  "required": [
+    "goal",
+    "owner_member_id"
+  ],
+  "title": "PersonalRequest",
+  "type": "object"
+}
