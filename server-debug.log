@@ -1,0 +1,7 @@
+킥오프: http://127.0.0.1:8010/kickoff-demo · Python 변경 자동 반영 · 종료: Ctrl+C
+INFO:     Will watch for changes in these directories: ['C:\\Users\\user\\Desktop\\크리퍼_복구_2\\src', 'C:\\Users\\user\\Desktop\\크리퍼_복구_2\\tools\\bench']
+INFO:     Uvicorn running on http://127.0.0.1:8010 (Press CTRL+C to quit)
+INFO:     Started reloader process [15796] using StatReload
+INFO:     Started server process [19628]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
