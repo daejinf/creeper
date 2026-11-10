@@ -20,7 +20,7 @@ Python 3.11 이상을 설치한 뒤, 이 README가 있는 폴더의 PowerShell �
 .\run.cmd
 ```
 
-처음 실행할 때는 가상환경과 필요한 패키지를 자동으로 설치한 다음 서버를 시작합니다. 이후에는 설치를 건너뛰고 바로 실행합니다. 터미널에 표시되는 `킥오프:` 주소를 브라우저에서 열고, 종료할 때는 터미널에서 `Ctrl+C`를 누르세요. 8010 포트가 사용 중이거나 Windows에서 차단된 경우 다른 포트를 자동으로 선택합니다. 특정 포트를 쓰려면 `.\run.cmd -Port 9000`, 자동 재시작 없이 실행하려면 `.\run.cmd -NoReload`, 설치만 미리 끝내려면 `.\run.cmd -SetupOnly`를 사용합니다.
+처음 실행할 때는 가상환경과 필요한 패키지를 자동으로 설치합니다. Timely API 키가 등록되지 않았다면 숨김 입력으로 키를 요청하며, 입력한 키는 Windows 사용자 환경변수에 저장되어 다음 실행에도 사용됩니다. 키 없이 Enter를 누르면 REPLAY만 사용할 수 있습니다. 설치 후 터미널에 표시되는 `킥오프:` 주소를 브라우저에서 열고, 종료할 때는 `Ctrl+C`를 누르세요. 8010 포트가 사용 중이거나 Windows에서 차단된 경우 다른 포트를 자동으로 선택합니다. 특정 포트를 쓰려면 `.\run.cmd -Port 9000`, 자동 재시작 없이 실행하려면 `.\run.cmd -NoReload`, 키 질문을 건너뛰려면 `.\run.cmd -SkipApiKeyPrompt`, 설치만 미리 끝내려면 `.\run.cmd -SetupOnly`를 사용합니다.
 
 > 0.13.0은 기본 연결을 Timely GPT로 변경했습니다. M1-A~F 독립 함수와 기존 SQLite 기록은 유지합니다. M0 직접 사용자는 `DeepSeekClient`를 `TimelyClient`로 바꾸고 `TIMELY_*` 환경변수를 사용하세요. 0.10.1과는 API가 달라졌습니다. `GoalAI`와 순차 실행 화면은 제거했습니다. [변경 안내](docs/MIGRATION.md)와 [실제로 검증한 범위](docs/VERIFICATION.md)를 확인하세요.
 
