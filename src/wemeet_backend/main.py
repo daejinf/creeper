@@ -35,7 +35,14 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         if app.state.engine is not None:
             app.state.engine.dispose()
 
-    app = FastAPI(title="WE-MEET backend", lifespan=lifespan, docs_url=None, redoc_url=None, openapi_url=None)
+    docs = settings.enable_docs  # off by default; /docs and /openapi.json only for local API-spec sharing
+    app = FastAPI(
+        title="WE-MEET backend",
+        lifespan=lifespan,
+        docs_url="/docs" if docs else None,
+        redoc_url=None,
+        openapi_url="/openapi.json" if docs else None,
+    )
     app.state.settings = settings
     app.state.engine = None
 

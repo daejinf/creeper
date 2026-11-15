@@ -25,6 +25,7 @@ class Settings:
     cookie_samesite: str = "lax"
     cookie_domain: str | None = None
     cors_origins: tuple[str, ...] = ()
+    enable_docs: bool = False
 
 
 def _bool(env: Mapping[str, str], name: str, default: bool) -> bool:
@@ -94,4 +95,5 @@ def load_settings(env: Mapping[str, str] | None = None) -> Settings:
         cookie_samesite=samesite,
         cookie_domain=domain,
         cors_origins=origins,
+        enable_docs=_bool(env, "WEMEET_ENABLE_DOCS", False),
     )

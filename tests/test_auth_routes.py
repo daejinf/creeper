@@ -191,10 +191,25 @@ def test_importing_main_does_not_require_env(monkeypatch):
     assert "WEMEET_AUTH_DATABASE_URL" in str(e.value)
 
 
-def test_docs_endpoints_disabled():
-    app = create_app(load_settings({"WEMEET_AUTH_DATABASE_URL": "postgresql://u:p@127.0.0.1:1/none"}))
-    with TestClient(app) as c:
+DUMMY_URL = "postgresql://u:p@127.0.0.1:1/none"
+
+
+@pytest.mark.parametrize("flag", [None, "", "false", "0"])
+def test_docs_disabled_by_default(flag):
+    env = {"WEMEET_AUTH_DATABASE_URL": DUMMY_URL}
+    if flag is not None:
+        env["WEMEET_ENABLE_DOCS"] = flag
+    with TestClient(create_app(load_settings(env))) as c:
         assert c.get("/docs").status_code == 404 and c.get("/openapi.json").status_code == 404
+
+
+def test_docs_enabled_by_env_and_spec_has_no_secrets():
+    env = {"WEMEET_AUTH_DATABASE_URL": "postgresql://u:secretpw@127.0.0.1:1/none", "WEMEET_ENABLE_DOCS": "true"}
+    with TestClient(create_app(load_settings(env))) as c:
+        assert c.get("/docs").status_code == 200
+        spec = c.get("/openapi.json")
+        assert spec.status_code == 200 and "/api/auth/signup" in spec.json()["paths"]
+        assert "secretpw" not in spec.text
 
 
 def test_origin_check_and_cors():
