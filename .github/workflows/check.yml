@@ -8,7 +8,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - run: python -m pip install '.[test,web]'
+      - run: python -m pip install '.[test,web,database]'
       - run: python -m pytest
       - run: python evaluations/check_data.py
       - run: python examples/d_group_plan.py
