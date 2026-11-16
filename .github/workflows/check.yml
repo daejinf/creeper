@@ -13,4 +13,3 @@ jobs:
       - run: python evaluations/check_data.py
       - run: python examples/d_group_plan.py
       - run: python examples/e_member_plan.py
-      - run: python -m examples.continue_record
