@@ -1,20 +1,36 @@
 """Explicit, administrator-only backup/migration/provisioning. Never runs at startup."""
-import os,json,hashlib,secrets,sqlite3,subprocess,winreg
+import os,json,hashlib,secrets,sqlite3,subprocess
+
+try:
+    import winreg
+except ImportError:
+    winreg = None
+
 from pathlib import Path
 from datetime import datetime
 from sqlalchemy.engine import make_url
 import psycopg
 from psycopg import sql
+
 ROOT=Path(__file__).resolve().parents[2]
 
+
 def user_get(name):
+    if winreg is None:
+        return os.environ.get(name)
     try:
-        with winreg.OpenKey(winreg.HKEY_CURRENT_USER,'Environment') as k:return winreg.QueryValueEx(k,name)[0]
-    except FileNotFoundError:return None
+        with winreg.OpenKey(winreg.HKEY_CURRENT_USER,'Environment') as k:
+            return winreg.QueryValueEx(k,name)[0]
+    except FileNotFoundError:
+        return os.environ.get(name)
+
 
 def user_set(name,value):
-    with winreg.CreateKey(winreg.HKEY_CURRENT_USER,'Environment') as k:winreg.SetValueEx(k,name,0,winreg.REG_SZ,value)
+    if winreg is not None:
+        with winreg.CreateKey(winreg.HKEY_CURRENT_USER,'Environment') as k:
+            winreg.SetValueEx(k,name,0,winreg.REG_SZ,value)
     os.environ[name]=value
+
 
 def main():
     admin=user_get('WEMEET_GOAL_ADMIN_DATABASE_URL') or user_get('WEMEET_GOAL_DATABASE_URL')
@@ -48,4 +64,7 @@ def main():
         user_set('WEMEET_RECOVERY_KEY',Fernet.generate_key().decode())
     (ROOT/'runtime/cutover-backup.json').write_text(json.dumps({'backup':str(folder),'sha256':manifest,'migration':'0003_unified_journal','app_role':'wemeet_app'},indent=2))
     print('Backup verified by SHA256; migration applied; restricted app role and recovery key configured. No credentials printed.')
-if __name__=='__main__':main()
+
+
+if __name__=='__main__':
+    main()
