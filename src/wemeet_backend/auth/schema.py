@@ -19,8 +19,12 @@ users = sa.Table(
     sa.Column("password_hash", sa.Text, nullable=False),
     sa.Column("created_at", sa.DateTime(timezone=True), nullable=False, server_default=sa.func.now()),
     sa.Column("last_login_at", sa.DateTime(timezone=True)),
+    sa.Column("nickname", sa.Text, nullable=False),  # display name; duplicates allowed (no unique)
     sa.UniqueConstraint("username", name="uq_auth_users_username"),
     sa.CheckConstraint("username ~ '^[a-z0-9_]{3,20}$'", name="ck_auth_users_username"),
+    sa.CheckConstraint(
+        "char_length(nickname) BETWEEN 2 AND 10 AND nickname = btrim(nickname)", name="ck_auth_users_nickname"
+    ),
 )
 
 auth_sessions = sa.Table(

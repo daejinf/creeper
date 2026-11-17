@@ -11,12 +11,12 @@ from sqlalchemy.engine import Connection
 from .schema import auth_sessions, users
 
 
-def create_user(conn: Connection, username: str, password_hash: str) -> uuid.UUID | None:
+def create_user(conn: Connection, username: str, password_hash: str, nickname: str) -> uuid.UUID | None:
     """Insert a user; return its id, or None if the username is already taken."""
     user_id = uuid.uuid4()
     stmt = (
         pg_insert(users)
-        .values(user_id=user_id, username=username, password_hash=password_hash)
+        .values(user_id=user_id, username=username, password_hash=password_hash, nickname=nickname)
         .on_conflict_do_nothing(index_elements=[users.c.username])
         .returning(users.c.user_id)
     )
@@ -54,9 +54,9 @@ def create_session(
 
 
 def get_user_by_session(conn: Connection, session_hash: str) -> Any | None:
-    """Return (user_id, username) for a live session; expiry is checked here, at read time."""
+    """Return (user_id, username, nickname) for a live session; expiry is checked here, at read time."""
     return conn.execute(
-        sa.select(users.c.user_id, users.c.username)
+        sa.select(users.c.user_id, users.c.username, users.c.nickname)
         .select_from(auth_sessions.join(users, users.c.user_id == auth_sessions.c.user_id))
         .where(auth_sessions.c.session_hash == session_hash, auth_sessions.c.expires_at > sa.func.now())
     ).first()

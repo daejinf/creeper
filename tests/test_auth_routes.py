@@ -50,7 +50,7 @@ def client(made):
 def signup(c, username=None, password=PW):
     username = username or uname()
     c.made.append(username)
-    return c.post("/api/auth/signup", json={"username": username, "password": password}), username
+    return c.post("/api/auth/signup", json={"username": username, "password": password, "nickname": "닉네임"}), username
 
 
 def cookie_header(r):
@@ -141,7 +141,7 @@ def test_login_success_and_uniform_failure(client):
 @NEEDS_DB
 def test_validation_error_does_not_echo_password(client):
     secret = "pw-should-not-echo-123"
-    r = client.post("/api/auth/signup", json={"username": "x", "password": secret})
+    r = client.post("/api/auth/signup", json={"username": "x", "password": secret, "nickname": "닉네임"})
     assert r.status_code == 422 and r.json()["error"]["code"] == "INVALID_REQUEST"
     assert secret not in r.text
     r = client.post("/api/auth/login", json={"username": "abc", "password": secret, "extra": 1})

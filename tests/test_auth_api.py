@@ -51,7 +51,7 @@ def signup(c, username, password=PW):
 
     c.track(username)
     with c.begin():
-        return service.signup(c, SignupRequest(username=username, password=password))
+        return service.signup(c, SignupRequest(username=username, password=password, nickname="닉네임"))
 
 
 def login(c, username, password):
@@ -96,7 +96,7 @@ def test_signup_normalizes_username_and_rejects_duplicates(conn):
     with pytest.raises(service.AuthError) as e:  # case-insensitive duplicate
         signup(conn, "  " + u.upper() + " ")
     assert e.value.code == "USERNAME_TAKEN"
-    assert SignupRequest(username=" ABC_1 ", password=PW).username == "abc_1"
+    assert SignupRequest(username=" ABC_1 ", password=PW, nickname="닉네임").username == "abc_1"
 
 
 @pytest.mark.parametrize(
@@ -107,7 +107,7 @@ def test_signup_validation(username, password):
     from wemeet_backend.auth.models import SignupRequest
 
     with pytest.raises(ValidationError):
-        SignupRequest(username=username, password=password)
+        SignupRequest(username=username, password=password, nickname="닉네임")
 
 
 def test_models_forbid_extra_and_hide_password():
@@ -115,7 +115,7 @@ def test_models_forbid_extra_and_hide_password():
 
     with pytest.raises(ValidationError):
         LoginRequest(username="abc", password=PW, admin=True)
-    assert PW not in repr(SignupRequest(username="abc", password=PW))
+    assert PW not in repr(SignupRequest(username="abc", password=PW, nickname="닉네임"))
     assert PW not in repr(LoginRequest(username="abc", password=PW))
 
 

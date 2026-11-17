@@ -10,7 +10,7 @@ from sqlalchemy import Engine
 from ..config import Settings
 from . import service
 from .deps import current_user, get_engine, get_settings, session_token
-from .models import LoginRequest, SignupRequest, UserOut
+from .models import LoginEnvelope, LoginRequest, ProfileEnvelope, SignupRequest, UserOut, UserProfileOut
 
 router = APIRouter(prefix="/api/auth", tags=["auth"])
 
@@ -39,11 +39,11 @@ def _clear_cookie(response: Response, settings: Settings) -> None:
     )
 
 
-def _ok(user: UserOut) -> dict:
+def _ok(user: UserOut) -> dict:  # works for UserOut and UserProfileOut alike
     return {"status": "OK", "data": {"user": user.model_dump(mode="json")}}
 
 
-@router.post("/signup", status_code=201)
+@router.post("/signup", status_code=201, response_model=ProfileEnvelope)
 def signup(
     body: SignupRequest,
     response: Response,
@@ -56,7 +56,7 @@ def signup(
     return _ok(auth.user)
 
 
-@router.post("/login")
+@router.post("/login", response_model=LoginEnvelope)
 def login(
     body: LoginRequest,
     response: Response,
@@ -82,6 +82,6 @@ def logout(
     return {"status": "OK", "data": {}}
 
 
-@router.get("/me")
-def me(user: UserOut = Depends(current_user)):
+@router.get("/me", response_model=ProfileEnvelope)
+def me(user: UserProfileOut = Depends(current_user)):
     return _ok(user)

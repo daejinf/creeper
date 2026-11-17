@@ -59,6 +59,10 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             if msg.startswith("Value error, "):
                 message = msg.removeprefix("Value error, ")
                 break
+            if err.get("type") == "missing" and err.get("loc"):
+                # field name only, never the submitted value
+                message = f"필수 항목이 없습니다: {err['loc'][-1]}"
+                break
         return failed(422, "INVALID_REQUEST", message)
 
     @app.middleware("http")

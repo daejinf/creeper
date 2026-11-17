@@ -8,7 +8,7 @@ from sqlalchemy import Engine
 from .. import db
 from ..config import Settings
 from . import service
-from .models import UserOut
+from .models import UserProfileOut
 
 _engine_lock = Lock()
 
@@ -33,7 +33,7 @@ def session_token(request: Request, settings: Settings = Depends(get_settings)) 
 
 def current_user(
     token: str | None = Depends(session_token), engine: Engine = Depends(get_engine)
-) -> UserOut:
+) -> UserProfileOut:
     """Cookie -> session -> user, else 401 UNAUTHENTICATED. Sync (thread pool), own short transaction."""
     with engine.begin() as conn:
         return service.authenticate(conn, token)
