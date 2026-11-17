@@ -9,6 +9,7 @@ jobs:
         with:
           python-version: '3.12'
       - run: python -m pip install '.[test,web,database]'
+      - run: python -m playwright install --with-deps chromium
       - run: python -m pytest
       - run: python evaluations/check_data.py
       - run: python examples/d_group_plan.py

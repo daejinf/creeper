@@ -89,6 +89,80 @@ sa.Index('ix_member_group_owner', member_goals.c.group_id, member_goals.c.member
 sa.Index('ix_plan_group_owner', plans.c.group_id, plans.c.owner_member_id)
 sa.Index('ix_task_due', tasks.c.plan_version_id, tasks.c.due_date)
 
+# M2 mutable completion workflow. Immutable plans/tasks remain the evaluation source.
+task_submissions = sa.Table('task_submissions', metadata,
+    col('submission_id', primary_key=True), col('group_id', nullable=False), col('plan_version_id', nullable=False),
+    col('task_id', nullable=False), col('member_id', nullable=False), col('action_id', nullable=False),
+    col('description', nullable=False), col('input_hash', nullable=False), created(),
+    sa.ForeignKeyConstraint(['group_id','member_id'], [S+'members.group_id',S+'members.member_id']),
+    sa.ForeignKeyConstraint(['group_id','plan_version_id'], [S+'plan_versions.group_id',S+'plan_versions.plan_version_id']),
+    sa.ForeignKeyConstraint(['plan_version_id','task_id','member_id'], [S+'tasks.plan_version_id',S+'tasks.task_id',S+'tasks.owner_member_id']),
+    sa.UniqueConstraint('group_id','action_id'),
+    sa.CheckConstraint("length(btrim(description)) > 0"))
+
+submission_evidence = sa.Table('submission_evidence', metadata,
+    col('submission_id', primary_key=True), col('evidence_id', primary_key=True), col('original_name', nullable=False),
+    col('storage_key', nullable=False), col('mime_type', nullable=False), col('size_bytes', sa.BigInteger, nullable=False),
+    col('sha256', nullable=False), col('content_kind', nullable=False), col('page_count', sa.Integer),
+    col('extracted_character_count', sa.Integer, nullable=False, server_default='0'),
+    col('image_count', sa.Integer, nullable=False, server_default='0'),
+    col('extraction_status', nullable=False, server_default='READY'), created(),
+    sa.ForeignKeyConstraint(['submission_id'], [S+'task_submissions.submission_id'], ondelete='CASCADE'),
+    sa.UniqueConstraint('storage_key'),
+    sa.CheckConstraint("content_kind IN ('IMAGE','PDF','DOCX')"),
+    sa.CheckConstraint("extraction_status IN ('READY','FAILED')"),
+    sa.CheckConstraint('size_bytes >= 0 AND extracted_character_count >= 0 AND image_count >= 0 AND (page_count IS NULL OR page_count > 0)'))
+
+completion_reviews = sa.Table('completion_reviews', metadata,
+    col('review_id', primary_key=True), col('submission_id', nullable=False), col('operation_id', nullable=False, unique=True),
+    col('decision', nullable=False), col('summary', nullable=False), col('criteria_results', JSONB, nullable=False),
+    col('missing_items', JSONB, nullable=False), col('user_message', nullable=False), col('model'),
+    col('prompt_version'), col('run_id'), created(),
+    sa.ForeignKeyConstraint(['submission_id'], [S+'task_submissions.submission_id']),
+    sa.CheckConstraint("decision IN ('PASS','REVIEW_NEEDED','NEEDS_INPUT')"))
+
+completion_appeals = sa.Table('completion_appeals', metadata,
+    col('appeal_id', primary_key=True), col('review_id', nullable=False), col('submission_id', nullable=False),
+    col('group_id', nullable=False), col('member_id', nullable=False), col('action_id', nullable=False),
+    col('input_hash', nullable=False), col('reason', nullable=False), col('required_votes', sa.Integer, nullable=False),
+    col('eligible_voters', sa.Integer, nullable=False), col('status', nullable=False), created(),
+    col('resolved_at', sa.DateTime(timezone=True)),
+    sa.ForeignKeyConstraint(['review_id'], [S+'completion_reviews.review_id']),
+    sa.ForeignKeyConstraint(['submission_id'], [S+'task_submissions.submission_id']),
+    sa.ForeignKeyConstraint(['group_id','member_id'], [S+'members.group_id',S+'members.member_id']),
+    sa.UniqueConstraint('appeal_id','group_id'), sa.UniqueConstraint('group_id','action_id'),
+    sa.CheckConstraint("status IN ('OPEN','APPROVED','SUPERSEDED')"),
+    sa.CheckConstraint('required_votes > 0 AND eligible_voters >= 0'),
+    sa.CheckConstraint("length(btrim(reason)) > 0"))
+
+completion_votes = sa.Table('completion_votes', metadata,
+    col('appeal_id', primary_key=True), col('group_id', nullable=False), col('voter_member_id', primary_key=True),
+    col('action_id', nullable=False), col('input_hash', nullable=False), col('approve', sa.Boolean, nullable=False), created(),
+    sa.ForeignKeyConstraint(['appeal_id','group_id'], [S+'completion_appeals.appeal_id',S+'completion_appeals.group_id']),
+    sa.ForeignKeyConstraint(['group_id','voter_member_id'], [S+'members.group_id',S+'members.member_id']),
+    sa.UniqueConstraint('group_id','action_id'))
+
+task_progress = sa.Table('task_progress', metadata,
+    col('group_id', primary_key=True), col('plan_version_id', primary_key=True), col('task_id', primary_key=True),
+    col('member_id', primary_key=True), col('status', nullable=False), col('latest_submission_id'),
+    col('latest_review_id'), col('latest_appeal_id'), col('latest_review_operation_id'),
+    col('review_input_hash'), col('review_error_code'), col('review_error_message'),
+    col('completed_at', sa.DateTime(timezone=True)),
+    col('updated_at', sa.DateTime(timezone=True), nullable=False, server_default=sa.func.now()),
+    col('revision', sa.Integer, nullable=False, server_default='0'),
+    sa.ForeignKeyConstraint(['group_id','member_id'], [S+'members.group_id',S+'members.member_id']),
+    sa.ForeignKeyConstraint(['group_id','plan_version_id'], [S+'plan_versions.group_id',S+'plan_versions.plan_version_id']),
+    sa.ForeignKeyConstraint(['plan_version_id','task_id','member_id'], [S+'tasks.plan_version_id',S+'tasks.task_id',S+'tasks.owner_member_id']),
+    sa.ForeignKeyConstraint(['latest_submission_id'], [S+'task_submissions.submission_id']),
+    sa.ForeignKeyConstraint(['latest_review_id'], [S+'completion_reviews.review_id']),
+    sa.ForeignKeyConstraint(['latest_appeal_id'], [S+'completion_appeals.appeal_id']),
+    sa.CheckConstraint("status IN ('TODO','SUBMITTED','REVIEWING','REVIEW_NEEDED','NEEDS_INPUT','APPEALED','COMPLETED','REVIEW_FAILED')"),
+    sa.CheckConstraint('revision >= 0'))
+
+sa.Index('ix_submission_task', task_submissions.c.group_id, task_submissions.c.plan_version_id, task_submissions.c.task_id, task_submissions.c.member_id)
+sa.Index('ix_review_submission', completion_reviews.c.submission_id, completion_reviews.c.created_at)
+sa.Index('ix_appeal_submission', completion_appeals.c.submission_id, completion_appeals.c.created_at)
+
 # Diagnostics can refer to a legacy record whose domain transaction was rejected.
 # They are not goals and cannot be used as an evaluation baseline.
 sync_attempts = sa.Table('sync_attempts', metadata,

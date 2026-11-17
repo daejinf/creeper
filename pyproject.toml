@@ -3,12 +3,19 @@ name = "wemeet-ai-core"
 version = "0.15.0"
 description = "Independent WE-MEET M0 and M1 AI modules"
 requires-python = ">=3.11"
-dependencies = ["requests>=2.32,<3", "pydantic>=2.7,<3", "tzdata>=2025.2; platform_system == 'Windows'"]
+dependencies = [
+    "requests>=2.32,<3",
+    "pydantic>=2.7,<3",
+    "Pillow>=11.0,<13",
+    "PyMuPDF>=1.25,<2",
+    "python-docx>=1.1,<2",
+    "tzdata>=2025.2; platform_system == 'Windows'",
+]
 
 [project.optional-dependencies]
-web = ["fastapi>=0.115,<1", "uvicorn>=0.34,<1"]
+web = ["fastapi>=0.115,<1", "uvicorn>=0.34,<1", "python-multipart>=0.0.20,<1"]
 database = ["SQLAlchemy>=2.0,<3", "alembic>=1.13,<2", "psycopg[binary]>=3.2,<4", "cryptography>=46,<49"]
-test = ["pytest>=8.3,<9", "httpx>=0.28,<1", "build>=1.2,<2"]
+test = ["pytest>=8.3,<9", "httpx>=0.28,<1", "build>=1.2,<2", "playwright>=1.49,<2"]
 
 [project.scripts]
 wemeet-ai = "wemeet_ai.cli:main"

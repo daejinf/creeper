@@ -7,7 +7,7 @@ import hashlib
 from pathlib import Path
 
 ROOT=Path(__file__).resolve().parents[1]
-TASKS=('A','B','C','D','E.coach','E.draft','E.plan','F')
+TASKS=('A','B','C','D','E.coach','E.draft','E.plan','F','M2.review')
 
 
 def read_sources():
@@ -18,8 +18,9 @@ def read_sources():
 def revision_for(task,sources):
     name=task.split('.')[0]
     folder={'A':'a_coaching','B':'b_analysis','C':'c_goal_draft',
-        'D':'d_group_plan','E':'e_member_plan','F':'f_validation'}.get(name)
+        'D':'d_group_plan','E':'e_member_plan','F':'f_validation','M2':None}.get(name)
     prefixes=['m0/','shared/']
+    if name=='M2': prefixes.append('m2/')
     if folder:prefixes.append('m1/'+folder+'/')
     if name=='D' or task=='E.plan':prefixes.append('m1/f_validation/')
     selected=[(path,digest) for path,digest in sorted(sources.items())

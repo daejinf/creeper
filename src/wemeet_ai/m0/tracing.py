@@ -28,6 +28,11 @@ active = ContextVar("wemeet_trace", default=None)
 
 def scrub(value, owner=None):
     if isinstance(value, dict):
+        if value.get("type") == "image_url":
+            image = value.get("image_url")
+            url = image.get("url") if isinstance(image, dict) else None
+            mime_type = url[5:].split(";", 1)[0] if isinstance(url, str) and url.startswith("data:") else None
+            return {"type": "image_url", "image_url": {"url": "<REDACTED>", "mime_type": mime_type}}
         result = {}
         for key, item in value.items():
             if key.lower() in {"authorization", "api_key", "deepseek_api_key", "timely_api_key", "headers", "reasoning_content"}:
@@ -41,6 +46,8 @@ def scrub(value, owner=None):
             else: result[key] = scrub(item, owner)
         return sanitize(result)
     if isinstance(value, list): return [scrub(v, owner) for v in value]
+    if isinstance(value, str) and value.startswith("data:image/"):
+        return "<REDACTED_IMAGE_DATA_URL>"
     return sanitize(value)
 
 

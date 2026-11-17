@@ -20,6 +20,7 @@ from .kickoff import router as kickoff_router
 from .kickoff_flow import router as kickoff_flow_router
 from .kickoff_plans import router as kickoff_plans_router
 from .goal_database import router as goal_database_router
+from .completion import router as completion_router
 
 app = FastAPI(title="WE·MEET 독립 모듈 테스트", version=__version__)
 app.include_router(record_router)
@@ -27,14 +28,19 @@ app.include_router(kickoff_router)
 app.include_router(kickoff_flow_router)
 app.include_router(kickoff_plans_router)
 app.include_router(goal_database_router)
+app.include_router(completion_router)
 cache = MemoryResultCache()
 
 @app.get("/")
 def index(): return FileResponse(Path(__file__).with_name("index.html"), headers={"Cache-Control":"no-store"})
 
+@app.get("/kickoff/completion")
+def kickoff_completion_page():
+    return FileResponse(Path(__file__).with_name("kickoff-completion.html"), headers={"Cache-Control":"no-store"})
+
 @app.get("/assets/{name}")
 def asset(name: str):
-    if name not in {"bench.js", "bench.css", "continuity.js", "kickoff.js", "kickoff-flow.js", "kickoff-plans.js", "kickoff-version.js", "kickoff-goals.js", "kickoff.css"}: return JSONResponse({"error":"NOT_FOUND"},status_code=404)
+    if name not in {"bench.js", "bench.css", "continuity.js", "kickoff.js", "kickoff-flow.js", "kickoff-plans.js", "kickoff-completion.js", "kickoff-completion-page.js", "kickoff-version.js", "kickoff-goals.js", "kickoff.css"}: return JSONResponse({"error":"NOT_FOUND"},status_code=404)
     return FileResponse(Path(__file__).with_name(name),headers={"Cache-Control":"no-store"})
 
 @app.get("/api/config")

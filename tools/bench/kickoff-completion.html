@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>WE·MEET · 완료 판정</title>
+  <link rel="stylesheet" href="/assets/kickoff.css?v=16">
+</head>
+<body class="completionPageBody">
+  <section class="completionWorkspace">
+    <header class="completionPageHeader">
+      <div>
+        <span class="eyebrow">WE·MEET AI · COMPLETION</span>
+        <h1>과제 완료 판정</h1>
+        <p class="hint">제출부터 AI 판정과 동료 확인까지 한곳에서 이어갑니다.</p>
+      </div>
+      <div class="completionHeaderActions">
+        <button id="refreshCompletionState" type="button">상태 새로고침</button>
+        <a id="backToKickoff" class="completionBackLink" href="/kickoff">기존 킥오프로 돌아가기</a>
+        <small id="completionSyncStatus" role="status" aria-live="polite">DB 상태를 확인하고 있습니다.</small>
+      </div>
+    </header>
+
+    <section id="completionMissingGroup" class="completionMissingGroup" role="status" hidden>
+      <span class="eyebrow">GROUP REQUIRED</span>
+      <h2>열어볼 그룹을 찾지 못했습니다</h2>
+      <p class="hint">기존 킥오프에서 그룹을 연 뒤 실행 계획의 완료 판정 버튼으로 들어와 주세요.</p>
+      <a class="completionBackLink" href="/kickoff">킥오프로 이동</a>
+    </section>
+
+    <main id="completionPageLayout" class="completionPageLayout" aria-label="그룹 과제 완료 판정">
+      <aside class="completionPageColumn completionPageSidebar" aria-labelledby="completionGroupHeading">
+        <div class="completionPageColumnHeader">
+          <span class="eyebrow">GROUP &amp; FILTER</span>
+          <h2 id="completionGroupHeading">현재 그룹</h2>
+          <span id="completionGroupMarker" class="completionGroupMarker"></span>
+        </div>
+        <div id="completionMemberList" class="completionMemberList" aria-label="구성원 필터"></div>
+        <nav class="completionFilterList" aria-label="과제 필터">
+          <button type="button" aria-pressed="true" data-task-filter="all">전체 과제</button>
+          <button type="button" aria-pressed="false" data-task-filter="mine">내 과제</button>
+          <button type="button" aria-pressed="false" data-task-filter="todo">제출 전</button>
+          <button type="button" aria-pressed="false" data-task-filter="review">AI 검토 필요</button>
+          <button type="button" aria-pressed="false" data-task-filter="input">자료 보완</button>
+          <button type="button" aria-pressed="false" data-task-filter="appeal">투표 필요</button>
+          <button type="button" aria-pressed="false" data-task-filter="completed">완료</button>
+        </nav>
+      </aside>
+
+      <section class="completionPageColumn completionPageOverview" aria-labelledby="completionOverviewHeading">
+        <div class="completionPageColumnHeader">
+          <span class="eyebrow">GROUP PROGRESS</span>
+          <h2 id="completionOverviewHeading">그룹 완료 현황</h2>
+          <p id="completionLoadSummary" class="hint">그룹과 구성원 과제를 확인하고 있습니다.</p>
+        </div>
+        <div id="completionProgressCard" class="completionProgressCard" role="progressbar" aria-label="그룹 진행률 준비 중" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+          <div><strong>진행률</strong><p class="hint">평가 준비가 된 과제를 기준으로 계산합니다.</p></div>
+          <strong id="completionProgressValue">—</strong>
+        </div>
+        <p id="completionPageLoading" class="completionPageLoading" role="status">그룹과 구성원별 과제를 불러오는 중…</p>
+        <div id="completionPageIssues" class="completionPageIssues" aria-live="polite"></div>
+        <div id="completionTaskList" class="completionTaskList" aria-live="polite"></div>
+      </section>
+
+      <aside class="completionPageColumn completionPageDetail" aria-labelledby="completionDetailHeading">
+        <div class="completionPageColumnHeader">
+          <span class="eyebrow">TASK DETAIL</span>
+          <h2 id="completionDetailHeading">선택한 과제</h2>
+          <p class="hint">과제를 선택하면 제출과 판정 작업이 이곳에 표시됩니다.</p>
+        </div>
+        <div id="completionTaskDetail" class="completionPageEmpty">
+          <div><p>아직 선택한 과제가 없습니다.</p><div class="completionPlaceholderList" aria-hidden="true"><span></span><span></span><span></span></div></div>
+        </div>
+      </aside>
+    </main>
+  </section>
+  <script src="/assets/kickoff-completion.js?v=10"></script>
+  <script src="/assets/kickoff-completion-page.js?v=12"></script>
+</body>
+</html>

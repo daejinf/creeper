@@ -158,3 +158,29 @@ def test_timely_secret_scrubbed(monkeypatch):
         'text':'tgpt_s_ANOTHER_SYNTHETIC_SECRET_123456'})
     assert key not in json.dumps([result.model_dump(),sink.events,cache.values,exported],default=str)
     assert 'TIMELY_API_KEY' not in exported and 'tgpt_s_' not in exported['text']
+
+
+def test_content_parts_preserve_text_behavior_and_redact_image_trace():
+    image_url = "data:image/png;base64,PRIVATE_IMAGE_BYTES"
+    sink = MemoryTraceSink()
+    session = Session([Response()])
+    result = Runtime(TimelyClient(session), trace_sink=sink, debug=True).run(
+        "A", Shape(answer="question"), Shape, "answer", content_parts=[
+            {"type": "text", "text": "inspect this image"},
+            {"type": "image_url", "image_url": {"url": image_url}},
+        ]
+    )
+    assert result.status == "OK"
+    content = session.calls[0][1]["json"]["messages"][-1]["content"]
+    assert isinstance(content, list) and content[-1]["image_url"]["url"] == image_url
+    traced = json.dumps(sink.events, ensure_ascii=False)
+    assert "PRIVATE_IMAGE_BYTES" not in traced
+    assert "<REDACTED>" in traced
+
+
+def test_image_request_rejection_is_actionable():
+    session = Session([Response(400)])
+    messages = [{"role": "user", "content": [{"type": "image_url", "image_url": {"url": "data:image/png;base64,AA=="}}]}]
+    with pytest.raises(AIError) as error:
+        TimelyClient(session).complete_json(messages, Shape)
+    assert error.value.code == "VISION_NOT_SUPPORTED"

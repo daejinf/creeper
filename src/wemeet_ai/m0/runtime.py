@@ -22,7 +22,8 @@ class Runtime:
         self.client = client if client is not None else TimelyClient()
         self.cache, self.scope_id, self.trace_sink, self.debug = cache, scope_id, trace_sink, debug
 
-    def run(self, task, request, output_type, instructions, *, text=False, check=None, owner=None, fresh=False):
+    def run(self, task, request, output_type, instructions, *, text=False, check=None, owner=None, fresh=False,
+            content_parts=None):
         if reload_required(task):
             return code_result(task,error=Error(code='SOURCE_RELOAD_REQUIRED',message='모듈 코드가 바뀌었습니다. 서버 코드 반영이 끝난 뒤 다시 실행해주세요.',retryable=True))
         payload = sanitize(request.model_dump(mode="json"))
@@ -57,7 +58,10 @@ class Runtime:
             sink = self.trace_sink if self.debug else None
             with scope(sink, meta.run_id, meta.run_id, None, task, owner):
                 emit("input.prepared", payload)
-                messages = [{"role": "system", "content": instructions}, {"role": "user", "content": json.dumps(payload, ensure_ascii=False)}]
+                user_content = json.dumps(payload, ensure_ascii=False)
+                if content_parts is not None:
+                    user_content = [{"type": "text", "text": user_content}, *content_parts]
+                messages = [{"role": "system", "content": instructions}, {"role": "user", "content": user_content}]
                 try:
                     for attempt in range(2):
                         if text:

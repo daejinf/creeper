@@ -112,7 +112,14 @@ class TimelyClient:
                 if status == 429 or status >= 500:
                     raise AIError("RATE_LIMITED" if status == 429 else "UPSTREAM_ERROR", f"Timely returned HTTP {status}", True)
                 if status >= 400:
-                    raise AIError("INVALID_REQUEST", f"Timely returned HTTP {status}")
+                    has_image = any(
+                        isinstance(message.get("content"), list)
+                        and any(isinstance(part, dict) and part.get("type") == "image_url" for part in message["content"])
+                        for message in messages
+                        if isinstance(message, dict)
+                    )
+                    code = "VISION_NOT_SUPPORTED" if status == 400 and has_image else "INVALID_REQUEST"
+                    raise AIError(code, f"Timely returned HTTP {status}")
                 try:
                     data = response.json()
                 except ValueError:

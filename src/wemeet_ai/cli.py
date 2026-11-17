@@ -11,15 +11,19 @@ def registry():
     from .m1.d_group_plan import ConfirmedGoal, generate_group_plan
     from .m1.e_member_plan import MemberCoachRequest, MemberPlanRequest, coach_member_goal, draft_member_goal, generate_member_plan
     from .m1.f_validation import ValidationRequest, RevisionRequest, validate_plan, revise_plan
+    from .m2 import CompletionReviewRequest, review_completion
     return {"A": (CoachRequest, coach_reply), "B": (AnalysisRequest, analyze_conversation), "C": (DraftRequest, draft_goal_spec),
             "D": (ConfirmedGoal, generate_group_plan), "E.coach": (MemberCoachRequest, coach_member_goal),
             "E.draft": (MemberCoachRequest, draft_member_goal), "E.plan": (MemberPlanRequest, generate_member_plan),
-            "F": (ValidationRequest, validate_plan), "F.revise": (RevisionRequest, revise_plan)}
+            "F": (ValidationRequest, validate_plan), "F.revise": (RevisionRequest, revise_plan),
+            "M2.review": (CompletionReviewRequest, review_completion)}
 
 def execute(module, payload, *, runtime=None, fresh=False):
     request_type, function = registry()[module]
     request = request_type.model_validate(payload)
-    return function(request) if module == "F" else function(request, runtime=runtime, fresh=fresh)
+    if module == "F": return function(request)
+    if module == "M2.review": return function(request, [], runtime=runtime, fresh=fresh)
+    return function(request, runtime=runtime, fresh=fresh)
 
 def main():
     parser = argparse.ArgumentParser(description="WE·MEET 독립 모듈 JSON 실행기. 실행은 유료 LIVE일 수 있습니다.")
