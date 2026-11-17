@@ -13,3 +13,4 @@ runtime/
 *.sqlite3
 *.db
 .backup-location.txt
+wemeet_goals_backup.sql
