@@ -51,7 +51,7 @@ fixture와 mock 결과는 LIVE로 보고하지 않는다.
 | 항목 | 판정 | 근거 |
 |---|---|---|
 | 결정적 안정화 | DETERMINISTIC PASS (2026-11-18) | `tests/test_m0_provider.py` 37개 통과(LIVE 뒤 기본 주소·모델·토큰 파라미터 테스트 1개 추가). 판정 당시 전체 74개, 0B 마감 시점 전체 105개 통과, 원본 HTML 해시 9/9 일치 |
-| LIVE | LIVE PASS (2026-11-18) | 정상 text 1회(호출 5), 정상 structured output 1회(호출 6) 성공. 총 6회 사용, 잔여 6회 |
+| LIVE | LIVE PASS (2026-11-18) | 정상 text 1회(호출 5), 정상 structured output 1회(호출 6) 성공. 누적 6회 사용(D-A8 이후 고정 호출 상한 없음) |
 
 LIVE에서 발견해 고친 것(결정적 fixture 테스트로는 잡히지 않는 공급자 쪽 변경):
 
