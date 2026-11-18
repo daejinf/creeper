@@ -21,7 +21,7 @@
 | 마이그레이션 | Alembic `0001_foundation`, `0002_ai_jobs`, `0003_auth`. `upgrade → downgrade base → upgrade` 확인(테스트가 매번 실행) |
 | PostgreSQL | 16, 포트 54329, 로컬 데이터 `.local/pgdata`. 개발 DB `moim_dev`, 테스트 DB `moim_test`. 역할은 아직 `moim` 하나(superuser)다. 테스트의 `DROP SCHEMA public CASCADE`는 호스트 localhost·포트 54329·DB명 정확히 `moim_test`·`MOIM_ENV=test`를 모두 확인한 뒤에만 실행한다(`tests/dbsafety.py`) |
 | 설정 | `.env`(Git 제외)와 `.env.example`. **앱은 `.env`를 자동으로 읽지 않는다.** 환경변수로만 읽으며 `MOIM_ENV`, `MOIM_DATABASE_URL`이 없으면 `ConfigError`로 실패한다. `alembic`은 환경변수를 먼저 불러온 셸에서 실행한다. 테스트는 `tests/conftest.py`가 설정한다 |
-| 테스트 | `.\.venv\Scripts\python.exe -m pytest -q`: 247개 통과(2026-11-18 1단계 뒤. 기반·공급자 계약·작업 상태·패키징·Runtime 계약·DROP 가드 164 + 인증 83). 환경변수(`MOIM_*`)를 먼저 불러온 셸에서 실행한다 |
+| 테스트 | `.\.venv\Scripts\python.exe -m pytest -q`: 248개 통과(2026-11-18 1단계 뒤. 기반·공급자 계약·작업 상태·패키징·Runtime 계약·DROP 가드 164 + 인증 84). 환경변수(`MOIM_*`)를 먼저 불러온 셸에서 실행한다 |
 | 깨끗한 환경 검증 | 0B 보정 커밋 직전, 스테이징한 내용을 새 폴더로 내보내 새 venv에서 `pip install -e ".[test,visual]"`, import, `pytest` 164개 통과(건너뜀 0), 해시 9/9(2회), 프롬프트 검증 14개를 확인했다. 마이그레이션 up/down/up은 테스트와 개발 DB 직접 실행으로 확인 |
 | 크리퍼 재확인 | 격리 복사본·격리 DB `creeper_scratch`로 225개 실행, 223 통과·2 실패(원인과 판정 영향 없음은 `docs/ARCHITECTURE.md`의 `0B-1 재확인 결과`) |
 | 주의 | 크리퍼의 `tools/db/cutover.py`·`bootstrap.py`와 테스트 일부는 Windows 사용자 레지스트리(`HKCU\Environment`)로 실제 크리퍼 DB(55432)를 읽거나 쓴다. 원본에서 실행하지 않는다. MOIM에 이 방식을 가져오지 않는다 |
@@ -42,7 +42,7 @@
 $env:MOIM_ENV='development'; .\.venv\Scripts\python.exe tools\capture_screens.py
 ```
 
-  결과는 `artifacts\screens\<원본 파일명>\original.png`와 `impl.png`, 나란히 보는 `artifacts\screens\index.html`. 구현 화면이 아직 없어 `tools/capture_screens.py`의 `SCREENS`가 전부 `None`이고 `impl.png`는 만들지 않는다(실패가 아니라 "구현 없음"으로 기록). 구현 화면을 만드는 단계에서 라우트를 채운다. 임시 확인은 `--route moim-login.html=/login --base-url http://127.0.0.1:8000`. 현재 산출물에는 원본 이미지만 있고 구현 이미지(`impl.png`)는 없다. 원본·구현 쌍 저장 경로는 임시 스텁 서버로만 확인했고 실제 구현 화면으로는 확인하지 않았다(서버가 꺼져 있을 때 종료 코드 1은 확인). 시드 훅(`apply_dev_seed`)은 있으나 제품 테이블이 없어 하는 일이 없다.
+  결과는 `artifacts\screens\<원본 파일명>\original.png`와 `impl.png`, 나란히 보는 `artifacts\screens\index.html`. 1단계부터 landing·signup·login 경로가 `SCREENS`에 등록되어 이 3쌍은 `impl.png`까지 만든다. 나머지 6개는 아직 `None`이라 `impl.png` 없이 "구현 없음"으로 기록한다(실패 아님). 임시 확인은 `--route moim-login.html=/login --base-url http://127.0.0.1:8000`. 시드 훅(`apply_dev_seed`)은 제품 테이블이 없어 하는 일이 없다.
 - 새 의존성: `playwright`(선택 extra `visual`, `pip install -e ".[test,visual]"`). 브라우저는 이 PC에 이미 있는 것을 썼고 새로 내려받지 않았다. 새 큐·DB·프런트엔드 프레임워크는 없다.
 
 ## 0B 보정 (2026-11-18)
@@ -59,7 +59,7 @@ $env:MOIM_ENV='development'; .\.venv\Scripts\python.exe tools\capture_screens.py
 - 결과: 회원가입(가입 즉시 로그인), 아이디 중복 확인, 로그인(로그인 상태 유지 선택), 로그아웃, 서버 세션, landing·signup·login 템플릿 이식, 비밀번호 복구 비활성 안내. 값·구조는 `docs/SECURITY.md` 4-2, `docs/ARCHITECTURE.md`의 `인증 (1단계)`.
 - landing 맨 아래 CTA: 로그아웃이면 `/login`(성공 뒤 `/dashboard`), 로그인이면 `/dashboard`(D-A5). `moim-invite`로 가지 않는다.
 - 새 의존성: `argon2-cffi`(라이브러리 하나. 새 DB·큐·프런트엔드 프레임워크 없음). 새 설정 환경변수 없음.
-- 검증: `tests/test_auth.py` 83개(결정적, LIVE 없음). 브라우저(내장 브라우저, 개발 서버·개발 DB)에서 중복 확인 3상태, 클라이언트 검증, 가입 → 새로고침 → 로그아웃 → 보호 페이지 차단, 잘못된 비밀번호·없는 아이디의 같은 오류, 로그인 유지 로그인, localStorage·sessionStorage·`document.cookie` 비어 있음을 확인했다. 개발 DB에 확인용 계정 `browser01`이 남아 있다.
+- 검증: `tests/test_auth.py` 84개(결정적, LIVE 없음). 브라우저(내장 브라우저, 개발 서버·개발 DB)에서 중복 확인 3상태, 클라이언트 검증, 가입 → 새로고침 → 로그아웃 → 보호 페이지 차단, 잘못된 비밀번호·없는 아이디의 같은 오류, 로그인 유지 로그인, localStorage·sessionStorage·`document.cookie` 비어 있음을 확인했다. 개발 DB에 확인용 계정 `browser01`이 남아 있다.
 - 1440×900 캡처: `artifacts\screens\moim-signup.html\`, `moim-login.html\`는 원본과 구현이 픽셀까지 같았다(진단용 비교, 합격 기준 아님). `moim-landing.html\`은 애니메이션(흐르는 카드·떠다니는 캐릭터) 때문에 캡처마다 일부 픽셀이 달라진다(검토에서 21픽셀 차이). 사용자가 `artifacts\screens\index.html`로 눈으로 확인한다.
 - 달랐던 사실:
   - 첫 생성에서 `login.js`·`signup.js`가 문법 오류였고(자르는 위치 오류) 폼이 서버 JSON 오류 화면으로 넘어갔다. 수정했고 `test_generated_scripts_parse`가 모든 정적 스크립트를 `node --check`로 검사한다(node가 없으면 건너뜀).
