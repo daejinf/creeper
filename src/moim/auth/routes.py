@@ -1,9 +1,9 @@
-"""Auth pages and API: landing, signup, login, logout, username check, and the signed-in placeholder."""
+"""Auth pages and API: landing, signup, login, logout, username check."""
 from __future__ import annotations
 
 import logging
 import uuid
-from urllib.parse import quote, urlsplit
+from urllib.parse import urlsplit
 
 from fastapi import APIRouter, Depends, Request
 from fastapi.responses import JSONResponse, RedirectResponse, Response
@@ -142,14 +142,6 @@ def make_router(
         if current_user(request):
             return RedirectResponse(DEFAULT_NEXT, status_code=303)
         return page(request, "signup.html")
-
-    @router.get("/dashboard", include_in_schema=False)
-    def dashboard_placeholder(request: Request):
-        # Placeholder until stage 2 builds the real dashboard. It exists so login, refresh, expiry and logout are testable.
-        user = current_user(request)
-        if user is None:
-            return RedirectResponse(f"/login?next={quote(DEFAULT_NEXT, safe='')}", status_code=303)
-        return page(request, "dashboard_placeholder.html", display_name=user.display_name)
 
     # ---- API --------------------------------------------------------------------------------
 

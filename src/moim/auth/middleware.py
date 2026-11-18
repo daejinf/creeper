@@ -1,9 +1,18 @@
-"""ASGI middleware: security headers on every response and a request-body cap on the auth API."""
+"""ASGI middleware: security headers on every response and request-body caps on the JSON APIs."""
 from __future__ import annotations
 
 import json
 
 AUTH_BODY_LIMIT = 8 * 1024
+GROUP_BODY_LIMIT = 32 * 1024  # a ProjectBrief (1000-character content, types, milestones) fits with room to spare
+
+
+def body_limit(path: str) -> int | None:
+    if path.startswith("/api/auth/"):
+        return AUTH_BODY_LIMIT
+    if path.startswith("/api/groups"):
+        return GROUP_BODY_LIMIT
+    return None
 
 CSP = "; ".join(
     [
@@ -31,7 +40,8 @@ class SecurityMiddleware:
             await self.app(scope, receive, send)
             return
 
-        limited = scope["path"].startswith("/api/auth/")
+        cap = body_limit(scope["path"])
+        limited = cap is not None
         too_big = False
 
         async def guarded_receive():
@@ -39,7 +49,7 @@ class SecurityMiddleware:
             message = await receive()
             if limited and message["type"] == "http.request":
                 seen += len(message.get("body", b""))
-                if seen > AUTH_BODY_LIMIT:
+                if seen > cap:
                     too_big = True
                     return {"type": "http.request", "body": b"", "more_body": False}
             return message
@@ -47,7 +57,7 @@ class SecurityMiddleware:
         seen = 0
         if limited:
             declared = dict(scope["headers"]).get(b"content-length")
-            if declared and declared.isdigit() and int(declared) > AUTH_BODY_LIMIT:
+            if declared and declared.isdigit() and int(declared) > cap:
                 await self._reject(send)
                 return
 

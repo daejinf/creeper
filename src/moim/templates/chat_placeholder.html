@@ -146,14 +146,14 @@ input.bad{border-color:#EBA190}
 </header>
 
 <main>
-  <h1>로그인 완료</h1>
+  <h1>내 AI 대화</h1>
   <div class="card">
-    <p class="sub" style="margin:0">{{ display_name }}님, 환영해요. 대시보드는 다음 단계에서 만들어져요. 이 화면은 로그인 상태를 확인하기 위한 임시 화면이에요.</p>
-    <p class="msg" id="logout-msg" role="alert" aria-live="polite"></p>
+    <p class="sub" style="margin:0">{{ display_name }}님, 그룹이 시작됐어요. AI 인터뷰 화면은 다음 단계에서 만들어져요. 이 화면은 그룹 참여 구성원만 들어올 수 있다는 것을 확인하기 위한 임시 화면이에요.</p>
+    <a class="btn" href="/groups/{{ group_id }}" style="display:flex;align-items:center;justify-content:center">그룹으로 돌아가기</a>
   </div>
 </main>
 
 <script src="/static/auth-common.js"></script>
-<script src="/static/dashboard-placeholder.js"></script>
+<script src="/static/shell.js"></script>
 </body>
 </html>

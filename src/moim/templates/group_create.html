@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="csrf-token" content="{{ csrf_token }}">
+<title>MOIM · 새 그룹 만들기</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#1A1D29;--coral:#F26A4F;--blue:#2F54EB;--sun:#FFC53D;--mute:#555B6B;--gray:#8A90A0;--line:#ECEEF3;--field:#E1E4EC;--soft:#F6F7FA;--req:#E0573B}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:flex;flex-direction:column;background:#fff;color:var(--ink);font-family:'Noto Sans KR',system-ui,-apple-system,sans-serif;font-size:15px;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+button,input,textarea{font-family:inherit;color:inherit}
+a:focus-visible,button:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+[hidden]{display:none!important}
+
+/* ---------- header ---------- */
+.top{
+  position:sticky;top:0;z-index:20;height:68px;display:flex;align-items:center;justify-content:space-between;gap:16px;
+  padding:0 clamp(16px,3vw,32px);background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);
+}
+.logo{display:flex;align-items:center;gap:10px;font-size:22px;font-weight:800;letter-spacing:-0.02em}
+.mark{display:flex;align-items:flex-end;gap:3px}
+.mark i{display:block;width:11px;height:11px}
+.mark .c{border-radius:50%;background:var(--coral)}
+.mark .a{border-radius:6px 6px 0 0;background:var(--blue)}
+.mark .q{border-radius:3px;background:var(--sun)}
+
+/* ---------- layout ---------- */
+main{flex:1;width:100%;max-width:680px;margin:0 auto;padding:40px clamp(16px,3.5vw,40px) 80px}
+.head{margin-bottom:28px}
+.title-row{display:flex;align-items:center;gap:20px}
+.title-row h1{flex:none}
+
+/* 진행 막대: 채울수록 캐릭터가 깃발까지 걸어가요 */
+.walk{position:relative;flex:1;min-width:120px;height:30px;margin-top:2px}
+.walk .track{position:absolute;left:0;right:0;bottom:6px;height:4px;border-radius:999px;background:#F1F3F7}
+.walk .fill{position:absolute;left:0;bottom:6px;height:4px;width:calc(11px + (100% - 22px) * var(--pp, 0));border-radius:999px;background:#F9B4A6;transition:width .8s cubic-bezier(.3,.8,.3,1)}
+.walk .who{
+  position:absolute;bottom:10px;left:calc(11px + (100% - 22px) * var(--pp, 0));width:22px;height:22px;margin-left:-11px;border-radius:50%;background:var(--coral);
+  display:flex;align-items:center;justify-content:center;gap:4px;transition:left .8s cubic-bezier(.3,.8,.3,1);
+}
+.walk .who i{width:3px;height:3px;border-radius:50%;background:var(--ink)}
+.walk .who.go{animation:step .2s ease-in-out 4 alternate}
+@keyframes step{to{transform:translateY(-3px) rotate(-6deg)}}
+.crumb{display:flex;align-items:center;gap:6px;margin-bottom:10px;font-size:13px;color:var(--gray)}
+.crumb a:hover{color:var(--ink)}
+h1{margin:0;font-size:24px;font-weight:800;letter-spacing:-0.03em}
+
+/* ---------- form ---------- */
+form{display:flex;flex-direction:column;gap:28px}
+.field{position:relative;display:flex;flex-direction:column;gap:8px}
+.lab{display:flex;align-items:baseline;gap:2px;padding-left:2px;font-size:14px;font-weight:700}
+.lab .req{color:var(--req);font-weight:700}
+.lab .cnt{margin-left:auto;font-size:12px;font-weight:500;color:var(--gray);font-variant-numeric:tabular-nums}
+.help{margin:0;padding-left:2px;font-size:12px;line-height:1.6;color:var(--gray)}
+.err{margin:0;padding-left:2px;font-size:12px;font-weight:600;color:#D14B30}
+.err:empty{display:none}
+
+.inp,textarea{
+  width:100%;height:46px;padding:0 14px;border-radius:12px;border:1px solid var(--field);background:#fff;
+  font-size:15px;transition:border-color .15s,box-shadow .15s;
+}
+textarea{height:auto;min-height:132px;padding:12px 14px;line-height:1.65;resize:vertical}
+.inp:focus,textarea:focus{outline:none;border-color:#B9BECB;box-shadow:0 4px 14px rgba(26,29,41,.06)}
+.inp::placeholder,textarea::placeholder{color:#A3A9B6}
+.inp.bad{border-color:#EBA190}
+input[type=date]{cursor:pointer}
+input[type=date]::-webkit-calendar-picker-indicator{opacity:.45;cursor:pointer}
+input[type=date].empty{color:#A3A9B6}
+
+/* 기간 (date range) */
+.range{
+  display:flex;align-items:center;gap:12px;width:100%;max-width:420px;height:46px;padding:0 14px;border-radius:12px;border:1px solid var(--field);
+  background:#fff;font-size:15px;text-align:left;cursor:pointer;transition:border-color .15s,box-shadow .15s;
+}
+.range:hover{border-color:#C9CEDB}
+.range[aria-expanded="true"]{border-color:#B9BECB;box-shadow:0 4px 14px rgba(26,29,41,.06)}
+.range .v{flex:1;display:flex;align-items:center;gap:10px;font-variant-numeric:tabular-nums}
+.range .v .ph{color:#A3A9B6}
+.range .v .tilde{color:#B4BAC6}
+.range svg{flex:none;color:#A3A9B6}
+
+.cal{
+  position:absolute;top:76px;left:0;z-index:30;width:316px;padding:16px;border:1px solid var(--line);border-radius:16px;background:#fff;
+  box-shadow:0 18px 40px rgba(26,29,41,.10);animation:calIn .16s ease both;
+}
+.field.has-cal{z-index:30}
+@keyframes calIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+.cal-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.cal-h b{font-size:14px;font-weight:700}
+.cal-h button{width:30px;height:30px;display:grid;place-items:center;border:0;border-radius:8px;background:transparent;color:var(--mute);cursor:pointer}
+.cal-h button:hover:not(:disabled){background:var(--soft);color:var(--ink)}
+.cal-h button:disabled{color:#D5D9E2;cursor:default}
+.wk,.days{display:grid;grid-template-columns:repeat(7,1fr)}
+.wk span{height:28px;display:grid;place-items:center;font-size:11px;font-weight:600;color:var(--gray)}
+.wk span:first-child{color:#D9826F}
+.days button{position:relative;height:38px;padding:0;border:0;background:transparent;font-size:13px;font-weight:500;cursor:pointer;font-variant-numeric:tabular-nums}
+.days button span{position:relative;z-index:1;display:grid;place-items:center;width:34px;height:34px;margin:0 auto;border-radius:50%;transition:background .12s}
+.days button:hover:not(:disabled) span{background:var(--soft)}
+.days button:disabled{color:#CDD1DA;cursor:default}
+.days button.out{visibility:hidden}
+.days button.today span::after{content:"";position:absolute;bottom:4px;left:50%;width:3px;height:3px;margin-left:-1.5px;border-radius:50%;background:var(--gray)}
+.days button.in::before{content:"";position:absolute;inset:2px 0;background:#F0F1F5}
+.days button.s::before{content:"";position:absolute;inset:2px 0 2px 50%;background:#F0F1F5}
+.days button.e::before{content:"";position:absolute;inset:2px 50% 2px 0;background:#F0F1F5}
+.days button.s.e::before{display:none}
+.days button.s span,.days button.e span{background:var(--ink)!important;color:#fff;font-weight:700}
+.days button.s span::after,.days button.e span::after{background:#fff}
+.cal-f{display:flex;align-items:center;justify-content:space-between;margin-top:10px;padding-top:12px;border-top:1px solid var(--line);font-size:12px;color:var(--gray)}
+.cal-f button{border:0;background:none;padding:4px 2px;font-size:12px;font-weight:600;color:var(--mute);cursor:pointer}
+.cal-f button:hover{color:var(--ink)}
+
+/* 결과물 형태 */
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{
+  display:inline-flex;align-items:center;gap:6px;height:38px;padding:0 14px;border-radius:8px;border:1px solid var(--field);background:#fff;
+  font-size:14px;font-weight:600;color:var(--mute);cursor:pointer;transition:border-color .15s,background .15s,color .15s;
+}
+.chip:hover{border-color:#C9CEDB;color:var(--ink)}
+.chip svg{display:none}
+.chip[aria-pressed="true"] svg{display:block}
+#etcChip[aria-pressed="true"] svg{display:none}
+.chip[aria-pressed="true"]{border-color:#4A5063;background:var(--soft);color:var(--ink)}
+
+.chip.custom[aria-pressed="true"] .x{display:block;margin-right:-4px;color:var(--gray)}
+.etc{display:flex;gap:8px;max-width:360px}
+.etc .inp{flex:1;min-width:0;height:40px}
+.sbtn{flex:none;height:40px;padding:0 14px;border:1px solid var(--field);border-radius:8px;background:#fff;font-size:13px;font-weight:700;cursor:pointer;transition:border-color .15s}
+.sbtn:hover:not(:disabled){border-color:#B9BECB}
+.sbtn:disabled{color:#B4BAC6;cursor:default}
+
+/* 중간 일정 */
+.ms{display:flex;flex-direction:column;gap:8px;margin:0;padding:0;list-style:none}
+.ms:empty{display:none}
+.ms li{display:flex;align-items:center;gap:8px;animation:in .25s ease both}
+@keyframes in{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+.ms .name{flex:1;min-width:0}
+.ms input[type=date]{flex:0 0 170px}
+.ms .rm{flex:none;width:32px;height:32px;display:grid;place-items:center;border:0;border-radius:8px;background:transparent;color:#A3A9B6;cursor:pointer;transition:color .15s}
+.ms .rm:hover{color:var(--ink)}
+.add{
+  align-self:flex-start;display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 4px;border:0;background:none;
+  font-size:13px;font-weight:700;color:var(--mute);cursor:pointer;
+}
+.add svg{transition:transform .2s}
+.add:hover{color:var(--ink)}
+.add:hover svg{transform:rotate(90deg)}
+
+/* 다음 버튼 */
+.next-wrap{display:flex;justify-content:flex-end;padding-top:12px}
+.next{
+  width:44px;height:44px;display:grid;place-items:center;margin-right:-13px;padding:0;border:0;border-radius:8px;background:none;color:var(--ink);cursor:pointer;
+}
+.next svg{transition:transform .25s cubic-bezier(.3,1.4,.5,1)}
+.next:hover:not(:disabled) svg{transform:translateX(3px)}
+.next:disabled{color:#C9CEDB;cursor:default}
+
+@media (max-width:520px){
+  .ms li{flex-wrap:wrap}
+  .ms .name{flex:1 1 100%}
+  .ms input[type=date]{flex:1 1 0;min-width:0}
+  .cal{width:100%}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+/* 서버 구현: 저장 오류 문구 */
+.err.form{margin:0;text-align:right}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <a class="logo" href="/dashboard">
+    <span class="mark" aria-hidden="true"><i class="c"></i><i class="a"></i><i class="q"></i></span>
+        MOIM
+  </a>
+</header>
+
+<main>
+  <div class="head">
+    <div class="crumb"><a href="{{ '/groups/' ~ group_id if mode == 'edit' else '/invite' }}">{{ '그룹' if mode == 'edit' else '초대방' }}</a><span aria-hidden="true">/</span><span>{{ '프로젝트 정보 수정' if mode == 'edit' else '새 그룹' }}</span></div>
+    <div class="title-row">
+    <h1>{{ '프로젝트 정보 수정' if mode == 'edit' else '새 그룹 만들기' }}</h1>
+    <div class="walk" id="walk" aria-hidden="true">
+      <span class="track"></span><span class="fill"></span>
+      <span class="who" id="who"><i></i><i></i></span>
+    </div>
+    </div>
+  </div>
+
+  <form id="f" novalidate data-mode="{{ mode }}" data-group="{{ group_id }}" data-today="{{ today }}"{% if base_revision %} data-revision="{{ base_revision }}"{% endif %}>
+    <div class="field">
+      <label class="lab" for="name">프로젝트 명<span class="req" aria-hidden="true">*</span><span class="cnt" id="nameCnt">0/30</span></label>
+      <input class="inp" id="name" type="text" maxlength="30" autocomplete="off" required>
+    </div>
+
+    <div class="field">
+      <label class="lab" for="desc">프로젝트 내용<span class="cnt" id="descCnt">0/1000</span></label>
+      <textarea id="desc" maxlength="1000" placeholder="과제 공지나 주제, 평가 기준 등을 적어주세요.&#10;이 내용을 바탕으로 팀 목표와 할 일을 정해요."></textarea>
+    </div>
+
+    <div class="field" id="rangeField">
+      <span class="lab" id="rangeLab">프로젝트 기간<span class="req" aria-hidden="true">*</span></span>
+      <button type="button" class="range" id="range" aria-haspopup="dialog" aria-expanded="false" aria-labelledby="rangeLab rangeVal">
+        <span class="v" id="rangeVal"></span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>
+      </button>
+      <div class="cal" id="cal" role="dialog" aria-label="프로젝트 기간 선택" hidden>
+        <div class="cal-h">
+          <button type="button" id="prev" aria-label="이전 달"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button>
+          <b id="calTitle" aria-live="polite"></b>
+          <button type="button" id="nextM" aria-label="다음 달"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
+        </div>
+        <div class="wk" aria-hidden="true"><span>일</span><span>월</span><span>화</span><span>수</span><span>목</span><span>금</span><span>토</span></div>
+        <div class="days" id="days"></div>
+        <div class="cal-f"><span id="calHint">시작일을 골라주세요</span><button type="button" id="calReset">초기화</button></div>
+      </div>
+    </div>
+
+    <div class="field" role="group" aria-labelledby="typeLab">
+      <span class="lab" id="typeLab">결과물 형태<span class="req" aria-hidden="true">*</span></span>
+      <div class="chips" id="chips">
+        <button type="button" class="chip" aria-pressed="false"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>보고서</button>
+        <button type="button" class="chip" aria-pressed="false"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>PPT</button>
+        <button type="button" class="chip" aria-pressed="false"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>발표</button>
+        <button type="button" class="chip" aria-pressed="false"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>개발</button>
+        <button type="button" class="chip" aria-pressed="false"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>디자인</button>
+        <button type="button" class="chip" aria-pressed="false"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>영상</button>
+        <button type="button" class="chip" id="etcChip" aria-pressed="false" aria-expanded="false" aria-controls="etcBox"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>기타</button>
+      </div>
+      <div class="etc" id="etcBox" hidden>
+        <input class="inp" id="etcIn" type="text" maxlength="12" autocomplete="off" placeholder="직접 입력" aria-label="결과물 형태 직접 입력">
+        <button type="button" class="sbtn" id="etcAdd" disabled>추가</button>
+      </div>
+    </div>
+
+    <div class="field">
+      <span class="lab" id="msLab">중간 일정</span>
+      <ul class="ms" id="ms" aria-labelledby="msLab"></ul>
+      <p class="err" id="msErr" aria-live="polite"></p>
+      <button type="button" class="add" id="msAdd">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>일정 추가
+      </button>
+    </div>
+
+    <p class="err form" id="formErr" role="alert" aria-live="polite"></p>
+
+    <div class="next-wrap">
+      <button type="submit" class="next" id="next" aria-label="{{ '저장' if mode == 'edit' else '다음 단계' }}" title="{{ '저장' if mode == 'edit' else '다음 단계' }}" disabled><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
+    </div>
+  </form>
+</main>
+
+{% if brief %}<script type="application/json" id="briefData">{{ brief|tojson }}</script>{% endif %}
+<script src="/static/auth-common.js"></script>
+<script src="/static/group-create.js"></script>
+</body>
+</html>

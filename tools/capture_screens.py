@@ -20,24 +20,103 @@ ROOT = Path(__file__).resolve().parents[1]
 VIEWPORT = {"width": 1440, "height": 900}
 
 # original file -> implemented route. None = not built yet (later stages fill these in).
+# Placeholders ({room_id}, {active_id}) are filled from the development seed. AUTH names the seeded user whose session
+# the browser carries for that screen; screens not listed there are captured signed out.
 SCREENS: dict[str, str | None] = {
     "moim-landing.html": "/",
     "moim-signup.html": "/signup",
     "moim-login.html": "/login",
-    "moim-dashboard.html": None,
-    "moim-invite.html": None,
-    "moim-group-create.html": None,
+    "moim-dashboard.html": "/dashboard",
+    "moim-invite.html": "/invite",
+    "moim-group-create.html": "/groups/{room_id}/create",
     "moim-chat.html": None,
-    "moim-group.html": None,
+    "moim-group.html": "/groups/{active_id}",
     "moim-mypage.html": None,
 }
+AUTH = {
+    "moim-dashboard.html": "lead",
+    "moim-invite.html": "roomlead",
+    "moim-group-create.html": "roomlead",
+    "moim-group.html": "lead",
+}
+# The original invite page shows its signed-in header only through its own demo switch.
+ORIGINAL_QUERY = {"moim-invite.html": "?login=1"}
 
 
-def apply_dev_seed() -> str:
-    """Development seed hook. There are no product tables yet, so there is nothing to seed."""
+def apply_dev_seed() -> dict:
+    """Development seed: fixed users (username prefix `shot`) with an active group, the leader's own empty invite room
+    and a second invite room with three people. Re-running replaces only those rows.
+
+    The active group's team-goal sentence is a hand-written VISUAL FIXTURE so the header has something to show.
+    It is not a Timely result and is never reported as LIVE.
+    """
     if os.environ.get("MOIM_ENV", "development") not in ("development", "test"):
         raise SystemExit("refusing to seed outside a development/test environment")
-    return "nothing to seed yet (no product tables)"
+    sys.path.insert(0, str(ROOT / "src"))
+    try:
+        import uuid
+        from datetime import timedelta
+
+        from sqlalchemy import text
+
+        from moim.auth.sessions import SessionStore
+        from moim.config import load_settings
+        from moim.db import make_engine, make_session_factory
+        from moim.groups.service import GroupService, today_kst
+        from moim.groups.validation import BriefData, Milestone
+        from moim.timeutil import utcnow
+
+        settings = load_settings()
+    except Exception as exc:  # noqa: BLE001
+        return {"note": f"seed unavailable: {type(exc).__name__}"}
+    engine = make_engine(settings)
+    sf = make_session_factory(engine)
+    sessions, groups = SessionStore(sf), GroupService(sf)
+    shot = "(select id from users where username like 'shot%')"
+    owned = f"(select id from groups where owner_id in {shot})"
+    with sf.begin() as s:
+        for sql in (
+            f"delete from goal_displays where group_id in {owned}",
+            f"delete from cohort_members where group_id in {owned}",
+            f"delete from activation_cohorts where group_id in {owned}",
+            f"delete from project_briefs where group_id in {owned}",
+            f"delete from invite_codes where group_id in {owned}",
+            f"delete from group_members where group_id in {owned}",
+            f"delete from groups where owner_id in {shot}",
+            f"delete from auth_sessions where user_id in {shot}",
+            "delete from users where username like 'shot%'",
+        ):
+            s.execute(text(sql))
+    names = {"lead": ("shotlead", "PARK"), "kim": ("shotkim", "KIM"), "lee": ("shotlee", "LEE"), "choi": ("shotchoi", "CHOI"),
+             "roomlead": ("shotroom", "JIN"), "seo": ("shotseo", "SEO"), "min": ("shotmin", "MIN")}
+    ids = {}
+    with sf.begin() as s:
+        for key, (username, display) in names.items():
+            ids[key] = str(uuid.uuid4())
+            s.execute(text("insert into users (id, username, display_name, password_hash, terms_accepted_at) "
+                           "values (:i, :u, :d, 'seed-not-loginable', now())"), {"i": ids[key], "u": username, "d": display})
+    today = today_kst(utcnow())
+
+    def room(leader, members):
+        gid, _ = groups.create_or_reuse_room(ids[leader])
+        code = groups.room(ids[leader], gid).code
+        for m in members:
+            groups.join_by_code(ids[m], code)
+        return gid
+
+    active = room("lead", ["kim", "lee", "choi"])
+    groups.activate(ids["lead"], active, BriefData(
+        "캡스톤 디자인", "팀플 협업 서비스의 MVP를 만들고 최종 발표까지 마친다.", today, today + timedelta(days=12),
+        ("보고서", "PPT"), (Milestone("중간 발표", today + timedelta(days=6)),)))
+    own_room = room("lead", [])  # the leader's own empty invite room, shown as an "초대 대기" card
+    invite = room("roomlead", ["seo", "min"])
+    with sf.begin() as s:
+        s.execute(text("update goal_displays set state='SUCCEEDED', text=:t, model='visual-fixture' where group_id=:g"),
+                  {"t": "팀플 협업 서비스 MVP를 완성하고 최종 발표하기", "g": active})
+    tokens = {key: sessions.create(ids[key], False)[0] for key in ("lead", "roomlead")}
+    engine.dispose()
+    return {"note": "seeded 7 users, 1 active group, 2 invite rooms (goal sentence is a visual fixture)",
+            "tokens": tokens, "vars": {"active_id": active, "room_id": invite, "own_room_id": own_room}}
 
 
 def launch(playwright, browser_name: str):
@@ -54,9 +133,12 @@ def launch(playwright, browser_name: str):
     raise SystemExit("no browser could be started:\n  " + "\n  ".join(errors))
 
 
-def shot(browser, url: str, path: Path, full_page: bool = False) -> None:
+def shot(browser, url: str, path: Path, full_page: bool = False, session: str | None = None) -> None:
     context = browser.new_context(viewport=VIEWPORT, device_scale_factor=1)
     try:
+        if session:
+            host = url.split("//", 1)[1].split("/", 1)[0].split(":")[0]
+            context.add_cookies([{"name": "moim_session", "value": session, "domain": host, "path": "/"}])
         page = context.new_page()
         page.goto(url, wait_until="load", timeout=30000)
         page.wait_for_timeout(500)
@@ -106,7 +188,10 @@ def main(argv: list[str] | None = None) -> int:
     if unknown:
         raise SystemExit(f"unknown screen(s): {', '.join(unknown)}")
 
-    print("seed:", apply_dev_seed())
+    seed = apply_dev_seed()
+    print("seed:", seed["note"])
+    fill = seed.get("vars", {})
+    tokens = seed.get("tokens", {})
     out = Path(args.out)
     out.mkdir(parents=True, exist_ok=True)
     from playwright.sync_api import sync_playwright
@@ -124,15 +209,19 @@ def main(argv: list[str] | None = None) -> int:
             folder = out / name
             folder.mkdir(parents=True, exist_ok=True)
             row = {"name": name, "impl": "missing", "note": ""}
-            shot(browser, source.as_uri(), folder / "original.png", args.full_page)
+            shot(browser, source.as_uri() + ORIGINAL_QUERY.get(name, ""), folder / "original.png", args.full_page)
             route = routes[name]
             if route is None:
                 row["note"] = "implementation not built yet"
             else:
                 try:
-                    shot(browser, args.base_url.rstrip("/") + route, folder / "impl.png", args.full_page)
+                    route = route.format(**fill) if "{" in route else route
+                    who = AUTH.get(name)
+                    if who and who not in tokens:
+                        raise RuntimeError("needs the development seed (" + seed["note"] + ")")
+                    shot(browser, args.base_url.rstrip("/") + route, folder / "impl.png", args.full_page, tokens.get(who))
                     row["impl"] = "captured"
-                except Exception as exc:  # noqa: BLE001
+                except (Exception, KeyError) as exc:  # noqa: BLE001
                     row["note"] = "implementation capture failed: " + str(exc).splitlines()[0]
                     failed = True
             print(f"{'OK  ' if row['impl'] == 'captured' else 'PART'} {name}: {row['note'] or 'pair saved'}")

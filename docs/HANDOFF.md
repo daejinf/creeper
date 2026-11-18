@@ -9,7 +9,8 @@
 - 원본 HTML 9개는 변경하지 않았고 해시 9/9가 `docs/PRODUCT.md` 기준과 같다(`tools/check_design_hashes.py`).
 - 0B-2 완료(DETERMINISTIC PASS·LIVE PASS), 0B-3 구현·검증 완료(작업 상태 저장, 화면 캡처 스크립트).
 - 0B 보정(2026-11-18): D-A8 기록, Git baseline, DROP 모듈·옛 CLI·오래된 egg-info 제거, 테스트의 `DROP SCHEMA` 가드. 아래 `0B 보정` 절.
-- 1단계 인증 구현·검증 완료(2026-11-18, 아래 `1단계 인증` 절). 그룹·ProjectBrief·dashboard 실제 화면은 아직 없다(2단계). `/dashboard`는 로그인 확인용 임시 화면이다.
+- 1단계 인증 구현·검증 완료(2026-11-18, 아래 `1단계 인증` 절).
+- 2단계 대시보드·그룹·ProjectBrief 구현·검증 완료(2026-11-18, 아래 `2단계 그룹·ProjectBrief` 절). 팀 목표 표시문 LIVE 2회 성공(누적 LIVE 8회). `/dashboard`는 이제 실제 화면이고 로그인 확인용 임시 화면은 지웠다. `/groups/{id}/chat`은 3단계 전까지 임시 화면이다.
 
 ## 환경 스냅샷 (2026-11-18, 확인한 사실만)
 
@@ -17,11 +18,11 @@
 |---|---|
 | 작업 폴더 | `C:\Users\user\Desktop\moim-design`. Git 저장소(`main`). 첫 baseline 커밋 `a9a9721`(승인 문서, 원본 HTML 9개, 0A/0B 기반). 원격 저장소 없음, push 안 함. 그 뒤 0B root hardening 커밋은 아래 `0B 보정` 절에 기록 |
 | Python | 3.12.8, 가상환경 `.venv` |
-| 앱 | `src/moim/`(`config.py`, `db.py`, `logging_utils.py`, `main.py`, `models.py`, `timeutil.py`, `jobs.py`, `job_routes.py`, `auth/`, `templates/`, `static/`). FastAPI 앱, `/healthz`와 `/api/jobs`(핸들러 없음). AI 코드는 `src/wemeet_ai`의 KEEP/ADAPT 모듈만 남았다: `m0`(client·runtime·tracing·records), `m1`(e_member_plan·f_validation), `m2`, `shared` |
-| 마이그레이션 | Alembic `0001_foundation`, `0002_ai_jobs`, `0003_auth`. `upgrade → downgrade base → upgrade` 확인(테스트가 매번 실행) |
+| 앱 | `src/moim/`(`config.py`, `db.py`, `logging_utils.py`, `main.py`, `models.py`, `timeutil.py`, `jobs.py`, `job_routes.py`, `auth/`, `groups/`, `templates/`, `static/`). FastAPI 앱, `/healthz`, `/api/jobs`(핸들러 없음), 인증, 그룹·초대방·ProjectBrief. AI 코드는 `src/wemeet_ai`의 KEEP/ADAPT 모듈만 남았다: `m0`(client·runtime·tracing·records), `m1`(e_member_plan·f_validation), `m2`, `shared` |
+| 마이그레이션 | Alembic `0001_foundation`, `0002_ai_jobs`, `0003_auth`, `0004_groups`. `upgrade → downgrade base → upgrade` 확인(테스트가 매번 실행) |
 | PostgreSQL | 16, 포트 54329, 로컬 데이터 `.local/pgdata`. 개발 DB `moim_dev`, 테스트 DB `moim_test`. 역할은 아직 `moim` 하나(superuser)다. 테스트의 `DROP SCHEMA public CASCADE`는 호스트 localhost·포트 54329·DB명 정확히 `moim_test`·`MOIM_ENV=test`를 모두 확인한 뒤에만 실행한다(`tests/dbsafety.py`) |
 | 설정 | `.env`(Git 제외)와 `.env.example`. **앱은 `.env`를 자동으로 읽지 않는다.** 환경변수로만 읽으며 `MOIM_ENV`, `MOIM_DATABASE_URL`이 없으면 `ConfigError`로 실패한다. `alembic`은 환경변수를 먼저 불러온 셸에서 실행한다. 테스트는 `tests/conftest.py`가 설정한다 |
-| 테스트 | `.\.venv\Scripts\python.exe -m pytest -q`: 248개 통과(2026-11-18 1단계 뒤. 기반·공급자 계약·작업 상태·패키징·Runtime 계약·DROP 가드 164 + 인증 84). 환경변수(`MOIM_*`)를 먼저 불러온 셸에서 실행한다 |
+| 테스트 | `.\.venv\Scripts\python.exe -m pytest -q`: 322개 통과(2026-11-18 2단계 뒤. 기반·공급자 계약·작업 상태·패키징·Runtime 계약·DROP 가드 164 + 인증 84 + 그룹 74). 환경변수(`MOIM_*`)를 먼저 불러온 셸에서 실행한다 |
 | 깨끗한 환경 검증 | 0B 보정 커밋 직전, 스테이징한 내용을 새 폴더로 내보내 새 venv에서 `pip install -e ".[test,visual]"`, import, `pytest` 164개 통과(건너뜀 0), 해시 9/9(2회), 프롬프트 검증 14개를 확인했다. 마이그레이션 up/down/up은 테스트와 개발 DB 직접 실행으로 확인 |
 | 크리퍼 재확인 | 격리 복사본·격리 DB `creeper_scratch`로 225개 실행, 223 통과·2 실패(원인과 판정 영향 없음은 `docs/ARCHITECTURE.md`의 `0B-1 재확인 결과`) |
 | 주의 | 크리퍼의 `tools/db/cutover.py`·`bootstrap.py`와 테스트 일부는 Windows 사용자 레지스트리(`HKCU\Environment`)로 실제 크리퍼 DB(55432)를 읽거나 쓴다. 원본에서 실행하지 않는다. MOIM에 이 방식을 가져오지 않는다 |
@@ -42,7 +43,7 @@
 $env:MOIM_ENV='development'; .\.venv\Scripts\python.exe tools\capture_screens.py
 ```
 
-  결과는 `artifacts\screens\<원본 파일명>\original.png`와 `impl.png`, 나란히 보는 `artifacts\screens\index.html`. 1단계부터 landing·signup·login 경로가 `SCREENS`에 등록되어 이 3쌍은 `impl.png`까지 만든다. 나머지 6개는 아직 `None`이라 `impl.png` 없이 "구현 없음"으로 기록한다(실패 아님). 임시 확인은 `--route moim-login.html=/login --base-url http://127.0.0.1:8000`. 시드 훅(`apply_dev_seed`)은 제품 테이블이 없어 하는 일이 없다.
+  결과는 `artifacts\screens\<원본 파일명>\original.png`와 `impl.png`, 나란히 보는 `artifacts\screens\index.html`. landing·signup·login·dashboard·invite·group-create·group 7쌍은 `impl.png`까지 만든다(chat·mypage는 아직 `None`이라 "구현 없음"으로 기록, 실패 아님). 로그인이 필요한 4쌍은 개발 시드(`apply_dev_seed`)가 만든 사용자의 세션 쿠키로 캡처한다. 시드는 `shot`으로 시작하는 사용자와 그 그룹만 지우고 다시 만들며(개발·테스트 환경만), 데이터베이스 환경변수(`MOIM_DATABASE_URL`)가 있어야 한다. 시드의 팀 목표 문장은 화면 확인용 손으로 쓴 FIXTURE이며 LIVE가 아니다. 캡처는 개발 서버(`uvicorn --factory moim.main:app_factory`)가 떠 있어야 한다.
 - 새 의존성: `playwright`(선택 extra `visual`, `pip install -e ".[test,visual]"`). 브라우저는 이 PC에 이미 있는 것을 썼고 새로 내려받지 않았다. 새 큐·DB·프런트엔드 프레임워크는 없다.
 
 ## 0B 보정 (2026-11-18)
@@ -67,9 +68,24 @@ $env:MOIM_ENV='development'; .\.venv\Scripts\python.exe tools\capture_screens.py
 - 남은 제한: `docs/SECURITY.md` 4-2의 `남은 제한`(프록시 뒤 주소, 아이디 단위 잠금의 계정 잠금 공격, 복구 없음, 탈퇴·비밀번호 변경은 6단계, `/api/jobs` 미인증).
 - 실행: 앱은 `.env`를 읽지 않는다. 개발 서버는 환경변수를 불러온 셸에서 `python -m uvicorn --factory moim.main:app_factory`로 띄운다.
 
+## 2단계 그룹·ProjectBrief (2026-11-18)
+
+- 결과: `FORMING` 초대방 → ProjectBrief → `ACTIVE` 흐름 전체. 값·구조는 `docs/ARCHITECTURE.md`의 `그룹·초대방·ProjectBrief (2단계)`, 보안 값은 `docs/SECURITY.md` 4-3, 초대방 정원·만료·정리 정책(PROPOSED)은 `docs/ROADMAP.md` 표.
+- 판정: 결정적 PASS(`tests/test_groups.py` 74개, 전체 322개). 팀 목표 표시문 LIVE PASS(2회, `docs/LIVE_TESTING.md` 6절). 원본 HTML 해시 9/9 동일(`tools/check_design_hashes.py`).
+- 화면 검증: 내장 브라우저가 아니라 Playwright(실제 Chromium) 두 계정으로 dashboard `새 그룹 만들기` → 초대방 → 다른 계정의 코드 입력 참여 → 대기 화면 → 최소 2명에서 `그룹 생성하기` → ProjectBrief 입력(달력·결과물 칩·중간 일정) → 다음 버튼 → 두 계정이 각자 chat으로 이동 → 팀 목표 표시 → 지각 참여 거부 → ProjectBrief 수정(revision 2) → 새 표시문을 확인했다. 스크립트는 일회용이라 저장소에 넣지 않았다. 확인용 계정(`shote…a`, `shote…b`)과 그룹은 개발 DB에 남아 있고 캡처 시드를 다시 돌리면 정리된다.
+- 1440×900 캡처: `artifacts\screens\` 아래 dashboard·invite·group-create·group 4쌍을 새로 만들었다. 원본과의 눈 확인은 `artifacts\screens\index.html`에서 사용자가 한다.
+- 달랐던 사실:
+  - 원본 dashboard·group에는 `새 그룹 만들기`가 `<a>`였다. 구현은 `<button>`(클릭 시 `POST /api/groups`)이며 스타일을 그대로 쓴다.
+  - 원본 dashboard에 없던 `초대코드로 참여` 링크(상단)와 `로그아웃` 버튼을 상단 우측에 넣었다. 원본 landing → invite 경로가 D-A5로 바뀌어 초대받은 사람이 코드 참여 화면에 들어갈 길이 필요했고, 로그아웃은 1단계 임시 화면이 하던 일을 옮긴 것이다. 기존 `.login` 링크 스타일을 재사용했다. 사용자가 원본 디자인 차이로 보면 알려 달라.
+  - 원본 사이드바의 프로필 `마이페이지` 링크는 마이페이지가 6단계라 링크 없는 표시(이름만)로 바꿨다.
+  - 원본 invite는 참여 칸과 코드 박스가 한 화면에 함께 있다. 초대방이 없는 사용자는 코드 박스 대신 `새 그룹 만들기` 버튼을, 참여 대기자는 입력칸과 코드 박스 없이 대기 문구를 본다(초대방 활성화 대기 상태, 기존 문구·칩 스타일 재사용).
+  - 원본 group-create의 `moim-group-create-position.html` 이동과 invite의 `그룹 생성 완료` 팝업은 이식하지 않았고, 원본 CSS의 쓰이지 않는 규칙(투두·패널 등)은 그대로 둔 채 구현에 필요한 최소 CSS만 덧붙였다(비활성 버튼, 안내 패널, 팀 목표 다시 시도 버튼).
+  - 첫 e2e 실행에서 Playwright의 `wait_for_function`이 CSP(`unsafe-eval` 금지)에 막혔다. 제품 쪽 문제가 아니라 확인 방법이었고 셀렉터 대기로 바꿨다.
+- 남은 제한: `docs/SECURITY.md` 4-3의 `남은 제한`(코드 공간 100만 개, 대기자 스스로 나가기 없음, 폴링 4초, 표시문 근거는 사람 판정).
+
 ## 다음 한 단계
 
-2단계 대시보드·그룹·ProjectBrief(`prompts/02-groups-brief.md`). 이전에 `/api/jobs`에 첫 핸들러를 붙일 때 `auth/deps.py`의 `require_user`·`verify_csrf`와 소유자 검사를 같이 넣는다.
+`prompts/GATE-B.md`의 추천안 작성(읽기 전용, 2단계 완료가 진입 조건). `/api/jobs`는 여전히 인증이 없고 핸들러도 없다. 첫 핸들러를 붙이는 단계(3단계)에서 `auth/deps.py`의 `require_user`·`verify_csrf`와 소유자 검사를 함께 넣는다.
 
 ## OPEN
 

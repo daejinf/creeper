@@ -1,10 +1,10 @@
-"""FastAPI entrypoint: health check, the AI job API and auth (landing, signup, login). Other product screens come later."""
+"""FastAPI entrypoint: health check, the AI job API, auth, and the stage 2 group screens. Later stages add their own."""
 from __future__ import annotations
 
 import logging
 from contextlib import asynccontextmanager
 from pathlib import Path
-from typing import Mapping
+from typing import Callable, Mapping
 
 from fastapi import FastAPI, Request
 from fastapi.exception_handlers import request_validation_exception_handler
@@ -20,6 +20,9 @@ from .auth.sessions import SessionStore
 from .auth.throttle import Throttle
 from .config import Settings, load_settings
 from .db import make_engine, make_session_factory
+from .groups.goals import GoalService
+from .groups.routes import make_router as make_group_router
+from .groups.service import GroupService
 from .job_routes import make_router
 from .jobs import Handler, JobStore
 from .logging_utils import install_redaction
@@ -37,11 +40,24 @@ class RevalidatedStaticFiles(StaticFiles):
         return response
 
 
-def create_app(settings: Settings | None = None, job_handlers: Mapping[str, Handler] | None = None) -> FastAPI:
+def _timely_client():
+    from wemeet_ai.m0.client import TimelyClient
+
+    return TimelyClient()
+
+
+def create_app(
+    settings: Settings | None = None,
+    job_handlers: Mapping[str, Handler] | None = None,
+    goal_client_factory: Callable[[], object] | None = None,
+) -> FastAPI:
+    """`goal_client_factory` exists for deterministic tests only; the product always uses the Timely client."""
     settings = settings or load_settings()
     engine = make_engine(settings)
     handlers = dict(job_handlers or {})
     store = JobStore(make_session_factory(engine))
+    group_service = GroupService(make_session_factory(engine))
+    goal_service = GoalService(make_session_factory(engine), goal_client_factory or _timely_client)
 
     @asynccontextmanager
     async def lifespan(app: FastAPI):
@@ -51,6 +67,9 @@ def create_app(settings: Settings | None = None, job_handlers: Mapping[str, Hand
         interrupted = store.fail_interrupted()  # work lost with the previous process becomes a retryable failure
         if interrupted:
             log.warning("marked %d interrupted job(s) as FAILED (SERVER_RESTARTED)", interrupted)
+        lost_goals = goal_service.fail_interrupted()
+        if lost_goals:
+            log.warning("marked %d interrupted team goal(s) as FAILED (SERVER_RESTARTED)", lost_goals)
         yield
         engine.dispose()
 
@@ -64,17 +83,20 @@ def create_app(settings: Settings | None = None, job_handlers: Mapping[str, Hand
     app.state.jobs = store
     app.state.sessions = sessions
     app.state.throttle = throttle
+    app.state.groups = group_service
+    app.state.goals = goal_service
     app.add_middleware(SecurityMiddleware, hsts=settings.secure_cookies)
     app.add_exception_handler(AuthError, auth_error_handler)
 
     @app.exception_handler(RequestValidationError)
     async def validation_error(request: Request, exc: RequestValidationError):
-        if request.url.path.startswith("/api/auth/"):  # malformed auth bodies get the auth error shape; no echo of input
+        if request.url.path.startswith(("/api/auth/", "/api/groups")):  # malformed auth bodies get the auth error shape; no echo of input
             return auth_error_handler(request, AuthError(400, "BAD_REQUEST", "요청 형식이 올바르지 않아요."))
         return await request_validation_exception_handler(request, exc)
 
     app.include_router(make_router(store, handlers))
     app.include_router(make_auth_router(settings, session_factory, sessions, throttle, templates))
+    app.include_router(make_group_router(settings, group_service, goal_service, throttle, templates))
     app.mount("/static", RevalidatedStaticFiles(directory=STATIC_DIR), name="static")
 
     @app.get("/healthz")

@@ -29,6 +29,9 @@ LOGIN_IP = Rule("login-ip", 20, 15 * 60, 15 * 60)
 LOGIN_USER = Rule("login-user", 15, 15 * 60, 15 * 60)
 CHECK_IP = Rule("check-ip", 30, 10 * 60, 10 * 60)
 SIGNUP_IP = Rule("signup-ip", 10, 60 * 60, 60 * 60)
+# Invite codes are six digits: wrong guesses (not known-but-closed codes) are counted per user and per address.
+JOIN_USER = Rule("join-user", 10, 15 * 60, 15 * 60)
+JOIN_IP = Rule("join-ip", 30, 15 * 60, 15 * 60)
 
 _HIT = text(
     """

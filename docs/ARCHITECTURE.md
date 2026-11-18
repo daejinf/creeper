@@ -65,6 +65,16 @@ AI가 DB를 직접 임의 수정하지 않는다. 구조화된 변경안, 권한
 - 전체 대화를 매번 보내지 않고 구조화된 MemberState, 이전 요약과 필요한 최근 메시지만 보낸다.
 - 0B 측정 전에는 현재 기본 max_tokens 1500을 유지하고, 모듈별 상한은 출력 완전성과 안정성을 먼저 충족한 뒤 지연·비용 측정으로 확정한다. 토큰 절약 때문에 정상 출력을 잘라서는 안 된다.
 
+### 그룹·초대방·ProjectBrief (2단계)
+
+- 모듈: `src/moim/groups/`의 `service`(상태 전환과 인가, 모두 한 트랜잭션), `validation`(ProjectBrief 입력), `goals`(팀 목표 표시문), `routes`(화면·API).
+- 테이블(마이그레이션 `0004_groups`): `groups`(`FORMING`·`ACTIVE`·`CANCELLED`, 현재 `brief_revision`·`cohort_revision`), `group_members`(`LEADER`·`MEMBER`), `invite_codes`(전역 유일, 폐기 사유 `REISSUED`·`ACTIVATED`·`CANCELLED`), `project_briefs`(revision별 행, 덮어쓰지 않음), `activation_cohorts`·`cohort_members`(활성화 시점 구성원 고정), `goal_displays`(revision별 표시문 상태). DB 제약이 규칙을 직접 막는다: 생성자당 `FORMING` 하나(부분 유니크), 그룹당 살아 있는 코드 하나(부분 유니크), `ACTIVE`는 brief·cohort revision이 1 이상일 때만.
+- 흐름: dashboard/group의 `새 그룹 만들기`(버튼, 클릭 시 `POST /api/groups`) → 본인 `FORMING` 초대방 생성 또는 재사용 → `/invite`(그룹장: 코드·복사·새로 만들기·초대방 닫기·구성원·`그룹 생성하기`, 참여 대기자: 대기 안내) → `그룹 생성하기`는 `/groups/{id}/create`로 이동만 하며 상태를 바꾸지 않음(최소 2명, 그룹장만) → ProjectBrief 다음 버튼 `POST /api/groups/{id}/activate`가 revision 1 저장·cohort 고정·`ACTIVE`·코드 폐기·`goal_displays` 행 생성을 한 트랜잭션으로 처리 → 그룹장은 응답의 `redirect`로, 대기 중인 구성원은 4초 폴링으로 `/groups/{id}/chat`로 이동. 상태 확인과 폴링은 GET이며 상태를 바꾸지 않는다.
+- 동시성: 상태를 바꾸는 요청은 그룹 행 `FOR UPDATE`(그룹이 둘이면 id 순서)와 사용자별 advisory lock을 쓴다. 두 번째 활성화는 `ALREADY_ACTIVE`, 마지막 자리 경쟁은 `ROOM_FULL`, 오래된 revision 저장은 `REVISION_CONFLICT`.
+- 인가: 모든 객체 조회·변경은 `service`에서 멤버십을 확인하고, 비회원·다른 그룹 사용자는 없는 그룹과 같은 404를 받는다. 그룹장 전용(코드 재발급·초대방 닫기·활성화·ProjectBrief 수정·목표 다시 시도)은 비그룹장에게 403. `/groups/{id}/chat`은 `ACTIVE` cohort 구성원만 들어가며 3단계 전까지는 임시 화면이다.
+- 팀 목표 표시문: `goals.generate_goal`이 M0 `TimelyClient.complete_json`을 한 번 호출(재시도·복구 호출 없음). 입력은 `프로젝트 내용`뿐이다. 결과 검사는 4~80자·한 줄이며 사실 근거는 사람이 LIVE 기록에서 본다. 상태 `EMPTY`(내용 없음)·`PENDING`·`RUNNING`·`SUCCEEDED`·`FAILED`. 화면에는 현재 revision의 상태만 보이고 이전 revision의 문장은 현재 목표처럼 쓰지 않는다. 서버가 시작될 때 중단된 작업은 `SERVER_RESTARTED` 실패로 바꾼다. 범용 `/api/jobs`는 쓰지 않는다(인증이 없는 라우트이고 소유자 개념이 없음).
+- 화면: 원본 dashboard·invite·group-create·group의 CSS를 그대로 가져온 템플릿 4개와 임시 `chat_placeholder`·`notice`. 인라인 스크립트 없이 `static/{shell,dashboard,invite,group-create,group}.js`. 원본의 데모 동작(직접 group-create 링크, 로드 때 코드 생성, 가짜 구성원, `그룹 생성 완료` 팝업, position 이동, `localStorage` 로그인)은 가져오지 않았다. 실행 진행률·투두·활동·소식·오른쪽 패널은 만들지 않았다(5단계).
+
 ## 2. 모듈 판정표
 
 판정: KEEP(그대로) / ADAPT(어댑터 또는 내부 수정) / REPLACE(새로 구현) / DROP(사용 안 함). 줄 번호는 2026-11-18 기준 `src/wemeet_ai/` 아래 경로다. "테스트"는 크리퍼 `tests/`에 있는 파일이다. 0B-1에서 격리한 복사본으로 실행한 결과는 이 절 끝의 `0B-1 재확인 결과`에 있다(이 저장소의 `tests/`는 MOIM 자체 테스트다).
