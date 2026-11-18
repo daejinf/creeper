@@ -29,7 +29,7 @@ src/wemeet_ai는 기존 AI·검증·persistence 기반으로 우선 검토한다
 
 ### 기본 모듈 후보
 
-- 개인 인터뷰: E.coach
+- 개인 인터뷰: E.coach(D-B3: 3단계에서 호출하지 않음, 4단계의 배정 뒤 인터뷰에서 재사용)
 - 팀 목표 표시문: ProjectBrief 전용 MOIM 요약 operation. 기존 C/TeamGoal 합성 경로와 분리
 - 역할·투두 초안: E.draft, E.plan
 - 개인 조건 수정: update_member_condition 계열
@@ -63,7 +63,7 @@ AI가 DB를 직접 임의 수정하지 않는다. 구조화된 변경안, 권한
 - 긴 AI 작업은 입력 저장 → operation 발급 → 빠른 202와 상태 URL → 백그라운드 작업 실행 → 상태 조회·복구 흐름을 기본으로 한다. 구간별 지연 측정은 MVP 범위에서 하지 않는다.
 - 사용자 메시지 한 번은 Timely 호출 한 번으로 처리하고 자동 재시도는 하지 않는다. E.coach와 E.draft 같은 기능 연쇄 호출은 별도 사용자 동작과 별도 operation으로 분리한다.
 - 전체 대화를 매번 보내지 않고 구조화된 MemberState, 이전 요약과 필요한 최근 메시지만 보낸다.
-- 0B 측정 전에는 현재 기본 max_tokens 1500을 유지하고, 모듈별 상한은 출력 완전성과 안정성을 먼저 충족한 뒤 지연·비용 측정으로 확정한다. 토큰 절약 때문에 정상 출력을 잘라서는 안 된다.
+- 출력 한도는 클라이언트 상수 `DEFAULT_MAX_OUTPUT_TOKENS`(4096, `m0/client.py`) 하나다(0B 보정으로 1500에서 4096으로 바뀌었고 이 문서의 옛 값 1500은 정정했다). 3단계 LIVE에서 E.coach 한 턴이 완료 토큰 1,245~2,027개를 썼고 한도에 닿은 적은 없다. 토큰 절약 때문에 정상 출력을 잘라서는 안 된다.
 
 ### 그룹·초대방·ProjectBrief (2단계)
 
@@ -74,6 +74,20 @@ AI가 DB를 직접 임의 수정하지 않는다. 구조화된 변경안, 권한
 - 인가: 모든 객체 조회·변경은 `service`에서 멤버십을 확인하고, 비회원·다른 그룹 사용자는 없는 그룹과 같은 404를 받는다. 그룹장 전용(코드 재발급·초대방 닫기·활성화·ProjectBrief 수정·목표 다시 시도)은 비그룹장에게 403. `/groups/{id}/chat`은 `ACTIVE` cohort 구성원만 들어가며 3단계 전까지는 임시 화면이다.
 - 팀 목표 표시문: `goals.generate_goal`이 M0 `TimelyClient.complete_json`을 한 번 호출(재시도·복구 호출 없음). 입력은 `프로젝트 내용`뿐이다. 결과 검사는 4~80자·한 줄이며 사실 근거는 사람이 LIVE 기록에서 본다. 상태 `EMPTY`(내용 없음)·`PENDING`·`RUNNING`·`SUCCEEDED`·`FAILED`. 화면에는 현재 revision의 상태만 보이고 이전 revision의 문장은 현재 목표처럼 쓰지 않는다. 서버가 시작될 때 중단된 작업은 `SERVER_RESTARTED` 실패로 바꾼다. 범용 `/api/jobs`는 쓰지 않는다(인증이 없는 라우트이고 소유자 개념이 없음).
 - 화면: 원본 dashboard·invite·group-create·group의 CSS를 그대로 가져온 템플릿 4개와 임시 `chat_placeholder`·`notice`. 인라인 스크립트 없이 `static/{shell,dashboard,invite,group-create,group}.js`. 원본의 데모 동작(직접 group-create 링크, 로드 때 코드 생성, 가짜 구성원, `그룹 생성 완료` 팝업, position 이동, `localStorage` 로그인)은 가져오지 않았다. 실행 진행률·투두·활동·소식·오른쪽 패널은 만들지 않았다(5단계).
+
+### 공용 역할 후보·비공개 순위 제출 (3단계, D-B3)
+
+- D-B3(2026-11-19)로 3단계에는 개인 AI 인터뷰가 없다. 인터뷰는 배정 뒤 4단계에서 한다. 아래 서술 중 `인터뷰(D-B2 AI 주도)`·`E.coach 변경` 항목은 **사용 중단된 구현의 기록**이며 3단계 경로에서 호출되지 않는다.
+- 모듈: `src/moim/interview/`의 `candidates`(그룹 역할 후보), `ranking`(`RankingService`: 화면 조회·순위 제출·인가), `routes`(chat 화면·API). 사용 중단(보존, 어떤 import도 없음): `coach`(E.coach 어댑터)와 `turns`(`InterviewTurnService`, 옛 인터뷰 턴 처리). 4단계 배정 뒤 인터뷰가 재사용한다. 화면은 `templates/chat.html`(원본 `moim-chat.html`의 `<style>` 194줄을 그대로 옮김)과 `static/chat.js`.
+- API: `GET /api/groups/{id}/roles`(후보·내 순위 상태·`N/M` 집계를 한 번에), `POST /api/groups/{id}/preferences`(순위 제출), `POST /api/groups/{id}/roles/candidates/retry`. 옛 `/interview*` 경로는 없다.
+- 테이블(마이그레이션 `0005_interview`, `0006`, `0007_interview_deprecated`): `role_candidate_sets`(ProjectBrief revision당 한 행, 후보 revision = `source_project_brief_revision`), `preference_submissions`(불변 revision, 1·2·3순위 서로 다름을 DB가 검사), `member_progress`(저장된 `INTERVIEW | WAITING_ASSIGNMENT`. `INTERVIEW`는 이제 "순위 미제출"이다). **사용 중단·보존:** `interview_turns`, `member_states`, `member_progress.interview_closed_at`은 삭제·변경하지 않고 DB 주석으로 DEPRECATED를 표시했다(`0007`은 주석만 바꾸고 데이터를 건드리지 않으며 downgrade로 주석만 제거). 3단계는 이 테이블을 쓰지도 읽지도 않는다.
+- 순위 제출: 인터뷰·MemberState 없이 후보가 `SUCCEEDED`이면 바로 제출할 수 있다. 제출 전 선택은 화면에만 있고(자유롭게 변경) 제출이 immutable revision이다. 멤버별 advisory lock 아래서 같은 `action_id`는 재생(False), 다른 `action_id`로 이미 제출했으면 409 `ALREADY_SUBMITTED`라 동시 제출도 한 번만 저장한다.
+- 역할 후보: ProjectBrief revision이 만들어질 때(활성화·수정) 같은 트랜잭션에서 `PENDING` 행이 생기고 백그라운드로 Timely를 1회 호출한다. 입력은 ProjectBrief(이름·내용·기간·결과물·중간 일정)뿐이다(D-B1 B5). 후보 수는 프롬프트에서 6~8개로 요청하고(cohort 최대 6명), 서버가 3~8개·인원 수 이상을 검사한다. 3~8개·인원 수 이상·이름 ≤12자·설명 ≤60자·이름 중복 없음을 서버가 검사하고 id(`r1`…)는 서버가 붙인다. 성공하면 다시 쓰지 않는다. 실패는 `FAILED`와 오류, 명시적 다시 시도(`action_id`로 멱등)이며 고정 목록·이전 revision으로 대체하지 않는다. 새로고침·재접속·다른 구성원 조회는 저장된 행만 읽는다.
+- (사용 중단, D-B3) 인터뷰(D-B2 AI 주도): 메시지·버튼 하나가 AI 한 번(Timely 한 번)이다. `interview/coach.py`의 `run_turn`이 `e_member_plan.interview_turn`(`TurnModel`: understood·value·quote·extras·reply·next{field,text,options})을 한 번 호출한다. AI가 답 해석과 다음 질문·버튼 작성을 맡고, 코드가 모든 부분을 검사한다: 인용은 사용자 메시지 안에 있어야 하고(문자열 값은 사용자 말과 글자쌍 50% 이상 겹쳐야 하며 아니면 인용을 저장), 숫자·목록은 사용자 말 안에 근거가 있어야 하고, 부가 `scope`는 의도 표현이 필요하며, 이미 아는 항목은 고쳐 말할 때만 바뀐다. 다음 질문은 새 항목 또는 재질문, 버튼 2~4개(값은 서버에만 저장, 브라우저는 id·문구만), 내부 표현 없음을 만족해야 하고 아니면 서버의 기본 질문(첫 누락 필수 항목)으로 바꾼다(`interview_event … ai_next_question_replaced_by_server_question` 로그). 질문·버튼 값은 `member_states.state.question`에 있다. 완료는 서버: `missing_required`(필수 4개가 알려졌거나 "모름" 두 번), 턴 한도에서는 항상 닫기 가능. 의미 없는 입력은 422 `UNCLEAR_ANSWER`로 거절한다. 옛 자유 대화 `coach_member_goal`은 MOIM이 호출하지 않는다. 속도: `Runtime(extra_options={"reasoning_effort": "low"})`(`minimal`은 공급자가 거절), 프롬프트 약 1.6k·완료 130~213 토큰.
+- (사용 중단, 4단계 재사용용) E.coach 변경(ADAPT, 모듈 판정 유지): `coach_member_goal(extra_policy=)` 인자 추가(턴 예산·필수 항목·답변 길이 정책), `Runtime(extra_options=)` 추가, LIVE에서 드러난 실패를 고쳤다(질문 필드가 진단 항목에 없으면 실패 대신 그 항목을 더한다는 것 포함). ① 모델이 `AI_SUGGESTED`/공동 목표 근거로 만든 `scope` "사실"은 저장하지 않고 버린다(없는 사용자 메시지를 근거로 대는 사실은 여전히 실패). ② 사용하지 않는 답변 버튼 선택지의 값이 틀려도 그 선택지만 버리고 턴은 실패시키지 않는다. 둘 다 호출을 더 하지 않는 결정적 코드이고 저장되는 사실의 근거 조건은 그대로다.
+- STALE: ProjectBrief가 바뀌어 새 revision이 생기면(`update_brief`, 같은 트랜잭션) 이전 후보는 현재가 아니므로 제공하지 않고, 그 후보를 참조해 `WAITING_ASSIGNMENT`이던 구성원은 `INTERVIEW`(순위 미제출)로 돌아가 새 후보에서 다시 고른다(이전 제출 행은 기록으로 남는다).
+- 복구: 서버가 시작될 때 `PENDING`·`RUNNING`으로 남은 후보는 `FAILED / SERVER_RESTARTED`가 된다(옛 턴은 더 이상 만들어지지 않는다). 화면은 `GET /api/groups/{id}/roles` 하나로 후보·내 순위·집계를 한 번에 읽어 왼쪽과 오른쪽이 같은 서버 상태를 쓴다. 범용 `/api/jobs`는 쓰지 않는다.
+- 이 단계에는 역할 배정, 투두 draft, 숨겨진 평가 기준이 없다(테스트가 테이블·컬럼·응답 키를 검사한다).
 
 ## 2. 모듈 판정표
 

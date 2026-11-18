@@ -29,7 +29,7 @@ SCREENS: dict[str, str | None] = {
     "moim-dashboard.html": "/dashboard",
     "moim-invite.html": "/invite",
     "moim-group-create.html": "/groups/{room_id}/create",
-    "moim-chat.html": None,
+    "moim-chat.html": "/groups/{active_id}/chat",
     "moim-group.html": "/groups/{active_id}",
     "moim-mypage.html": None,
 }
@@ -38,6 +38,7 @@ AUTH = {
     "moim-invite.html": "roomlead",
     "moim-group-create.html": "roomlead",
     "moim-group.html": "lead",
+    "moim-chat.html": "lead",
 }
 # The original invite page shows its signed-in header only through its own demo switch.
 ORIGINAL_QUERY = {"moim-invite.html": "?login=1"}
@@ -76,6 +77,11 @@ def apply_dev_seed() -> dict:
     owned = f"(select id from groups where owner_id in {shot})"
     with sf.begin() as s:
         for sql in (
+            f"delete from member_progress where group_id in {owned}",
+            f"delete from preference_submissions where group_id in {owned}",
+            f"delete from member_states where group_id in {owned}",
+            f"delete from interview_turns where group_id in {owned}",
+            f"delete from role_candidate_sets where group_id in {owned}",
             f"delete from goal_displays where group_id in {owned}",
             f"delete from cohort_members where group_id in {owned}",
             f"delete from activation_cohorts where group_id in {owned}",
@@ -113,6 +119,15 @@ def apply_dev_seed() -> dict:
     with sf.begin() as s:
         s.execute(text("update goal_displays set state='SUCCEEDED', text=:t, model='visual-fixture' where group_id=:g"),
                   {"t": "팀플 협업 서비스 MVP를 완성하고 최종 발표하기", "g": active})
+    # VISUAL FIXTURE for the chat screen: a shared role-candidate set (D-B3: no interview). Hand-written, not Timely.
+    import json
+
+    candidates = [{"id": f"r{i}", "name": n, "description": d} for i, (n, d) in enumerate(
+        [("기획·자료조사", "방향을 잡고 자료를 모아요"), ("디자인", "화면과 발표 자료를 꾸며요"), ("개발", "서비스를 구현해요"),
+         ("발표", "최종 발표를 준비해요"), ("문서 정리", "보고서를 정리해요")], 1)]
+    with sf.begin() as s:
+        s.execute(text("update role_candidate_sets set state='SUCCEEDED', candidates=cast(:c as jsonb), model='visual-fixture' where group_id=:g"),
+                  {"c": json.dumps(candidates, ensure_ascii=False), "g": active})
     tokens = {key: sessions.create(ids[key], False)[0] for key in ("lead", "roomlead")}
     engine.dispose()
     return {"note": "seeded 7 users, 1 active group, 2 invite rooms (goal sentence is a visual fixture)",

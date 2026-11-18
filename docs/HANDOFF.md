@@ -11,6 +11,7 @@
 - 0B 보정(2026-11-18): D-A8 기록, Git baseline, DROP 모듈·옛 CLI·오래된 egg-info 제거, 테스트의 `DROP SCHEMA` 가드. 아래 `0B 보정` 절.
 - 1단계 인증 구현·검증 완료(2026-11-18, 아래 `1단계 인증` 절).
 - 2단계 대시보드·그룹·ProjectBrief 구현·검증 완료(2026-11-18, 아래 `2단계 그룹·ProjectBrief` 절). 팀 목표 표시문 LIVE 2회 성공(누적 LIVE 8회). `/dashboard`는 이제 실제 화면이고 로그인 확인용 임시 화면은 지웠다. `/groups/{id}/chat`은 3단계 전까지 임시 화면이다.
+- **D-B3(2026-11-19, 제품 흐름 변경 승인)**: 3단계에서 개인 AI 인터뷰를 없애고 공용 역할 후보의 비공개 1·2·3순위만 제출받는다. 인터뷰는 배정 뒤 4단계로 옮겼다. 기록·변경 전후 문장은 `docs/PRODUCT.md` D-B3, 헌법은 `AGENTS.md` 1절(4·5번 흐름 항목, 본문 두 문장)만 바꿨다. 3단계 구현은 새 흐름으로 바뀌었고 **디자인 눈 확인은 NOT RUN이라 사용자의 캡처 확인 전까지 완료 대기**다. 4단계는 시작하지 않았다. 아래 `3단계 공용 후보·순위 제출(D-B3)` 절.
 - GATE B 승인 완료(D-B1, 2026-11-18): 인터뷰 항목·턴, chat 네 상태 문구와 `N/M명 제출 완료` 집계, 공급자 입력 필드, 미제출·신규 합류(차단 유지)·재배정·중복 역할, 역할 후보 생성(revision당 1회), 이름·순위 비노출 안내 문구(원본과 다른 제품 차이), 투두 공개·재확정, STALE 규칙. 이번 작업은 문서만 바꿨고 코드·테스트·원본 HTML은 변경하지 않았다.
 
 ## 환경 스냅샷 (2026-11-18, 확인한 사실만)
@@ -20,10 +21,10 @@
 | 작업 폴더 | `C:\Users\user\Desktop\moim-design`. Git 저장소(`main`). 첫 baseline 커밋 `a9a9721`(승인 문서, 원본 HTML 9개, 0A/0B 기반). 원격 저장소 없음, push 안 함. 그 뒤 0B root hardening 커밋은 아래 `0B 보정` 절에 기록 |
 | Python | 3.12.8, 가상환경 `.venv` |
 | 앱 | `src/moim/`(`config.py`, `db.py`, `logging_utils.py`, `main.py`, `models.py`, `timeutil.py`, `jobs.py`, `job_routes.py`, `auth/`, `groups/`, `templates/`, `static/`). FastAPI 앱, `/healthz`, `/api/jobs`(핸들러 없음), 인증, 그룹·초대방·ProjectBrief. AI 코드는 `src/wemeet_ai`의 KEEP/ADAPT 모듈만 남았다: `m0`(client·runtime·tracing·records), `m1`(e_member_plan·f_validation), `m2`, `shared` |
-| 마이그레이션 | Alembic `0001_foundation`, `0002_ai_jobs`, `0003_auth`, `0004_groups`. `upgrade → downgrade base → upgrade` 확인(테스트가 매번 실행) |
+| 마이그레이션 | Alembic `0001_foundation`, `0002_ai_jobs`, `0003_auth`, `0004_groups`, `0005_interview`, `0006_interview_d_b2`, `0007_interview_deprecated`(주석만). `upgrade → downgrade base → upgrade` 확인(테스트가 매번 실행) |
 | PostgreSQL | 16, 포트 54329, 로컬 데이터 `.local/pgdata`. 개발 DB `moim_dev`, 테스트 DB `moim_test`. 역할은 아직 `moim` 하나(superuser)다. 테스트의 `DROP SCHEMA public CASCADE`는 호스트 localhost·포트 54329·DB명 정확히 `moim_test`·`MOIM_ENV=test`를 모두 확인한 뒤에만 실행한다(`tests/dbsafety.py`) |
 | 설정 | `.env`(Git 제외)와 `.env.example`. **앱은 `.env`를 자동으로 읽지 않는다.** 환경변수로만 읽으며 `MOIM_ENV`, `MOIM_DATABASE_URL`이 없으면 `ConfigError`로 실패한다. `alembic`은 환경변수를 먼저 불러온 셸에서 실행한다. 테스트는 `tests/conftest.py`가 설정한다 |
-| 테스트 | `.\.venv\Scripts\python.exe -m pytest -q`: 322개 통과(2026-11-18 2단계 뒤. 기반·공급자 계약·작업 상태·패키징·Runtime 계약·DROP 가드 164 + 인증 84 + 그룹 74). 환경변수(`MOIM_*`)를 먼저 불러온 셸에서 실행한다 |
+| 테스트 | `.\.venv\Scripts\python.exe -m pytest -q`: 348개 통과(2026-11-19 D-B3 뒤. 옛 `test_interview.py` 30개를 `test_ranking.py` 26개로 교체해 352에서 줄었다. 기반·공급자 계약·작업 상태·패키징·Runtime 계약·DROP 가드 164 + 인증 84 + 그룹 74 + 순위 26). 환경변수(`MOIM_*`)를 먼저 불러온 셸에서 실행한다 |
 | 깨끗한 환경 검증 | 0B 보정 커밋 직전, 스테이징한 내용을 새 폴더로 내보내 새 venv에서 `pip install -e ".[test,visual]"`, import, `pytest` 164개 통과(건너뜀 0), 해시 9/9(2회), 프롬프트 검증 14개를 확인했다. 마이그레이션 up/down/up은 테스트와 개발 DB 직접 실행으로 확인 |
 | 크리퍼 재확인 | 격리 복사본·격리 DB `creeper_scratch`로 225개 실행, 223 통과·2 실패(원인과 판정 영향 없음은 `docs/ARCHITECTURE.md`의 `0B-1 재확인 결과`) |
 | 주의 | 크리퍼의 `tools/db/cutover.py`·`bootstrap.py`와 테스트 일부는 Windows 사용자 레지스트리(`HKCU\Environment`)로 실제 크리퍼 DB(55432)를 읽거나 쓴다. 원본에서 실행하지 않는다. MOIM에 이 방식을 가져오지 않는다 |
@@ -84,13 +85,34 @@ $env:MOIM_ENV='development'; .\.venv\Scripts\python.exe tools\capture_screens.py
   - 첫 e2e 실행에서 Playwright의 `wait_for_function`이 CSP(`unsafe-eval` 금지)에 막혔다. 제품 쪽 문제가 아니라 확인 방법이었고 셀렉터 대기로 바꿨다.
 - 남은 제한: `docs/SECURITY.md` 4-3의 `남은 제한`(코드 공간 100만 개, 대기자 스스로 나가기 없음, 폴링 4초, 표시문 근거는 사람 판정).
 
+## 3단계 공용 후보·순위 제출 (D-B3, 2026-11-19)
+
+- 결과: ACTIVE cohort 구성원이 개인 인터뷰 없이 그룹 공용 역할 후보(ProjectBrief revision당 Timely 1회, 불변)에서 서로 다른 1·2·3순위를 고르고, 제출 전에는 화면에서 자유롭게 바꾸며, 제출하면 immutable preference submission revision과 `WAITING_ASSIGNMENT`가 저장·복구된다. 모두에게 `N/M명 제출 완료`만 보인다. 값·구조는 `docs/ARCHITECTURE.md`의 `공용 역할 후보·비공개 순위 제출 (3단계, D-B3)`, 보안은 `docs/SECURITY.md` 4-4.
+- 판정: 결정적 PASS(`tests/test_ranking.py` 26개, 전체 348개, 공급자는 FIXTURE). **이번 작업에서 LIVE 호출 0회**(후보 생성 코드·프롬프트·입력은 바꾸지 않았다. 누적 LIVE 67회 그대로). 원본 HTML 해시 9/9 동일. 프롬프트 검증 14개 PASS. 실제 Chromium(Playwright, 개발 서버·개발 DB)에서 후보 6개 말풍선 → 칩 3개 선택 → 순위 변경 → 제출 → `순위를 제출했어요… 1/4명 제출 완료` → 새로고침 복구, 콘솔 오류 없음, `localStorage`·`sessionStorage` 비어 있음을 확인했다.
+- 바꾼 것: 인터뷰 API(`/interview*`)·MemberState 패널·인터뷰 턴·종료 버튼·`E.coach` 호출을 3단계 경로에서 제거. `RankingService`(`ranking.py`)가 화면·제출을 맡고 `GET /api/groups/{id}/roles`가 화면 데이터를 준다. 입력창은 구조 유지를 위해 남기되 비활성이다(AI 대화 없음). 패널 제목은 `역할 순위 선택`·`역할 배정 대기`.
+- 보존(삭제 안 함, 4단계 재사용): `interview/coach.py`(E.coach 어댑터), `interview/turns.py`(`InterviewTurnService`, 어디서도 import하지 않음), `wemeet_ai.m1.e_member_plan`, 테이블 `interview_turns`·`member_states`·`member_progress.interview_closed_at`(마이그레이션 `0007`이 DB 주석으로 DEPRECATED 표시만 했고 데이터는 그대로, 테스트로 down/up 뒤에도 행이 남음을 확인).
+- 달랐던 사실:
+  - 옛 `tests/test_interview.py`(31개)를 삭제했다. 후보·격리·순위·STALE 검증은 `test_ranking.py`로 옮겼지만 인터뷰 턴·E.coach 동작 검증은 옮기지 않았다(코드는 호출되지 않는다). 그 파일은 커밋 전 작업 사본이라 Git에서 복구할 수 없다. 4단계가 `coach.py`·`turns.py`를 다시 연결할 때 테스트를 새로 써야 한다.
+  - 포트 8000에 이전 코드의 개발 서버가 떠 있어 종료하고 새 코드로 다시 띄웠다(캡처가 옛 라우트를 읽어 실패했기 때문).
+  - 캡처 스크립트 시드에서 인터뷰 턴·MemberState 삽입을 지웠다(후보만 시드).
+- 화면 캡처: `artifacts\screens\moim-chat.html\original.png`·`impl.png`와 추가 `impl-ranking.png`(순위 선택 중)·`impl-waiting.png`(제출 뒤), `artifacts\screens\index.html`. 시드의 후보는 손으로 쓴 FIXTURE다. 눈 확인은 사용자가 한다.
+- 해결된 OPEN: 10턴 안에 필수 4개를 못 채우면 순위를 못 내던 막다른 길은 인터뷰가 3단계에서 없어져 사라졌다.
+- 개발 DB에 남은 것: 일회용 LIVE 스크립트의 `live3a…`/`live3b…` 사용자와 그룹, 캡처 시드의 `shot*`(시드를 다시 돌리면 `shot*`만 정리된다).
+
 ## 다음 한 단계
 
-`prompts/03-interview.md`(3단계 개인 AI 인터뷰와 역할 순위 제출). GATE B는 D-B1(2026-11-18)로 전부 승인됐다(`docs/PRODUCT.md`). 3단계 구현 때 알아둘 점: 기존 `tests/test_groups.py:667`의 신규 합류 차단 테스트는 D-B1 B4와 일치해 그대로 유효하다. `docs/ARCHITECTURE.md`는 `max_tokens` 기본 1500, 이 문서 위쪽 0B 보정 절은 4096이라고 해 서로 다르다(코드 `DEFAULT_MAX_OUTPUT_TOKENS`를 기준으로 3단계 시작 때 정리). `/api/jobs`는 여전히 인증이 없고 핸들러도 없다. 첫 핸들러를 붙이는 단계(3단계)에서 `auth/deps.py`의 `require_user`·`verify_csrf`와 소유자 검사를 함께 넣는다.
+먼저 사용자가 `artifacts\screens\index.html`의 chat 캡처(원본·구현·순위·대기)를 원본과 나란히 확인해 3단계를 완료로 전환한다(그 전에는 4단계 진입 불가). 그 다음 단계는 `prompts/04-role-todos.md`(4단계)이고 선행은 3단계 완료와 GATE B·D-B3 승인이다. 4단계 구현 때 알아둘 점:
+
+- 배정은 `preference_submissions`의 최신 revision 중 `source_candidate_revision`이 현재 ProjectBrief revision인 것만 입력으로 쓰고, `member_progress.status = WAITING_ASSIGNMENT`인 cohort 전원이 모였을 때만 실행한다(`interview/ranking.py`의 집계 쿼리와 같은 기준). 후보 id(`r1`…)는 revision 안에서만 유일하다.
+- **배정 뒤 인터뷰(D-B3)**: 배정이 끝난 각 사용자가 본인에게만 보이는 AI와 배정 역할에 맞는 짧은 인터뷰를 한 뒤 투두 초안을 만든다. 경험·주간 가능 시간·도구·일정·환경 제약·선호 시간만 묻고 배정 역할을 바꾸지 않으며 순위 원문은 AI 입력에 넣지 않는다. 항목·턴·종료 조건이 제품 의미를 바꾸면 사용자 승인이 필요하다. `interview/coach.py`·`turns.py`와 보존 테이블은 재사용할 수 있지만 D-B2의 옛 질문 항목(필수 4개)·턴 한도(10)·종료 버튼 규칙은 D-B3로 개정됐으므로 그대로 쓰지 말고 4단계에서 다시 정한다. 다시 연결할 때 `coach.py`·`turns.py` 테스트를 새로 쓴다.
+- 투두 초안 공급자 입력은 D-B1 B3를 따른다(`constraints`·순위 원문·대화 원문 금지). `member_progress.status`는 지금 `INTERVIEW | WAITING_ASSIGNMENT` 두 값뿐이다(`ROLE_TODOS`와 배정 뒤 인터뷰 상태는 4단계가 추가).
+- `/api/jobs`는 여전히 인증이 없고 핸들러도 없다. 4단계가 범용 작업 API를 쓰려면 `auth/deps.py`의 `require_user`·`verify_csrf`와 소유자 검사를 함께 넣는다(전용 상태 테이블을 쓰면 필요 없다).
 
 ## OPEN
 
 `docs/PRODUCT.md` 5절, `docs/ROADMAP.md`의 GATE B·GATE D 목록을 본다. BLOCKED 항목은 없다.
+
+3단계 관련 OPEN: 10턴 한도 막다른 길은 D-B3로 해소됐다. E.coach 지연 단축 항목은 배정 뒤 인터뷰를 4단계에서 정할 때 다시 본다. 배정 뒤 인터뷰의 항목·턴·종료 조건은 4단계에서 정한다(제품 의미가 바뀌면 승인).
 
 이번 보정에서 범위 밖이라 하지 않은 것(요청에서 제외):
 

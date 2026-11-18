@@ -22,7 +22,8 @@ def code_result(task, data=None, *, needed=(), error=None):
 
 
 class Runtime:
-    def __init__(self, client=None, *, trace_sink=None, debug=False, max_output_tokens=None):
+    def __init__(self, client=None, *, trace_sink=None, debug=False, max_output_tokens=None, extra_options=None):
+        self.extra_options = dict(extra_options or {})  # fixed per Runtime (e.g. reasoning_effort); never changed per call
         self.client = client if client is not None else TimelyClient()
         self.trace_sink, self.debug, self.max_output_tokens = trace_sink, debug, max_output_tokens
 
@@ -32,7 +33,7 @@ class Runtime:
         stats, started = RunStats(), time.perf_counter()
         meta = Meta(run_id=str(uuid4()), task=task, prompt_version=f"{task}-{PROMPT_VERSION}", model=self.client.model)
         limit = max_output_tokens or self.max_output_tokens
-        options = {"max_completion_tokens": limit} if limit else {}
+        options = {**self.extra_options, **({"max_completion_tokens": limit} if limit else {})}
         # Raw traces require explicit opt-in and must be stored in the caller's private scope.
         sink = self.trace_sink if self.debug else None
         with scope(sink, meta.run_id, meta.run_id, None, task, owner):

@@ -27,7 +27,9 @@ from ..models import (
     group_members,
     groups,
     invite_codes,
+    member_progress,
     project_briefs,
+    role_candidate_sets,
     users,
 )
 from ..timeutil import DISPLAY_TZ, utcnow
@@ -381,6 +383,12 @@ class GroupService:
                 updated_at=now,
             )
         )
+        # The group's role candidates come from this revision too: one set per revision, generated once in the background.
+        s.execute(
+            insert(role_candidate_sets).values(
+                group_id=group_id, source_project_brief_revision=revision, state="PENDING", created_at=now, updated_at=now
+            )
+        )
 
     # ---- ProjectBrief -----------------------------------------------------------------------
 
@@ -405,6 +413,13 @@ class GroupService:
             revision = g.brief_revision + 1
             self._insert_brief(s, group_id, revision, brief, user_id, now)
             s.execute(update(groups).where(groups.c.id == group_id).values(brief_revision=revision))
+            # The previous candidate set is now STALE, and so is every ranking that points at it: those members must
+            # rank again against the new set. Their interview conversation and MemberState are kept.
+            s.execute(
+                update(member_progress)
+                .where(member_progress.c.group_id == group_id, member_progress.c.status == "WAITING_ASSIGNMENT")
+                .values(status="INTERVIEW", submission_revision=None, updated_at=now)
+            )
         log.info("group.brief_revised group_id=%s revision=%d", group_id, revision)
         return revision, True
 

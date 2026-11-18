@@ -21,6 +21,7 @@ from ..auth.routes import client_ip
 from ..auth.sessions import SessionUser
 from ..config import Settings
 from ..timeutil import utcnow
+from ..interview.candidates import CandidateService
 from .goals import EMPTY, FAILED, GoalService
 from .service import (
     ACTIVE,
@@ -75,6 +76,7 @@ def make_router(
     settings: Settings,
     groups: GroupService,
     goals: GoalService,
+    candidates: CandidateService,
     throttle: th.Throttle,
     templates: Jinja2Templates,
 ) -> APIRouter:
@@ -254,24 +256,6 @@ def make_router(
             display_name=user.display_name,
         )
 
-    @router.get("/groups/{group_id}/chat", include_in_schema=False)
-    def chat_gate(group_id: str, request: Request):
-        # Stage 3 builds the chat. Until then this proves who may enter: ACTIVE cohort members only.
-        user = current_user(request)
-        if user is None:
-            return login_redirect(request)
-        try:
-            gate = groups.cohort_has(user.user_id, group_id)
-        except GroupError as exc:
-            return error_page(request, exc)
-        if gate == "forming":
-            return RedirectResponse("/invite", status_code=303)
-        if gate == "cancelled":
-            return RedirectResponse("/dashboard", status_code=303)
-        if gate != "ok":
-            return error_page(request, GroupError(403, "FORBIDDEN", "이 그룹의 참여 구성원만 들어올 수 있어요."))
-        return page(request, "chat_placeholder.html", group_id=group_id, display_name=user.display_name)
-
     # ---- API: invite room -------------------------------------------------------------------
 
     @router.post("/api/groups", dependencies=[Depends(verify_csrf)])
@@ -326,6 +310,7 @@ def make_router(
         revision = groups.activate(user.user_id, group_id, brief)
         if brief.content.strip():
             background.add_task(goals.run, group_id, revision)
+        background.add_task(candidates.run, group_id, revision)
         return json_ok({"status": ACTIVE, "brief_revision": revision, "redirect": f"/groups/{group_id}/chat"}, 201)
 
     @router.post("/api/groups/{group_id}/brief", dependencies=[Depends(verify_csrf)])
@@ -334,6 +319,8 @@ def make_router(
         revision, changed = groups.update_brief(user.user_id, group_id, body.base_revision, brief)
         if changed and brief.content.strip():
             background.add_task(goals.run, group_id, revision)
+        if changed:
+            background.add_task(candidates.run, group_id, revision)
         return json_ok({"brief_revision": revision, "changed": changed, "redirect": f"/groups/{group_id}"})
 
     @router.get("/api/groups/{group_id}/brief")

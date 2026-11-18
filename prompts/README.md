@@ -16,11 +16,11 @@
 
 | ID | 날짜 | 결정 | 영향 단계 |
 |---|---|---|---|
-| D-A5 | 2026-11-18 | 생성자는 dashboard/group 구현본의 `새 그룹 만들기`에서 생성 의도를 명시해 `FORMING` 초대방과 초대코드를 만들거나 기존의 본인 소유 활성 `FORMING` 초대방을 재사용하고, `moim-invite`에서 팀원을 모은 뒤 `그룹 생성하기`로 `moim-group-create`에 간다. 초대코드 참여 화면 조회만으로는 그룹을 만들지 않는다. ProjectBrief 제출로 그룹을 `ACTIVE`로 전환하며 그 시점의 구성원을 활성화 cohort로 고정한다. 초대받은 구성원은 활성화 전까지 초대방에서 대기하고, `ACTIVE` 전환 시 기존 초대코드는 폐기하며 GATE B 승인 전 활성화 뒤 신규 합류는 차단한다. 생성자를 포함해 최소 2명이어야 `그룹 생성하기`를 진행할 수 있다. `moim-group-create-position.html`·별도 포지션 등록 화면·AI 인터뷰 시작 버튼은 구현본에 만들지 않되 루트 원본 HTML은 변경하지 않는다. 각 구성원은 ProjectBrief 기반의 동일한 그룹 역할 후보 revision 안에서 서로 다른 1·2·3순위를 비공개로 제출하고(`INTERVIEW → WAITING_ASSIGNMENT`), cohort 전원이 제출한 뒤 서버가 한 번만 배정해 하나의 assignment revision으로 고정한다. 같은 순위 충돌과 3순위 소진 뒤에만 서버 무작위를 쓰고 AI는 당첨자를 고르지 않는다. 배정 뒤에만 `ROLE_TODOS`로 전환해 개인 투두를 만든다. 사용자는 투두만 직접 수정할 수 있고 역할 변경은 GATE B에서 승인된 재배정 operation으로만 처리한다. 미제출자·신규 합류·재배정의 세부 규칙과 역할 후보 생성 방식·LIVE 예산은 GATE B에서 정한다. landing 구현본의 `그룹 생성 · 참여하기` CTA는 `moim-invite`가 아니라 로그아웃 시 로그인 화면(성공 뒤 dashboard), 로그인 시 dashboard로 연결한다. | 0A-1, 1, 2, GATE B, 3, 4 |
+| D-A5 | 2026-11-18 (순서 일부는 D-B3가 개정) | 생성자는 dashboard/group 구현본의 `새 그룹 만들기`에서 생성 의도를 명시해 `FORMING` 초대방과 초대코드를 만들거나 기존의 본인 소유 활성 `FORMING` 초대방을 재사용하고, `moim-invite`에서 팀원을 모은 뒤 `그룹 생성하기`로 `moim-group-create`에 간다. 초대코드 참여 화면 조회만으로는 그룹을 만들지 않는다. ProjectBrief 제출로 그룹을 `ACTIVE`로 전환하며 그 시점의 구성원을 활성화 cohort로 고정한다. 초대받은 구성원은 활성화 전까지 초대방에서 대기하고, `ACTIVE` 전환 시 기존 초대코드는 폐기하며 GATE B 승인 전 활성화 뒤 신규 합류는 차단한다. 생성자를 포함해 최소 2명이어야 `그룹 생성하기`를 진행할 수 있다. `moim-group-create-position.html`·별도 포지션 등록 화면·AI 인터뷰 시작 버튼은 구현본에 만들지 않되 루트 원본 HTML은 변경하지 않는다. 각 구성원은 ProjectBrief 기반의 동일한 그룹 역할 후보 revision 안에서 서로 다른 1·2·3순위를 비공개로 제출하고(`INTERVIEW → WAITING_ASSIGNMENT`), cohort 전원이 제출한 뒤 서버가 한 번만 배정해 하나의 assignment revision으로 고정한다. 같은 순위 충돌과 3순위 소진 뒤에만 서버 무작위를 쓰고 AI는 당첨자를 고르지 않는다. 배정 뒤에만 `ROLE_TODOS`로 전환해 개인 투두를 만든다. 사용자는 투두만 직접 수정할 수 있고 역할 변경은 GATE B에서 승인된 재배정 operation으로만 처리한다. 미제출자·신규 합류·재배정의 세부 규칙과 역할 후보 생성 방식·LIVE 예산은 GATE B에서 정한다. landing 구현본의 `그룹 생성 · 참여하기` CTA는 `moim-invite`가 아니라 로그아웃 시 로그인 화면(성공 뒤 dashboard), 로그인 시 dashboard로 연결한다. | 0A-1, 1, 2, GATE B, 3, 4 |
 
 승인 문장(2026-11-18): "루트 원본 HTML은 수정하지 않고 구현본에서 `moim-group-create-position.html` 이동 동작을 이식하지 않는다. dashboard/group 구현본의 `새 그룹 만들기`는 생성 의도가 확인되는 요청으로 `moim-invite` 생성자 흐름에 연결하며, 초대코드 참여 화면 조회만으로 빈 그룹을 만들지 않는다. 생성자는 최소 2명의 `FORMING` 초대방에서 `그룹 생성하기`를 눌러 `moim-group-create`로 이동하고, ProjectBrief의 다음 버튼에서만 ProjectBrief 저장·cohort 고정·`ACTIVE` 전환을 원자적으로 수행한다. `ACTIVE` 전환 시 기존 초대코드는 폐기하고 GATE B 승인 전 신규 합류는 차단한다. 역할 후보는 동일한 ProjectBrief 기반 candidate revision으로 저장한 뒤 각자의 유효한 1·2·3순위를 먼저 받고 서버가 종합해 한 번 배정한다. 사용자는 배정 역할을 직접 수정하지 않고 승인된 재배정 operation만 사용한다."
 
-`MOIM-BOOTSTRAP.md`의 흐름·GATE A·GATE B 문구가 D-A5와 다르면 D-A5를 따른다.
+`MOIM-BOOTSTRAP.md`의 흐름·GATE A·GATE B 문구가 D-A5와 다르면 D-A5를 따른다. 위 표의 D-A5 원문 중 "각 구성원은 … 순위를 비공개로 제출" 앞의 인터뷰 전제는 D-B3(2026-11-19, `docs/PRODUCT.md`)가 개정했다: 3단계에는 개인 AI 인터뷰가 없고, 인터뷰는 배정 뒤 4단계에서 한다.
 
 ## 공통 실행 계약
 
@@ -31,7 +31,7 @@
 - 한 번에 지정된 제품 단계만 구현한다.
 - private conversation/profile은 본인만 열람하며, 사용자가 확정한 역할·투두만 그룹 실행 화면에 공유한다.
 - 별도 개인 목표 단계나 엔터티를 만들지 않는다. private MemberState, 배정된 역할과 확정된 투두가 구성원의 실행 목표다. AI는 각 투두와 함께 내부 `deliverable`·`completion_criteria`를 만들지만 화면에는 투두 제목과 기한만 표시하며, `투두 확정하기` 때 숨겨진 기준도 같은 revision으로 고정한다. M2는 특정 투두의 숨겨진 기준으로 그 투두에 첨부된 자료를 평가할 수 있다. M2 결과 표시와 PASS의 완료 반영 방식은 GATE D 승인 결정을 따른다. ProjectBrief에서 생성한 팀 목표는 별도 라벨 없이 기존 팀 목표 영역에 표시하고 ProjectBrief를 기준 원본으로 유지한다. 역할 후보는 고정 목록 없이 그룹별 ProjectBrief를 근거로 정한다.
-- D-A5의 순서를 지킨다: `FORMING` 초대방과 팀원 모집 → ProjectBrief 저장과 그룹 활성화 → 각자의 비동기 인터뷰·유효한 1·2·3순위 제출 → 활성화 cohort 전원 제출 뒤 서버 역할 배정 → 고정된 assignment revision 이후 개인 투두 생성. 역할 배정 전에는 투두를 생성·표시·확정하지 않고 AI나 브라우저가 역할 충돌 결과를 선택하지 않는다.
+- D-A5의 순서를 지킨다: `FORMING` 초대방과 팀원 모집 → ProjectBrief 저장과 그룹 활성화 → 각자의 비동기 공용 역할 후보 유효한 1·2·3순위 제출(개인 AI 인터뷰 없음, D-B3) → 활성화 cohort 전원 제출 뒤 서버 역할 배정 → 각자 배정 역할에 맞는 짧은 인터뷰(배정 역할을 바꾸지 않음, D-B3) → 고정된 assignment revision 이후 개인 투두 생성. 역할 배정 전에는 투두를 생성·표시·확정하지 않고 AI나 브라우저가 역할 충돌 결과를 선택하지 않는다.
 - 인증·객체 인가·그룹 경계·CSRF·입력 검증·출력 이스케이프를 해당 기능과 함께 구현하고 테스트한다.
 - 원본 HTML의 `innerHTML` 기반 데모 렌더링을 사용자 데이터 경로에 그대로 복사하지 않는다. 서버 템플릿 자동 이스케이프나 안전한 DOM API를 사용하고 불가피한 HTML 삽입은 정화와 XSS 테스트를 거친다.
 - AI 공급자는 서버에서만 호출한다. 비밀정보와 원문 대화는 로그에 남기지 않는다.
@@ -66,7 +66,7 @@
 | 6 | `01-auth.md` | 0B-1·0B-3 및 0B-2 결정적 부분 PASS. LIVE는 BLOCKED 허용 |
 | 7 | `02-groups-brief.md` | 1단계 완료 |
 | 8 | `GATE-B.md` | 2단계 완료, 읽기 전용 추천안 작성 |
-| 9 | `03-interview.md` | GATE B 승인 및 0B-2 LIVE 확인 완료. `LIVE BLOCKED`였다면 `00B-2-live-provider.md`의 LIVE 부분만 다시 실행 |
+| 9 | `03-interview.md`(공용 역할 후보·순위 제출, D-B3) | GATE B 승인 및 0B-2 LIVE 확인 완료. `LIVE BLOCKED`였다면 `00B-2-live-provider.md`의 LIVE 부분만 다시 실행 |
 | 10 | `04-role-todos.md` | 3단계 완료, GATE B 승인 |
 | 11 | `GATE-D.md` | 4단계 완료. 가능하면 vision 사전 확인, 불가능하면 M2만 비활성화하고 추천안 작성 |
 | 12 | `05-execution-review.md` | GATE D 승인 |

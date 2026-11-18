@@ -213,3 +213,133 @@ goal_displays = Table(
     CheckConstraint("state in ('EMPTY','PENDING','RUNNING','SUCCEEDED','FAILED')", name="state"),
     CheckConstraint("(state = 'SUCCEEDED') = (text is not null)", name="text_iff_succeeded"),
 )
+
+# ---- stage 3: personal interview and role preference ----------------------------------------------------------------
+
+# One role-candidate set per ProjectBrief revision (candidate revision == source ProjectBrief revision). Created
+# PENDING together with the brief revision; the candidates are written once, on SUCCEEDED, and never changed.
+role_candidate_sets = Table(
+    "role_candidate_sets",
+    metadata,
+    Column("group_id", String(36), primary_key=True),
+    Column("source_project_brief_revision", Integer, primary_key=True),
+    Column("state", String(12), nullable=False),
+    Column("attempt", Integer, nullable=False, server_default="1"),
+    Column("last_action_id", String(64)),  # the explicit retry that started the current attempt (idempotency)
+    Column("candidates", JSONB),
+    Column("error_code", String(64)),
+    Column("error_message", String(500)),
+    Column("model", String(64)),
+    Column("latency_ms", Integer),
+    Column("prompt_tokens", Integer),
+    Column("completion_tokens", Integer),
+    Column("total_tokens", Integer),
+    Column("created_at", DateTime(timezone=True), nullable=False, server_default=func.now()),
+    Column("updated_at", DateTime(timezone=True), nullable=False, server_default=func.now()),
+    ForeignKeyConstraint(
+        ["group_id", "source_project_brief_revision"], ["project_briefs.group_id", "project_briefs.revision"]
+    ),
+    CheckConstraint("state in ('PENDING','RUNNING','SUCCEEDED','FAILED')", name="state"),
+    CheckConstraint("(state = 'SUCCEEDED') = (candidates is not null)", name="candidates_iff_succeeded"),
+)
+
+# One row per user message and the AI reply to it (one Timely call per message). action_id makes a resend idempotent.
+interview_turns = Table(
+    "interview_turns",
+    metadata,
+    Column("group_id", String(36), primary_key=True),
+    Column("user_id", String(36), primary_key=True),
+    Column("seq", Integer, primary_key=True),
+    Column("action_id", String(64), nullable=False),
+    Column("user_message", Text, nullable=False),
+    Column("ai_reply", Text),
+    Column("state", String(12), nullable=False),
+    Column("attempt", Integer, nullable=False, server_default="1"),
+    Column("answer_question_id", String(64)),  # set when the message is a button answer (D-B2)
+    Column("answer_option_id", String(64)),
+    Column("state_revision", Integer),  # the member_states revision this turn produced
+    Column("error_code", String(64)),
+    Column("error_message", String(500)),
+    Column("model", String(64)),
+    Column("latency_ms", Integer),
+    Column("prompt_tokens", Integer),
+    Column("completion_tokens", Integer),
+    Column("total_tokens", Integer),
+    Column("created_at", DateTime(timezone=True), nullable=False, server_default=func.now()),
+    Column("updated_at", DateTime(timezone=True), nullable=False, server_default=func.now()),
+    ForeignKeyConstraint(["group_id"], ["groups.id"]),
+    ForeignKeyConstraint(["user_id"], ["users.id"]),
+    UniqueConstraint("group_id", "user_id", "action_id"),
+    CheckConstraint("state in ('PENDING','RUNNING','SUCCEEDED','FAILED')", name="state"),
+    CheckConstraint("seq between 1 and 10", name="seq"),
+    CheckConstraint("(answer_question_id is null) = (answer_option_id is null)", name="answer_pair"),
+    CheckConstraint("char_length(user_message) between 1 and 300", name="message_length"),
+    CheckConstraint("(state = 'SUCCEEDED') = (ai_reply is not null)", name="reply_iff_succeeded"),
+    # One unresolved turn per member at a time: a FAILED turn must be retried before the next message.
+    Index(
+        "uq_interview_turns_open", "group_id", "user_id", unique=True,
+        postgresql_where=text("state in ('PENDING','RUNNING','FAILED')"),
+    ),
+    comment="DEPRECATED since D-B3 (2026-11-19): kept for the stage 4 post-assignment interview, not written by stage 3",
+)
+
+# The structured private MemberState, one immutable row per revision. Only its owner ever reads it.
+member_states = Table(
+    "member_states",
+    metadata,
+    Column("group_id", String(36), primary_key=True),
+    Column("user_id", String(36), primary_key=True),
+    Column("revision", Integer, primary_key=True),
+    Column("state", JSONB, nullable=False),
+    Column("source_turn_seq", Integer, nullable=False),
+    Column("created_at", DateTime(timezone=True), nullable=False, server_default=func.now()),
+    ForeignKeyConstraint(
+        ["group_id", "user_id", "source_turn_seq"],
+        ["interview_turns.group_id", "interview_turns.user_id", "interview_turns.seq"],
+    ),
+    CheckConstraint("revision >= 1", name="revision"),
+    comment="DEPRECATED since D-B3 (2026-11-19): kept for the stage 4 post-assignment interview, not written by stage 3",
+)
+
+# Immutable preference submissions (1st, 2nd, 3rd choice of one candidate revision). A new revision exists only after
+# the previous one went stale because the ProjectBrief (and so the candidates) changed.
+preference_submissions = Table(
+    "preference_submissions",
+    metadata,
+    Column("group_id", String(36), primary_key=True),
+    Column("user_id", String(36), primary_key=True),
+    Column("revision", Integer, primary_key=True),
+    Column("source_candidate_revision", Integer, nullable=False),
+    Column("action_id", String(64), nullable=False),
+    Column("rank1", String(16), nullable=False),
+    Column("rank2", String(16), nullable=False),
+    Column("rank3", String(16), nullable=False),
+    Column("created_at", DateTime(timezone=True), nullable=False, server_default=func.now()),
+    ForeignKeyConstraint(["user_id"], ["users.id"]),
+    ForeignKeyConstraint(
+        ["group_id", "source_candidate_revision"],
+        ["role_candidate_sets.group_id", "role_candidate_sets.source_project_brief_revision"],
+    ),
+    UniqueConstraint("group_id", "user_id", "action_id"),
+    CheckConstraint("revision >= 1", name="revision"),
+    CheckConstraint("rank1 <> rank2 and rank1 <> rank3 and rank2 <> rank3", name="distinct_ranks"),
+)
+
+# Per-member stored status: INTERVIEW -> WAITING_ASSIGNMENT. Back to INTERVIEW when the candidates went stale.
+member_progress = Table(
+    "member_progress",
+    metadata,
+    Column("group_id", String(36), primary_key=True),
+    Column("user_id", String(36), primary_key=True),
+    Column("status", String(20), nullable=False),
+    Column("submission_revision", Integer),
+    Column("interview_closed_at", DateTime(timezone=True), comment="DEPRECATED since D-B3 (2026-11-19): kept for the stage 4 post-assignment interview, not written by stage 3"),  # D-B2 value kept; stage 3 ignores it
+    Column("updated_at", DateTime(timezone=True), nullable=False, server_default=func.now()),
+    ForeignKeyConstraint(["user_id"], ["users.id"]),
+    ForeignKeyConstraint(
+        ["group_id", "user_id", "submission_revision"],
+        ["preference_submissions.group_id", "preference_submissions.user_id", "preference_submissions.revision"],
+    ),
+    CheckConstraint("status in ('INTERVIEW','WAITING_ASSIGNMENT')", name="status"),
+    CheckConstraint("(status = 'WAITING_ASSIGNMENT') = (submission_revision is not null)", name="submission_iff_waiting"),
+)

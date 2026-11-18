@@ -23,6 +23,9 @@ from .db import make_engine, make_session_factory
 from .groups.goals import GoalService
 from .groups.routes import make_router as make_group_router
 from .groups.service import GroupService
+from .interview.candidates import CandidateService
+from .interview.routes import make_router as make_interview_router
+from .interview.ranking import RankingService
 from .job_routes import make_router
 from .jobs import Handler, JobStore
 from .logging_utils import install_redaction
@@ -46,18 +49,35 @@ def _timely_client():
     return TimelyClient()
 
 
+class _BlockedClient:
+    """Test environment default for the interview/candidate AI: a test that forgets to inject a fixture must not reach Timely."""
+
+    model = "blocked"
+
+    def complete_json(self, *args, **kwargs):
+        from wemeet_ai.m0.client import AIError
+
+        raise AIError("LIVE_CALLS_PAUSED", "no AI client injected in the test environment")
+
+
 def create_app(
     settings: Settings | None = None,
     job_handlers: Mapping[str, Handler] | None = None,
     goal_client_factory: Callable[[], object] | None = None,
+    ai_client_factory: Callable[[], object] | None = None,
 ) -> FastAPI:
-    """`goal_client_factory` exists for deterministic tests only; the product always uses the Timely client."""
+    """`goal_client_factory` and `ai_client_factory` (role candidates) exist for deterministic tests only;
+    the product always uses the Timely client."""
     settings = settings or load_settings()
     engine = make_engine(settings)
     handlers = dict(job_handlers or {})
     store = JobStore(make_session_factory(engine))
     group_service = GroupService(make_session_factory(engine))
     goal_service = GoalService(make_session_factory(engine), goal_client_factory or _timely_client)
+    if ai_client_factory is None:
+        ai_client_factory = (lambda: _BlockedClient()) if settings.env == "test" else _timely_client
+    candidate_service = CandidateService(make_session_factory(engine), ai_client_factory)
+    ranking_service = RankingService(make_session_factory(engine))
 
     @asynccontextmanager
     async def lifespan(app: FastAPI):
@@ -70,6 +90,9 @@ def create_app(
         lost_goals = goal_service.fail_interrupted()
         if lost_goals:
             log.warning("marked %d interrupted team goal(s) as FAILED (SERVER_RESTARTED)", lost_goals)
+        lost_candidates = candidate_service.fail_interrupted()
+        if lost_candidates:
+            log.warning("marked %d interrupted role candidate set(s) as FAILED (SERVER_RESTARTED)", lost_candidates)
         yield
         engine.dispose()
 
@@ -85,6 +108,8 @@ def create_app(
     app.state.throttle = throttle
     app.state.groups = group_service
     app.state.goals = goal_service
+    app.state.candidates = candidate_service
+    app.state.ranking = ranking_service
     app.add_middleware(SecurityMiddleware, hsts=settings.secure_cookies)
     app.add_exception_handler(AuthError, auth_error_handler)
 
@@ -96,7 +121,8 @@ def create_app(
 
     app.include_router(make_router(store, handlers))
     app.include_router(make_auth_router(settings, session_factory, sessions, throttle, templates))
-    app.include_router(make_group_router(settings, group_service, goal_service, throttle, templates))
+    app.include_router(make_group_router(settings, group_service, goal_service, candidate_service, throttle, templates))
+    app.include_router(make_interview_router(settings, group_service, goal_service, candidate_service, ranking_service, templates))
     app.mount("/static", RevalidatedStaticFiles(directory=STATIC_DIR), name="static")
 
     @app.get("/healthz")

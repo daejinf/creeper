@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="csrf-token" content="{{ csrf_token }}">
+<title>MOIM · 역할 배정과 내 투두</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1A1D29;--coral:#F26A4F;--blue:#2F54EB;--sun:#FFC53D;
+  --mute:#555B6B;--line:#ECEEF3;--soft:#F6F7FA;--err:#D2492C;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:'Noto Sans KR',system-ui,-apple-system,'Apple SD Gothic Neo',sans-serif;font-size:15px;color:var(--ink);background:#fff;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;color:inherit}
+a:focus-visible,button:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+.app{height:100vh;height:100dvh;display:flex;flex-direction:column}
+
+/* header (대시보드와 동일) */
+.top{position:sticky;top:0;z-index:20;height:68px;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:0 clamp(16px,3vw,32px);background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.logo{display:flex;align-items:center;gap:10px;font-size:22px;font-weight:800;letter-spacing:-0.02em}
+.mark{display:flex;align-items:flex-end;gap:3px}
+.mark i{display:block;width:11px;height:11px}
+.mark .c{border-radius:50%;background:var(--coral)}
+.mark .a{border-radius:6px 6px 0 0;background:var(--blue)}
+.mark .q{border-radius:3px;background:var(--sun)}
+.avatar{display:flex;align-items:center;gap:10px;padding:4px 14px 4px 4px;border-radius:12px;font-size:14px;font-weight:600;transition:background .15s}
+.avatar:hover,.avatar:focus-visible{background:#EEF0F5}
+.me-face{flex:0 0 auto;width:40px;height:40px;border-radius:50%;background:#C9CEDB;display:flex;align-items:center;justify-content:center;gap:8px}
+.me-face i{width:4px;height:4px;border-radius:50%;background:var(--ink)}
+
+main{flex:1;min-height:0;width:100%;max-width:1160px;margin:0 auto;padding:16px clamp(16px,3vw,40px) clamp(32px,7vh,64px);display:flex;flex-direction:column}
+.head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 16px;margin-bottom:10px;flex:0 0 auto}
+.ttl{display:flex;align-items:baseline;gap:10px}
+.head h1{margin:0;font-size:22px;line-height:1.4;font-weight:800;letter-spacing:-0.03em}
+.head .grp{font-size:13px;color:#8A90A0}
+.hl{background:linear-gradient(transparent 62%,#FFE08A 62%);padding:0 3px;margin:0 -3px}
+.pill{display:flex;align-items:center;gap:8px;padding:8px 14px;border:1px solid var(--line);border-radius:999px;font-size:13px;color:var(--mute);background:#fff}
+.pill b{color:var(--ink);font-size:14px}
+
+/* 페이지가 스크롤돼요. 상자 안쪽 스크롤은 없어요 */
+.grid{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:16px}
+.card{display:flex;flex-direction:column;min-height:0;overflow:hidden;border:1px solid var(--line);border-radius:22px;background:#fff}
+.panel{background:#FBFBFD}
+.card-head{flex:0 0 auto;display:flex;align-items:center;gap:10px;padding:16px 22px;border-bottom:1px solid var(--line);font-size:15px;font-weight:700}
+.card-head small{margin-left:auto;font-size:12px;font-weight:500;color:var(--mute)}
+.count{padding:2px 8px;border-radius:999px;background:#EEF0F5;font-size:12px;font-weight:700;color:var(--mute)}
+
+.av.bot{display:inline-flex;flex:0 0 auto;width:34px;height:34px}
+.card-head .av.bot{width:28px;height:28px}
+
+/* chat */
+.log{flex:1;min-height:0;overflow-y:auto;scrollbar-width:none;display:flex;flex-direction:column;gap:12px;padding:18px 18px 10px}
+.log::-webkit-scrollbar,.pbody::-webkit-scrollbar{display:none}
+.log > :first-child{margin-top:auto}
+.log > *,.todos > *{flex-shrink:0}
+.row{display:flex;align-items:flex-start;gap:10px;max-width:92%;animation:pop .3s cubic-bezier(.2,.8,.3,1) both}
+@keyframes pop{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.row.me{align-self:flex-end}
+.who{display:block;margin:0 0 5px 2px;font-size:12px;font-weight:700;color:var(--mute)}
+.col{min-width:0}
+.bubble{padding:11px 16px;border-radius:4px 16px 16px 16px;background:#EFF9F4;font-size:14.5px;line-height:1.65;white-space:pre-wrap;overflow-wrap:anywhere}
+.row.me .bubble{background:#EEF0F5;border-radius:16px 4px 16px 16px}
+.typing{display:inline-flex;align-items:center;gap:5px;padding:15px 18px}
+.typing i{display:block;width:8px;height:8px;animation:bounce 1s ease-in-out infinite}
+.typing i:nth-child(1){border-radius:50%;background:var(--coral)}
+.typing i:nth-child(2){border-radius:4px 4px 0 0;background:var(--blue);animation-delay:.15s}
+.typing i:nth-child(3){border-radius:2px;background:var(--sun);animation-delay:.3s}
+@keyframes bounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-5px)}}
+.quick{flex:0 0 auto;display:flex;flex-wrap:wrap;gap:8px;padding:0 20px 12px}
+.quick:empty{display:none}
+.quick button{min-height:38px;padding:0 16px;border:1px solid #E1E4EC;border-radius:999px;background:#fff;font-size:14px;font-weight:600;cursor:pointer;transition:border-color .15s,background .15s}
+.quick button:hover{border-color:#C9CEDB;background:var(--soft)}
+.composer{flex:0 0 auto;display:flex;align-items:flex-end;gap:10px;margin:0 16px 16px;padding:6px 6px 6px 18px;background:#fff;border:1px solid #E1E4EC;border-radius:16px;transition:border-color .15s}
+.composer:focus-within{border-color:#C9CEDB}
+.composer textarea{flex:1;min-width:0;margin:0;padding:10px 0;border:0;outline:0;resize:none;max-height:96px;background:transparent;font:500 15px/1.55 'Noto Sans KR',sans-serif;color:var(--ink)}
+.composer textarea::placeholder{color:#A4AABA}
+.send{flex:0 0 auto;width:42px;height:42px;display:flex;align-items:center;justify-content:center;border:0;border-radius:12px;background:#F1F3F7;color:var(--ink);cursor:pointer;transition:background .15s,color .15s}
+.send:not(:disabled):hover{background:#E8EBF1}
+.send:disabled{color:#C9CEDB;cursor:not-allowed}
+
+/* 그룹 목표 (대시보드 카드 썸네일 느낌) */
+.pbody{flex:1;min-height:0;overflow-y:auto;scrollbar-width:none;padding:14px 16px 4px}
+.goalbox{position:relative;overflow:hidden;padding:14px 18px;border-radius:16px;background:#E8EDFF;animation:pop .35s cubic-bezier(.2,.8,.3,1) both}
+.goalbox[hidden]{display:none}
+.goalbox .ring{position:absolute;right:-50px;top:-60px;width:190px;height:190px;border-radius:50%;border:1.5px solid rgba(26,29,41,.08)}
+.goalbox .ring.r2{right:-14px;top:-24px;width:120px;height:120px}
+.ghead{position:relative;display:flex;align-items:center;gap:8px}
+.glabel{font-size:12.5px;font-weight:700;color:#4A5A8F}
+.dday{display:inline-block;padding:4px 10px;border-radius:999px;background:#fff;font-size:12px;font-weight:700}
+.gt{position:relative;margin:8px 0 2px;font-size:16px;font-weight:800;letter-spacing:-0.02em;line-height:1.45}
+.gd{position:relative;margin:0;font-size:13px;color:var(--mute)}
+.gd b{color:var(--ink);font-weight:700}
+.crew{position:absolute;right:18px;bottom:14px;display:flex;align-items:flex-end;gap:5px}
+.m{width:26px;height:26px;display:flex;align-items:center;justify-content:center;gap:5px}
+.m i{width:3px;height:3px;border-radius:50%;background:var(--ink)}
+.m.c{border-radius:50%;background:var(--coral)}
+.m.a{border-radius:13px 13px 0 0;background:var(--blue);padding-top:3px}
+.m.a i{background:#fff}
+.m.q{border-radius:8px;background:var(--sun)}
+.rolebox{display:flex;align-items:center;gap:8px;margin-top:8px;padding:10px 14px;background:#fff;border:1px solid var(--line);border-radius:12px;font-size:13px;animation:pop .3s cubic-bezier(.2,.8,.3,1) both}
+.rolebox[hidden]{display:none}
+.rolebox .rl{color:var(--mute);font-weight:500}
+.rolebox b{font-size:14px;font-weight:700}
+.rolebox .rp{margin-left:auto;font-size:12px;color:#8A90A0}
+.empty{display:flex;flex-direction:column;align-items:center;gap:10px;padding:28px 10px;text-align:center;color:#8A90A0;font-size:14px;line-height:1.7;border:1px dashed #DCE0E8;border-radius:12px}
+.empty .dots{display:flex;gap:6px}
+.empty .dots i{display:block;width:12px;height:12px}
+.empty .dots i:nth-child(1){border-radius:50%;background:#FFD3C8}
+.empty .dots i:nth-child(2){border-radius:6px 6px 0 0;background:#C9CEDB}
+.empty .dots i:nth-child(3){border-radius:3px;background:#FFE08A}
+
+.todos{list-style:none;margin:10px 0 0;padding:0;display:flex;flex-direction:column;gap:6px}
+.todo{display:flex;align-items:center;gap:8px;padding:5px 6px 5px 10px;background:#fff;border:1px solid var(--line);border-radius:12px;animation:pop .3s cubic-bezier(.2,.8,.3,1) both;transition:border-color .15s}
+.todo:focus-within{border-color:#C9CEDB}
+.n{flex:0 0 auto;width:20px;height:20px;display:grid;place-items:center;padding:0;border:1.5px solid #C9CEDB;border-radius:6px;background:#fff;color:#fff;cursor:pointer;transition:background .15s,border-color .15s}
+.n svg{opacity:0;transition:opacity .15s}
+.n:hover{border-color:#A3A9B6}
+.n[aria-checked="true"]{background:var(--ink);border-color:var(--ink)}
+.n[aria-checked="true"] svg{opacity:1}
+.todo.checked .t{color:#A3A9B6;text-decoration:line-through;text-decoration-color:#C9CEDB}
+.todo .t{flex:1;min-width:0;padding:6px 0;border:0;outline:0;background:transparent;font:600 14px 'Noto Sans KR',sans-serif;color:var(--ink)}
+/* 마감일: 대시보드의 D-day 뱃지처럼 알약 모양. 누르면 달력이 열려요 */
+.due{flex:0 0 auto;display:inline-flex;align-items:center;gap:6px;height:28px;padding:0 4px;border:0;border-radius:6px;background:none;font-family:inherit;color:var(--mute);font-size:12px;font-weight:500;white-space:nowrap;cursor:pointer;font-variant-numeric:tabular-nums;transition:color .15s}
+.due:hover{color:var(--ink)}
+.due svg{display:none}
+.due .dd{font-weight:700;color:var(--ink)}
+.due .dd::before{content:"·";margin-right:6px;color:#C9CEDB;font-weight:400}
+.due.near .dd{color:#D14B30}
+.due.unset{color:#A3A9B6;text-decoration:underline;text-underline-offset:3px;text-decoration-color:#D5D9E2}
+.due.unset:hover{color:var(--ink)}
+
+/* 달력 (대시보드의 주간 달력과 같은 모양) */
+.cal{position:fixed;z-index:50;width:272px;padding:14px 14px 12px;background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:0 16px 40px rgba(26,29,41,.14);animation:pop .18s ease both}
+.cal[hidden]{display:none}
+.cal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.cal-head b{font-size:14px;font-weight:700}
+.cal-nav{width:30px;height:30px;display:flex;align-items:center;justify-content:center;border:0;border-radius:8px;background:transparent;color:var(--mute);cursor:pointer}
+.cal-nav:hover:not(:disabled){background:#EEF0F5;color:var(--ink)}
+.cal-nav:disabled{opacity:.3;cursor:default}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;text-align:center}
+.cw{padding:4px 0 6px;font-size:11px;color:#8A90A0}
+.cd{position:relative;height:34px;border:0;border-radius:50%;background:transparent;font:600 13px 'Noto Sans KR',sans-serif;color:var(--ink);cursor:pointer;transition:background .12s}
+.cd:hover:not(:disabled){background:#EEF0F5}
+.cd:disabled{color:#C9CEDB;cursor:default}
+.cd.today{box-shadow:inset 0 0 0 1.5px var(--ink)}
+.cd.sel{background:var(--ink);color:#fff;box-shadow:none}
+.cd.sel:hover{background:var(--ink)}
+.cd.end::after{content:'';position:absolute;left:50%;bottom:3px;width:4px;height:4px;margin-left:-2px;border-radius:50%;background:var(--coral)}
+.cal-foot{display:flex;align-items:center;gap:6px;margin:8px 2px 0;padding-top:8px;border-top:1px solid var(--line);font-size:12px;color:var(--mute)}
+.dot-end{width:6px;height:6px;border-radius:50%;background:var(--coral)}
+.x{flex:0 0 auto;width:30px;height:30px;display:flex;align-items:center;justify-content:center;border:0;border-radius:8px;background:transparent;color:#A4AABA;cursor:pointer;transition:background .15s,color .15s}
+.x:hover{background:#EEF0F5;color:var(--ink)}
+.addrow{flex:0 0 auto;padding:8px 16px 0}
+.add{width:100%;min-height:40px;border:1.5px dashed #C9CEDB;border-radius:12px;background:transparent;color:var(--mute);font-size:14px;font-weight:600;cursor:pointer;transition:border-color .15s,color .15s,background .15s}
+.add:hover{border-color:var(--ink);color:var(--ink);background:var(--soft)}
+.pfoot{flex:0 0 auto;padding:10px 16px 12px;display:flex;flex-direction:column;gap:6px}
+.confirm{min-height:48px;border:0;border-radius:12px;background:#ECEEF3;color:var(--ink);font-size:15px;font-weight:700;cursor:pointer;transition:background .15s}
+.confirm:hover{background:#E3E6EC}
+.msg{min-height:18px;margin:0;text-align:center;font-size:13px;font-weight:500;color:var(--mute)}
+.msg.err{color:var(--err)}
+
+/* done: 화면 위에 떠 있고, 아무 데나 누르면 그룹 화면으로 가요 */
+.done{
+  position:fixed;inset:0;z-index:60;display:flex;align-items:center;justify-content:center;padding:20px;
+  background:rgba(255,255,255,.72);backdrop-filter:blur(6px);cursor:pointer;
+  opacity:0;visibility:hidden;transition:opacity .2s,visibility .2s;
+}
+.done.show{opacity:1;visibility:visible}
+.done-card{
+  display:flex;flex-direction:column;align-items:center;gap:10px;width:100%;max-width:360px;padding:32px 24px 28px;text-align:center;
+  border:1px solid var(--line);border-radius:22px;background:#fff;box-shadow:0 20px 48px rgba(26,29,41,.10);
+  transform:translateY(8px) scale(.98);transition:transform .25s cubic-bezier(.2,.8,.3,1);
+}
+.done.show .done-card{transform:none}
+.done .check{width:52px;height:52px;margin-bottom:4px;border-radius:50%;background:#F1F3F7;display:flex;align-items:center;justify-content:center;color:var(--ink)}
+.done h2{margin:0;font-size:20px;font-weight:800;letter-spacing:-0.03em}
+.done p{margin:0;font-size:13px;color:var(--mute);line-height:1.7;white-space:pre-line}
+
+/* 가로가 좁으면 마감일을 할 일 아래 줄로 */
+@media (max-width:1000px){
+  .todo{display:grid;grid-template-columns:20px minmax(0,1fr) 30px;column-gap:8px;row-gap:0;padding:6px 6px 6px 10px}
+  .todo .n{grid-row:1 / span 2}
+  .todo .t{grid-column:2;padding:2px 0 0}
+  .todo .due{grid-column:2;grid-row:2;justify-self:start;height:22px;margin:0 0 2px;padding:0;font-size:11.5px}
+  .todo .x{grid-column:3;grid-row:1 / span 2}
+  .goalbox .crew{display:none}
+  .head .pill{display:none}
+  }
+/* 휴대폰처럼 아주 좁을 때만 위아래로 쌓여요 */
+@media (max-width:640px){
+  .app{height:auto;min-height:100vh}
+  .grid{grid-template-columns:1fr;flex:none}
+  .chat{height:72vh}
+  .panel{max-height:none}
+  .pbody{overflow:visible}
+}
+@media (prefers-reduced-motion:reduce){
+  .row,.todo,.goalbox,.typing i{animation:none}
+  .done,.done-card{transition:none}
+}
+
+/* ---------- 구현 추가: 상태·오류·비활성 (기존 색·크기 재사용) ---------- */
+.quick button[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
+.quick button:disabled{opacity:.6;cursor:default}
+.quick .pick-note{flex-basis:100%;font-size:12px;font-weight:500;color:var(--mute)}
+.bubble.err{background:#FDF1EE;color:var(--err)}
+.add:disabled,.confirm:disabled{opacity:.6;cursor:default}
+.add:disabled:hover{border-color:#C9CEDB;color:var(--mute);background:transparent}
+.confirm.primary{background:var(--ink);color:#fff}
+.confirm.primary:hover:not(:disabled){background:#2B2F3E}
+.rolebox.state .rp{max-width:60%;text-align:right;white-space:normal;overflow-wrap:anywhere}
+.rolebox.state.empty-row .rp{color:#A3A9B6}
+.sect{margin:12px 2px 0;font-size:12.5px;font-weight:700;color:var(--mute)}
+.sect[hidden]{display:none}
+.pill[hidden],.count[hidden],.addrow[hidden],.confirm[hidden]{display:none}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <a class="logo" href="/dashboard">
+      <span class="mark" aria-hidden="true"><i class="c"></i><i class="a"></i><i class="q"></i></span>
+      MOIM
+    </a>
+  </header>
+
+  <main id="main" data-group="{{ group_id }}">
+    <div class="head">
+      <div class="ttl">
+        <h1>역할 배정 &amp; 내 투두 만들기</h1>
+        <span class="grp" id="grpName"></span>
+      </div>
+      <span class="pill" hidden>내 투두 <b id="pillCount">0</b></span>
+    </div>
+
+    <div class="grid">
+      <section class="card chat" aria-label="AI와의 대화">
+        <div class="card-head">
+          <span class="av bot" aria-hidden="true"><svg viewBox="0 0 24 24" width="100%" height="100%" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#3DB884"/><circle cx="9.6" cy="11.6" r="1.25" fill="#1A1D29"/><circle cx="14.4" cy="11.6" r="1.25" fill="#1A1D29"/></svg></span>
+          MOIM AI
+        </div>
+        <div class="log" id="log" role="log" aria-live="polite" aria-label="AI 대화"></div>
+        <div class="quick" id="quick" aria-label="빠른 답변"></div>
+        <form class="composer" id="form" autocomplete="off">
+          <textarea id="input" rows="1" maxlength="300" placeholder="역할 순위를 골라 주세요" aria-label="메시지 입력" disabled></textarea>
+          <button class="send" id="send" type="submit" aria-label="보내기" disabled>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+          </button>
+        </form>
+      </section>
+
+      <section class="card panel" aria-label="역할 순위">
+        <div class="card-head"><span id="panelTitle">역할 순위 선택</span> <span class="count" id="count" hidden>0</span></div>
+        <div class="pbody">
+          <div class="goalbox" id="goalbox" hidden>
+            <span class="ring" aria-hidden="true"></span><span class="ring r2" aria-hidden="true"></span>
+            <div class="ghead"><span class="dday" id="dday"></span><span class="glabel">우리 팀의 최종 목표</span></div>
+            <p class="gt" id="goalText"></p>
+            <p class="gd">기한은 <b id="goalDue"></b>까지</p>
+            <div class="crew" aria-hidden="true"><span class="m c"><i></i><i></i></span><span class="m a"><i></i><i></i></span><span class="m q"><i></i><i></i></span></div>
+          </div>
+          <p class="sect" id="rankHead" hidden>내 역할 순위</p>
+          <div id="rankRows"></div>
+          <div class="empty" id="empty">
+            <span class="dots" aria-hidden="true"><i></i><i></i><i></i></span>
+            <span id="emptyText">역할이 정해지면 여기에 내 투두가 만들어져요.</span>
+          </div>
+          <ol class="todos" id="todos"></ol>
+        </div>
+        <div class="addrow" hidden><button class="add" id="add" type="button" disabled>+ 직접 추가하기</button></div>
+        <div class="pfoot">
+          <button class="confirm primary" id="submitRank" type="button" hidden>순위 제출하기</button>
+          <button class="confirm" id="confirm" type="button" disabled hidden>투두 확정하기</button>
+          <p class="msg" id="msg" role="status" aria-live="polite"></p>
+        </div>
+      </section>
+    </div>
+
+  </main>
+</div>
+
+<script src="/static/auth-common.js"></script>
+<script src="/static/chat.js"></script>
+</body>
+</html>

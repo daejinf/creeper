@@ -1099,7 +1099,7 @@ def test_group_page_matches_the_original_structure(db, mk):
 
 
 def test_generated_pages_have_no_inline_scripts_or_storage():
-    for name in ("dashboard", "invite", "group_create", "group", "chat_placeholder", "notice"):
+    for name in ("dashboard", "invite", "group_create", "group", "chat", "notice"):
         html = (SRC / "templates" / f"{name}.html").read_text(encoding="utf-8")
         import re
 

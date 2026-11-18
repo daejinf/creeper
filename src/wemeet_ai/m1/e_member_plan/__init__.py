@@ -124,7 +124,8 @@ def update_member_condition(state: MemberState, field: str, *, value=None, statu
         out.question = None
     return code_result("E.review", out)
 
-def coach_member_goal(request: MemberCoachRequest, *, runtime: Runtime | None = None):
+def coach_member_goal(request: MemberCoachRequest, *, runtime: Runtime | None = None, extra_policy: str = ""):
+    """`extra_policy` is appended to the built-in policy by the MOIM adapter (turn budget, required fields)."""
     import hashlib
     state = request.state.model_copy(deep=True)
     state.owner_member_id = request.owner_member_id
@@ -172,6 +173,13 @@ def coach_member_goal(request: MemberCoachRequest, *, runtime: Runtime | None = 
     unconfirmed_states = []
     def check(out):
         ids = {m.message_id for m in request.conversation if m.role == "user"}
+        # MOIM: a fact the model only suggests (AI_SUGGESTED, or backed by the shared context instead of the member's own
+        # words) is not a personal fact. It is dropped here, never stored, and the member is simply asked again. The LIVE
+        # model did this for `scope`; failing the whole turn for it made the interview unusable. Facts that claim a user
+        # message that does not exist still fail below.
+        for field in [f for f, fact in out.extracted_fields.items() if fact.origin == "AI_SUGGESTED" or any(e.source != "USER_MESSAGE" for e in fact.evidence)]:
+            out.extracted_fields.pop(field)
+            out.answer_states.pop(field, None)
         # The public role/context is not a private answer. Before the first
         # personal reply there can be no newly extracted personal facts.
         if not ids:
@@ -231,15 +239,23 @@ def coach_member_goal(request: MemberCoachRequest, *, runtime: Runtime | None = 
             extracted = out.extracted_fields.get(q.field)
             refining = bool(q.refinement_reason and q.topic_id and q.topic_id not in state.answered_topics)
             repeated = answered in {"UNKNOWN", "SKIPPED"} or q.topic_id and q.topic_id in state.answered_topics or (answered == "KNOWN" or extracted and extracted.value is not None or q.field in out.answer_states) and not refining
-            if q.field not in dims: raise AIError("INVALID_FIELD", "진단 항목 안에서 질문하세요.")
+            if q.field not in dims:
+                # MOIM: the open question's field is part of the diagnosis, so add it instead of failing the turn (at most 6 items).
+                if len(out.dimensions) >= 6: raise AIError("INVALID_FIELD", "진단 항목 안에서 질문하세요.")
+                out.dimensions.append(Dimension(field=q.field, label=q.field, reason=""))
+                dims.append(q.field)
             if repeated:
                 out.question = None
                 out.reply = out.reply.replace(q.text, "").strip() + "\n이미 확인된 내용은 다시 묻지 않고 현재 조건을 활용하겠습니다."
                 return  # Keep valid facts; a repeated optional question must not destroy progress.
+            usable = []
             for o in q.options:
                 o.value = normalize_value(q.field, o.value)
-                if o.action == "VALUE" and not valid_value(q.field, o.value): raise AIError("SCHEMA_INVALID", "버튼의 정규화 값이 잘못됐습니다.")
-                if o.action == "SKIP" and q.field in {"current_level", "weekly_available_minutes", "scope"}: raise AIError("INVALID_FIELD", "이 항목은 모름으로 답할 수 있습니다.")
+                # MOIM: an unusable button is dropped instead of failing the turn (this free-form coach is no longer called by MOIM; see interpret_member_answer).
+                if o.action == "VALUE" and not valid_value(q.field, o.value): continue
+                if o.action == "SKIP" and q.field in {"current_level", "weekly_available_minutes", "scope"}: continue
+                usable.append(o)
+            q.options = usable
         if "마지막 하나" in out.reply or "마지막으로 하나" in out.reply: raise AIError("COACH_POLICY", "확인이 끝난다는 약속을 반복하지 마세요.")
     policy = """본인 역할에 맞는 개인 코치입니다. 공동 목표/역할/일정만 있어도 시작합니다.
 수준·주간시간만 묻고 끝내지 말고 scope/current_progress/tools/preferred_times/constraints/support_needed 중 계획을 바꾸는 항목을 포함해 4~6개 dimensions를 선정하세요.
@@ -261,7 +277,9 @@ answer_states에는 이번 답변에서 새로 확인한 상태만 넣으세요.
 자유 입력의 모름/건너뜀은 extracted_fields의 null 값과 본인 evidence를 붙이고 answer_states의 UNKNOWN/SKIPPED로 기록합니다. 제약 없음은 VALUE의 빈 목록이며 건너뜀과 다릅니다.
 state.refinements/refinement_states는 기존 사실의 세부 답변입니다. 세부사항에 모름을 답했다고 이미 확인한 상위 범위·시간·수준을 미정으로 바꾸지 마세요. 모른다고 답한 세부 주제는 다시 묻지 말고 초안 제안으로 남깁니다.
 기여 결과물/완료 기준/수준/시간예산이 실질적으로 확인됐으면 진단을 마무리해도 됩니다. 추가 선택 정보가 없다고 막지 마세요."""
-    result = (runtime or Runtime()).run("E.coach", payload, CoachModel, policy, check=check, owner=request.owner_member_id)
+    if extra_policy:
+        policy += "\n" + extra_policy
+    result =(runtime or Runtime()).run("E.coach", payload, CoachModel, policy, check=check, owner=request.owner_member_id)
     if unconfirmed_states:result.warnings.append("아직 답하지 않은 항목은 모름·건너뜀 선택으로 저장하지 않았습니다.")
     if result.status != "OK":
         result.data = MemberCoachReply(reply="답변은 보존했습니다. AI 응답만 다시 요청할 수 있습니다.", state=state)
@@ -292,6 +310,57 @@ state.refinements/refinement_states는 기존 사실의 세부 답변입니다. 
     optional = [d.field for d in state.dimensions if d.field not in core and d.field not in state.answer_states]
     result.data = MemberCoachReply(reply=output.reply, state=state, remaining_core=core, remaining_optional=optional, can_generate_plan=not core, summary_checkpoint=checkpoint)
     return result
+
+class ExtraFact(Contract):
+    field: PersonalField
+    value: Any
+    quote: str
+
+class NextOption(Contract):
+    label: str
+    value: Any = None
+
+class NextQuestion(Contract):
+    field: PersonalField
+    text: str
+    options: list[NextOption] = Field(default_factory=list, max_length=4)
+
+class TurnModel(Contract):
+    """MOIM: one interview turn. The AI reads the member's answer AND leads the conversation: it writes the next question and
+    its answer buttons. The server validates every part (quotes, values, field, options) before anything is stored or shown."""
+    understood: bool = True
+    value: Any = None
+    quote: str = ""
+    extras: list[ExtraFact] = Field(default_factory=list, max_length=4)
+    reply: str = ""
+    next: NextQuestion | None = None
+
+class TurnRequest(Contract):
+    owner_member_id: str
+    project: dict
+    question_field: PersonalField
+    question: str
+    answer: str = Field(min_length=1, max_length=300)
+    answer_kind: Literal["text", "button"]
+    known: dict[str, Any] = Field(default_factory=dict)
+    asked_unknown: list[str] = Field(default_factory=list)
+    missing_required: list[str] = Field(default_factory=list)
+    turns_left: int = Field(ge=0, le=20)
+
+INTERVIEW_POLICY = """너는 MOIM의 개인 인터뷰어다. 팀 프로젝트(project)에서 이 사람(한 명)이 어떤 역할을 맡으면 좋을지 정하려고, 본인에게만 몇 가지를 묻는다.
+입력: project(프로젝트 정보), question_field·question(방금 한 질문), answer·answer_kind(사용자 답, text=직접 쓴 글, button=고른 버튼), known(이미 알게 된 정보), asked_unknown(모른다고 답한 항목), missing_required(아직 꼭 필요한 항목), turns_left(남은 질문 횟수).
+항목(field): current_level(경험 수준, 문자열), weekly_available_minutes(주간 가능 시간, 정수 분), scope(맡고 싶은 범위, 문자열), constraints(일정·도구 제약, 문자열 목록, 없으면 []), tools(쓸 수 있는 도구, 목록), current_progress(준비한 자료·진행, 문자열), preferred_times(선호 시간대, 목록), support_needed(필요한 도움, 목록).
+JSON {"understood": bool, "value": ..., "quote": "...", "extras": [{"field","value","quote"}], "reply": "...", "next": {"field": "...", "text": "...", "options": [{"label": "...", "value": ...}]} | null} 하나만 반환한다.
+1) answer_kind가 text이면 answer가 question_field에 대한 답으로 이해되는지 판단한다. 이해되면 understood=true, value는 question_field 형식의 짧고 정확한 값, quote는 answer 안의 근거 문구를 글자 그대로 복사한 것이다. 이해되지 않거나 엉뚱하면 understood=false. answer_kind가 button이면 이미 처리됐으니 value·quote는 비운다.
+2) answer에 다른 항목의 정보를 사용자가 분명히 말했으면 extras에 넣는다(각 quote는 answer에서 그대로 복사, scope는 맡고 싶다/할 수 있다고 분명히 말했을 때만, 이미 known인 항목은 사용자가 고쳐 말한 경우만). 목록 항목은 말한 것을 빠짐없이 담는다.
+3) next는 네가 다음에 가장 알고 싶은 것 하나다. 이 프로젝트와 지금까지의 답에 맞춰 구체적으로 묻는다(예: 발표 경험이 있다고 했으면 발표 준비 방식, 개발이면 쓰는 언어). field는 known에 없는 항목이고, 이미 물어 답을 받은 항목을 다시 묻지 않는다. missing_required가 비어 있지 않으면 그 안에서 고른다(모른다고 답한 필수 항목은 다른 방식으로 한 번 더 묻는다). answer가 이해되지 않았으면 같은 항목을 더 쉽게 다시 묻는다. 사용자가 질문을 했으면 reply로 한 문장 답하고 이어간다. 더 물을 것이 없고 missing_required가 비어 있으면 next는 null.
+4) next.options는 이 질문에 사용자가 실제로 고를 법한 구체적 답 2~4개다(label 20자 이내). value는 항목 형식(weekly_available_minutes는 정수 분, 목록 항목은 문자열 목록, 문자열 항목은 문자열). 모른다/직접 입력은 넣지 않는다(서버가 붙인다).
+5) reply는 한 문장 60자 이내. 사용자가 이해되지 않았거나 질문했을 때만 쓰고, 그 밖에는 빈 문자열이다. 항목명·진단·상태 같은 내부 표현은 쓰지 않고, 역할이나 투두를 제안·배정하지 않는다.
+6) 출력은 짧게: 불필요한 설명·이유 필드를 만들지 않는다."""
+
+def interview_turn(request: TurnRequest, *, runtime: Runtime | None = None):
+    """E.coach in MOIM (D-B2 follow-up): the AI leads the interview; see TurnModel and docs/ARCHITECTURE.md."""
+    return (runtime or Runtime()).run("E.coach", request, TurnModel, INTERVIEW_POLICY, owner=request.owner_member_id)
 
 class Contribution(Contract):
     title: str
