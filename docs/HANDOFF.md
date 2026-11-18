@@ -47,6 +47,7 @@ $env:MOIM_ENV='development'; .\.venv\Scripts\python.exe tools\capture_screens.py
 
 ## 0B 보정 (2026-11-18)
 
+- **최종 커밋:** `d7e5fd7e9aca33adae33000e1f1008479ba8784b`(`0B root hardening`, baseline `a9a9721` 다음). 이 해시는 보정 내용 커밋의 것이며, 이 줄을 추가한 문서 커밋은 그 다음 커밋이다.
 - D-A8: LIVE 예산 개정(`docs/PRODUCT.md`). `docs/LIVE_TESTING.md` 4절·ROADMAP·`prompts/`의 고정 호출 상한 문구를 맞췄다. 누적 LIVE 호출 6회(보정 중 LIVE 재호출 없음).
 - 줄바꿈: 변경한 텍스트 파일 21개를 LF로 정상화했고 `git diff --cached --check`가 깨끗하다. 변경하지 않은 기존 파일 일부(`alembic.ini`, `tools/capture_screens.py`, `src/wemeet_ai`의 일부 모듈 등)는 baseline에 CRLF로 들어 있어 그대로 두었다. `AGENTS.md`와 원본 HTML은 커밋에 포함하지 않았다(변경 없음).
 - Git: 위 환경 표. `.gitattributes`(`moim-*.html text eol=lf`)와 `.gitignore`(`.env`, `.local/`, `.venv/`, `artifacts/`, `build/`, `*.egg-info/`)가 실제로 적용됨을 `git check-ignore`와 `git ls-files --eol`로 확인했고, `core.autocrlf=true`로 새로 clone해도 원본 9개 바이트가 같았다.
