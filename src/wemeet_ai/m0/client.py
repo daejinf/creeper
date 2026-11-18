@@ -16,6 +16,9 @@ from .tracing import emit, current_stage
 
 call_log = logging.getLogger("moim.provider")
 
+# Output limit for one call (reasoning tokens count against it). Callers may pass `max_completion_tokens`.
+DEFAULT_MAX_OUTPUT_TOKENS = 4096
+
 
 class AIError(Exception):
     def __init__(self, code: str, message: str, retryable: bool = False):
@@ -91,7 +94,7 @@ class TimelyClient:
         key = os.getenv("TIMELY_API_KEY")
         if not key:
             raise AIError("AUTH_FAILED", "TIMELY_API_KEY is not configured")
-        body = {"model": self.model, "messages": messages, "max_completion_tokens": 1500, **options}  # gpt-5.x rejects `max_tokens`
+        body = {"model": self.model, "messages": messages, "max_completion_tokens": DEFAULT_MAX_OUTPUT_TOKENS, **options}  # gpt-5.x rejects `max_tokens`
         call = {"call_id": str(uuid4()), "model": self.model, "usage": Usage(), "request_id": None}
         started = time.perf_counter()
         stats.transport_attempts += 1

@@ -18,7 +18,7 @@
 GATE A (승인 완료, 2026-11-18):
 
 - 현재 HTML 9개를 LOCKED 디자인 기준으로 승인: 승인(D-A6)
-- Timely LIVE 테스트 허용과 0B 호출 예산: 승인(D-A7, 0B 최대 12회)
+- Timely LIVE 테스트 허용: 승인(D-A7). 호출 예산은 D-A8(2026-11-18)로 개정: 고정 상한 없음, 모든 호출 기록, 단일 작업 100회 이상 대량·부하 호출만 사전 승인
 
 에이전트가 추천 기본값을 정하고 근거를 기록하는 결정 (PROPOSED, 사용자 승인 대상 아님):
 
@@ -35,7 +35,7 @@ GATE B — 3·4단계 전 (OPEN):
 - moim-chat 상태 전환 방식
 - private 정보에서 역할·투두 초안에 사용할 수 있는 필드
 - 1·2·3순위 역할 배정의 미제출자 처리, 활성화 뒤 신규 합류와 재배정 규칙, 남은 역할이 없을 때의 중복 허용. 배정 시점(활성화 cohort 전원 제출 뒤 서버 1회 실행)과 순위별 충돌·순위 소진 뒤의 무작위 배정 원칙은 승인됨(D-A5)
-- ProjectBrief 기반 그룹별 역할 후보의 생성 주체·시점·개수·표시 위치, source ProjectBrief를 가진 공용 candidate revision, 실패·재시도·STALE 규칙과 별도 LIVE 예산(포지션 등록 화면은 만들지 않음, D-A5)
+- ProjectBrief 기반 그룹별 역할 후보의 생성 주체·시점·개수·표시 위치, source ProjectBrief를 가진 공용 candidate revision, 실패·재시도·STALE 규칙(별도 고정 LIVE 예산은 두지 않음, D-A8)(포지션 등록 화면은 만들지 않음, D-A5)
 - 사용자가 수정할 수 있는 투두 범위와 서버 역할 재배정 operation. 배정 역할·담당자 직접 수정은 허용하지 않음
 - 배정 안내 문구에서 다른 구성원의 이름·순위를 보여줄지. 원본 `moim-chat` 데모 문구는 이를 노출하므로 순위 비공개를 유지하려면 문구 변경이 제품 차이로 승인돼야 함
 - 역할·투두의 사용자 확정과 그룹 공개 범위
@@ -88,7 +88,7 @@ GATE A에서도 코드 확인 없이는 결정하기 어려운 CSP 세부값, �
 
 3단계 — 개인 AI 인터뷰와 역할 순위 제출
 - 개인 전용 대화와 MemberState
-- GATE B에서 승인한 별도 LIVE 예산과 방식으로 ProjectBrief 기반 그룹 역할 후보를 한 번 생성해 공용 candidate revision으로 저장·복구
+- GATE B에서 승인한 방식으로(D-A8: 별도 고정 LIVE 예산 없음, 모든 호출 기록) ProjectBrief 기반 그룹 역할 후보를 한 번 생성해 공용 candidate revision으로 저장·복구
 - 동일 candidate revision의 역할 후보 표시와 서로 다른 1·2·3순위 제출(후보 밖 문자열·중복·누락·stale revision 거부)
 - 제출 뒤 `WAITING_ASSIGNMENT`, 순위 원문 비공개. 역할 배정·투두는 만들지 않음
 - 비동기 실행과 새로고침 복구
@@ -136,8 +136,8 @@ GATE A에서도 코드 확인 없이는 결정하기 어려운 CSP 세부값, �
 
 AI 기능이 생긴 단계부터:
 
-- 승인된 LIVE 테스트가 통과하거나 정확한 BLOCKED 이유가 있다.
-- 모델, latency, usage, 오류와 호출 횟수를 기록한다.
+- 승인된 LIVE 테스트(D-A8 범위)가 통과하거나 정확한 BLOCKED 이유가 있다.
+- 모든 실제 호출의 모델, latency, usage, request ID, 결과와 누적 호출 수를 `docs/LIVE_TESTING.md` 6절 표에 기록한다.
 
 디자인 구현이 생긴 단계부터:
 

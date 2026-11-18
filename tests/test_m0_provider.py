@@ -167,7 +167,8 @@ def test_defaults_use_direct_api_and_unprefixed_model(monkeypatch):
     assert session.posts[0]["url"] == "https://hello.timelyai.io/api/v2/chat/direct/openai/v1/chat/completions"
     assert session.posts[0]["json"]["model"] == "gpt-5.6-luna"
     assert "max_tokens" not in session.posts[0]["json"]
-    assert session.posts[0]["json"]["max_completion_tokens"] == 1500
+    from wemeet_ai.m0.client import DEFAULT_MAX_OUTPUT_TOKENS
+    assert session.posts[0]["json"]["max_completion_tokens"] == DEFAULT_MAX_OUTPUT_TOKENS
 
 
 def test_user_retry_is_a_new_call():

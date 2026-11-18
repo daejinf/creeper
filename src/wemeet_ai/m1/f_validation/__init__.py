@@ -88,7 +88,7 @@ class RevisionRequest(Contract):
     feedback: str = Field(min_length=1)
     weekly_budget: int | None = Field(default=None, gt=0)
 
-def revise_plan(request: RevisionRequest, *, runtime: Runtime | None = None, fresh=False):
+def revise_plan(request: RevisionRequest, *, runtime: Runtime | None = None):
     from uuid import uuid4
     from ...m0 import AIError
     def check(plan):
@@ -97,7 +97,7 @@ def revise_plan(request: RevisionRequest, *, runtime: Runtime | None = None, fre
         issues = inspect_plan(plan, request.context, {plan.owner_member_id: request.weekly_budget} if request.weekly_budget else None)
         if issues: raise AIError("PLAN_INVALID", str([i.model_dump() for i in issues]))
         assign_ids(plan, request.plan.plan_version_id)
-    result = (runtime or Runtime()).run("F.revise", request, Plan, "수정 요청을 반영하되 확인된 목표·기간·시간 예산을 지키세요. 공개 과제와 실행 방법만 작성하고 개인 사유는 설명하지 마세요.", check=check, fresh=fresh)
+    result = (runtime or Runtime()).run("F.revise", request, Plan, "수정 요청을 반영하되 확인된 목표·기간·시간 예산을 지키세요. 공개 과제와 실행 방법만 작성하고 개인 사유는 설명하지 마세요.", check=check)
     return result
 
 __all__ = ["ValidationRequest", "RevisionRequest", "validate_plan", "revise_plan"]

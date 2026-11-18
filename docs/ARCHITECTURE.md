@@ -75,6 +75,8 @@ AI가 DB를 직접 임의 수정하지 않는다. 구조화된 변경안, 권한
 | 보조 `shared/` | KEEP |
 | 보조 `continuity.py`·`cli.py` | DROP |
 
+**0B 보정 결과 (2026-11-18):** 위 표의 DROP·실행 제외 모듈(A·B·C·D, `persistence/`, `continuity.py`, `cli.py`, `m0/versions.py`, `m0/cache.py`)은 소스에서 제거했고 KEEP·ADAPT 모듈(`m0`, `m1/e_member_plan`, `m1/f_validation`, `m2`, `shared`)만 남았다. 이 문서의 아래 모듈별 서술에 있는 줄 번호와 제거된 모듈의 설명은 기준선(Git `a9a9721`) 시점의 기록이다. 제거 확인은 `tests/test_packaging.py`.
+
 ### M0 — ADAPT
 
 - 계약 일치: `Result`·`Meta`·`Usage`·`AIError`와 JSON 스키마 검증(`m0/client.py:57-81`)은 맞다. 불일치는 자동 재시도 세 곳(`client.py:63` JSON 복구 재호출, `client.py:91` 전송 재시도, `runtime.py:66` 검증 재호출)이다. "사용자 메시지 한 번에 Timely 호출 한 번, 자동 재시도 없음"과 충돌한다. `runtime.py:71`이 JSON 작업에 `max_tokens` 4096을 넘겨 `client.py:89`의 1500을 덮어쓴다(문서 전제와 다름).
@@ -170,6 +172,6 @@ AI가 DB를 직접 임의 수정하지 않는다. 구조화된 변경안, 권한
 |---|---|---|
 | provider 요청·응답·파싱 원문 emit | `m0/client.py` | 0B-2에서 해결(2026-11-18): 크기·해시·ID만 기록. `docs/LIVE_TESTING.md` 4-1 |
 | 자동 재시도 세 곳 | `m0/client.py`, `m0/runtime.py` | 0B-2에서 해결(2026-11-18): 모두 제거, 호출 1회. 이후 줄 번호는 위 서술과 다르다 |
-| 소스 변경 시 `SOURCE_RELOAD_REQUIRED` | `m0/runtime.py:27`, `m0/versions.py` | 0B-2 (제외) |
+| 소스 변경 시 `SOURCE_RELOAD_REQUIRED` | `m0/runtime.py:27`, `m0/versions.py` | 0B 보정(2026-11-18)에서 해결: `versions.py`·`cache.py` 제거, `Runtime`에서 게이트·캐시 삭제 |
 | 기본 모델·URL이 코드 상수 | `m0/client.py` | 0B-2에서 LIVE로 확인(2026-11-18): 옛 주소가 종료되어 기본값을 직접 API 주소와 `gpt-5.6-luna`로 바꿨다. `TIMELY_BASE_URL`·`TIMELY_MODEL` 환경변수로 덮어쓴다 |
 | 원본 HTML의 `innerHTML`·`localStorage` 데모 | `docs/PRODUCT.md` 2절 | 구현본에 복사하지 않음 |

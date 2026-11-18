@@ -21,17 +21,13 @@ class Meta(Contract):
     run_id: str
     task: str
     prompt_version: str = "0.13.1"
-    source_revision: str | None = None
     model: str | None = None
     usage: Usage = Field(default_factory=Usage)
     latency_ms: int = 0
     transport_attempts: int = 0
     repair_attempts: int = 0
     provider_request_ids: list[str] = Field(default_factory=list)
-    execution_source: Literal["LIVE", "CACHE", "CODE", "REPLAY"] = "CODE"
-    source_run_id: str | None = None
-    cached_usage: Usage | None = None
-    cache_hit: bool = False
+    execution_source: Literal["LIVE", "CODE", "REPLAY"] = "CODE"
 
 T = TypeVar("T")
 class PersistenceInfo(Contract):

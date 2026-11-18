@@ -22,12 +22,8 @@ def tables(url) -> set[str]:
 
 
 @pytest.fixture()
-def clean_db(test_environ):
-    eng = create_engine(test_environ)
-    with eng.begin() as c:
-        c.execute(text("drop schema public cascade"))
-        c.execute(text("create schema public"))
-    eng.dispose()
+def clean_db(test_environ, reset_schema):
+    reset_schema()  # guarded drop of the test schema
     yield test_environ
 
 

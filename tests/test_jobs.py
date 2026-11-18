@@ -23,12 +23,8 @@ SECRET = "PRIVATE-JOB-INPUT-MARKER-4417"
 
 
 @pytest.fixture()
-def db(test_environ):
-    eng = create_engine(test_environ)
-    with eng.begin() as c:
-        c.execute(text("drop schema public cascade"))
-        c.execute(text("create schema public"))
-    eng.dispose()
+def db(test_environ, reset_schema):
+    reset_schema()  # guarded drop of the test schema
     command.upgrade(Config(str(ROOT / "alembic.ini")), "head")
     return test_environ
 

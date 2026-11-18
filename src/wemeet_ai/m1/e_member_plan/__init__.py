@@ -124,7 +124,7 @@ def update_member_condition(state: MemberState, field: str, *, value=None, statu
         out.question = None
     return code_result("E.review", out)
 
-def coach_member_goal(request: MemberCoachRequest, *, runtime: Runtime | None = None, fresh=False):
+def coach_member_goal(request: MemberCoachRequest, *, runtime: Runtime | None = None):
     import hashlib
     state = request.state.model_copy(deep=True)
     state.owner_member_id = request.owner_member_id
@@ -261,7 +261,7 @@ answer_states에는 이번 답변에서 새로 확인한 상태만 넣으세요.
 자유 입력의 모름/건너뜀은 extracted_fields의 null 값과 본인 evidence를 붙이고 answer_states의 UNKNOWN/SKIPPED로 기록합니다. 제약 없음은 VALUE의 빈 목록이며 건너뜀과 다릅니다.
 state.refinements/refinement_states는 기존 사실의 세부 답변입니다. 세부사항에 모름을 답했다고 이미 확인한 상위 범위·시간·수준을 미정으로 바꾸지 마세요. 모른다고 답한 세부 주제는 다시 묻지 말고 초안 제안으로 남깁니다.
 기여 결과물/완료 기준/수준/시간예산이 실질적으로 확인됐으면 진단을 마무리해도 됩니다. 추가 선택 정보가 없다고 막지 마세요."""
-    result = (runtime or Runtime()).run("E.coach", payload, CoachModel, policy, check=check, owner=request.owner_member_id, fresh=fresh)
+    result = (runtime or Runtime()).run("E.coach", payload, CoachModel, policy, check=check, owner=request.owner_member_id)
     if unconfirmed_states:result.warnings.append("아직 답하지 않은 항목은 모름·건너뜀 선택으로 저장하지 않았습니다.")
     if result.status != "OK":
         result.data = MemberCoachReply(reply="답변은 보존했습니다. AI 응답만 다시 요청할 수 있습니다.", state=state)
@@ -304,7 +304,7 @@ class MemberDraft(Contract):
     profile_fields: dict[str, ReviewField] = Field(default_factory=dict)
     unanswered: list[str] = Field(default_factory=list)
 
-def draft_member_goal(request: MemberCoachRequest, *, runtime: Runtime | None = None, fresh=False):
+def draft_member_goal(request: MemberCoachRequest, *, runtime: Runtime | None = None):
     def check(out):
         out.contribution.confirmed = False
         ids = {m.message_id for m in request.conversation if m.role == "user"}
@@ -317,7 +317,7 @@ def draft_member_goal(request: MemberCoachRequest, *, runtime: Runtime | None = 
             if key not in FIELDS or f.value is not None and not valid_value(key, f.value): raise AIError("SCHEMA_INVALID", "개인 조건 형식을 확인하세요.")
             if f.value is not None and (not f.evidence or any(e.source != "USER_MESSAGE" or e.source_id not in ids for e in f.evidence)): raise AIError("INVALID_EVIDENCE", "본인 근거가 필요합니다.")
     return (runtime or Runtime()).run("E.draft", request, MemberDraft,
-        "공개 목표 안에서 본인이 맡을 결과물·완료 기준을 추천하고 본인 발언으로 확인한 조건만 profile_fields로 정리하세요. 없는 개인 시간/수준을 만들지 마세요. 미정은 unanswered에 기록하세요. 비공개 사유는 contribution에 쓰지 마세요. confirmed=false입니다.", check=check, owner=request.owner_member_id, fresh=fresh)
+        "공개 목표 안에서 본인이 맡을 결과물·완료 기준을 추천하고 본인 발언으로 확인한 조건만 profile_fields로 정리하세요. 없는 개인 시간/수준을 만들지 마세요. 미정은 unanswered에 기록하세요. 비공개 사유는 contribution에 쓰지 마세요. confirmed=false입니다.", check=check, owner=request.owner_member_id)
 
 class MemberProfile(Contract):
     current_level: str = ""
@@ -332,9 +332,9 @@ class MemberPlanRequest(Contract):
     contribution: Contribution
     profile: MemberProfile
 
-def generate_member_plan(request: MemberPlanRequest, *, runtime: Runtime | None = None, fresh=False):
+def generate_member_plan(request: MemberPlanRequest, *, runtime: Runtime | None = None):
     missing = []
-    for k in ("goal", "start_date", "end_date"): 
+    for k in ("goal", "start_date", "end_date"):
         if not getattr(request.context, k): missing.append("context." + k)
     if not request.profile.current_level: missing.append("profile.current_level")
     if not request.profile.weekly_available_minutes: missing.append("profile.weekly_available_minutes")
@@ -362,7 +362,7 @@ def generate_member_plan(request: MemberPlanRequest, *, runtime: Runtime | None 
 확인된 날짜와 주간 시간 예산을 지키고 결과물·난이도·분량·작업 순서를 수준에 맞추세요.
 30분과300분 계획은 작업 범위가 달라야 합니다. 작은 예산이면 최소 결과물과 도움 요청을 제안하세요.
 owner_member_id는 본인, 과제도 본인입니다. 공개 과제·완료 기준·일정만 작성하며 개인 사유나 비공개 조언은 쓰지 마세요.
-새 plan_version_id/task_id는 빈 문자열, dependencies는 빈 목록입니다. 인증 방식은 context를 따릅니다. 같은 주차에 여러 과제가 있으면 합계로 예산을 지키세요."""+budget_policy, check=check, owner=request.owner_member_id, fresh=fresh)
+새 plan_version_id/task_id는 빈 문자열, dependencies는 빈 목록입니다. 인증 방식은 context를 따릅니다. 같은 주차에 여러 과제가 있으면 합계로 예산을 지키세요."""+budget_policy, check=check, owner=request.owner_member_id)
     if result.status == "OK":
         if not result.data.plan_version_id: result.data.plan_version_id = str(uuid4())
         for t in result.data.tasks:

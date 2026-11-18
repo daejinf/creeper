@@ -45,7 +45,6 @@ def review_completion(
     request: CompletionReviewRequest,
     prepared_evidence: list[PreparedEvidence],
     runtime: Runtime | None = None,
-    fresh: bool = False,
 ) -> Result[CompletionReview]:
     known = {item.evidence_id for item in request.evidence}
     if any(item.evidence_id not in known for item in prepared_evidence):
@@ -60,6 +59,5 @@ def review_completion(
         CompletionReview,
         REVIEW_POLICY,
         check=check,
-        fresh=fresh,
         content_parts=_content_parts(prepared_evidence),
     )
