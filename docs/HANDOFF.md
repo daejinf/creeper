@@ -11,6 +11,7 @@
 - 0B 보정(2026-11-18): D-A8 기록, Git baseline, DROP 모듈·옛 CLI·오래된 egg-info 제거, 테스트의 `DROP SCHEMA` 가드. 아래 `0B 보정` 절.
 - 1단계 인증 구현·검증 완료(2026-11-18, 아래 `1단계 인증` 절).
 - 2단계 대시보드·그룹·ProjectBrief 구현·검증 완료(2026-11-18, 아래 `2단계 그룹·ProjectBrief` 절). 팀 목표 표시문 LIVE 2회 성공(누적 LIVE 8회). `/dashboard`는 이제 실제 화면이고 로그인 확인용 임시 화면은 지웠다. `/groups/{id}/chat`은 3단계 전까지 임시 화면이다.
+- GATE B 승인 완료(D-B1, 2026-11-18): 인터뷰 항목·턴, chat 네 상태 문구와 `N/M명 제출 완료` 집계, 공급자 입력 필드, 미제출·신규 합류(차단 유지)·재배정·중복 역할, 역할 후보 생성(revision당 1회), 이름·순위 비노출 안내 문구(원본과 다른 제품 차이), 투두 공개·재확정, STALE 규칙. 이번 작업은 문서만 바꿨고 코드·테스트·원본 HTML은 변경하지 않았다.
 
 ## 환경 스냅샷 (2026-11-18, 확인한 사실만)
 
@@ -85,7 +86,7 @@ $env:MOIM_ENV='development'; .\.venv\Scripts\python.exe tools\capture_screens.py
 
 ## 다음 한 단계
 
-`prompts/GATE-B.md`의 추천안 작성(읽기 전용, 2단계 완료가 진입 조건). `/api/jobs`는 여전히 인증이 없고 핸들러도 없다. 첫 핸들러를 붙이는 단계(3단계)에서 `auth/deps.py`의 `require_user`·`verify_csrf`와 소유자 검사를 함께 넣는다.
+`prompts/03-interview.md`(3단계 개인 AI 인터뷰와 역할 순위 제출). GATE B는 D-B1(2026-11-18)로 전부 승인됐다(`docs/PRODUCT.md`). 3단계 구현 때 알아둘 점: 기존 `tests/test_groups.py:667`의 신규 합류 차단 테스트는 D-B1 B4와 일치해 그대로 유효하다. `docs/ARCHITECTURE.md`는 `max_tokens` 기본 1500, 이 문서 위쪽 0B 보정 절은 4096이라고 해 서로 다르다(코드 `DEFAULT_MAX_OUTPUT_TOKENS`를 기준으로 3단계 시작 때 정리). `/api/jobs`는 여전히 인증이 없고 핸들러도 없다. 첫 핸들러를 붙이는 단계(3단계)에서 `auth/deps.py`의 `require_user`·`verify_csrf`와 소유자 검사를 함께 넣는다.
 
 ## OPEN
 
