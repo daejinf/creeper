@@ -28,7 +28,7 @@
 | 상태 | revision, 멱등성, STALE 전파가 해당 단계 계약대로 동작함 |
 | 생성·배정 순서 | D-A5의 `FORMING → ACTIVE → INTERVIEW → WAITING_ASSIGNMENT → ROLE_TODOS` 순서를 지키고, cohort 전원 제출 전 역할 배정이나 투두가 생기지 않으며 모든 투두가 source assignment revision을 가짐 |
 | 초대방 생명주기 | 생성 의도가 확인된 POST만 `FORMING`을 만들거나 재사용하고 GET·참여 화면 조회는 상태를 바꾸지 않으며, 최소 2명·코드 재발급·`CANCELLED`·ACTIVE 코드 폐기·`GROUP_NOT_JOINABLE` 계약이 검증됨 |
-| 역할 후보 | 모든 cohort 구성원이 같은 source ProjectBrief 기반 candidate revision을 사용하고, 후보 생성 LIVE 예산·멱등성·실패·재시도·STALE 전파가 승인 계약대로 동작함 |
+| 역할 후보 | 모든 cohort 구성원이 같은 source ProjectBrief 기반 candidate revision을 사용하고, 후보 생성 LIVE 호출 기록(D-A8)·멱등성·실패·재시도·STALE 전파가 승인 계약대로 동작함 |
 | 수정 경계 | 사용자는 투두만 허용 범위에서 수정하고 배정 역할·담당자는 직접 바꾸지 못하며, 역할 변경은 승인된 서버 재배정과 새 assignment revision으로만 처리됨 |
 | DB | 저장 후 새 프로세스/새 요청에서 재조회 가능함 |
 | 디자인 | 원본 9개 해시가 기준과 동일하고 1440×900 스크린샷 캡처를 사용자가 확인함 |

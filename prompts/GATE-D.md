@@ -36,4 +36,4 @@ vision 결과를 확인하지 못하면 M2.review만 `BLOCKED/비활성`로 두�
 
 ## 완료 보고
 
-vision 사전 확인을 수행했거나 `LIVE BLOCKED`를 판정한 직후 호출 수, 모델, 지원 여부, latency, usage와 오류를 `docs/LIVE_TESTING.md`에 기록하고 `docs/HANDOFF.md`에 M2 활성/비활성 상태와 GATE D 대기 상태를 갱신하라. 추천안 표, 위험, 사용자 승인이 필요한 결정만 제시하고 승인을 기다려라. M2 LIVE 예산은 사용하지 마라. 사용자가 승인하면 같은 작업에서 `docs/PRODUCT.md`의 사용자 승인 결정 기록에 결정 ID, 날짜, 사용자의 승인 문장과 영향 단계를 남기고, `docs/ROADMAP.md`의 해당 OPEN 항목을 승인 결과로 갱신하며, `docs/HANDOFF.md`를 현재 상태와 다음 한 단계로 다시 갱신하라. 문서 외 파일은 변경하지 않는다.
+vision 사전 확인을 수행했거나 `LIVE BLOCKED`를 판정한 직후 호출 수, 모델, 지원 여부, latency, usage와 오류를 `docs/LIVE_TESTING.md`에 기록하고 `docs/HANDOFF.md`에 M2 활성/비활성 상태와 GATE D 대기 상태를 갱신하라. 추천안 표, 위험, 사용자 승인이 필요한 결정만 제시하고 승인을 기다려라. GATE D 승인 전에는 M2 LIVE 호출을 하지 마라. 사용자가 승인하면 같은 작업에서 `docs/PRODUCT.md`의 사용자 승인 결정 기록에 결정 ID, 날짜, 사용자의 승인 문장과 영향 단계를 남기고, `docs/ROADMAP.md`의 해당 OPEN 항목을 승인 결과로 갱신하며, `docs/HANDOFF.md`를 현재 상태와 다음 한 단계로 다시 갱신하라. 문서 외 파일은 변경하지 않는다.
