@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="csrf-token" content="{{ csrf_token }}">
+<title>MOIM 로그인</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#1A1D29;--coral:#F26A4F;--blue:#2F54EB;--sun:#FFC53D;--mute:#555B6B;--line:#ECEEF3;--soft:#F6F7FA}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:flex;flex-direction:column;background:#fff;color:var(--ink);font-family:'Noto Sans KR',system-ui,-apple-system,sans-serif;font-size:15px;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+a:focus-visible,button:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+
+/* ---------- header (대시보드·그룹 페이지와 동일) ---------- */
+.top{
+  position:sticky;top:0;z-index:20;height:68px;display:flex;align-items:center;justify-content:space-between;gap:16px;
+  padding:0 clamp(16px,3vw,32px);background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);
+}
+.logo{display:flex;align-items:center;gap:10px;font-size:22px;font-weight:800;letter-spacing:-0.02em}
+.mark{display:flex;align-items:flex-end;gap:3px}
+.mark i{display:block;width:11px;height:11px}
+.mark .c{border-radius:50%;background:var(--coral)}
+.mark .a{border-radius:6px 6px 0 0;background:var(--blue)}
+.mark .q{border-radius:3px;background:var(--sun)}
+.top-right{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:600}
+.top-right a{white-space:nowrap}
+.top-right .login{min-height:40px;display:flex;align-items:center;padding:0 12px}
+.top-right .join{min-height:40px;display:flex;align-items:center;padding:0 12px;color:var(--ink);font-weight:700}
+.top-right .login{color:var(--mute)}
+.top-right .login{font-weight:500}
+.top-right .login:hover{color:var(--ink)}
+
+/* ---------- 본문 ---------- */
+main{flex:1;display:flex;flex-direction:column;align-items:center;padding:56px 20px 72px}
+
+.shapes{display:flex;align-items:flex-end;gap:14px;margin-bottom:26px}
+.shape{position:relative;width:52px;height:52px;--ex:0px;--ey:0px;animation:pop .5s cubic-bezier(.3,1.5,.5,1) both}
+.shape:nth-child(2){height:58px;animation-delay:.06s}
+.shape:nth-child(3){width:50px;height:50px;animation-delay:.12s}
+.shape:nth-child(4){width:56px;height:56px;animation-delay:.18s}
+.shape::after{content:"";position:absolute;left:12%;right:12%;bottom:-9px;height:5px;border-radius:50%;background:rgba(26,29,41,.08)}
+.body{position:absolute;inset:0}
+.shape i{position:absolute;width:6px;height:6px;border-radius:50%;transform:translate(var(--ex),var(--ey));transition:transform .18s ease-out,height .12s,border-radius .12s}
+.shape i:nth-of-type(1){left:28%}
+.shape i:nth-of-type(2){left:58%}
+.shape.blink i{height:1.5px;border-radius:1px}
+.shapes.shy .shape i{height:1.5px;border-radius:1px;transform:translate(0,3px)}
+.shapes.hop .shape{animation:hop .45s ease}
+.shapes.hop .shape:nth-child(2){animation-delay:.05s}
+.shapes.hop .shape:nth-child(3){animation-delay:.1s}
+.shapes.hop .shape:nth-child(4){animation-delay:.15s}
+@keyframes pop{from{opacity:0;transform:translateY(10px) scale(.9)}to{opacity:1;transform:none}}
+@keyframes hop{0%,100%{transform:none}40%{transform:translateY(-8px)}}
+.circle .body{border-radius:50%;background:var(--coral)}
+.circle i{top:45%;background:var(--ink)}
+.arch .body{border-radius:26px 26px 0 0;background:var(--blue)}
+.arch i{top:50%;background:#fff}
+.square .body{border-radius:15px;background:var(--sun)}
+.square i{top:44%;background:var(--ink)}
+.tri .body{background:var(--ink);clip-path:polygon(50% 0,100% 100%,0 100%)}
+.tri i{top:68%;background:#fff}
+.tri i:nth-of-type(1){left:36%}
+.tri i:nth-of-type(2){left:54%}
+
+h1{margin:0 0 28px;text-align:center;font-size:26px;line-height:1.3;font-weight:800;letter-spacing:-0.03em}
+.sub{margin:8px 0 28px;text-align:center;font-size:14px;line-height:1.6;color:var(--mute)}
+
+.card{
+  width:100%;max-width:400px;padding:28px;border-radius:22px;background:#fff;border:1px solid var(--line);
+  box-shadow:0 16px 40px rgba(26,29,41,.07);display:flex;flex-direction:column;gap:18px;
+}
+.field{position:relative;display:flex;flex-direction:column;gap:8px}
+label{font-size:13px;font-weight:700}
+.field > label{padding-left:15px;font-size:12px;font-weight:600;color:var(--mute)}
+input[type=text],input[type=password]{
+  width:100%;height:46px;padding:0 14px;border-radius:12px;border:1px solid #E1E4EC;background:#fff;
+  font-family:inherit;font-size:15px;color:var(--ink);transition:border-color .15s,box-shadow .15s;
+}
+input[type=text]:focus,input[type=password]:focus{outline:none;border-color:#B9BECB;box-shadow:0 4px 14px rgba(26,29,41,.06)}
+input::placeholder{color:#A3A9B6}
+.pw{position:relative}
+.pw input{padding-right:52px}
+.eye{
+  position:absolute;top:7px;right:7px;display:flex;align-items:center;justify-content:center;width:32px;height:32px;padding:0;border:0;
+  border-radius:8px;background:transparent;color:#8A90A0;cursor:pointer;transition:background .15s,color .15s;
+}
+.eye:hover{color:var(--ink)}
+.eye .off{display:none}
+.eye.on .off{display:block}
+.eye.on .show{display:none}
+.row{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;font-size:13px}
+.row label{display:flex;align-items:center;gap:8px;font-weight:500;cursor:pointer}
+.row input{width:16px;height:16px;margin:0;accent-color:var(--ink)}
+.row a{font-weight:500;color:var(--mute)}
+.row a:hover{color:var(--ink)}
+.btn{
+  height:48px;border:1px solid #4A5063;border-radius:8px;background:#fff;color:var(--ink);font-family:inherit;font-size:15px;font-weight:700;cursor:pointer;
+  transition:background .15s;
+}
+.btn:hover{background:#FAFBFC}
+.foot{margin:24px 0 0;font-size:13px;color:var(--mute)}
+.foot a{color:var(--ink);font-weight:700;text-decoration:underline;text-underline-offset:3px}
+/* 오류·안내·비활성 상태: signup의 .msg 규칙 재사용 */
+.msg{margin:0;padding-left:15px;font-size:12px;line-height:16px;font-weight:600;color:#D14B30}
+.msg.info{color:var(--mute);font-weight:500;line-height:1.6}
+.msg:empty,.msg[hidden]{display:none}
+.btn:disabled{opacity:.6;cursor:default}
+
+@media (max-width:560px){
+  main{padding-top:40px}
+  .card{padding:22px}
+}
+@media (prefers-reduced-motion:reduce){ input,.eye,.btn,.shape i{transition:none} .shape,.shapes.hop .shape{animation:none} }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <a class="logo" href="/">
+    <span class="mark" aria-hidden="true"><i class="c"></i><i class="a"></i><i class="q"></i></span>
+    MOIM
+  </a>
+  <div class="top-right">
+    <a class="login" href="/login" aria-current="page">로그인</a>
+    <a class="join" href="/signup">회원가입</a>
+  </div>
+</header>
+
+<main>
+  <h1>로그인</h1>
+
+  <div class="shapes" aria-hidden="true">
+    <div class="shape circle"><div class="body"></div><i></i><i></i></div>
+    <div class="shape arch"><div class="body"></div><i></i><i></i></div>
+    <div class="shape square"><div class="body"></div><i></i><i></i></div>
+    <div class="shape tri"><div class="body"></div><i></i><i></i></div>
+  </div>
+
+  <form class="card" id="login-form" method="post" action="/api/auth/login" data-next="{{ next }}" novalidate>
+    <div class="field">
+      <label for="login-id">아이디</label>
+      <input id="login-id" name="username" type="text" autocomplete="username" maxlength="64" autocapitalize="none" spellcheck="false" placeholder="아이디를 입력하세요">
+    </div>
+
+    <div class="field">
+      <label for="login-pw">비밀번호</label>
+      <div class="pw">
+        <input id="login-pw" name="password" type="password" autocomplete="current-password" maxlength="128" placeholder="비밀번호를 입력하세요">
+        <button type="button" class="eye" id="login-eye" aria-label="비밀번호 표시" aria-pressed="false">
+          <svg class="show" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>
+          <svg class="off" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17.94 17.94A10.9 10.9 0 0 1 12 19c-6.4 0-10-7-10-7a18.5 18.5 0 0 1 4.06-5.06M9.9 5.24A10 10 0 0 1 12 5c6.4 0 10 7 10 7a18.5 18.5 0 0 1-2.16 3.19M14.12 14.12a3 3 0 1 1-4.24-4.24"/><path d="M2 2l20 20"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="row">
+      <label for="login-keep"><input id="login-keep" name="keep" type="checkbox">로그인 상태 유지</label>
+      <a href="#recovery-note" id="recovery-toggle" role="button" aria-expanded="false" aria-controls="recovery-note">비밀번호 찾기</a>
+    </div>
+    <p class="msg info" id="recovery-note" hidden>비밀번호 찾기는 아직 지원하지 않아요. 이메일·문자 인증이 준비되지 않아 지금은 비밀번호를 잊으면 계정을 복구할 수 없어요.</p>
+    <p class="msg" id="login-msg" role="alert" aria-live="polite"></p>
+
+    <button type="submit" class="btn">로그인</button>
+  </form>
+
+  <p class="foot">아직 계정이 없나요? <a href="/signup">회원가입</a></p>
+</main>
+
+<script src="/static/auth-common.js"></script>
+<script src="/static/login.js"></script>
+</body>
+</html>

@@ -41,6 +41,11 @@ class Settings:
     database_url: str = field(repr=False)
 
     @property
+    def secure_cookies(self) -> bool:
+        """Production cookies are Secure and `__Host-` prefixed. Local HTTP development/test is the only exception."""
+        return self.env == "production"
+
+    @property
     def safe_database_url(self) -> str:
         return redact_url(self.database_url)
 

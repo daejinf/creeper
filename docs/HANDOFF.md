@@ -9,7 +9,7 @@
 - 원본 HTML 9개는 변경하지 않았고 해시 9/9가 `docs/PRODUCT.md` 기준과 같다(`tools/check_design_hashes.py`).
 - 0B-2 완료(DETERMINISTIC PASS·LIVE PASS), 0B-3 구현·검증 완료(작업 상태 저장, 화면 캡처 스크립트).
 - 0B 보정(2026-11-18): D-A8 기록, Git baseline, DROP 모듈·옛 CLI·오래된 egg-info 제거, 테스트의 `DROP SCHEMA` 가드. 아래 `0B 보정` 절.
-- 인증 UI, 그룹 기능, 제품 화면은 아직 없다(1단계 이후).
+- 1단계 인증 구현·검증 완료(2026-11-18, 아래 `1단계 인증` 절). 그룹·ProjectBrief·dashboard 실제 화면은 아직 없다(2단계). `/dashboard`는 로그인 확인용 임시 화면이다.
 
 ## 환경 스냅샷 (2026-11-18, 확인한 사실만)
 
@@ -17,11 +17,11 @@
 |---|---|
 | 작업 폴더 | `C:\Users\user\Desktop\moim-design`. Git 저장소(`main`). 첫 baseline 커밋 `a9a9721`(승인 문서, 원본 HTML 9개, 0A/0B 기반). 원격 저장소 없음, push 안 함. 그 뒤 0B root hardening 커밋은 아래 `0B 보정` 절에 기록 |
 | Python | 3.12.8, 가상환경 `.venv` |
-| 앱 | `src/moim/`(`config.py`, `db.py`, `logging_utils.py`, `main.py`, `models.py`, `timeutil.py`, `jobs.py`, `job_routes.py`, `static/job-poller.js`). FastAPI 앱, `/healthz`와 `/api/jobs`(핸들러 없음). AI 코드는 `src/wemeet_ai`의 KEEP/ADAPT 모듈만 남았다: `m0`(client·runtime·tracing·records), `m1`(e_member_plan·f_validation), `m2`, `shared` |
-| 마이그레이션 | Alembic `0001_foundation`, `0002_ai_jobs`. `upgrade → downgrade base → upgrade` 확인(테스트가 매번 실행) |
+| 앱 | `src/moim/`(`config.py`, `db.py`, `logging_utils.py`, `main.py`, `models.py`, `timeutil.py`, `jobs.py`, `job_routes.py`, `auth/`, `templates/`, `static/`). FastAPI 앱, `/healthz`와 `/api/jobs`(핸들러 없음). AI 코드는 `src/wemeet_ai`의 KEEP/ADAPT 모듈만 남았다: `m0`(client·runtime·tracing·records), `m1`(e_member_plan·f_validation), `m2`, `shared` |
+| 마이그레이션 | Alembic `0001_foundation`, `0002_ai_jobs`, `0003_auth`. `upgrade → downgrade base → upgrade` 확인(테스트가 매번 실행) |
 | PostgreSQL | 16, 포트 54329, 로컬 데이터 `.local/pgdata`. 개발 DB `moim_dev`, 테스트 DB `moim_test`. 역할은 아직 `moim` 하나(superuser)다. 테스트의 `DROP SCHEMA public CASCADE`는 호스트 localhost·포트 54329·DB명 정확히 `moim_test`·`MOIM_ENV=test`를 모두 확인한 뒤에만 실행한다(`tests/dbsafety.py`) |
 | 설정 | `.env`(Git 제외)와 `.env.example`. **앱은 `.env`를 자동으로 읽지 않는다.** 환경변수로만 읽으며 `MOIM_ENV`, `MOIM_DATABASE_URL`이 없으면 `ConfigError`로 실패한다. `alembic`은 환경변수를 먼저 불러온 셸에서 실행한다. 테스트는 `tests/conftest.py`가 설정한다 |
-| 테스트 | `.\.venv\Scripts\python.exe -m pytest -q`: 164개 통과(2026-11-18 0B 보정 뒤. 기반·공급자 계약·작업 상태 + 패키징·Runtime 계약·DROP 가드). 환경변수(`MOIM_*`)를 먼저 불러온 셸에서 실행한다 |
+| 테스트 | `.\.venv\Scripts\python.exe -m pytest -q`: 247개 통과(2026-11-18 1단계 뒤. 기반·공급자 계약·작업 상태·패키징·Runtime 계약·DROP 가드 164 + 인증 83). 환경변수(`MOIM_*`)를 먼저 불러온 셸에서 실행한다 |
 | 깨끗한 환경 검증 | 0B 보정 커밋 직전, 스테이징한 내용을 새 폴더로 내보내 새 venv에서 `pip install -e ".[test,visual]"`, import, `pytest` 164개 통과(건너뜀 0), 해시 9/9(2회), 프롬프트 검증 14개를 확인했다. 마이그레이션 up/down/up은 테스트와 개발 DB 직접 실행으로 확인 |
 | 크리퍼 재확인 | 격리 복사본·격리 DB `creeper_scratch`로 225개 실행, 223 통과·2 실패(원인과 판정 영향 없음은 `docs/ARCHITECTURE.md`의 `0B-1 재확인 결과`) |
 | 주의 | 크리퍼의 `tools/db/cutover.py`·`bootstrap.py`와 테스트 일부는 Windows 사용자 레지스트리(`HKCU\Environment`)로 실제 크리퍼 DB(55432)를 읽거나 쓴다. 원본에서 실행하지 않는다. MOIM에 이 방식을 가져오지 않는다 |
@@ -54,9 +54,22 @@ $env:MOIM_ENV='development'; .\.venv\Scripts\python.exe tools\capture_screens.py
 - 제거: `m1/a_coaching`·`b_analysis`·`c_goal_draft`·`d_group_plan`, `persistence/`, `continuity.py`, `cli.py`, `m0/versions.py`, `m0/cache.py`, 오래된 `src/wemeet_ai_core.egg-info`(`wemeet-ai` 콘솔 엔트리와 설치된 `wemeet-ai-core` 배포판). `Runtime`은 캐시·`SOURCE_RELOAD_REQUIRED` 게이트·`fresh`·`scope_id`가 없고 호출 한 번이 모델 호출 한 번이다. `Meta`에서 `source_revision`·캐시 관련 필드를 지웠다. `tests/test_packaging.py`가 남은 모듈 집합(19개) 정확 일치, 제거 모듈 import 불가, 옛 CLI 실행 불가, 콘솔 엔트리·배포판 없음, 빌드한 wheel의 내용을 검증한다. `pyproject.toml`에 `static/*` package-data를 추가했다(없으면 설치본에서 정적 파일이 빠졌다).
 - 출력 한도: `DEFAULT_MAX_OUTPUT_TOKENS` 상수 하나(4096). 4096은 기존 값을 유지한 것이고 LIVE 구조화 출력 측정으로 검증하지 않았다.
 
+## 1단계 인증 (2026-11-18)
+
+- 결과: 회원가입(가입 즉시 로그인), 아이디 중복 확인, 로그인(로그인 상태 유지 선택), 로그아웃, 서버 세션, landing·signup·login 템플릿 이식, 비밀번호 복구 비활성 안내. 값·구조는 `docs/SECURITY.md` 4-2, `docs/ARCHITECTURE.md`의 `인증 (1단계)`.
+- landing 맨 아래 CTA: 로그아웃이면 `/login`(성공 뒤 `/dashboard`), 로그인이면 `/dashboard`(D-A5). `moim-invite`로 가지 않는다.
+- 새 의존성: `argon2-cffi`(라이브러리 하나. 새 DB·큐·프런트엔드 프레임워크 없음). 새 설정 환경변수 없음.
+- 검증: `tests/test_auth.py` 83개(결정적, LIVE 없음). 브라우저(내장 브라우저, 개발 서버·개발 DB)에서 중복 확인 3상태, 클라이언트 검증, 가입 → 새로고침 → 로그아웃 → 보호 페이지 차단, 잘못된 비밀번호·없는 아이디의 같은 오류, 로그인 유지 로그인, localStorage·sessionStorage·`document.cookie` 비어 있음을 확인했다. 개발 DB에 확인용 계정 `browser01`이 남아 있다.
+- 1440×900 캡처: `artifacts\screens\moim-signup.html\`, `moim-login.html\`는 원본과 구현이 픽셀까지 같았다(진단용 비교, 합격 기준 아님). `moim-landing.html\`은 애니메이션(흐르는 카드·떠다니는 캐릭터) 때문에 캡처마다 일부 픽셀이 달라진다(검토에서 21픽셀 차이). 사용자가 `artifacts\screens\index.html`로 눈으로 확인한다.
+- 달랐던 사실:
+  - 첫 생성에서 `login.js`·`signup.js`가 문법 오류였고(자르는 위치 오류) 폼이 서버 JSON 오류 화면으로 넘어갔다. 수정했고 `test_generated_scripts_parse`가 모든 정적 스크립트를 `node --check`로 검사한다(node가 없으면 건너뜀).
+  - 정적 파일이 휴리스틱 캐시되어 수정 뒤에도 옛 JS가 실행됐다. 정적 파일을 `Cache-Control: no-cache`(재검증)로 서빙한다.
+- 남은 제한: `docs/SECURITY.md` 4-2의 `남은 제한`(프록시 뒤 주소, 아이디 단위 잠금의 계정 잠금 공격, 복구 없음, 탈퇴·비밀번호 변경은 6단계, `/api/jobs` 미인증).
+- 실행: 앱은 `.env`를 읽지 않는다. 개발 서버는 환경변수를 불러온 셸에서 `python -m uvicorn --factory moim.main:app_factory`로 띄운다.
+
 ## 다음 한 단계
 
-1단계 인증(`prompts/01-auth.md`). 작업 API를 실제로 쓰기 전에 `docs/SECURITY.md` 4-1의 인증·객체 단위 인가·CSRF를 반드시 함께 넣는다.
+2단계 대시보드·그룹·ProjectBrief(`prompts/02-groups-brief.md`). 이전에 `/api/jobs`에 첫 핸들러를 붙일 때 `auth/deps.py`의 `require_user`·`verify_csrf`와 소유자 검사를 같이 넣는다.
 
 ## OPEN
 

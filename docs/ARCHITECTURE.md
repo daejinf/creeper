@@ -49,6 +49,15 @@ AI 작업은 새로고침 뒤에도 복구되어야 한다. operation_id, action
 - 화면 조회 보조: `src/moim/static/job-poller.js`(`MoimJobs.pollJob`, `renderJobState`). 출력은 `textContent`만 쓰고 저장소·쿠키를 쓰지 않는다. 상태 URL을 페이지가 들고 있으면 새로고침 뒤 같은 작업에 다시 붙는다.
 - 로그: `moim.jobs` 로거에 job_id·kind·state·attempt만 기록한다. 입력과 결과는 기록하지 않는다.
 
+### 인증 (1단계)
+
+- 모듈: `src/moim/auth/`의 `validation`(입력 규칙), `passwords`(Argon2id), `sessions`(서버 세션), `throttle`(DB rate limit), `csrf`, `errors`(`{"error": {code, message, field?}}`), `middleware`(보안 헤더·본문 상한), `deps`(`current_user`·`require_user`·`verify_csrf`, 이후 단계가 재사용), `routes`.
+- 테이블(마이그레이션 `0003_auth`): `users`, `auth_sessions`(토큰은 sha256만), `auth_throttle`.
+- 화면: 원본 landing·signup·login을 `src/moim/templates/`로, 그 안의 인라인 스크립트를 `src/moim/static/*.js`로 옮겼다(CSP `script-src 'self'`). 원본 HTML은 읽기 전용이며 템플릿과 별개 파일이다. 원본과 달라진 곳은 링크(`/`, `/login`, `/signup`), 폼 속성(`name`, `method`, `maxlength`), 오류·안내용 `.msg` 줄과 `:disabled` 스타일, 비밀번호 찾기 안내, 서버 호출뿐이다. 원본 `<style>`의 모든 줄은 구현 페이지에 그대로 있다(테스트가 검사).
+- 라우트: `GET /`(landing, CTA는 로그아웃이면 `/login`, 로그인이면 `/dashboard`), `GET /login`, `GET /signup`(로그인 상태면 `/dashboard`로 303), `GET /dashboard`(**2단계에서 대체될 임시 화면**: 로그인 확인과 로그아웃 버튼만 있다, 로그아웃 상태면 `/login?next=/dashboard`), `POST /api/auth/{username-check,signup,login,logout}`.
+- 로그인 뒤 이동 경로 `next`는 같은 사이트 절대 경로만 허용하고 그 밖은 `/dashboard`.
+- 가입은 성공하면 바로 로그인된다.
+
 AI가 DB를 직접 임의 수정하지 않는다. 구조화된 변경안, 권한·revision·기간 검증, 사용자 확인과 저장 성공을 거친다.
 
 - 긴 AI 작업은 입력 저장 → operation 발급 → 빠른 202와 상태 URL → 백그라운드 작업 실행 → 상태 조회·복구 흐름을 기본으로 한다. 구간별 지연 측정은 MVP 범위에서 하지 않는다.

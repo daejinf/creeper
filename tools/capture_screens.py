@@ -21,9 +21,9 @@ VIEWPORT = {"width": 1440, "height": 900}
 
 # original file -> implemented route. None = not built yet (later stages fill these in).
 SCREENS: dict[str, str | None] = {
-    "moim-landing.html": None,
-    "moim-signup.html": None,
-    "moim-login.html": None,
+    "moim-landing.html": "/",
+    "moim-signup.html": "/signup",
+    "moim-login.html": "/login",
     "moim-dashboard.html": None,
     "moim-invite.html": None,
     "moim-group-create.html": None,
