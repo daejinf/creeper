@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MOIM 회원가입</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#1A1D29;--coral:#F26A4F;--blue:#2F54EB;--sun:#FFC53D;--mute:#555B6B;--line:#ECEEF3;--soft:#F6F7FA}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:flex;flex-direction:column;background:#fff;color:var(--ink);font-family:'Noto Sans KR',system-ui,-apple-system,sans-serif;font-size:15px;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+a:focus-visible,button:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+
+/* ---------- header (대시보드·그룹 페이지와 동일) ---------- */
+.top{
+  position:sticky;top:0;z-index:20;height:68px;display:flex;align-items:center;justify-content:space-between;gap:16px;
+  padding:0 clamp(16px,3vw,32px);background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);
+}
+.logo{display:flex;align-items:center;gap:10px;font-size:22px;font-weight:800;letter-spacing:-0.02em}
+.mark{display:flex;align-items:flex-end;gap:3px}
+.mark i{display:block;width:11px;height:11px}
+.mark .c{border-radius:50%;background:var(--coral)}
+.mark .a{border-radius:6px 6px 0 0;background:var(--blue)}
+.mark .q{border-radius:3px;background:var(--sun)}
+.top-right{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:600}
+.top-right a{white-space:nowrap}
+.top-right .login{min-height:40px;display:flex;align-items:center;padding:0 12px}
+.top-right .join{min-height:40px;display:flex;align-items:center;padding:0 12px;color:var(--ink);font-weight:700}
+.top-right .login{color:var(--mute)}
+.top-right .login{font-weight:500}
+.top-right .login:hover{color:var(--ink)}
+
+/* ---------- 본문 ---------- */
+main{flex:1;display:flex;flex-direction:column;align-items:center;padding:56px 20px 72px}
+
+.shapes{display:flex;align-items:flex-end;gap:14px;margin-bottom:26px}
+.shape{position:relative;width:52px;height:52px;--ex:0px;--ey:0px;animation:pop .5s cubic-bezier(.3,1.5,.5,1) both}
+.shape:nth-child(2){height:58px;animation-delay:.06s}
+.shape:nth-child(3){width:50px;height:50px;animation-delay:.12s}
+.shape:nth-child(4){width:56px;height:56px;animation-delay:.18s}
+.shape::after{content:"";position:absolute;left:12%;right:12%;bottom:-9px;height:5px;border-radius:50%;background:rgba(26,29,41,.08)}
+.body{position:absolute;inset:0}
+.shape i{position:absolute;width:6px;height:6px;border-radius:50%;transform:translate(var(--ex),var(--ey));transition:transform .18s ease-out,height .12s,border-radius .12s}
+.shape i:nth-of-type(1){left:28%}
+.shape i:nth-of-type(2){left:58%}
+.shape.blink i{height:1.5px;border-radius:1px}
+.shapes.shy .shape i{height:1.5px;border-radius:1px;transform:translate(0,3px)}
+.shapes.hop .shape{animation:hop .45s ease}
+.shapes.hop .shape:nth-child(2){animation-delay:.05s}
+.shapes.hop .shape:nth-child(3){animation-delay:.1s}
+.shapes.hop .shape:nth-child(4){animation-delay:.15s}
+@keyframes pop{from{opacity:0;transform:translateY(10px) scale(.9)}to{opacity:1;transform:none}}
+@keyframes hop{0%,100%{transform:none}40%{transform:translateY(-8px)}}
+.circle .body{border-radius:50%;background:var(--coral)}
+.circle i{top:45%;background:var(--ink)}
+.arch .body{border-radius:26px 26px 0 0;background:var(--blue)}
+.arch i{top:50%;background:#fff}
+.square .body{border-radius:15px;background:var(--sun)}
+.square i{top:44%;background:var(--ink)}
+.tri .body{background:var(--ink);clip-path:polygon(50% 0,100% 100%,0 100%)}
+.tri i{top:68%;background:#fff}
+.tri i:nth-of-type(1){left:36%}
+.tri i:nth-of-type(2){left:54%}
+
+h1{margin:0 0 28px;text-align:center;font-size:26px;line-height:1.3;font-weight:800;letter-spacing:-0.03em}
+.sub{margin:8px 0 28px;text-align:center;font-size:14px;line-height:1.6;color:var(--mute)}
+
+.card{
+  width:100%;max-width:400px;padding:28px;border-radius:22px;background:#fff;border:1px solid var(--line);
+  box-shadow:0 16px 40px rgba(26,29,41,.07);display:flex;flex-direction:column;gap:18px;
+}
+.field{position:relative;display:flex;flex-direction:column;gap:8px}
+label{font-size:13px;font-weight:700}
+.field > label{padding-left:15px;font-size:12px;font-weight:600;color:var(--mute)}
+input[type=text],input[type=password]{
+  width:100%;height:46px;padding:0 14px;border-radius:12px;border:1px solid #E1E4EC;background:#fff;
+  font-family:inherit;font-size:15px;color:var(--ink);transition:border-color .15s,box-shadow .15s;
+}
+input[type=text]:focus,input[type=password]:focus{outline:none;border-color:#B9BECB;box-shadow:0 4px 14px rgba(26,29,41,.06)}
+input::placeholder{color:#A3A9B6}
+.pw{position:relative}
+.pw input{padding-right:52px}
+.eye{
+  position:absolute;top:7px;right:7px;display:flex;align-items:center;justify-content:center;width:32px;height:32px;padding:0;border:0;
+  border-radius:8px;background:transparent;color:#8A90A0;cursor:pointer;transition:background .15s,color .15s;
+}
+.eye:hover{color:var(--ink)}
+.eye .off{display:none}
+.eye.on .off{display:block}
+.eye.on .show{display:none}
+.row{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;font-size:13px}
+.row label{display:flex;align-items:center;gap:8px;font-weight:500;cursor:pointer}
+.row input{width:16px;height:16px;margin:0;accent-color:var(--ink)}
+.row a{font-weight:500;color:var(--mute)}
+.row a:hover{color:var(--ink)}
+.btn{
+  height:48px;border:1px solid #4A5063;border-radius:8px;background:#fff;color:var(--ink);font-family:inherit;font-size:15px;font-weight:700;cursor:pointer;
+  transition:background .15s;
+}
+.btn:hover{background:#FAFBFC}
+.foot{margin:24px 0 0;font-size:13px;color:var(--mute)}
+.foot a{color:var(--ink);font-weight:700;text-decoration:underline;text-underline-offset:3px}
+
+/* ---------- 회원가입 전용 ---------- */
+.id-row{display:flex;gap:8px}
+.id-row input{flex:1 1 0;min-width:0}
+.check{
+  flex:none;height:46px;padding:0 16px;border:1px solid #E1E4EC;border-radius:8px;background:#fff;color:var(--ink);
+  font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;transition:border-color .15s;
+}
+.check:hover{border-color:#B9BECB}
+input.ok{border-color:#9CC9B0}
+input.bad{border-color:#EBA190}
+.msg{margin:0;padding-left:15px;font-size:12px;line-height:16px;font-weight:600;color:#D14B30}
+.msg.ok{color:#2F8A5B}
+.msg:empty{display:none}
+.terms{display:flex;flex-direction:column;gap:12px;padding:14px 15px;border-radius:12px;background:var(--soft)}
+.terms label{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:500;line-height:1.5;cursor:pointer}
+.terms input{flex:none;width:16px;height:16px;margin:0;accent-color:var(--ink)}
+.terms em{font-style:normal;color:var(--mute)}
+
+@media (max-width:560px){
+  main{padding-top:40px}
+  .card{padding:22px}
+}
+@media (prefers-reduced-motion:reduce){ input,.eye,.btn,.check,.shape i{transition:none} .shape,.shapes.hop .shape{animation:none} }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <a class="logo" href="moim-landing.html">
+    <span class="mark" aria-hidden="true"><i class="c"></i><i class="a"></i><i class="q"></i></span>
+    MOIM
+  </a>
+  <div class="top-right">
+    <a class="login" href="moim-login.html">로그인</a>
+    <a class="join" href="moim-signup.html" aria-current="page">회원가입</a>
+  </div>
+</header>
+
+<main>
+  <h1>회원가입</h1>
+
+  <div class="shapes" aria-hidden="true">
+    <div class="shape circle"><div class="body"></div><i></i><i></i></div>
+    <div class="shape arch"><div class="body"></div><i></i><i></i></div>
+    <div class="shape square"><div class="body"></div><i></i><i></i></div>
+    <div class="shape tri"><div class="body"></div><i></i><i></i></div>
+  </div>
+
+  <form class="card" id="signup-form" novalidate>
+    <div class="field">
+      <label for="su-name">이름</label>
+      <input id="su-name" type="text" autocomplete="name" placeholder="이름을 입력하세요">
+    </div>
+
+    <div class="field">
+      <label for="su-id">아이디</label>
+      <div class="id-row">
+        <input id="su-id" type="text" autocomplete="username" aria-describedby="su-id-msg" placeholder="영문 소문자/숫자 4~16자">
+        <button type="button" class="check" id="su-check">중복 확인</button>
+      </div>
+      <p class="msg" id="su-id-msg" aria-live="polite"></p>
+    </div>
+
+    <div class="field">
+      <label for="su-pw">비밀번호</label>
+      <div class="pw">
+        <input id="su-pw" type="password" autocomplete="new-password" placeholder="8자 이상, 영문과 숫자 포함">
+        <button type="button" class="eye" id="su-eye" aria-label="비밀번호 표시" aria-pressed="false">
+          <svg class="show" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>
+          <svg class="off" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17.94 17.94A10.9 10.9 0 0 1 12 19c-6.4 0-10-7-10-7a18.5 18.5 0 0 1 4.06-5.06M9.9 5.24A10 10 0 0 1 12 5c6.4 0 10 7 10 7a18.5 18.5 0 0 1-2.16 3.19M14.12 14.12a3 3 0 1 1-4.24-4.24"/><path d="M2 2l20 20"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="su-pw2">비밀번호 확인</label>
+      <input id="su-pw2" type="password" autocomplete="new-password" placeholder="비밀번호를 한 번 더 입력하세요">
+    </div>
+
+    <div class="terms">
+      <label for="su-terms"><input id="su-terms" type="checkbox"><span><em>(필수)</em> 이용약관 및 개인정보 처리방침에 동의해요</span></label>
+      <label for="su-noti"><input id="su-noti" type="checkbox"><span><em>(선택)</em> 팀 활동 알림을 받을게요</span></label>
+    </div>
+
+    <button type="submit" class="btn">회원가입</button>
+  </form>
+
+  <p class="foot">이미 계정이 있나요? <a href="moim-login.html">로그인</a></p>
+</main>
+
+<script>
+(function () {
+  // 비밀번호 표시/숨기기 (두 비밀번호 칸 함께 전환)
+  var pw = document.getElementById('su-pw');
+  var pw2 = document.getElementById('su-pw2');
+  var eye = document.getElementById('su-eye');
+  var wrap = document.querySelector('.shapes');
+  function pwFocused() { var a = document.activeElement; return a === pw || a === pw2; }
+  eye.addEventListener('click', function () {
+    var show = pw.type === 'password';
+    pw.type = pw2.type = show ? 'text' : 'password';
+    eye.classList.toggle('on', show);
+    eye.setAttribute('aria-pressed', show ? 'true' : 'false');
+    eye.setAttribute('aria-label', show ? '비밀번호 숨기기' : '비밀번호 표시');
+    wrap.classList.toggle('shy', !show && pwFocused());
+  });
+
+  // 아이디 중복 확인
+  var idInput = document.getElementById('su-id');
+  var msg = document.getElementById('su-id-msg');
+  var TAKEN = ['admin', 'moim', 'test', 'user']; // 데모용. 실제로는 서버에 조회하세요.
+  function setStatus(state, text) {
+    idInput.classList.toggle('ok', state === 'ok');
+    idInput.classList.toggle('bad', state === 'bad');
+    idInput.setAttribute('aria-invalid', state === 'bad' ? 'true' : 'false');
+    msg.classList.toggle('ok', state === 'ok');
+    msg.textContent = text || '';
+  }
+  idInput.addEventListener('input', function () { setStatus('idle', ''); });
+  document.getElementById('su-check').addEventListener('click', function () {
+    var v = idInput.value.trim();
+    if (!v) return setStatus('bad', '아이디를 입력해주세요.');
+    if (!/^[a-z0-9]{4,16}$/.test(v)) return setStatus('bad', '영문 소문자와 숫자 4~16자로 입력해주세요.');
+    if (TAKEN.indexOf(v) >= 0) return setStatus('bad', '이미 사용 중인 아이디예요.');
+    setStatus('ok', '사용할 수 있는 아이디예요.');
+  });
+
+  // 캐릭터: 커서 따라보기 · 깜빡임 · 비밀번호 입력 땐 눈 감기
+  var shapes = [].slice.call(wrap.children);
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function look(x, y) {
+    shapes.forEach(function (el) {
+      var r = el.getBoundingClientRect();
+      var dx = x - (r.left + r.width / 2), dy = y - (r.top + r.height / 2);
+      var d = Math.hypot(dx, dy) || 1, k = Math.min(1, d / 160);
+      el.style.setProperty('--ex', (dx / d * 3 * k).toFixed(2) + 'px');
+      el.style.setProperty('--ey', (dy / d * 2.5 * k).toFixed(2) + 'px');
+    });
+  }
+  if (!reduce) {
+    addEventListener('pointermove', function (e) { look(e.clientX, e.clientY); });
+    shapes.forEach(function (el) {
+      (function loop() {
+        setTimeout(function () {
+          el.classList.add('blink');
+          setTimeout(function () { el.classList.remove('blink'); loop(); }, 140);
+        }, 2500 + Math.random() * 4000);
+      })();
+    });
+  }
+  [document.getElementById('su-name'), idInput].forEach(function (inp) {
+    inp.addEventListener('input', function () {
+      var r = inp.getBoundingClientRect();
+      look(r.left + 16 + Math.min(inp.value.length * 8, r.width - 32), r.top + r.height / 2);
+    });
+  });
+  [pw, pw2].forEach(function (inp) {
+    inp.addEventListener('focus', function () { if (inp.type === 'password') wrap.classList.add('shy'); });
+    inp.addEventListener('blur', function () { setTimeout(function () { if (!pwFocused()) wrap.classList.remove('shy'); }); });
+  });
+
+  document.getElementById('signup-form').addEventListener('submit', function (e) {
+    e.preventDefault(); // 여기에 회원가입 요청을 연결하세요
+    if (reduce) return;
+    wrap.classList.remove('hop'); void wrap.offsetWidth; wrap.classList.add('hop');
+  });
+})();
+</script>
+</body>
+</html>

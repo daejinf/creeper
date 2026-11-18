@@ -1,0 +1,2 @@
+# Original design HTML must keep LF byte-for-byte (docs/PRODUCT.md hash table).
+moim-*.html text eol=lf

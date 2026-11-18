@@ -1,0 +1,37 @@
+[project]
+name = "moim"
+version = "0.1.0"
+description = "MOIM: personal AI role and todo planning service"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "fastapi>=0.115,<1",
+    "uvicorn>=0.34,<1",
+    "jinja2>=3.1,<4",
+    "python-multipart>=0.0.20,<1",
+    "SQLAlchemy>=2.0,<3",
+    "alembic>=1.13,<2",
+    "psycopg[binary]>=3.2,<4",
+    "tzdata>=2025.2; platform_system == 'Windows'",
+    # dependencies of the retained src/wemeet_ai modules (M0, M1-E/F, M2, shared)
+    "requests>=2.32,<3",
+    "pydantic>=2.7,<3",
+    "Pillow>=11.0,<13",
+    "PyMuPDF>=1.25,<2",
+    "python-docx>=1.1,<2",
+]
+
+[project.optional-dependencies]
+test = ["pytest>=8.3,<9", "httpx>=0.28,<1"]
+visual = ["playwright>=1.49,<2"]  # tools/capture_screens.py only; not needed to run the app
+
+[build-system]
+requires = ["setuptools>=75"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src", "."]
+addopts = "-q"

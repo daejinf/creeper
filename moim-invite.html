@@ -1,0 +1,521 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MOIM · 초대코드로 참여하기</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1A1D29;--coral:#F26A4F;--blue:#2F54EB;--sun:#FFC53D;--mute:#555B6B;--gray:#8A90A0;
+  --line:#ECEEF3;--field:#E1E4EC;--soft:#F6F7FA;--err:#D14B30;--ok:#2F8A5B;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:'Noto Sans KR',system-ui,-apple-system,'Apple SD Gothic Neo',sans-serif;font-size:15px;color:var(--ink);background:#fff;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;color:inherit}
+a:focus-visible,button:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.page{min-height:100vh;display:flex;flex-direction:column}
+
+/* 로그인 상태에 따라 메뉴 노출 */
+body[data-auth="out"] .auth-in,
+body[data-auth="in"] .auth-out{display:none !important}
+
+/* ---------- header (다른 페이지와 동일) ---------- */
+.nav{
+  position:sticky;top:0;z-index:20;height:68px;display:flex;align-items:center;justify-content:space-between;gap:16px;
+  padding:0 clamp(16px,3vw,32px);background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);
+}
+.logo{display:flex;align-items:center;gap:10px;font-size:22px;font-weight:800;letter-spacing:-0.02em}
+.mark{display:flex;align-items:flex-end;gap:3px}
+.mark i{display:block;width:11px;height:11px}
+.mark .c{border-radius:50%;background:var(--coral)}
+.mark .a{border-radius:6px 6px 0 0;background:var(--blue)}
+.mark .q{border-radius:3px;background:var(--sun)}
+.menu{display:flex;align-items:center;gap:8px;font-size:14px}
+.menu a{min-height:40px;display:flex;align-items:center;padding:0 12px;white-space:nowrap}
+.menu .login{font-weight:500;color:var(--mute)}
+.menu .login:hover{color:var(--ink)}
+.menu .join{font-weight:700;color:var(--ink)}
+.menu .mine{font-weight:600;color:var(--mute)}
+.menu .mine:hover{color:var(--ink)}
+
+/* ---------- main ---------- */
+main{flex:1;display:flex;flex-direction:column;align-items:center;padding:56px 20px 72px}
+.wrap{width:100%;max-width:520px;display:flex;flex-direction:column;align-items:center;text-align:center}
+.wrap h1{margin:0 0 4px;font-size:26px;line-height:1.35;font-weight:800;letter-spacing:-0.03em}
+.form{display:flex;flex-direction:column;align-items:center;width:100%}
+
+.label{font-size:12px;font-weight:600;color:var(--mute)}
+
+
+/* 캐릭터: 초대코드 박스 위에 앉아 있어요 */
+.cast{position:absolute;left:50%;bottom:100%;transform:translateX(-50%);display:flex;align-items:flex-end;gap:8px;pointer-events:none}
+.ch{position:relative;width:34px;height:34px;--ex:0px;--ey:0px;animation:peek .5s cubic-bezier(.3,1.5,.5,1) both}
+.ch:nth-child(2){height:38px;animation-delay:.06s}
+.ch:nth-child(3){width:32px;height:32px;animation-delay:.12s}
+.ch:nth-child(4){width:36px;height:36px;animation-delay:.18s}
+.ch .b{position:absolute;inset:0}
+.ch i{position:absolute;width:4px;height:4px;border-radius:50%;transform:translate(var(--ex),var(--ey));transition:transform .18s ease-out,height .12s,border-radius .12s}
+.ch i:nth-of-type(1){left:27%}
+.ch i:nth-of-type(2){left:59%}
+.ch.blink i,.cast.shy .ch i{height:1.5px;border-radius:1px}
+.ch.c .b{border-radius:50%;background:var(--coral)}.ch.c i{top:44%;background:var(--ink)}
+.ch.a .b{border-radius:19px 19px 0 0;background:var(--blue)}.ch.a i{top:50%;background:#fff}
+.ch.q .b{border-radius:10px;background:var(--sun)}.ch.q i{top:43%;background:var(--ink)}
+.ch.t .b{background:var(--ink);clip-path:polygon(50% 0,100% 100%,0 100%)}.ch.t i{top:66%;background:#fff}
+.ch.t i:nth-of-type(1){left:35%}.ch.t i:nth-of-type(2){left:54%}
+.cast.hop .ch{animation:hop .45s ease}
+.cast.hop .ch:nth-child(2){animation-delay:.05s}
+.cast.hop .ch:nth-child(3){animation-delay:.1s}
+.cast.hop .ch:nth-child(4){animation-delay:.15s}
+@keyframes peek{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@keyframes hop{0%,100%{transform:none}40%{transform:translateY(-7px)}}
+/* 팀원 칩의 캐릭터도 깜빡여요 */
+.chip .av{animation:none}
+
+/* 내 그룹 초대코드 */
+/* 티켓 (초대코드 박스 · 입력 박스 공통) */
+.ticket{
+  --cut:96px;position:relative;width:100%;border-radius:18px;background:#F1F3F7;border:1px solid #E6E9EF;
+  display:flex;flex-direction:column;align-items:center;
+}
+.ticket::before,.ticket::after{
+  content:"";position:absolute;top:var(--cut);width:20px;height:20px;margin-top:-10px;border-radius:50%;background:#fff;border:1px solid #E6E9EF;
+}
+.ticket::before{left:-12px;clip-path:inset(-1px -1px -1px 50%)}
+.ticket::after{right:-12px;clip-path:inset(-1px 50% -1px -1px)}
+.join-t{margin-top:64px}
+.gen-top{display:flex;flex-direction:column;align-items:center;gap:6px;width:100%;height:96px;justify-content:center}
+.gen-code{font-size:30px;font-weight:800;line-height:1.1;letter-spacing:.2em;margin-right:-.2em;font-variant-numeric:tabular-nums}
+.gen-bot{width:calc(100% - 36px);display:flex;justify-content:center;padding:8px 0 10px;border-top:1.5px dashed #D3D8E1}
+.join-t{--cut:44px}
+.join-top{height:44px;display:flex;align-items:center;justify-content:center}
+.join-bot{width:calc(100% - 36px);display:flex;justify-content:center;padding:18px 0 20px;border-top:1.5px dashed #D3D8E1}
+.gen-tools{display:flex;align-items:center;gap:10px}
+.mini{
+  height:26px;padding:0 8px;border:0;border-radius:6px;background:transparent;font-size:12px;font-weight:500;color:var(--gray);cursor:pointer;
+  display:inline-flex;align-items:center;gap:4px;transition:color .15s;
+}
+.mini:hover{color:var(--ink)}
+.mini.copied{color:var(--ok)}
+
+.or{display:flex;align-items:center;gap:12px;width:100%;margin:8px 0 36px;font-size:12px;color:var(--gray)}
+.or::before,.or::after{content:"";flex:1;height:1px;background:var(--line)}
+
+/* 코드 입력 */
+.code{display:flex;gap:8px}
+.code.bad{animation:shake .32s}
+@keyframes shake{20%,60%{transform:translateX(-4px)}40%,80%{transform:translateX(4px)}}
+.code input{
+  width:48px;height:56px;padding:0;text-align:center;font:800 22px/1 'Noto Sans KR',sans-serif;color:var(--ink);
+  background:#fff;border:1px solid var(--field);border-radius:12px;caret-color:var(--ink);
+  transition:border-color .15s,box-shadow .15s;
+}
+.code input:focus{outline:none;border-color:#B9BECB;box-shadow:0 4px 14px rgba(26,29,41,.06)}
+.code input::placeholder{color:transparent}
+.code input:placeholder-shown:not(:focus){border-color:#E6E9EF}
+.code.ok input{border-color:#9CC9B0}
+.code.bad input{border-color:#EBA190}
+.msg{min-height:18px;margin:10px 0 0;font-size:12px;font-weight:600;color:var(--mute)}
+.msg.err{color:var(--err)}
+.msg.ok,.msg.joined{color:var(--ok)}
+
+/* 함께할 팀원 */
+.members{display:flex;flex-direction:column;align-items:center;gap:4px;width:100%;margin-top:24px}
+.members .cap{font-size:14px;font-weight:700}
+.chips{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:12px}
+.chip{
+  display:flex;align-items:center;gap:8px;height:36px;padding:0 14px 0 7px;background:#fff;border:1px solid #D5D9E2;box-shadow:0 2px 6px rgba(26,29,41,.04);
+  border-radius:999px;font-size:13px;font-weight:700;animation:pop .3s cubic-bezier(.2,.8,.3,1) both;transition:border-color .3s;
+}
+@keyframes pop{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.chip.empty{padding:0 14px;border-style:dashed;border-color:#D5D9E2;color:var(--gray);font-weight:500;animation:none}
+.av{display:inline-flex;align-items:center;justify-content:center;gap:3px;flex:0 0 auto;width:22px;height:22px}
+.av i{display:block;width:3px;height:3px;border-radius:50%;background:var(--ink)}
+.av.c{border-radius:50%;background:var(--coral)}
+.av.a{border-radius:11px 11px 0 0;background:var(--blue);padding-top:3px}
+.av.a i{background:#fff}
+.av.q{border-radius:6px;background:var(--sun)}
+.av.t{background:var(--ink);clip-path:polygon(50% 0,100% 100%,0 100%);align-items:flex-end;padding-bottom:5px}
+.av.t i{background:#fff}
+
+/* 버튼 (회원가입 버튼과 동일) */
+.actions{display:flex;width:100%;max-width:340px;margin-top:24px}
+.actions .btn{flex:1}
+.btn{
+  height:48px;padding:0 24px;display:inline-flex;align-items:center;justify-content:center;border-radius:8px;
+  font:700 15px 'Noto Sans KR',sans-serif;cursor:pointer;background:#fff;color:var(--ink);border:1px solid #4A5063;transition:background .15s,border-color .15s;
+}
+.btn:hover{background:#FAFBFC}
+/* 그룹 생성하기: 작은 알약 버튼 */
+.actions.center{justify-content:center}
+.actions.center .btn{flex:none}
+.btn.make{height:44px;min-width:220px;padding:0 26px;font-size:14px;border:0;border-radius:12px;background:#F1F3F7;color:var(--ink);transition:background .15s,transform .12s}
+.btn.make:hover{background:#E8EBF1}
+.btn.make:active{transform:scale(.97)}
+
+/* 완료 */
+/* 완료: 화면 위에 떠 있고, 아무 데나 누르면 닫혀요 */
+.done{
+  position:fixed;inset:0;z-index:40;display:flex;align-items:center;justify-content:center;padding:20px;
+  background:rgba(255,255,255,.72);backdrop-filter:blur(6px);cursor:pointer;
+  opacity:0;visibility:hidden;transition:opacity .2s,visibility .2s;
+}
+.done.show{opacity:1;visibility:visible}
+.done-card{
+  display:flex;flex-direction:column;align-items:center;gap:10px;width:100%;max-width:360px;padding:32px 24px 28px;text-align:center;
+  border:1px solid var(--line);border-radius:22px;background:#fff;box-shadow:0 20px 48px rgba(26,29,41,.10);
+  transform:translateY(8px) scale(.98);transition:transform .25s cubic-bezier(.2,.8,.3,1);
+}
+.done.show .done-card{transform:none}
+.done .check{width:52px;height:52px;margin-bottom:4px;border-radius:50%;background:#F1F3F7;display:flex;align-items:center;justify-content:center;color:var(--ink)}
+.done h2{margin:0;font-size:20px;font-weight:800;letter-spacing:-0.03em}
+.done p{margin:0;font-size:13px;color:var(--mute);line-height:1.7;white-space:pre-line}
+
+/* 토스트 */
+.toast{
+  position:fixed;left:50%;bottom:32px;z-index:50;display:flex;align-items:center;gap:8px;
+  padding:10px 16px;background:#fff;color:var(--ink);border:1px solid var(--line);border-radius:12px;box-shadow:0 12px 28px rgba(26,29,41,.10);
+  font-size:13px;font-weight:600;white-space:nowrap;max-width:calc(100vw - 32px);
+  opacity:0;pointer-events:none;transform:translate(-50%,8px);transition:opacity .2s,transform .25s;
+}
+.toast::before{content:"✓";display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#E3F3EA;color:var(--ok);font-size:11px;font-weight:800}
+.toast.fail::before{content:"!";background:#FCE9E4;color:var(--err)}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+
+@media (max-width:480px){
+  .code{gap:6px}
+  .code input{width:42px;height:52px;font-size:20px}
+  .gen-code{font-size:28px}
+}
+@media (prefers-reduced-motion:reduce){.code.bad,.chip,.ch,.cast.hop .ch{animation:none}.ch i{transition:none}.btn,.chip,.mini,.code input,.toast,.done,.done-card{transition:none}}
+</style>
+</head>
+<body data-auth="out">
+<div class="page">
+  <header class="nav">
+    <a class="logo" href="moim-landing.html">
+      <span class="mark" aria-hidden="true"><i class="c"></i><i class="a"></i><i class="q"></i></span>
+      MOIM
+    </a>
+    <nav class="menu" aria-label="주요 메뉴">
+      <!-- 로그인 전 -->
+      <a class="login auth-out" id="loginLink" href="moim-login.html">로그인</a>
+      <a class="join auth-out" href="moim-signup.html">회원가입</a>
+      <!-- 로그인 후 -->
+      <a class="mine auth-in" href="moim-dashboard.html">내 그룹</a>
+    </nav>
+  </header>
+
+  <main>
+    <div class="wrap" id="wrap">
+      <div class="form">
+        <h1>팀 생성 및 참여</h1>
+
+        <div class="ticket join-t">
+          <div class="cast" id="cast" aria-hidden="true">
+            <span class="ch c"><span class="b"></span><i></i><i></i></span>
+            <span class="ch a"><span class="b"></span><i></i><i></i></span>
+            <span class="ch q"><span class="b"></span><i></i><i></i></span>
+            <span class="ch t"><span class="b"></span><i></i><i></i></span>
+          </div>
+          <div class="join-top"><span class="label" id="codeLabel">초대코드 입력</span></div>
+          <div class="join-bot"><div class="code" id="code" role="group" aria-labelledby="codeLabel"></div></div>
+        </div>
+        <p class="msg" id="msg" role="status" aria-live="polite"></p>
+
+        <div class="or">새 그룹을 만든다면</div>
+        <div class="gen ticket">
+          <div class="gen-top">
+            <span class="label">내 그룹 초대코드</span>
+            <strong class="gen-code" id="genCode" aria-live="polite">------</strong>
+          </div>
+          <div class="gen-bot"><div class="gen-tools">
+            <button class="mini" id="copy" type="button"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="3"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg><span>복사</span></button>
+            <button class="mini" id="regen" type="button"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 5v6h-6"/></svg><span>새로 만들기</span></button>
+          </div></div>
+        </div>
+
+        <div class="members">
+          <span class="cap" id="cap">함께할 팀원</span>
+          <div class="chips" id="chips" aria-live="polite"></div>
+        </div>
+
+        <div class="actions center">
+          <button class="btn make" id="create" type="button">그룹 생성하기
+          </button>
+        </div>
+
+      </div>
+
+      <div class="done" id="done" role="dialog" aria-modal="true" aria-labelledby="doneTitle" tabindex="-1">
+        <div class="done-card">
+          <div class="check" aria-hidden="true">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>
+          </div>
+          <h2 id="doneTitle">그룹 생성 완료</h2>
+          <p id="doneText"></p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+// ---------- 로그인 상태 (데모) ----------
+// 실제 서비스에서는 서버 세션/토큰 상태에 맞춰 body의 data-auth 값을 "in" / "out" 으로 바꿔주세요.
+// 데모: 주소 끝에 ?login=1 을 붙이면 로그인 상태, ?login=0 을 붙이면 로그아웃 상태로 보여요.
+(function () {
+  var KEY = 'moimLoggedIn';
+  function read() { try { return localStorage.getItem(KEY) === '1'; } catch (e) { return false; } }
+  function setAuth(on) {
+    document.body.setAttribute('data-auth', on ? 'in' : 'out');
+    try { localStorage.setItem(KEY, on ? '1' : '0'); } catch (e) {}
+  }
+  var q = new URLSearchParams(location.search).get('login');
+  if (q === '1') setAuth(true);
+  else if (q === '0') setAuth(false);
+  else setAuth(read());
+})();
+
+
+// ---------- 캐릭터 ----------
+var MoimCast = (function () {
+  var cast = document.getElementById('cast');
+  var chs = [].slice.call(cast.children);
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function look(x, y) {
+    chs.forEach(function (el) {
+      var r = el.getBoundingClientRect();
+      var dx = x - (r.left + r.width / 2), dy = y - (r.top + r.height / 2);
+      var d = Math.hypot(dx, dy) || 1, k = Math.min(1, d / 140);
+      el.style.setProperty('--ex', (dx / d * 2.4 * k).toFixed(2) + 'px');
+      el.style.setProperty('--ey', (dy / d * 2 * k).toFixed(2) + 'px');
+    });
+  }
+  function hop() {
+    if (reduce) return;
+    cast.classList.remove('hop'); void cast.offsetWidth; cast.classList.add('hop');
+  }
+  function shy() {
+    cast.classList.add('shy');
+    setTimeout(function () { cast.classList.remove('shy'); }, 700);
+  }
+  if (!reduce) {
+    addEventListener('pointermove', function (e) { look(e.clientX, e.clientY); });
+    chs.forEach(function (el) {
+      (function loop() {
+        setTimeout(function () {
+          el.classList.add('blink');
+          setTimeout(function () { el.classList.remove('blink'); loop(); }, 140);
+        }, 2500 + Math.random() * 4000);
+      })();
+    });
+  }
+  return { look: look, hop: hop, shy: shy };
+})();
+
+// ---------- 초대코드 ----------
+(function () {
+  var LEN = 6;                      // 초대코드 자리수
+  var MAX = 6;                      // 데모용 최대 인원
+  var SHAPES = ['c', 'a', 'q', 't'];
+  var NAMES = ['PARK', 'KIM', 'CHOI', 'LEE', 'JUNG'];  // 데모용: 합류하는 팀원 이름
+
+  var codeEl = document.getElementById('code');
+  var msg = document.getElementById('msg');
+  var chips = document.getElementById('chips');
+  var cap = document.getElementById('cap');
+  var wrap = document.getElementById('wrap');
+  var genEl = document.getElementById('genCode');
+  var inputs = [];
+  var genCode = '';
+  var members = [];
+
+  // 대기 중 칩
+
+  for (var i = 0; i < LEN; i++) {
+    var inp = document.createElement('input');
+    inp.type = 'text';
+    inp.inputMode = 'numeric';
+    inp.autocomplete = i === 0 ? 'one-time-code' : 'off';
+    inp.maxLength = 1;
+    inp.placeholder = ' ';
+    inp.setAttribute('aria-label', '초대코드 ' + (i + 1) + '번째 자리');
+    codeEl.appendChild(inp);
+    inputs.push(inp);
+  }
+
+  function value() { return inputs.map(function (n) { return n.value; }).join(''); }
+
+  // ---- 함께할 팀원 목록 ----
+  function updateCap() { cap.textContent = '함께할 팀원 ' + members.length + '명'; }
+
+  function chipEl(m) {
+    var c = document.createElement('span');
+    c.className = 'chip k-' + m.shape;
+    c.innerHTML = '<span class="av ' + m.shape + '" aria-hidden="true"><i></i><i></i></span>';
+    c.appendChild(document.createTextNode(m.name));
+    return c;
+  }
+
+  function renderMembers() {
+    chips.innerHTML = '';
+    members.forEach(function (m) { chips.appendChild(chipEl(m)); });
+    updateCap();
+  }
+
+  function addMember(m) {
+    members.push(m);
+    var el = chipEl(m);
+    chips.appendChild(el);
+    updateCap();
+  }
+
+  // ---- 입력 상태 ----
+  function setState(state, text) {
+    codeEl.classList.remove('ok', 'bad');
+    msg.className = 'msg';
+    if (state) { codeEl.classList.add(state); msg.classList.add(state === 'ok' ? 'ok' : 'err'); }
+    msg.textContent = text || '';
+  }
+
+  function resetInputs() {
+    inputs.forEach(function (n) { n.value = ''; });
+    codeEl.classList.remove('ok', 'bad');
+  }
+
+  // 6자리를 다 입력하면 바로 확인하고, 맞으면 곧바로 팀원으로 추가해요.
+  function check() {
+    var v = value();
+    if (v.length < LEN) { setState(null, ''); return; }
+    // TODO: 실제 서비스에서는 서버에 코드를 조회하고 참여 요청을 보내세요.
+    if (v !== genCode) { flash('존재하지 않는 코드예요. 다시 확인해 주세요.'); return; }
+    if (members.length >= MAX) { flash('인원이 가득 찼어요.'); return; }
+    var name = NAMES[(members.length - 1) % NAMES.length];
+    addMember({ name: name, shape: SHAPES[members.length % SHAPES.length] });
+    resetInputs();
+    setState(null, '');
+    MoimCast.hop();
+    inputs[0].focus();
+  }
+
+  // 안내 문구와 함께 입력창을 흔들어 알려줘요 (버튼은 항상 눌러볼 수 있어요)
+  function flash(text) {
+    setState(null, '');
+    void codeEl.offsetWidth;          // 흔들림 애니메이션을 다시 시작
+    setState('bad', text);
+    MoimCast.shy();
+  }
+
+  function fill(str) {
+    var digits = str.replace(/\D/g, '').slice(0, LEN).split('');
+    inputs.forEach(function (n, k) { n.value = digits[k] || ''; });
+    inputs[Math.min(digits.length, LEN - 1)].focus();
+    check();
+  }
+
+  inputs.forEach(function (inp, idx) {
+    inp.addEventListener('input', function () {
+      var d = inp.value.replace(/\D/g, '');
+      if (d.length > 1) { fill(value() + d); return; }
+      inp.value = d;
+      if (d && idx < LEN - 1) inputs[idx + 1].focus();
+      var r = inp.getBoundingClientRect(); MoimCast.look(r.left + r.width / 2, r.top + r.height / 2);
+      check();
+    });
+    inp.addEventListener('keydown', function (e) {
+      if (e.key === 'Backspace' && !inp.value && idx > 0) { inputs[idx - 1].focus(); inputs[idx - 1].value = ''; check(); e.preventDefault(); }
+      else if (e.key === 'ArrowLeft' && idx > 0) { inputs[idx - 1].focus(); e.preventDefault(); }
+      else if (e.key === 'ArrowRight' && idx < LEN - 1) { inputs[idx + 1].focus(); e.preventDefault(); }
+    });
+    inp.addEventListener('focus', function () { inp.select(); });
+    inp.addEventListener('paste', function (e) {
+      e.preventDefault();
+      fill((e.clipboardData || window.clipboardData).getData('text'));
+    });
+  });
+
+  // ---- 랜덤 초대코드 생성 ----
+  function generate() {
+    // TODO: 실제 서비스에서는 서버에서 중복 없는 코드를 발급받으세요.
+    genCode = String(Math.floor(Math.random() * Math.pow(10, LEN))).padStart(LEN, '0');
+    genEl.textContent = genCode;
+    genEl.setAttribute('aria-label', '초대코드 ' + genCode);
+    members = [{ name: '나', shape: SHAPES[0] }];   // 새 코드 = 새 그룹 (나만 있는 상태)
+    renderMembers();
+    resetInputs();
+    setState(null, '');
+  }
+
+  var toastEl = document.getElementById('toast');
+  var toastTimer;
+  function showToast(text, isFail) {
+    toastEl.textContent = text;
+    toastEl.classList.toggle('fail', !!isFail);
+    toastEl.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { toastEl.classList.remove('show'); }, 1800);
+  }
+
+  var copyBtn = document.getElementById('copy');
+  copyBtn.addEventListener('click', function () {
+    function ok() {
+      copyBtn.querySelector('span').textContent = '복사됨'; copyBtn.classList.add('copied');
+      setTimeout(function () { copyBtn.querySelector('span').textContent = '복사'; copyBtn.classList.remove('copied'); }, 1500);
+      showToast('초대코드가 복사됐어요');
+      MoimCast.hop();
+    }
+    function fail() { showToast('복사하지 못했어요. 코드를 직접 선택해 복사해 주세요.', true); }
+    // 미리보기(iframe) 등에서는 최신 복사 기능이 막혀 있을 수 있어서, 막히면 예전 방식으로 한 번 더 시도해요.
+    function legacy() {
+      var t = document.createElement('textarea');
+      t.value = genCode;
+      t.setAttribute('readonly', '');
+      t.style.cssText = 'position:fixed;top:0;left:0;opacity:0';
+      document.body.appendChild(t);
+      t.focus();
+      t.select();
+      t.setSelectionRange(0, t.value.length);
+      var done = false;
+      try { done = document.execCommand('copy'); } catch (e) {}
+      document.body.removeChild(t);
+      copyBtn.focus();
+      if (done) ok(); else fail();
+    }
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(genCode).then(ok, legacy);
+      else legacy();
+    } catch (e) { legacy(); }
+  });
+  document.getElementById('regen').addEventListener('click', generate);
+
+  // ---- 그룹 생성하기 ----
+  var doneEl = document.getElementById('done');
+  function closeDone() {
+    if (!doneEl.classList.contains('show')) return;
+    doneEl.classList.remove('show');
+    document.getElementById('create').focus();
+  }
+  doneEl.addEventListener('click', closeDone);
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' || e.key === 'Enter') { if (doneEl.classList.contains('show')) { e.preventDefault(); closeDone(); } } });
+  document.getElementById('create').addEventListener('click', function () {
+    // TODO: 실제 서비스에서는 여기서 서버에 그룹 생성 요청을 보내세요.
+    document.getElementById('doneText').textContent =
+      '지금 ' + members.length + '명이 함께해요.\n초대코드 ' + genCode + '를 팀원에게 공유해 주세요.';
+    doneEl.classList.add('show');
+    doneEl.focus();
+    MoimCast.hop();
+  });
+
+  generate();
+  inputs[0].focus();
+})();
+</script>
+</body>
+</html>

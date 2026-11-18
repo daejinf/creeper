@@ -1,0 +1,543 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MOIM · 마이페이지</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1A1D29;--coral:#F26A4F;--blue:#2F54EB;--sun:#FFC53D;
+  --mute:#555B6B;--line:#ECEEF3;--soft:#F6F7FA;--err:#D2492C;--ok:#1E8E5A;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:'Noto Sans KR',system-ui,-apple-system,'Apple SD Gothic Neo',sans-serif;font-size:15px;color:var(--ink);background:#fff;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+button,input{font-family:inherit;color:inherit}
+a:focus-visible,button:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+.app{min-height:100vh;display:flex;flex-direction:column}
+
+/* header (대시보드와 동일) */
+.top{position:sticky;top:0;z-index:20;height:68px;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:0 clamp(16px,3vw,32px);background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.logo{display:flex;align-items:center;gap:10px;font-size:22px;font-weight:800;letter-spacing:-0.02em}
+.mark{display:flex;align-items:flex-end;gap:3px}
+.mark i{display:block;width:11px;height:11px}
+.mark .c{border-radius:50%;background:var(--coral)}
+.mark .a{border-radius:6px 6px 0 0;background:var(--blue)}
+.mark .q{border-radius:3px;background:var(--sun)}
+
+main{flex:1;width:100%;max-width:1040px;margin:0 auto;padding:20px clamp(16px,3.5vw,40px) 48px}
+.head{margin-bottom:14px}
+.head h1{margin:0;font-size:22px;line-height:1.4;font-weight:800;letter-spacing:-0.03em}
+.head p{margin:2px 0 0;font-size:13px;color:var(--mute)}
+
+.layout{display:grid;grid-template-columns:260px minmax(0,1fr);gap:20px;align-items:start}
+.layout > *{min-width:0}
+
+/* 왼쪽: 프로필 + 메뉴 */
+.side{display:flex;flex-direction:column;gap:14px;padding:20px 16px 16px;border:1px solid var(--line);border-radius:22px;background:#FBFBFD}
+.prof{display:flex;flex-direction:column;align-items:center;gap:8px;padding:6px 0 14px;border-bottom:1px solid var(--line);text-align:center}
+.prof b{font-size:17px;font-weight:800;letter-spacing:-0.02em}
+.prof small{display:block;margin-top:2px;font-size:12.5px;color:var(--mute)}
+
+/* 캐릭터 (대시보드와 같은 모양) */
+.face{flex:0 0 auto;width:72px;height:72px;display:flex;align-items:center;justify-content:center;gap:12px}
+.face i{width:6px;height:6px;border-radius:50%;background:var(--ink);transition:transform .12s ease-out,width .18s,height .18s,border-radius .18s;will-change:transform}
+/* 비밀번호 변경 화면에서는 눈을 감아요 */
+.face.shut i{width:10px;height:2px;border-radius:2px;transform:none!important}
+.face.g{border-radius:50%;background:#C9CEDB}
+.face.c{border-radius:50%;background:var(--coral)}
+.face.a{border-radius:36px 36px 0 0;background:var(--blue);padding-top:8px}
+.face.a i,.face.t i{background:#fff}
+.face.q{border-radius:20px;background:var(--sun)}
+.face.t{background:var(--ink);clip-path:polygon(50% 0,100% 100%,0 100%);align-items:flex-end;padding-bottom:16px;gap:9px}
+
+.menu{display:flex;flex-direction:column;gap:4px}
+.menu button{display:flex;align-items:center;gap:10px;min-height:44px;padding:0 12px;border:0;border-radius:12px;background:transparent;font-size:14px;font-weight:600;color:var(--mute);text-align:left;cursor:pointer;transition:background .15s,color .15s}
+.menu button:hover{background:#EEF0F5;color:var(--ink)}
+.menu button[aria-selected="true"]{background:#EEF0F5;color:var(--ink)}
+.menu svg{flex:0 0 auto;opacity:.8}
+
+/* 오른쪽: 내용 카드 */
+.card{border:1px solid var(--line);border-radius:22px;background:#fff;padding:20px clamp(18px,3vw,32px) 22px}
+.card[hidden]{display:none}
+.card h2{margin:0;font-size:17px;font-weight:800;letter-spacing:-0.02em}
+.card .sub{margin:4px 0 16px;font-size:13px;color:var(--mute)}
+
+
+/* 입력 */
+.fields{display:flex;flex-direction:column;gap:12px}
+.card h2 + .fields{margin-top:18px}
+.field label,.flabel{display:block;margin-bottom:6px;font-size:13px;font-weight:700}
+.idv{margin:0 0 4px;padding:0 2px;font-size:15px;font-weight:500;color:var(--mute)}
+/* 내 정보: 왼쪽 라벨, 오른쪽 값. 값 글자는 이름 입력칸 안 글자와 같은 위치에서 시작해요 */
+.info{display:grid;grid-template-columns:64px minmax(0,360px);column-gap:16px;row-gap:8px;align-items:center}
+.info .flabel{margin:0;align-self:start;line-height:46px}
+.info .idv{margin:0;padding:0 15px;line-height:46px;color:var(--ink)}
+.info .hint:empty{display:none}
+.field .hint.ok,.info .hint.ok{color:var(--ok)}
+.info + .actions{margin-left:80px}
+.field .hint{margin:6px 2px 0;font-size:12px;color:#8A90A0}
+.field .hint.err{color:var(--err)}
+.box{display:flex;align-items:center;gap:8px;height:46px;padding:0 6px 0 14px;border:1px solid #E1E4EC;border-radius:12px;background:#fff;transition:border-color .15s,background .15s}
+.box:focus-within{border-color:#C9CEDB}
+.box.bad{border-color:var(--err)}
+.box input{flex:1;min-width:0;height:100%;border:0;outline:0;background:transparent;font-size:15px;font-weight:500}
+.box input::placeholder{color:#A4AABA}
+.box.ro{background:var(--soft);border-color:var(--line)}
+.box.ro input{color:var(--mute)}
+.lock{display:flex;align-items:center;gap:4px;padding:3px 9px;margin-right:4px;border-radius:999px;background:#EEF0F5;font-size:11px;font-weight:700;color:var(--mute);white-space:nowrap}
+.eye{width:36px;height:36px;display:flex;align-items:center;justify-content:center;border:0;border-radius:8px;background:transparent;color:#A4AABA;cursor:pointer;transition:background .15s,color .15s}
+.eye:hover{background:#EEF0F5;color:var(--ink)}
+
+.rules{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 0;padding:0;list-style:none}
+.rules{gap:4px 14px!important}
+.rules li{display:flex;align-items:center;gap:5px;padding:0 2px;font-size:12px;font-weight:500;color:#A3A9B6;transition:color .15s}
+.rules li svg{opacity:.5}
+.rules li.ok{color:var(--ok);font-weight:600}
+.rules li.ok svg{opacity:1}
+
+.actions{display:flex;align-items:center;gap:12px;margin-top:20px}
+/* 버튼: 투두 페이지의 "투두 확정하기"와 같은 모양 */
+.btn{min-height:48px;padding:0 24px;border:0;border-radius:12px;background:#ECEEF3;color:var(--ink);font-size:15px;font-weight:700;cursor:pointer;transition:background .15s,color .15s,border-color .15s}
+.btn:hover:not(:disabled){background:#E3E6EC}
+.btn.sm{min-height:40px;padding:0 18px;border-radius:10px;font-size:14px}
+.btn:disabled{background:#F1F3F7;color:#C9CEDB;cursor:not-allowed}
+.btn.ghost{background:#fff;border:1px solid #E1E4EC}
+.btn.ghost:hover:not(:disabled){background:var(--soft);border-color:#C9CEDB}
+.btn.danger{background:#FDECE8;color:#B5361C}
+.btn.danger:hover:not(:disabled){background:#FBDCD4}
+.btn.danger:disabled{background:#FDF3F0;color:#E9B5A8}
+.note{font-size:13px;font-weight:600;color:var(--mute)}
+.note.err{color:var(--err)}
+
+/* 내 그룹 목록 */
+.groups{position:relative;margin:0;padding:0;list-style:none;border:1px solid var(--line);border-radius:16px;overflow:hidden;background:#fff}
+.grp{display:flex;align-items:center;gap:14px;min-height:68px;padding:10px 18px;border-top:1px solid var(--line)}
+.grp:first-child{border-top:0}
+.dot{flex:0 0 auto;width:14px;height:14px}
+.dot.c{border-radius:50%;background:var(--coral)}
+.dot.a{border-radius:7px 7px 0 0;background:var(--blue)}
+.dot.q{border-radius:4px;background:var(--sun)}
+.grp .t{flex:1;min-width:0}
+.grp .t b{display:block;font-size:14.5px;font-weight:700}
+.prog{display:flex;align-items:center;gap:10px;margin-top:7px}
+.bar{flex:0 0 150px;height:6px;border-radius:999px;background:#ECEEF3}
+.bar span{display:block;height:6px;border-radius:999px;background:var(--ink)}
+.prog .cnt{font-size:12px;color:#8A90A0;white-space:nowrap}
+.grp .prog .cnt b{display:inline;font-size:12px;color:var(--ink);font-weight:700}
+.prog .hot{flex:0 0 auto;font-size:12px;font-weight:500;color:var(--mute);white-space:nowrap}
+.prog .hot::before{content:"·";margin-right:6px;color:#C9CEDB;font-weight:400}
+.grp .prog .hot b{display:inline;font-size:12px;font-weight:700;color:#D14B30}
+.grp .meta{font-size:12px;color:#8A90A0;white-space:nowrap}
+.dd{flex:0 0 auto;white-space:nowrap;font-size:12px;font-weight:500;color:var(--mute);font-variant-numeric:tabular-nums}
+.dd::before{content:"·";margin-right:6px;color:#C9CEDB;font-weight:400}
+.dd b{font-weight:700;color:var(--ink)}
+.dd.near b{color:#D14B30}
+.grp .meta + .dd{margin-left:-8px}
+
+/* 참여 중인 그룹 창: 투두 페이지의 그룹 목표 카드처럼 고리 선과 캐릭터 (배경은 흰색) */
+.card.deco{position:relative;overflow:hidden}
+.card.deco > *{position:relative}
+.card.deco .ring{position:absolute;right:-70px;top:-90px;width:260px;height:260px;border-radius:50%;border:1px solid rgba(26,29,41,.08);pointer-events:none}
+.card.deco .ring.r2{right:-20px;top:-40px;width:160px;height:160px}
+.card.deco .crew{position:absolute;right:28px;top:26px;display:flex;align-items:flex-end;gap:5px}
+.m{width:26px;height:26px;display:flex;align-items:center;justify-content:center;gap:5px}
+.m i{width:3px;height:3px;border-radius:50%;background:var(--ink)}
+.m.c{border-radius:50%;background:var(--coral)}
+.m.a{border-radius:13px 13px 0 0;background:var(--blue);padding-top:3px}
+.m.a i{background:#fff}
+.m.q{border-radius:8px;background:var(--sun)}
+
+/* 계정 관리 */
+.row{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px 0;border-top:1px solid var(--line)}
+.row:first-of-type{border-top:0;padding-top:0}
+.row b{display:block;font-size:14.5px}
+.row small{display:block;margin-top:2px;font-size:12.5px;color:var(--mute)}
+.leave{margin-top:4px;padding:16px;border-radius:16px;background:#FDF3F0}
+.leave[hidden]{display:none}
+.leave p{margin:0 0 10px;font-size:13px;line-height:1.6;color:#8A3A28}
+.leave .box{max-width:320px;background:#fff}
+
+/* 확인 팝업 (투두 페이지의 완료 창과 같은 모양) */
+.modal{position:fixed;inset:0;z-index:70;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(255,255,255,.72);backdrop-filter:blur(6px);opacity:0;visibility:hidden;transition:opacity .2s,visibility .2s}
+.modal.show{opacity:1;visibility:visible}
+.modal-card{width:100%;max-width:340px;padding:28px 24px 22px;text-align:center;border:1px solid var(--line);border-radius:22px;background:#fff;box-shadow:0 20px 48px rgba(26,29,41,.10);transform:translateY(8px) scale(.98);transition:transform .25s cubic-bezier(.2,.8,.3,1)}
+.modal.show .modal-card{transform:none}
+.modal h3{margin:0;font-size:18px;font-weight:800;letter-spacing:-0.03em}
+.modal p{margin:6px 0 0;font-size:13px;color:var(--mute)}
+.modal .actions{justify-content:center;gap:8px;margin-top:20px}
+.modal .btn{flex:1}
+
+/* 토스트 */
+.toast{position:fixed;left:50%;bottom:32px;z-index:60;transform:translate(-50%,20px);padding:12px 20px;border-radius:12px;background:#fff;border:1px solid var(--line);box-shadow:0 16px 40px rgba(26,29,41,.14);font-size:14px;font-weight:600;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+
+@media (max-width:760px){
+  .layout{grid-template-columns:1fr}
+  .side{padding:14px}
+  .prof{flex-direction:row;text-align:left;padding:0 0 12px}
+  .prof .face{width:52px;height:52px;gap:9px}
+  .prof .face i{width:5px;height:5px}
+  .prof .face.shut i{width:8px;height:2px}
+  .prof small{margin-top:2px}
+  .menu{flex-direction:row;overflow-x:auto;scrollbar-width:none}
+  .menu button{flex:0 0 auto}
+  .menu svg{display:none}
+  .row{flex-wrap:wrap}
+  .grp .meta{display:none}
+  .card.deco .crew{display:none}
+}
+@media (prefers-reduced-motion:reduce){.toast,.menu button,.btn,.box,.modal,.modal-card{transition:none}}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <a class="logo" href="moim-dashboard.html">
+      <span class="mark" aria-hidden="true"><i class="c"></i><i class="a"></i><i class="q"></i></span>
+      MOIM
+    </a>
+  </header>
+
+  <main>
+    <div class="head">
+      <h1>마이페이지</h1>
+      <p>내 계정 정보를 확인하고 바꿀 수 있어요.</p>
+    </div>
+
+    <div class="layout">
+      <!-- 왼쪽: 프로필 + 메뉴 -->
+      <aside class="side">
+        <div class="prof">
+          <span class="face g" id="sideFace" aria-hidden="true"><i></i><i></i></span>
+          <div><b id="sideName">PARK</b><small id="sideMail">park@moim.kr</small></div>
+        </div>
+        <nav class="menu" role="tablist" aria-label="마이페이지 메뉴">
+          <button type="button" role="tab" aria-selected="true" aria-controls="tab-info" id="t-info">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="3.8"/><path d="M5 20.5c.6-3.7 3.6-5.9 7-5.9s6.4 2.2 7 5.9"/></svg>
+            내 정보
+          </button>
+          <button type="button" role="tab" aria-selected="false" aria-controls="tab-pw" id="t-pw">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4.5" y="10.5" width="15" height="10" rx="3"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/></svg>
+            비밀번호 변경
+          </button>
+          <button type="button" role="tab" aria-selected="false" aria-controls="tab-grp" id="t-grp">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="9" r="3"/><circle cx="16.5" cy="9" r="3"/><path d="M2.5 19c.5-3 2.8-4.6 5.5-4.6s5 1.6 5.5 4.6M13 14.6c.9-.3 2.3-.2 3.5-.2 2.7 0 5 1.6 5.5 4.6"/></svg>
+            참여 중인 그룹
+          </button>
+          <button type="button" role="tab" aria-selected="false" aria-controls="tab-acc" id="t-acc">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
+            계정 관리
+          </button>
+        </nav>
+      </aside>
+
+      <div>
+        <!-- 내 정보 -->
+        <section class="card deco" id="tab-info" role="tabpanel" aria-labelledby="t-info">
+          <span class="ring" aria-hidden="true"></span><span class="ring r2" aria-hidden="true"></span>
+          <div class="crew" aria-hidden="true"><span class="m c"><i></i><i></i></span><span class="m a"><i></i><i></i></span><span class="m q"><i></i><i></i></span></div>
+          <h2 style="margin-bottom:16px">내 정보</h2>
+          <div class="info">
+            <span class="flabel">아이디</span>
+            <p class="idv" id="uid">park_moim</p>
+            <span class="flabel">이메일</span>
+            <p class="idv" id="umail">park@moim.kr</p>
+            <label class="flabel" for="name">이름</label>
+            <div>
+              <div class="box" id="nameBox"><input id="name" type="text" maxlength="12" value="PARK" autocomplete="nickname"></div>
+              <p class="hint" id="nameHint"></p>
+            </div>
+          </div>
+
+          <div class="actions">
+            <button class="btn sm" id="saveInfo" type="button" disabled>저장하기</button>
+          </div>
+        </section>
+
+        <!-- 비밀번호 변경 -->
+        <section class="card deco" id="tab-pw" role="tabpanel" aria-labelledby="t-pw" hidden>
+          <span class="ring" aria-hidden="true"></span><span class="ring r2" aria-hidden="true"></span>
+          <div class="crew" aria-hidden="true"><span class="m c"><i></i><i></i></span><span class="m a"><i></i><i></i></span><span class="m q"><i></i><i></i></span></div>
+          <h2>비밀번호 변경</h2>
+          <p class="sub">현재 비밀번호를 확인한 뒤 새 비밀번호로 바꿔요.</p>
+          <div class="fields">
+            <div class="field">
+              <label for="pw0">현재 비밀번호</label>
+              <div class="box" id="pw0Box"><input id="pw0" type="password" autocomplete="current-password" placeholder="지금 쓰는 비밀번호"><button class="eye" type="button" data-for="pw0" aria-label="비밀번호 보기"></button></div>
+              <p class="hint" id="pw0Hint"></p>
+            </div>
+            <div class="field">
+              <label for="pw1">새 비밀번호</label>
+              <div class="box" id="pw1Box"><input id="pw1" type="password" autocomplete="new-password" placeholder="새 비밀번호"><button class="eye" type="button" data-for="pw1" aria-label="비밀번호 보기"></button></div>
+              <ul class="rules" id="rules">
+                <li data-r="len"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>8자 이상</li>
+                <li data-r="mix"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>영문 + 숫자</li>
+              </ul>
+            </div>
+            <div class="field">
+              <label for="pw2">새 비밀번호 확인</label>
+              <div class="box" id="pw2Box"><input id="pw2" type="password" autocomplete="new-password" placeholder="한 번 더 입력"><button class="eye" type="button" data-for="pw2" aria-label="비밀번호 보기"></button></div>
+              <p class="hint" id="pw2Hint"></p>
+            </div>
+          </div>
+          <div class="actions">
+            <button class="btn sm" id="savePw" type="button" disabled>비밀번호 변경</button>
+          </div>
+        </section>
+
+        <!-- 참여 중인 그룹 -->
+        <section class="card deco" id="tab-grp" role="tabpanel" aria-labelledby="t-grp" hidden>
+          <span class="ring" aria-hidden="true"></span><span class="ring r2" aria-hidden="true"></span>
+          <div class="crew" aria-hidden="true"><span class="m c"><i></i><i></i></span><span class="m a"><i></i><i></i></span><span class="m q"><i></i><i></i></span></div>
+          <h2>참여 중인 그룹</h2>
+          <p class="sub">그룹마다 내 투두를 얼마나 끝냈는지 볼 수 있어요.</p>
+          <ul class="groups" id="groups"></ul>
+        </section>
+
+        <!-- 계정 관리 -->
+        <section class="card deco" id="tab-acc" role="tabpanel" aria-labelledby="t-acc" hidden>
+          <span class="ring" aria-hidden="true"></span><span class="ring r2" aria-hidden="true"></span>
+          <div class="crew" aria-hidden="true"><span class="m c"><i></i><i></i></span><span class="m a"><i></i><i></i></span><span class="m q"><i></i><i></i></span></div>
+          <h2 style="margin-bottom:16px">계정 관리</h2>
+          <div class="row">
+            <div><b>로그아웃</b><small>이 기기에서 MOIM 계정을 로그아웃해요.</small></div>
+            <button class="btn ghost" id="logout" type="button">로그아웃</button>
+          </div>
+          <div class="row">
+            <div><b>회원 탈퇴</b><small>모든 그룹에서 나가고, 내 투두와 기록이 지워져요.</small></div>
+            <button class="btn ghost" id="leaveOpen" type="button" aria-expanded="false" aria-controls="leave">탈퇴하기</button>
+          </div>
+          <div class="leave" id="leave" hidden>
+            <p>탈퇴하면 되돌릴 수 없어요. 본인 확인을 위해 현재 비밀번호를 입력해 주세요.</p>
+            <div class="box" id="leaveBox"><input id="leaveInput" type="password" autocomplete="current-password" placeholder="현재 비밀번호" aria-label="현재 비밀번호"><button class="eye" type="button" data-for="leaveInput" aria-label="비밀번호 보기"></button></div>
+            <p class="hint" id="leaveHint"></p>
+            <div class="actions" style="margin-top:12px">
+              <button class="btn danger" id="leaveBtn" type="button" disabled>회원 탈퇴</button>
+              <button class="btn ghost" id="leaveCancel" type="button">취소</button>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+</div>
+<div class="modal" id="logoutModal" role="dialog" aria-modal="true" aria-labelledby="logoutTitle" aria-hidden="true">
+  <div class="modal-card">
+    <h3 id="logoutTitle">로그아웃 하시겠습니까?</h3>
+    <p>다시 들어오려면 로그인해야 해요.</p>
+    <div class="actions">
+      <button class="btn sm ghost" id="logoutNo" type="button">취소</button>
+      <button class="btn sm" id="logoutYes" type="button">로그아웃</button>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  // ---- 데모용 데이터 (실제 서비스에서는 서버에서 받아오세요) ----
+  var user = { id: 'park_moim', name: 'PARK', email: 'park@moim.kr', shape: 'g' };
+  var GROUPS = [
+    // s: 그룹 모양, d: 그룹 마감까지 남은 날, done/total: 내 투두 완료/전체, today: 오늘 마감인 내 투두
+    { name: '캡스톤 디자인', s: 'a', members: 4, d: 12, done: 3, total: 5, today: 1 },
+    { name: '마케팅 공모전', s: 'c', members: 3, d: 5, done: 1, total: 5, today: 1 },
+    { name: '데이터분석 스터디', s: 'q', members: 5, d: 21, done: 1, total: 4, today: 0 }
+  ];
+
+  var $ = function (id) { return document.getElementById(id); };
+  var toastEl = $('toast'), toastT;
+  function toast(msg) {
+    toastEl.textContent = msg;
+    toastEl.classList.add('on');
+    clearTimeout(toastT);
+    toastT = setTimeout(function () { toastEl.classList.remove('on'); }, 2000);
+  }
+
+  /* ---------- 메뉴(탭) ---------- */
+  var tabs = Array.prototype.slice.call(document.querySelectorAll('.menu [role="tab"]'));
+  function openTab(btn) {
+    tabs.forEach(function (b) {
+      var on = b === btn;
+      b.setAttribute('aria-selected', on);
+      b.tabIndex = on ? 0 : -1;
+      $(b.getAttribute('aria-controls')).hidden = !on;
+    });
+    // 비밀번호 변경을 열면 캐릭터가 눈을 감아요
+    $('sideFace').classList.toggle('shut', btn.id === 't-pw');
+  }
+  tabs.forEach(function (b, i) {
+    b.addEventListener('click', function () { openTab(b); });
+    b.addEventListener('keydown', function (e) {
+      var k = e.key, n = null;
+      if (k === 'ArrowDown' || k === 'ArrowRight') n = tabs[(i + 1) % tabs.length];
+      if (k === 'ArrowUp' || k === 'ArrowLeft') n = tabs[(i - 1 + tabs.length) % tabs.length];
+      if (n) { e.preventDefault(); n.focus(); openTab(n); }
+    });
+  });
+  // 주소 끝에 #pw, #grp, #acc를 붙이면 그 메뉴로 바로 열려요
+  var startTab = $('t-' + (location.hash || '').slice(1));
+  if (startTab) openTab(startTab);
+
+  /* ---------- 내 정보 ---------- */
+  var nameIn = $('name');
+
+  function paintFace(el, s) { var shut = el.classList.contains('shut'); el.className = 'face ' + s + (shut ? ' shut' : ''); }
+  function paintSide() {
+    $('sideName').textContent = user.name;
+    $('sideMail').textContent = user.email;
+    $('umail').textContent = user.email;
+    $('uid').textContent = user.id;
+    paintFace($('sideFace'), user.shape);
+  }
+  function setHint(box, hint, msg, bad, base) {
+    $(box).classList.toggle('bad', !!bad);
+    var h = $(hint);
+    h.textContent = bad ? msg : base;
+    h.classList.toggle('err', !!bad);
+  }
+  function checkInfo() {
+    var n = nameIn.value.trim();
+    var nameBad = n.length < 2;
+    setHint('nameBox', 'nameHint', '이름은 2자 이상으로 정해 주세요.', nameBad && nameIn.value !== '', '');
+    var changed = n !== user.name;
+    $('saveInfo').disabled = !changed || nameBad;
+  }
+  nameIn.addEventListener('input', checkInfo);
+
+  $('saveInfo').addEventListener('click', function () {
+    // TODO: 실제 서비스에서는 여기서 서버에 이름을 저장하세요.
+    user.name = nameIn.value.trim();
+    paintSide();
+    checkInfo();
+    toast('내 정보를 저장했어요');
+  });
+
+  /* ---------- 비밀번호 ---------- */
+  var EYE = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>';
+  var EYE_OFF = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3l18 18M10.6 5.1A10.7 10.7 0 0 1 12 5c6.4 0 10 7 10 7a17 17 0 0 1-3.2 4M6.6 6.6A17 17 0 0 0 2 12s3.6 7 10 7a10 10 0 0 0 5.4-1.6M9.9 9.9a3 3 0 0 0 4.2 4.2"/></svg>';
+  Array.prototype.forEach.call(document.querySelectorAll('.eye'), function (b) {
+    b.innerHTML = EYE_OFF;               // 처음엔 가려져 있으니 빗금 친 눈
+    b.addEventListener('click', function () {
+      var inp = $(b.dataset.for), show = inp.type === 'password';
+      inp.type = show ? 'text' : 'password';
+      b.innerHTML = show ? EYE : EYE_OFF;  // 보이면 그냥 눈, 가려지면 빗금 친 눈
+      b.setAttribute('aria-label', show ? '비밀번호 숨기기' : '비밀번호 보기');
+    });
+  });
+
+  var pw0 = $('pw0'), pw1 = $('pw1'), pw2 = $('pw2');
+  function rule(r, ok) { document.querySelector('#rules [data-r="' + r + '"]').classList.toggle('ok', ok); }
+  function checkPw() {
+    var a = pw0.value, b = pw1.value, c = pw2.value;
+    var len = b.length >= 8, mix = /[A-Za-z]/.test(b) && /\d/.test(b), diff = true;
+    rule('len', len); rule('mix', mix);
+    var match = c === b;
+    setHint('pw2Box', 'pw2Hint', '불일치', c !== '' && !match, c && match && b ? '일치' : '');
+    $('pw2Hint').classList.toggle('ok', !!(c && match && b));
+    setHint('pw0Box', 'pw0Hint', '', false, '');
+    $('savePw').disabled = !(a && len && mix && diff && c && match);
+  }
+  [pw0, pw1, pw2].forEach(function (i) { i.addEventListener('input', checkPw); });
+
+  $('savePw').addEventListener('click', function () {
+    // TODO: 실제 서비스에서는 서버에 현재 비밀번호를 보내 확인한 뒤 바꿔요.
+    //       틀리면 아래처럼 안내해 주세요: setHint('pw0Box','pw0Hint','현재 비밀번호가 맞지 않아요.',true,'')
+    [pw0, pw1, pw2].forEach(function (i) { i.value = ''; });
+    checkPw();
+    toast('비밀번호를 바꿨어요');
+  });
+
+  /* ---------- 참여 중인 그룹 ---------- */
+  $('groups').innerHTML = GROUPS.map(function (g) {
+    return '<li class="grp"><span class="dot ' + g.s + '" aria-hidden="true"></span>' +
+      '<div class="t"><b>' + g.name + '</b>' +
+        '<div class="prog"><div class="bar" role="img" aria-label="내 투두 ' + g.total + '개 중 ' + g.done + '개 완료"><span style="width:' + Math.round(g.done / g.total * 100) + '%"></span></div>' +
+        '<span class="cnt">내 투두 <b>' + g.done + '/' + g.total + '</b> 완료</span>' +
+        (g.today ? '<span class="hot" title="오늘이 마감인 내 투두 ' + g.today + '개">오늘 할 일 <b>' + g.today + '</b></span>' : '') + '</div></div>' +
+      '<span class="meta">' + g.members + '명</span>' +
+      '<span class="dd' + (g.d <= 7 ? ' near' : '') + '" title="그룹 프로젝트 마감까지 ' + g.d + '일">그룹 마감 <b>D-' + g.d + '</b></span></li>';
+  }).join('');
+
+  /* ---------- 계정 관리 ---------- */
+  // 로그아웃: 한 번 더 묻는 팝업
+  var modal = $('logoutModal');
+  function setModal(open) {
+    modal.classList.toggle('show', open);
+    modal.setAttribute('aria-hidden', !open);
+    if (open) $('logoutNo').focus(); else $('logout').focus();
+  }
+  $('logout').addEventListener('click', function () { setModal(true); });
+  $('logoutNo').addEventListener('click', function () { setModal(false); });
+  modal.addEventListener('click', function (e) { if (e.target === modal) setModal(false); });   // 바깥을 누르면 닫혀요
+  document.addEventListener('keydown', function (e) {
+    if (!modal.classList.contains('show')) return;
+    if (e.key === 'Escape') setModal(false);
+    if (e.key === 'Tab') {                         // 팝업 안에서만 이동
+      e.preventDefault();
+      ($('logoutNo') === document.activeElement ? $('logoutYes') : $('logoutNo')).focus();
+    }
+  });
+  $('logoutYes').addEventListener('click', function () {
+    // TODO: 실제 서비스에서는 로그아웃 처리 후 랜딩 페이지로 보내세요.
+    setModal(false);
+    toast('로그아웃했어요 (데모)');
+  });
+  var leave = $('leave'), leaveIn = $('leaveInput');
+  function setLeave(open) {
+    leave.hidden = !open;
+    $('leaveOpen').setAttribute('aria-expanded', open);
+    leaveIn.value = '';
+    leaveIn.type = 'password';
+    var eb = leave.querySelector('.eye');
+    eb.innerHTML = EYE_OFF; eb.setAttribute('aria-label', '비밀번호 보기');
+    setHint('leaveBox', 'leaveHint', '', false, '');
+    $('leaveBtn').disabled = true;
+    if (open) leaveIn.focus();
+  }
+  $('leaveOpen').addEventListener('click', function () { setLeave(leave.hidden); });
+  $('leaveCancel').addEventListener('click', function () { setLeave(false); });
+  leaveIn.addEventListener('input', function () { $('leaveBtn').disabled = !leaveIn.value; setHint('leaveBox', 'leaveHint', '', false, ''); });
+  $('leaveBtn').addEventListener('click', function () {
+    // TODO: 실제 서비스에서는 서버에 비밀번호를 보내 확인한 뒤 탈퇴를 처리하세요.
+    //       틀리면: setHint('leaveBox','leaveHint','비밀번호가 맞지 않아요.',true,''); return;
+    setLeave(false);
+    toast('탈퇴 요청을 보냈어요 (데모)');
+  });
+
+  /* ---------- 프로필 캐릭터 눈이 커서를 따라가요 ---------- */
+  (function () {
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var raf = 0, px = 0, py = 0;
+    function look() {
+      raf = 0;
+      Array.prototype.forEach.call(document.querySelectorAll('.face'), function (f) {
+        var r = f.getBoundingClientRect();
+        if (!r.width) return;
+        var dx = px - (r.left + r.width / 2), dy = py - (r.top + r.height / 2);
+        var dist = Math.hypot(dx, dy) || 1;
+        var max = r.width * 0.13;                       // 얼굴 크기에 맞춰 눈이 움직이는 최대 거리
+        var k = Math.min(max, dist / 12) / dist;        // 가까우면 조금, 멀면 끝까지
+        var t = 'translate(' + (dx * k).toFixed(1) + 'px,' + (dy * k).toFixed(1) + 'px)';
+        Array.prototype.forEach.call(f.querySelectorAll('i'), function (eye) { eye.style.transform = t; });
+      });
+    }
+    document.addEventListener('pointermove', function (e) {
+      px = e.clientX; py = e.clientY;
+      if (!raf) raf = requestAnimationFrame(look);
+    });
+    // 커서가 창 밖으로 나가면 다시 정면을 봐요
+    document.documentElement.addEventListener('mouseleave', function () {
+      Array.prototype.forEach.call(document.querySelectorAll('.face i'), function (eye) { eye.style.transform = ''; });
+    });
+  })();
+
+  paintSide();
+  checkInfo();
+})();
+</script>
+</body>
+</html>

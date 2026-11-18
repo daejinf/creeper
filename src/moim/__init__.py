@@ -1,0 +1,1 @@
+"""MOIM application package."""
