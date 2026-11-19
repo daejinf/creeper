@@ -15,6 +15,9 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from sqlalchemy import text
 
+from .account.lifecycle import LifecycleService
+from .account.routes import make_router as make_account_router
+from .account.service import AccountService
 from .auth.errors import AuthError, auth_error_handler
 from .auth.middleware import SecurityMiddleware
 from .auth.routes import make_router as make_auth_router
@@ -102,6 +105,9 @@ def create_app(
     # Stage 5: M2.review is enabled by D-D1 (GATE D). `review_enabled=False` keeps manual completion only.
     storage = Storage(upload_dir or os.environ.get("MOIM_UPLOAD_DIR") or DEFAULT_UPLOAD_DIR)
     execution_service = ExecutionService(make_session_factory(engine), ai_client_factory, storage, review_enabled=review_enabled)
+    # Stage 6: mypage and the account lifecycle (D-D1 D6/D7).
+    account_service = AccountService(make_session_factory(engine))
+    lifecycle_service = LifecycleService(make_session_factory(engine), storage, assignment_service)
 
     @asynccontextmanager
     async def lifespan(app: FastAPI):
@@ -160,12 +166,14 @@ def create_app(
     app.state.todos = todo_service
     app.state.reassign = reassign_service
     app.state.execution = execution_service
+    app.state.account = account_service
+    app.state.lifecycle = lifecycle_service
     app.add_middleware(SecurityMiddleware, hsts=settings.secure_cookies)
     app.add_exception_handler(AuthError, auth_error_handler)
 
     @app.exception_handler(RequestValidationError)
     async def validation_error(request: Request, exc: RequestValidationError):
-        if request.url.path.startswith(("/api/auth/", "/api/groups")):  # malformed auth bodies get the auth error shape; no echo of input
+        if request.url.path.startswith(("/api/auth/", "/api/groups", "/api/account")):  # malformed auth bodies get the auth error shape; no echo of input
             return auth_error_handler(request, AuthError(400, "BAD_REQUEST", "요청 형식이 올바르지 않아요."))
         return await request_validation_exception_handler(request, exc)
 
@@ -177,6 +185,9 @@ def create_app(
         coverage=coverage_service, role_interview=role_interview_service, todos=todo_service, reassign=reassign_service,
     ))
     app.include_router(make_execution_router(execution_service))
+    # A member leaving can complete a cohort's rankings: that assignment's team coverage starts like any other.
+    app.include_router(make_account_router(settings, account_service, lifecycle_service, sessions, throttle, templates,
+                                           on_assigned=coverage_service.run))
     app.mount("/static", RevalidatedStaticFiles(directory=STATIC_DIR), name="static")
 
     @app.get("/healthz")

@@ -62,14 +62,16 @@ users = Table(
     "users",
     metadata,
     Column("id", String(36), primary_key=True),
-    Column("username", String(16), nullable=False),
+    Column("username", String(16)),  # NULL only on a deleted-user tombstone (stage 6, D-D1 D7)
     Column("display_name", String(30), nullable=False),
     Column("password_hash", String(255), nullable=False),
     Column("notify_opt_in", Boolean, nullable=False, server_default=false()),
     Column("terms_accepted_at", DateTime(timezone=True), nullable=False),
     Column("created_at", DateTime(timezone=True), nullable=False, server_default=func.now()),
+    Column("deleted_at", DateTime(timezone=True)),
     UniqueConstraint("username"),
-    CheckConstraint("username ~ '^[a-z0-9]{4,16}$'", name="username"),
+    CheckConstraint("username is null or username ~ '^[a-z0-9]{4,16}$'", name="username"),
+    CheckConstraint("(username is null) = (deleted_at is not null)", name="tombstone"),
 )
 
 # Server-side sessions. Only the sha256 of the cookie token is stored.
@@ -529,6 +531,7 @@ role_interview_snapshots = Table(
     Column("private_constraints", JSONB, nullable=False),
     Column("deadline_limits", JSONB, nullable=False),
     Column("stale_at", DateTime(timezone=True)),
+    Column("purged_at", DateTime(timezone=True)),  # stage 6: private content erased when the member left (D6)
     Column("created_at", DateTime(timezone=True), nullable=False, server_default=func.now()),
     ForeignKeyConstraint(
         ["group_id", "user_id", "source_assignment_revision"],
@@ -842,4 +845,26 @@ execution_events = Table(
         name="kind",
     ),
     Index("ix_execution_events_group", "group_id", "created_at"),
+)
+
+
+# ---- stage 6: account lifecycle audit (D-D1 D6/D7) -----------------------------------------------------------------
+# Metadata only: what happened, to which group id, by which user id. No name, username, text or file name. No foreign
+# keys on purpose: the record outlives a deleted group, and a deleted account's id is replaced by its tombstone id.
+LIFECYCLE_KINDS = ("LEAVE", "LEADER_HANDOFF", "GROUP_DELETED", "ACCOUNT_DELETED", "PASSWORD_CHANGED", "PROFILE_UPDATED")
+
+lifecycle_events = Table(
+    "lifecycle_events",
+    metadata,
+    Column("id", BigInteger, Identity(), primary_key=True),
+    Column("kind", String(16), nullable=False),
+    Column("user_id", String(36)),
+    Column("group_id", String(36)),
+    Column("detail", String(32)),
+    Column("created_at", DateTime(timezone=True), nullable=False, server_default=func.now()),
+    CheckConstraint(
+        "kind in ('LEAVE','LEADER_HANDOFF','GROUP_DELETED','ACCOUNT_DELETED','PASSWORD_CHANGED','PROFILE_UPDATED')",
+        name="kind",
+    ),
+    Index("ix_lifecycle_events_created", "created_at"),
 )

@@ -126,14 +126,10 @@ class AssignmentService:
         group_id = g.id
         if self.current(s, group_id) is not None:
             return None
-        cohort = [
-            r[0]
-            for r in s.execute(
-                select(cohort_members.c.user_id).where(
-                    cohort_members.c.group_id == group_id, cohort_members.c.cohort_revision == g.cohort_revision
-                )
-            )
-        ]
+        # The current active members only: someone who left the group (D-D1 D6) is never waited for.
+        from ..groups.service import active_cohort_query  # local: groups.service imports this module lazily too
+
+        cohort = [r[0] for r in s.execute(active_cohort_query(group_id, g.cohort_revision))]
         rows = s.execute(
             select(member_progress.c.user_id, member_progress.c.submission_revision, preference_submissions)
             .join(

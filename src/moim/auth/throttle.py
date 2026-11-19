@@ -32,6 +32,8 @@ SIGNUP_IP = Rule("signup-ip", 10, 60 * 60, 60 * 60)
 # Invite codes are six digits: wrong guesses (not known-but-closed codes) are counted per user and per address.
 JOIN_USER = Rule("join-user", 10, 15 * 60, 15 * 60)
 JOIN_IP = Rule("join-ip", 30, 15 * 60, 15 * 60)
+# Stage 6: a wrong current password (password change, account deletion) is counted per signed-in user.
+REAUTH_USER = Rule("reauth-user", 10, 15 * 60, 15 * 60)
 
 _HIT = text(
     """

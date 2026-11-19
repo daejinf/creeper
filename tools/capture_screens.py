@@ -31,7 +31,7 @@ SCREENS: dict[str, str | None] = {
     "moim-group-create.html": "/groups/{room_id}/create",
     "moim-chat.html": "/groups/{active_id}/chat",
     "moim-group.html": "/groups/{active_id}",
-    "moim-mypage.html": None,
+    "moim-mypage.html": "/mypage",
 }
 AUTH = {
     "moim-dashboard.html": "lead",
@@ -39,6 +39,7 @@ AUTH = {
     "moim-group-create.html": "roomlead",
     "moim-group.html": "lead",
     "moim-chat.html": "lead",
+    "moim-mypage.html": "lead",
 }
 # The original invite page shows its signed-in header only through its own demo switch.
 ORIGINAL_QUERY = {"moim-invite.html": "?login=1"}
@@ -80,7 +81,7 @@ def apply_dev_seed() -> dict:
         # immutable (DB trigger). Its seed users are retired instead: renamed out of the `shot` prefix, signed out.
         confirmed = "(select user_id from cohort_members where group_id in (select group_id from todo_confirmations))"
         s.execute(text(f"delete from auth_sessions where user_id in {shot} and user_id in {confirmed}"))
-        s.execute(text(f"update users set username = 'oldshot' || substr(replace(id, '-', ''), 1, 12) "
+        s.execute(text(f"update users set username = 'oldshot' || substr(replace(id, '-', ''), 1, 9) "
                        f"where username like 'shot%' and id in {confirmed}"))
         for sql in (
             f"delete from member_progress where group_id in {owned}",

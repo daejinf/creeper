@@ -19,7 +19,7 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session, sessionmaker
 
 from ..auth.errors import AuthError
-from ..groups.service import ACTIVE, is_group_id
+from ..groups.service import ACTIVE, active_cohort_query, is_group_id
 from ..models import (
     cohort_members,
     groups,
@@ -97,13 +97,9 @@ class InterviewTurnService:
         if g is None or g.status != ACTIVE:
             raise not_found()
         member = s.execute(
-            select(cohort_members.c.user_id).where(
-                cohort_members.c.group_id == group_id,
-                cohort_members.c.cohort_revision == g.cohort_revision,
-                cohort_members.c.user_id == user_id,
-            )
+            active_cohort_query(group_id, g.cohort_revision).where(cohort_members.c.user_id == user_id)
         ).first()
-        if member is None:
+        if member is None:  # never in the cohort, or left the group (D-D1 D6)
             raise not_found()
         return g
 

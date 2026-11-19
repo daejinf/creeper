@@ -55,6 +55,7 @@ ACTION_RE = re.compile(r"^[A-Za-z0-9_-]{8,64}$")
 UUID_RE = F.UUID_RE
 PENDING, RUNNING, SUCCEEDED, FAILED, SKIPPED = "PENDING", "RUNNING", "SUCCEEDED", "FAILED", "SKIPPED"
 FEED_LIMIT = 300
+LEFT_KEY = "left"  # feed rows of members who left the group (D-D1 D6); the browser shows "나간 팀원"
 MSG_NOT_FOUND = "찾을 수 없어요."
 MSG_INVALID = "요청 형식이 올바르지 않아요."
 MSG_CONFLICT = "그 사이 할 일이 바뀌었어요. 새로고침한 뒤 다시 해 주세요."
@@ -216,12 +217,12 @@ class ExecutionService:
                     bucket[day] = bucket.get(day, 0) + 1
             feed = []
             for r in recs:
-                if r.user_id not in keys:
-                    continue
+                # A member who left keeps their records on the team feed as "나간 팀원" (D-D1 D6): no name, no key that
+                # could tell two departed members apart. A deleted account's records are gone (D7).
                 own = r.user_id == user_id
                 item = {
                     "id": r.id if own else None,
-                    "who": keys[r.user_id],
+                    "who": keys.get(r.user_id, LEFT_KEY),
                     "title": r.title or r.task_title or "기타 자료",
                     "memo": r.memo or "",
                     "files": files_by.get(r.id, []),

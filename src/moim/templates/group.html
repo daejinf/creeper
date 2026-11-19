@@ -559,10 +559,10 @@ button.login{border:0;background:none;font-family:inherit;font-size:14px;font-we
         {% endfor %}
       </nav>
       <div class="side-foot">
-        <div class="profile">
+        <a class="profile" href="/mypage" title="마이페이지">
           <span class="me" aria-hidden="true"><i></i><i></i></span>
-          <span class="who"><b>{{ display_name }}</b></span>
-        </div>
+          <span class="who"><b>{{ display_name }}</b><small>마이페이지</small></span>
+        </a>
       </div>
     </aside>
     <div class="scrim" id="scrim"></div>
@@ -579,16 +579,15 @@ button.login{border:0;background:none;font-family:inherit;font-size:14px;font-we
         <div class="g-head">
           <h1>{{ name }}</h1>
           <span class="dday">{{ dday }}</span>
-          {% if is_leader %}
           <div class="more" id="more">
             <button class="icon-btn" id="moreBtn" type="button" aria-label="그룹 메뉴" aria-haspopup="true" aria-expanded="false">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg>
             </button>
             <div class="more-menu" role="menu">
-              <a role="menuitem" href="/groups/{{ group_id }}/brief/edit">프로젝트 정보 수정</a>
+              {% if is_leader %}<a role="menuitem" href="/groups/{{ group_id }}/brief/edit">프로젝트 정보 수정</a>{% endif %}
+              <button type="button" role="menuitem" class="danger" id="leaveGroup" data-group="{{ group_id }}">그룹 나가기</button>
             </div>
           </div>
-          {% endif %}
         </div>
         <p class="g-goal" id="goal" data-group="{{ group_id }}" data-state="{{ goal.state }}" data-revision="{{ goal.brief_revision }}" data-attempt="{{ goal.attempt }}"><span class="goal-tag"><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 21V3.5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><path d="M6 3.5h12.5l-2.8 4.75 2.8 4.75H6z" fill="currentColor"/></svg>팀 목표</span><span class="goal-text{% if goal.state != 'SUCCEEDED' %} quiet{% endif %}" id="goalText" role="status" aria-live="polite">{% if goal.state == 'SUCCEEDED' %}{{ goal.text }}{% elif goal.state in ('PENDING', 'RUNNING') %}팀 목표를 정리하고 있어요…{% elif goal.state == 'EMPTY' %}프로젝트 내용을 입력하면 팀 목표가 여기에 표시돼요.{% else %}{{ goal.error_message }}{% endif %}</span><button class="goal-retry" id="goalRetry" type="button" hidden>다시 시도</button></p>
 
@@ -690,5 +689,6 @@ button.login{border:0;background:none;font-family:inherit;font-size:14px;font-we
 <script src="/static/shell.js"></script>
 <script src="/static/group.js"></script>
 <script src="/static/group-exec.js"></script>
+<script src="/static/group-leave.js"></script>
 </body>
 </html>

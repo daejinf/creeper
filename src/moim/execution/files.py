@@ -16,6 +16,7 @@ import hashlib
 import io
 import os
 import re
+import shutil
 import warnings
 import zipfile
 from dataclasses import dataclass
@@ -250,11 +251,28 @@ class Storage:
     def read(self, group_id: str, file_id: str) -> bytes:
         return self.path(group_id, file_id).read_bytes()
 
-    def delete(self, group_id: str, file_id: str) -> None:
+    def delete(self, group_id: str, file_id: str) -> bool:
+        """True when the file is gone (also when it was never there). False only when removing it failed."""
         try:
             self.path(group_id, file_id).unlink(missing_ok=True)
+            return True
         except OSError:
-            pass  # an orphan file is harmless and unreachable (no row points at it)
+            return False  # an orphan file is harmless and unreachable (no row points at it)
+
+    def delete_group_dir(self, group_id: str) -> bool:
+        """Stage 6: a deleted group's whole folder (every file in it belongs to that group only)."""
+        if not UUID_RE.fullmatch(group_id or ""):
+            raise ValueError("invalid storage id")
+        d = (self.root / group_id).resolve()
+        if d.parent != self.root:
+            raise ValueError("invalid storage path")
+        try:
+            shutil.rmtree(d, ignore_errors=False)
+            return True
+        except FileNotFoundError:
+            return True
+        except OSError:
+            return False
 
 
 # ---- M2 review copies -----------------------------------------------------------------------------------------------

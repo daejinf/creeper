@@ -141,8 +141,14 @@ class ReassignmentService:
 
     @staticmethod
     def _members(s: Session, group_id: str, revision: int) -> list:
+        """The revision's members who are still in the group. A member who left (D-D1 D6) is never a target, never
+        holds a place a reassignment must respect, and is not carried into a new revision; the old revision keeps
+        their row unchanged."""
         return s.execute(
-            select(role_assignment_members).where(
+            select(role_assignment_members)
+            .join(group_members, (group_members.c.group_id == role_assignment_members.c.group_id)
+                  & (group_members.c.user_id == role_assignment_members.c.user_id))
+            .where(
                 role_assignment_members.c.group_id == group_id, role_assignment_members.c.assignment_revision == revision
             )
         ).all()

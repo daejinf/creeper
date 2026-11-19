@@ -209,10 +209,10 @@ class CandidateService:
             team = 0
             if row is not None:
                 cohort = s.execute(select(groups.c.cohort_revision).where(groups.c.id == group_id)).scalar_one()
+                from ..groups.service import active_cohort_query
+
                 team = s.execute(
-                    select(func.count()).select_from(cohort_members).where(
-                        cohort_members.c.group_id == group_id, cohort_members.c.cohort_revision == cohort
-                    )
+                    select(func.count()).select_from(active_cohort_query(group_id, cohort).subquery())
                 ).scalar_one()
         if row is None or row.state != PENDING:
             return

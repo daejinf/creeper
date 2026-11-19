@@ -696,8 +696,13 @@ class TodoService:
         after a ProjectBrief change (B8), the newest confirmation of the BRIEF_CHANGED revision, read-only, until the
         member confirms again. A confirmation of a revision replaced by a reassignment is STALE and not shown (B4)."""
         with self._sf() as s:
-            RankingService._cohort_group(s, group_id, user_id)
+            g = RankingService._cohort_group(s, group_id, user_id)
             shown = self.shown_confirmations(s, group_id)
+            # A member who left (D-D1 D6): their todos are no longer part of the group screen.
+            from ..groups.service import active_cohort_query
+
+            active = {r[0] for r in s.execute(active_cohort_query(group_id, g.cohort_revision))}
+            shown = {uid: v for uid, v in shown.items() if uid in active}
             out = []
             for uid, (rev, conf) in shown.items():
                 m = s.execute(

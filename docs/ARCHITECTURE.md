@@ -113,6 +113,18 @@ AI가 DB를 직접 임의 수정하지 않는다. 구조화된 변경안, 권한
 - API(로그인, 현재 활성 구성원만, 아니면 404): `GET /api/groups/{id}/execution`, `POST /api/groups/{id}/records`(multipart, CSRF, `action_id` 멱등), `POST …/records/{record_id}/undo`, `GET …/records/{record_id}/review`, `POST …/records/{record_id}/review/retry`(본인만), `GET /api/groups/{id}/files/{file_id}`(항상 `attachment`·`application/octet-stream`).
 - 저장: `MOIM_UPLOAD_DIR`(기본 `.local/uploads`, Git 제외) 아래 `<group_id>/<file_id>`. 둘 다 서버 uuid이고 경로를 만들 때마다 다시 검사한다. 사용자 파일명은 DB에 표시용으로만 있다.
 
+### 마이페이지·계정 생명주기 (6단계, D-D1 D6·D7, D-F1)
+
+- 코드: `src/moim/account/`(`service.py` 내 정보·이름·비밀번호, `lifecycle.py` 그룹 나가기·계정 삭제, `routes.py`), `templates/mypage.html`(원본 `moim-mypage.html`에서 스크립트로 만든 사본: CSS·마크업 그대로, 데이터 자리만 바꿈), `static/mypage.js`, `static/group-leave.js`, 마이그레이션 `0012_account_lifecycle`.
+- API: `GET /mypage`, `GET /api/account`, `POST /api/account/profile`, `POST /api/account/password`, `GET|POST /api/groups/{id}/leave`, `GET|POST /api/account/delete`. 되돌릴 수 없는 두 POST는 `confirm: true`가 없으면 아무것도 바꾸지 않고 409 `CONFIRM_REQUIRED`와 영향(`impact`)을 돌려준다.
+- 트랜잭션: 나가기·계정 삭제는 각각 DB 트랜잭션 하나다(사용자 advisory lock → 그룹 행 `FOR UPDATE`(id 순) → 그룹 배정 lock → 실행 lock, `update_brief`와 같은 순서). 파일은 커밋 뒤에만 지운다. 실패하면 전부 롤백되고 부분 성공 응답은 없다(파일 삭제 실패는 로그 `FILE_DELETE_FAILED`, 행이 없어 접근 불가).
+- 현재 활성 구성원: 모든 게이트·집계가 `groups.service.active_cohort_query`(cohort ∩ `group_members`)를 쓴다(`RankingService._cohort_group`, `turns`, 배정 `assign_if_ready`, 순위 진행 수, 후보 생성 팀 크기, 재배정 대상, 그룹 조회 API). cohort 행은 감사용 이력으로만 남는다.
+- 나가기(D6): 그 그룹의 개인 데이터 삭제(`interview_turns`·`member_states`·`role_interview_turns`·`role_member_states`·`todo_ai_steps`·`todo_actions`·확정되지 않은 `todo_items`·`member_progress`, 배정 기록이 가리키지 않는 순위), 인터뷰 snapshot은 키만 남기고 내용 비움(`purged_at`), 그 사람이 걸린 열린 재배정 요청 `SUPERSEDED`, `group_members` 삭제. 그룹장이면 남은 사람 중 `joined_at`·`user_id` 순 첫 사람에게 승계(`group_members.role`, `groups.owner_id`). 아무도 안 남으면 그룹 전체 삭제(모든 그룹 테이블 + 파일 폴더). 배정 전이면 남은 사람으로 `assign_if_ready`를 다시 확인하고 새 배정이면 coverage를 백그라운드로 시작. 실행 화면의 나간 사람 기록은 `who: "left"`(브라우저 표시 "나간 팀원", 이름·키 없음).
+- 계정 삭제(D7): 비밀번호 확인(`REAUTH_USER` 15분 10회) → 모든 그룹에 나가기(초대방 포함, 닫힌 내 초대방은 삭제) → 모든 그룹의 내 기록·파일·투두·남은 개인 데이터 삭제 → 팀이 보관하는 행(배정 기록 `role_assignment_members`와 그 FK 대상 순위, `cohort_members`, `activation_cohorts.activated_by`, `project_briefs.created_by`, 재배정 기록, `execution_events`, `role_assignments.draw_audit` 안 id, `lifecycle_events`)을 새 id의 "탈퇴한 사용자" tombstone(`users.username` NULL, `deleted_at`)으로 옮김 → 사용자 행 삭제(세션 cascade, 아이디 즉시 해제).
+- 확정 투두 불변 트리거(0009)는 트랜잭션 범위 설정 `moim.lifecycle_purge = 'on'`(`SET LOCAL`)일 때만 UPDATE/DELETE를 통과시킨다. 이 설정은 `lifecycle.py`의 그룹 삭제·계정 삭제만 건다.
+- 비밀번호 변경: 현재 비밀번호 확인(`REAUTH_USER`) → 새 Argon2id 해시(현재 파라미터·새 salt, 확인한 해시가 그대로일 때만 저장) → 그 계정의 모든 세션 폐기 → 이 기기에 같은 `keep`으로 새 세션, CSRF 토큰 회전(응답 본문으로 새 토큰 전달, 쿠키는 HttpOnly).
+- 감사: `lifecycle_events`(kind·user_id·group_id·짧은 코드, FK 없음, 이름·아이디·본문 없음).
+
 ## 2. 모듈 판정표
 
 판정: KEEP(그대로) / ADAPT(어댑터 또는 내부 수정) / REPLACE(새로 구현) / DROP(사용 안 함). 줄 번호는 2026-11-18 기준 `src/wemeet_ai/` 아래 경로다. "테스트"는 크리퍼 `tests/`에 있는 파일이다. 0B-1에서 격리한 복사본으로 실행한 결과는 이 절 끝의 `0B-1 재확인 결과`에 있다(이 저장소의 `tests/`는 MOIM 자체 테스트다).

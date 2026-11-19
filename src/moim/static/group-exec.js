@@ -73,7 +73,9 @@
       .then(function (d) { if (d) { data = d; render(fresh); } });
   }
 
-  function member(key) { for (var i = 0; i < data.members.length; i++) if (data.members[i].key === key) return data.members[i]; }
+  // Records of a member who left stay on the feed as "나간 팀원" (D-D1 D6); they have no card and no colour.
+  var LEFT = { key: 'left', name: '나간 팀원', shape: '' };
+  function member(key) { for (var i = 0; i < data.members.length; i++) if (data.members[i].key === key) return data.members[i]; return key === LEFT.key ? LEFT : undefined; }
   function me() { for (var i = 0; i < data.members.length; i++) if (data.members[i].is_me) return data.members[i]; }
 
   // ================= 그리기 =================

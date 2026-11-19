@@ -106,6 +106,19 @@ def today_kst(now: datetime) -> date:
     return now.astimezone(DISPLAY_TZ).date()
 
 
+def active_cohort_query(group_id: str, cohort_revision: int):
+    """User ids of the group's current active members: in the activation cohort and still in `group_members`.
+
+    The cohort rows are history (D-D1 D6: kept for audit after a member leaves); every gate, count and "everyone
+    submitted" check uses this instead, so a member who left loses access at once and no one waits for them."""
+    return (
+        select(cohort_members.c.user_id)
+        .join(group_members, (group_members.c.group_id == cohort_members.c.group_id)
+              & (group_members.c.user_id == cohort_members.c.user_id))
+        .where(cohort_members.c.group_id == group_id, cohort_members.c.cohort_revision == cohort_revision)
+    )
+
+
 class GroupService:
     def __init__(self, session_factory: sessionmaker[Session], clock: Callable[[], datetime] = utcnow):
         self._sf = session_factory

@@ -15,7 +15,7 @@ from sqlalchemy import func, insert, select, text, update
 from sqlalchemy.orm import Session, sessionmaker
 
 from ..auth.errors import AuthError
-from ..groups.service import ACTIVE, is_group_id
+from ..groups.service import ACTIVE, active_cohort_query, is_group_id
 from ..models import cohort_members, groups, member_progress, preference_submissions, role_assignments, role_candidate_sets
 from ..timeutil import utcnow
 from .candidates import SUCCEEDED as CANDIDATES_READY
@@ -60,13 +60,9 @@ class RankingService:
         if g is None or g.status != ACTIVE:
             raise not_found()
         member = s.execute(
-            select(cohort_members.c.user_id).where(
-                cohort_members.c.group_id == group_id,
-                cohort_members.c.cohort_revision == g.cohort_revision,
-                cohort_members.c.user_id == user_id,
-            )
+            active_cohort_query(group_id, g.cohort_revision).where(cohort_members.c.user_id == user_id)
         ).first()
-        if member is None:
+        if member is None:  # never in the cohort, or left the group (D-D1 D6)
             raise not_found()
         return g
 
@@ -113,20 +109,12 @@ class RankingService:
                 submitted_ranks = [
                     {"rank": i + 1, "id": cid, "name": names.get(cid, "")} for i, cid in enumerate((sub.rank1, sub.rank2, sub.rank3))
                 ]
-            total = s.execute(
-                select(func.count()).select_from(cohort_members).where(
-                    cohort_members.c.group_id == group_id, cohort_members.c.cohort_revision == g.cohort_revision
-                )
-            ).scalar_one()
+            active = active_cohort_query(group_id, g.cohort_revision)
+            total = s.execute(select(func.count()).select_from(active.subquery())).scalar_one()
             done = s.execute(
                 select(func.count()).select_from(member_progress)
-                .join(
-                    cohort_members,
-                    (cohort_members.c.group_id == member_progress.c.group_id)
-                    & (cohort_members.c.user_id == member_progress.c.user_id)
-                    & (cohort_members.c.cohort_revision == g.cohort_revision),
-                )
-                .where(member_progress.c.group_id == group_id, member_progress.c.status.in_((WAITING_ASSIGNMENT, ROLE_TODOS)))
+                .where(member_progress.c.group_id == group_id, member_progress.c.status.in_((WAITING_ASSIGNMENT, ROLE_TODOS)),
+                       member_progress.c.user_id.in_(active))
             ).scalar_one()
         return {
             "phase": status,
