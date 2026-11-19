@@ -349,18 +349,26 @@ $env:MOIM_ENV='development'; .\.venv\Scripts\python.exe tools\capture_screens.py
 
 ## OPEN
 
-`docs/PRODUCT.md` 5절을 본다. GATE B(D-B1)와 GATE D(D-D1, 2026-11-19)는 승인 완료다. 5단계로 넘긴 기술 세부는 위 `다음 한 단계`에 있다. BLOCKED 항목은 없다.
+`docs/PRODUCT.md` 5절을 본다. GATE B(D-B1)·GATE D(D-D1)와 6단계 화면 차이(D-F1)는 승인 완료이고, 제품 OPEN 항목은 남아 있지 않다. BLOCKED 항목은 없다. (2026-11-19 MVP 마감 보정: 해결된 3단계 인터뷰 메모와 "1단계 전에 확인" 메모를 지우고 현재 사실로 바꿨다.)
 
-3단계 관련 OPEN: 10턴 한도 막다른 길은 D-B3로 해소됐다. E.coach 지연 단축 항목은 배정 뒤 인터뷰를 4단계에서 정할 때 다시 본다. 배정 뒤 인터뷰의 항목·턴·종료 조건은 4단계에서 정한다(제품 의미가 바뀌면 승인).
+7단계(실제 배포를 결정할 때만)로 넘긴 기술 항목:
 
-이번 보정에서 범위 밖이라 하지 않은 것(요청에서 제외):
+- PostgreSQL 역할 분리(migration·제한된 앱·테스트 역할)와 새 환경 DB 준비 스크립트·실행 문서. 지금은 `moim` superuser 하나다(0B 보정 때 진행하다 되돌렸고 로컬 클러스터는 역할 `moim` 하나로 복구).
+- 의존성 constraints/lock 고정, LIVE 회귀(반복·한국어·긴 구조화 출력·실제 Runtime 경로)와 토큰 상한 근거, 캡처 스크립트의 "구현 없음" 보고 강화.
+- 범용 작업 API `/api/jobs`에는 인증·인가·CSRF가 없다. 등록된 핸들러가 없어 지금은 작업을 만들 수 없다(2~6단계는 전용 상태 테이블을 썼다). 핸들러를 등록하는 단계에서 `auth/deps.py`의 `require_user`·`verify_csrf`와 소유자 검사를 함께 넣는다(`docs/SECURITY.md` 4-1).
+- 서버가 둘 이상이면 시작할 때 서로의 진행 중 작업을 실패로 바꾼다. MVP는 프로세스 하나를 전제한다.
+- `docs/SECURITY.md` 4-7의 6단계 남은 제한(백업 없음, 파일 삭제 실패 시 고아 파일, 대기방 스스로 나가기·수동 위임 화면 없음).
 
-- PostgreSQL 역할 분리(migration·제한된 앱·테스트 역할), 새 환경 DB 준비 스크립트와 실행 문서. 지금은 `moim` superuser 하나다. 진행하다 중단해 되돌렸고 로컬 클러스터도 원래 상태(역할 `moim` 하나)로 복구했다.
-- 의존성 constraints/lock 고정, 작업 API의 정책 guard·owner scope 코드, LIVE 회귀(반복·한국어·긴 구조화 출력·실제 Runtime 경로)와 토큰 상한 근거, 캡처 스크립트의 "구현 없음" 보고 강화.
+설정 사실(확인됨):
+
+- 앱은 `.env`를 자동으로 읽지 않는다. `MOIM_ENV`·`MOIM_DATABASE_URL`을 환경변수로만 읽고 없으면 `ConfigError`로 실패한다(의도된 방침, 1단계부터 그대로). 테스트는 `tests/conftest.py`가 `.env`의 `MOIM_TEST_DATABASE_URL`을 읽는다.
+
+환경 사실(2026-11-19 확인):
+
+- 프로젝트 `.venv`는 정상이다(`C:\Python312` 3.12.8 기반, `include-system-site-packages = false`). 테스트는 `.\.venv\Scripts\python.exe -m pytest`로 실행한다.
+- PATH의 맨 앞 `python`은 MOIM과 무관한 다른 도구의 가상환경(`hermes-agent`, 없는 `C:\python_cs`를 가리킴)이라 맨 `python` 명령은 실패한다. MOIM 문제는 아니며 `.venv` 경로를 직접 쓴다.
+- 시스템 Python(`C:\Python312`)에는 과거 `wemeet-ai-core 0.10.1`이 설치돼 있다. `.venv`는 시스템 패키지를 보지 않고 pytest는 `src`를 맨 앞에 두므로 MOIM 실행·테스트에 영향이 없다. 다른 작업에서 쓰는지 알 수 없어 지우지 않았다.
 
 달랐던 사실:
 
-- 크리퍼 `test_unified_storage.py`의 DB 역할 권한 검사는 이 환경의 `moim` 역할이 superuser여서 실패한다. MOIM의 앱 DB 역할 분리는 위 범위 밖 항목과 `docs/SECURITY.md`에서 다룬다.
-- `.env` 미로딩 동작은 의도된 설정 방침인지 1단계 전에 확인한다. 필요하면 실행 스크립트를 추가한다.
-- 작업 API에는 인증·인가·CSRF가 없다(핸들러 미등록이라 지금은 작업을 만들 수 없음). `docs/SECURITY.md` 4-1. 코드 guard는 아직 없다.
-- 서버가 둘 이상이면 시작할 때 서로의 진행 중 작업을 실패로 바꾼다. MVP는 프로세스 하나를 전제한다.
+- 크리퍼 `test_unified_storage.py`의 DB 역할 권한 검사는 이 환경의 `moim` 역할이 superuser여서 실패한다. MOIM의 앱 DB 역할 분리는 위 7단계 항목이다.
