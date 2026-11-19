@@ -26,6 +26,9 @@ from .groups.service import GroupService
 from .interview.candidates import CandidateService
 from .interview.routes import make_router as make_interview_router
 from .interview.ranking import RankingService
+from .roles.assignment import AssignmentService
+from .roles.coverage import CoverageService
+from .roles.interview import RoleInterviewService
 from .job_routes import make_router
 from .jobs import Handler, JobStore
 from .logging_utils import install_redaction
@@ -65,6 +68,7 @@ def create_app(
     job_handlers: Mapping[str, Handler] | None = None,
     goal_client_factory: Callable[[], object] | None = None,
     ai_client_factory: Callable[[], object] | None = None,
+    rng_factory: Callable[[], object] | None = None,
 ) -> FastAPI:
     """`goal_client_factory` and `ai_client_factory` (role candidates) exist for deterministic tests only;
     the product always uses the Timely client."""
@@ -77,7 +81,11 @@ def create_app(
     if ai_client_factory is None:
         ai_client_factory = (lambda: _BlockedClient()) if settings.env == "test" else _timely_client
     candidate_service = CandidateService(make_session_factory(engine), ai_client_factory)
-    ranking_service = RankingService(make_session_factory(engine))
+    # Stage 4: the product draws with random.SystemRandom (no seed); only deterministic tests inject a seeded RNG.
+    assignment_service = AssignmentService(rng_factory) if rng_factory is not None else AssignmentService()
+    ranking_service = RankingService(make_session_factory(engine), assignment=assignment_service)
+    coverage_service = CoverageService(make_session_factory(engine), ai_client_factory)
+    role_interview_service = RoleInterviewService(make_session_factory(engine), ai_client_factory)
 
     @asynccontextmanager
     async def lifespan(app: FastAPI):
@@ -93,6 +101,12 @@ def create_app(
         lost_candidates = candidate_service.fail_interrupted()
         if lost_candidates:
             log.warning("marked %d interrupted role candidate set(s) as FAILED (SERVER_RESTARTED)", lost_candidates)
+        lost_coverage = coverage_service.fail_interrupted()
+        if lost_coverage:
+            log.warning("marked %d interrupted team coverage(s) as FAILED (SERVER_RESTARTED)", lost_coverage)
+        lost_turns = role_interview_service.fail_interrupted()
+        if lost_turns:
+            log.warning("marked %d interrupted interview step(s) as FAILED (SERVER_RESTARTED)", lost_turns)
         yield
         engine.dispose()
 
@@ -110,6 +124,9 @@ def create_app(
     app.state.goals = goal_service
     app.state.candidates = candidate_service
     app.state.ranking = ranking_service
+    app.state.assignment = assignment_service
+    app.state.coverage = coverage_service
+    app.state.role_interview = role_interview_service
     app.add_middleware(SecurityMiddleware, hsts=settings.secure_cookies)
     app.add_exception_handler(AuthError, auth_error_handler)
 
@@ -122,7 +139,10 @@ def create_app(
     app.include_router(make_router(store, handlers))
     app.include_router(make_auth_router(settings, session_factory, sessions, throttle, templates))
     app.include_router(make_group_router(settings, group_service, goal_service, candidate_service, throttle, templates))
-    app.include_router(make_interview_router(settings, group_service, goal_service, candidate_service, ranking_service, templates))
+    app.include_router(make_interview_router(
+        settings, group_service, goal_service, candidate_service, ranking_service, templates,
+        coverage=coverage_service, role_interview=role_interview_service,
+    ))
     app.mount("/static", RevalidatedStaticFiles(directory=STATIC_DIR), name="static")
 
     @app.get("/healthz")

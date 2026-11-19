@@ -48,6 +48,29 @@ class PreferenceBody(_Body):
     ranks: list[str] = Field(min_length=1, max_length=8)
 
 
+class ActionBody(_Body):
+    action_id: str = Field(min_length=8, max_length=64)
+
+
+class AnswerBody(_Body):
+    action_id: str = Field(min_length=8, max_length=64)
+    message: str | None = Field(default=None, max_length=1000)
+    question_id: str | None = Field(default=None, max_length=64)
+    option_id: str | None = Field(default=None, max_length=64)
+
+
+class TurnRetryBody(_Body):
+    action_id: str = Field(min_length=8, max_length=64)
+    seq: int = Field(ge=0, le=40)
+    expected_attempt: int = Field(ge=1, le=1_000_000)
+
+
+class CoverageRetryBody(_Body):
+    action_id: str = Field(min_length=8, max_length=64)
+    assignment_revision: int = Field(ge=1, le=1_000_000)
+    expected_attempt: int = Field(ge=1, le=1_000_000)
+
+
 def make_router(
     settings: Settings,
     groups: GroupService,
@@ -55,7 +78,10 @@ def make_router(
     candidates: CandidateService,
     ranking: RankingService,
     templates: Jinja2Templates,
+    coverage=None,
+    role_interview=None,
 ) -> APIRouter:
+    """`coverage` (CoverageService) and `role_interview` (RoleInterviewService) are the stage 4 services."""
     router = APIRouter()
     secure = settings.secure_cookies
 
@@ -84,6 +110,8 @@ def make_router(
             "goal": {"state": goal["state"], "text": goal["text"]},
         }
         data["ranking_available"] = bool(cand["state"] == "SUCCEEDED" and data["phase"] == "INTERVIEW")
+        # Stage 4: the caller's own assignment and interview only (D-B1 B6), after the server assignment.
+        data["role"] = role_interview.role_view(user.user_id, group_id, user.display_name) if data["phase"] == "ROLE_TODOS" else None
         return data
 
     # ---- page -------------------------------------------------------------------------------
@@ -123,8 +151,49 @@ def make_router(
         return json_ok(screen(user, group_id), 202)
 
     @router.post("/api/groups/{group_id}/preferences", dependencies=[Depends(verify_csrf)])
-    def submit(group_id: str, body: PreferenceBody, user: SessionUser = Depends(require_user)):
-        stored = ranking.submit_preferences(user.user_id, group_id, body.action_id, body.candidate_revision, body.ranks)
+    def submit(group_id: str, body: PreferenceBody, background: BackgroundTasks, user: SessionUser = Depends(require_user)):
+        stored, assigned = ranking.submit_preferences(user.user_id, group_id, body.action_id, body.candidate_revision, body.ranks)
+        if assigned is not None:  # this submission completed the cohort: the team coverage is made once, in the background
+            background.add_task(coverage.run, group_id, assigned)
         return json_ok(screen(user, group_id), 201 if stored else 200)
+
+    # ---- stage 4: post-assignment interview and team coverage ---------------------------------
+
+    @router.post("/api/groups/{group_id}/role-interview/start", dependencies=[Depends(verify_csrf)])
+    def interview_start(group_id: str, body: ActionBody, background: BackgroundTasks, user: SessionUser = Depends(require_user)):
+        outcome, rev = role_interview.start(user.user_id, group_id, body.action_id)
+        if outcome == "started":
+            background.add_task(role_interview.run, group_id, user.user_id, rev, 0)
+        return json_ok(screen(user, group_id), 202 if outcome == "started" else 200)
+
+    @router.post("/api/groups/{group_id}/role-interview/answer", dependencies=[Depends(verify_csrf)])
+    def interview_answer(group_id: str, body: AnswerBody, background: BackgroundTasks, user: SessionUser = Depends(require_user)):
+        outcome, rev, seq = role_interview.answer(
+            user.user_id, group_id, body.action_id, body.message, body.question_id, body.option_id
+        )
+        if outcome == "started":
+            background.add_task(role_interview.run, group_id, user.user_id, rev, seq)
+        return json_ok(screen(user, group_id), {"started": 202, "done": 201}.get(outcome, 200))
+
+    @router.post("/api/groups/{group_id}/role-interview/retry", dependencies=[Depends(verify_csrf)])
+    def interview_retry(group_id: str, body: TurnRetryBody, background: BackgroundTasks, user: SessionUser = Depends(require_user)):
+        outcome, rev = role_interview.retry(user.user_id, group_id, body.seq, body.expected_attempt)
+        if outcome == "refused":
+            raise AuthError(409, "NOT_RETRYABLE", MSG_NOT_RETRYABLE)
+        if outcome == "started":
+            background.add_task(role_interview.run, group_id, user.user_id, rev, body.seq)
+        return json_ok(screen(user, group_id), 202)
+
+    @router.post("/api/groups/{group_id}/coverage/retry", dependencies=[Depends(verify_csrf)])
+    def coverage_retry(group_id: str, body: CoverageRetryBody, background: BackgroundTasks, user: SessionUser = Depends(require_user)):
+        data = screen(user, group_id)  # cohort members only (404 otherwise)
+        if data["phase"] != "ROLE_TODOS":
+            raise AuthError(409, "NOT_RETRYABLE", MSG_NOT_RETRYABLE)
+        outcome = coverage.retry(group_id, body.assignment_revision, body.expected_attempt, body.action_id)
+        if outcome == "refused":
+            raise AuthError(409, "NOT_RETRYABLE", MSG_NOT_RETRYABLE)
+        if outcome == "started":
+            background.add_task(coverage.run, group_id, body.assignment_revision)
+        return json_ok(screen(user, group_id), 202)
 
     return router

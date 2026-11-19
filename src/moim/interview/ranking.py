@@ -22,7 +22,7 @@ from .candidates import SUCCEEDED as CANDIDATES_READY
 
 log = logging.getLogger("moim.interview")
 
-INTERVIEW, WAITING_ASSIGNMENT = "INTERVIEW", "WAITING_ASSIGNMENT"  # stored member status (INTERVIEW = ranking not submitted)
+INTERVIEW, WAITING_ASSIGNMENT, ROLE_TODOS = "INTERVIEW", "WAITING_ASSIGNMENT", "ROLE_TODOS"  # stored member status (INTERVIEW = ranking not submitted)
 ACTION_RE = re.compile(r"^[A-Za-z0-9_-]{8,64}$")
 MSG_NOT_FOUND = "찾을 수 없어요."
 
@@ -42,9 +42,10 @@ def _action(action_id: str) -> str:
 
 
 class RankingService:
-    def __init__(self, session_factory: sessionmaker[Session], clock: Callable = utcnow):
+    def __init__(self, session_factory: sessionmaker[Session], clock: Callable = utcnow, assignment=None):
         self._sf = session_factory
         self._clock = clock
+        self._assignment = assignment  # stage 4: AssignmentService, run inside the last submission's transaction
 
     @staticmethod
     def _lock_member(s: Session, group_id: str, user_id: str) -> None:
@@ -125,7 +126,7 @@ class RankingService:
                     & (cohort_members.c.user_id == member_progress.c.user_id)
                     & (cohort_members.c.cohort_revision == g.cohort_revision),
                 )
-                .where(member_progress.c.group_id == group_id, member_progress.c.status == WAITING_ASSIGNMENT)
+                .where(member_progress.c.group_id == group_id, member_progress.c.status.in_((WAITING_ASSIGNMENT, ROLE_TODOS)))
             ).scalar_one()
         return {
             "phase": status,
@@ -137,10 +138,20 @@ class RankingService:
             "brief_revision": g.brief_revision,
         }
 
-    def submit_preferences(self, user_id: str, group_id: str, action_id: str, candidate_revision: int, ranks: list[str]) -> bool:
-        """Store the member's 1st/2nd/3rd choice once. Returns True if stored now, False for a replay of the same action."""
+    def submit_preferences(
+        self, user_id: str, group_id: str, action_id: str, candidate_revision: int, ranks: list[str]
+    ) -> tuple[bool, int | None]:
+        """Store the member's 1st/2nd/3rd choice once. Returns (stored now, new assignment revision or None).
+
+        A replay of the same action stores nothing. When this submission completes the cohort, the server assignment
+        runs in the same transaction under a per-group lock (taken before the member lock, by every submitter of the
+        group), so exactly one assignment revision is made, once, and no retry or refresh draws again.
+        """
         _action(action_id)
+        assigned = None
         with self._sf.begin() as s:
+            if self._assignment is not None and is_group_id(group_id):
+                self._assignment.lock_group(s, group_id)
             self._lock_member(s, group_id, user_id)
             g = self._cohort_group(s, group_id, user_id)
             progress = self._progress(s, group_id, user_id)
@@ -152,8 +163,8 @@ class RankingService:
                 )
             ).first()
             if replay is not None:
-                return False
-            if progress is not None and progress.status == WAITING_ASSIGNMENT:
+                return False, None
+            if progress is not None and progress.status in (WAITING_ASSIGNMENT, ROLE_TODOS):
                 raise RankingError(409, "ALREADY_SUBMITTED", "이미 순위를 제출했어요.")
             if candidate_revision != g.brief_revision:
                 raise RankingError(
@@ -193,5 +204,7 @@ class RankingService:
                     .where(member_progress.c.group_id == group_id, member_progress.c.user_id == user_id)
                     .values(status=WAITING_ASSIGNMENT, submission_revision=revision, updated_at=now)
                 )
+            if self._assignment is not None:
+                assigned = self._assignment.assign_if_ready(s, g, now)
         log.info("ranking_event group_id=%s user_id=%s state=WAITING_ASSIGNMENT submission_revision=%d", group_id, user_id, revision)
-        return True
+        return True, assigned

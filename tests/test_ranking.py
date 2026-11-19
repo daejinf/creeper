@@ -429,7 +429,7 @@ def test_duplicate_and_concurrent_submits_store_one_revision(db, app, mk, ai):
 
     def go_same():
         try:
-            same.append(app.state.ranking.submit_preferences(lead.id, gid, "same-action-1", cand_rev, ["r1", "r2", "r3"]))
+            same.append(app.state.ranking.submit_preferences(lead.id, gid, "same-action-1", cand_rev, ["r1", "r2", "r3"])[0])
         except Exception as exc:  # noqa: BLE001
             same.append(type(exc).__name__)
 
@@ -446,7 +446,7 @@ def test_duplicate_and_concurrent_submits_store_one_revision(db, app, mk, ai):
 
     def go_diff(i):
         try:
-            diff.append(app.state.ranking.submit_preferences(lead2.id, gid2, f"diff-action-{i}", rev2, ["r1", "r2", "r3"]))
+            diff.append(app.state.ranking.submit_preferences(lead2.id, gid2, f"diff-action-{i}", rev2, ["r1", "r2", "r3"])[0])
         except Exception as exc:  # noqa: BLE001
             diff.append(getattr(exc, "code", type(exc).__name__))
 
@@ -473,7 +473,8 @@ def test_progress_is_a_count_only_and_shown_to_every_cohort_member(db, mk, ai):
     assert screen(m2, gid)["submitted_ranks"] is None
     assert rank(m2, gid, ["r3", "r2", "r1"]).status_code == 201
     done = screen(lead, gid)
-    assert done["progress"] == {"submitted": 3, "total": 3} and done["phase"] == "WAITING_ASSIGNMENT"
+    # stage 4: the last submission completes the cohort, so the server assignment runs at once (ROLE_TODOS)
+    assert done["progress"] == {"submitted": 3, "total": 3} and done["phase"] == "ROLE_TODOS"
 
 
 def test_a_ranking_is_never_visible_to_anyone_else_nor_in_logs(db, mk, ai, caplog):
@@ -533,22 +534,31 @@ def test_brief_change_makes_candidates_and_rankings_stale(db, mk, ai):
 # ---- boundaries of this stage ---------------------------------------------------------------------
 
 
-def test_nothing_is_assigned_drafted_or_hidden_before_or_after_everyone_submits(db, mk, ai):
+def test_nothing_is_assigned_before_everyone_submits_and_nothing_is_drafted_after(db, mk, ai):
+    """Stage 4 contract (changed from the stage 3 "nothing is ever assigned" check, see docs/HANDOFF.md): before the
+    last submission there is no assignment, coverage or interview; the last submission makes exactly one assignment
+    revision. No todo, hidden criteria or old interview data appears in this flow, and no interview AI call is made."""
     gid, lead, (m1, m2) = team(mk, ai, 3)
 
-    def check_nothing():
+    def check_nothing(last: bool):
         tables = col(db, "select table_name from information_schema.tables where table_schema='public'")
-        assert not [t for t in tables if re.search(r"assign|todo|criteri|deliverable_hidden", t)], tables
+        assert not [t for t in tables if re.search(r"todo|criteri|deliverable_hidden", t)], tables
         columns = col(db, "select column_name from information_schema.columns where table_schema='public'")
-        assert not [c for c in columns if re.search(r"completion_criteria|^deliverable$|assigned_role|todo", c)], columns
+        assert not [c for c in columns if re.search(r"completion_criteria|^deliverable$|todo", c)], columns
         assert scalar(db, "select count(*) from member_states") == 0 and scalar(db, "select count(*) from interview_turns") == 0
         assert scalar(db, "select status from groups where id=:g", g=gid) == "ACTIVE"
-        assert not [k for k, _ in ai.calls if k != "CandidateOutput"]
+        assert scalar(db, "select count(*) from role_assignments where group_id=:g", g=gid) == (1 if last else 0)
+        assert scalar(db, "select count(*) from team_coverages where group_id=:g", g=gid) == (1 if last else 0)
+        assert scalar(db, "select count(*) from role_interview_turns where group_id=:g", g=gid) == 0
+        assert not [k for k, _ in ai.calls if k not in ("CandidateOutput", "CoverageOutput")]
+        assert len(ai.kinds("CoverageOutput")) == (1 if last else 0)
 
-    check_nothing()
+    check_nothing(False)
     for i, u in enumerate((lead, m1, m2)):
         assert rank(u, gid, ["r1", "r2", "r3"]).status_code == 201
-        check_nothing()  # partway (1/3, 2/3) and when the last one has submitted
+        check_nothing(i == 2)  # partway (1/3, 2/3) and when the last one has submitted
+        if i == 2:
+            break
         for v in (lead, m1, m2):
             payload = screen(v, gid)
             keys = set()
@@ -562,7 +572,7 @@ def test_nothing_is_assigned_drafted_or_hidden_before_or_after_everyone_submits(
 
             walk(payload)
             assert not [k for k in keys if re.search(r"assign|todo|criteria|deliverable|role_result|member_state", k)], keys
-    assert screen(lead, gid)["progress"] == {"submitted": 3, "total": 3}  # everyone is in, and still nothing is assigned
+    assert screen(lead, gid)["progress"] == {"submitted": 3, "total": 3}  # everyone is in: one assignment, no todo
 
 
 def test_user_text_is_data_never_markup_and_the_browser_never_reaches_the_provider(db, mk, ai):

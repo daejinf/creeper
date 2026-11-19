@@ -325,7 +325,8 @@ preference_submissions = Table(
     CheckConstraint("rank1 <> rank2 and rank1 <> rank3 and rank2 <> rank3", name="distinct_ranks"),
 )
 
-# Per-member stored status: INTERVIEW -> WAITING_ASSIGNMENT. Back to INTERVIEW when the candidates went stale.
+# Per-member stored status: INTERVIEW -> WAITING_ASSIGNMENT -> ROLE_TODOS. Back to INTERVIEW when the candidates went
+# stale. ROLE_TODOS keeps the submission the assignment was made from and names the assignment revision the member sees.
 member_progress = Table(
     "member_progress",
     metadata,
@@ -333,6 +334,7 @@ member_progress = Table(
     Column("user_id", String(36), primary_key=True),
     Column("status", String(20), nullable=False),
     Column("submission_revision", Integer),
+    Column("assignment_revision", Integer),
     Column("interview_closed_at", DateTime(timezone=True), comment="DEPRECATED since D-B3 (2026-11-19): kept for the stage 4 post-assignment interview, not written by stage 3"),  # D-B2 value kept; stage 3 ignores it
     Column("updated_at", DateTime(timezone=True), nullable=False, server_default=func.now()),
     ForeignKeyConstraint(["user_id"], ["users.id"]),
@@ -340,6 +342,194 @@ member_progress = Table(
         ["group_id", "user_id", "submission_revision"],
         ["preference_submissions.group_id", "preference_submissions.user_id", "preference_submissions.revision"],
     ),
-    CheckConstraint("status in ('INTERVIEW','WAITING_ASSIGNMENT')", name="status"),
-    CheckConstraint("(status = 'WAITING_ASSIGNMENT') = (submission_revision is not null)", name="submission_iff_waiting"),
+    ForeignKeyConstraint(["group_id", "assignment_revision"], ["role_assignments.group_id", "role_assignments.revision"]),
+    CheckConstraint("status in ('INTERVIEW','WAITING_ASSIGNMENT','ROLE_TODOS')", name="status"),
+    CheckConstraint("(status = 'INTERVIEW') = (submission_revision is null)", name="submission_unless_interview"),
+    CheckConstraint("(status = 'ROLE_TODOS') = (assignment_revision is not null)", name="assignment_iff_role_todos"),
+)
+
+# ---- stage 4 (session A): role assignment, team coverage, post-assignment interview -------------------------------
+
+# One immutable assignment revision per server assignment run. Exactly one CURRENT revision per group; a reassignment
+# (stage 4 session C) or a ProjectBrief/cohort change marks it STALE and never edits it. `draw_audit` records every
+# server random draw (D-B1 B4) and is never shown to anyone.
+role_assignments = Table(
+    "role_assignments",
+    metadata,
+    Column("group_id", String(36), primary_key=True),
+    Column("revision", Integer, primary_key=True),
+    Column("source_cohort_revision", Integer, nullable=False),
+    Column("source_candidate_revision", Integer, nullable=False),
+    Column("operation", String(16), nullable=False),
+    Column("state", String(8), nullable=False),
+    Column("stale_reason", String(32)),
+    Column("stale_at", DateTime(timezone=True)),
+    Column("draw_audit", JSONB, nullable=False),
+    Column("created_at", DateTime(timezone=True), nullable=False, server_default=func.now()),
+    ForeignKeyConstraint(["group_id"], ["groups.id"]),
+    ForeignKeyConstraint(
+        ["group_id", "source_candidate_revision"],
+        ["role_candidate_sets.group_id", "role_candidate_sets.source_project_brief_revision"],
+    ),
+    CheckConstraint("revision >= 1", name="revision"),
+    CheckConstraint("operation in ('INITIAL','REASSIGN')", name="operation"),
+    CheckConstraint("state in ('CURRENT','STALE')", name="state"),
+    CheckConstraint("(state = 'STALE') = (stale_at is not null)", name="stale_pair"),
+    Index("uq_role_assignments_current", "group_id", unique=True, postgresql_where=text("state = 'CURRENT'")),
+)
+
+# The members of one assignment revision: the submission each one was assigned from, the role, the rank it matched
+# (null = server random from the remaining roles) and an anonymous slot id ("s1"...) used in every AI input.
+role_assignment_members = Table(
+    "role_assignment_members",
+    metadata,
+    Column("group_id", String(36), primary_key=True),
+    Column("assignment_revision", Integer, primary_key=True),
+    Column("user_id", String(36), primary_key=True),
+    Column("submission_revision", Integer, nullable=False),
+    Column("slot_id", String(8), nullable=False),
+    Column("role_id", String(16), nullable=False),
+    Column("role_name", String(30), nullable=False),
+    Column("role_description", String(120), nullable=False),
+    Column("assigned_rank", Integer),
+    ForeignKeyConstraint(["group_id", "assignment_revision"], ["role_assignments.group_id", "role_assignments.revision"]),
+    ForeignKeyConstraint(
+        ["group_id", "user_id", "submission_revision"],
+        ["preference_submissions.group_id", "preference_submissions.user_id", "preference_submissions.revision"],
+    ),
+    UniqueConstraint("group_id", "assignment_revision", "slot_id", name="uq_role_assignment_members_slot"),
+    CheckConstraint("assigned_rank is null or assigned_rank between 1 and 3", name="rank"),
+)
+
+# The internal team coverage of one assignment revision: which slot owns which deliverable part of the ProjectBrief.
+# One Timely call, written once on SUCCEEDED; a failure is FAILED with an explicit retry. Never shown as a plan.
+team_coverages = Table(
+    "team_coverages",
+    metadata,
+    Column("group_id", String(36), primary_key=True),
+    Column("source_assignment_revision", Integer, primary_key=True),
+    Column("state", String(12), nullable=False),
+    Column("attempt", Integer, nullable=False, server_default="1"),
+    Column("last_action_id", String(64)),
+    Column("parts", JSONB),
+    Column("error_code", String(64)),
+    Column("error_message", String(500)),
+    Column("model", String(64)),
+    Column("latency_ms", Integer),
+    Column("prompt_tokens", Integer),
+    Column("completion_tokens", Integer),
+    Column("total_tokens", Integer),
+    Column("stale_at", DateTime(timezone=True)),
+    Column("created_at", DateTime(timezone=True), nullable=False, server_default=func.now()),
+    Column("updated_at", DateTime(timezone=True), nullable=False, server_default=func.now()),
+    ForeignKeyConstraint(["group_id", "source_assignment_revision"], ["role_assignments.group_id", "role_assignments.revision"]),
+    CheckConstraint("state in ('PENDING','RUNNING','SUCCEEDED','FAILED')", name="state"),
+    CheckConstraint("(state = 'SUCCEEDED') = (parts is not null)", name="parts_iff_succeeded"),
+)
+
+# One post-assignment interview per member and assignment revision. `state` is the ROLE_TODOS sub-state:
+# ASKING (AI questions) -> CONFIRMING (member checks/edits what was understood) -> DONE (input snapshot written).
+role_interviews = Table(
+    "role_interviews",
+    metadata,
+    Column("group_id", String(36), primary_key=True),
+    Column("user_id", String(36), primary_key=True),
+    Column("source_assignment_revision", Integer, primary_key=True),
+    Column("state", String(12), nullable=False),
+    Column("questions_asked", Integer, nullable=False, server_default="0"),
+    Column("state_revision", Integer, nullable=False, server_default="0"),
+    Column("stale_at", DateTime(timezone=True)),
+    Column("created_at", DateTime(timezone=True), nullable=False, server_default=func.now()),
+    Column("updated_at", DateTime(timezone=True), nullable=False, server_default=func.now()),
+    ForeignKeyConstraint(
+        ["group_id", "source_assignment_revision", "user_id"],
+        ["role_assignment_members.group_id", "role_assignment_members.assignment_revision", "role_assignment_members.user_id"],
+    ),
+    CheckConstraint("state in ('ASKING','CONFIRMING','DONE')", name="state"),
+    CheckConstraint("questions_asked between 0 and 5", name="questions_asked"),
+)
+
+# One row per interview step. OPEN = the AI's first question (no member message), ANSWER = a member answer (one Timely
+# call unless none is needed), EDIT = a confirm-step action (never a Timely call). action_id makes a resend idempotent;
+# `question` is the question shown after this step, with its button values (owner-only).
+role_interview_turns = Table(
+    "role_interview_turns",
+    metadata,
+    Column("group_id", String(36), primary_key=True),
+    Column("user_id", String(36), primary_key=True),
+    Column("source_assignment_revision", Integer, primary_key=True),
+    Column("seq", Integer, primary_key=True),
+    Column("kind", String(8), nullable=False),
+    Column("action_id", String(64), nullable=False),
+    Column("user_message", Text),
+    Column("answer_question_id", String(64)),
+    Column("answer_option_id", String(64)),
+    Column("state", String(12), nullable=False),
+    Column("attempt", Integer, nullable=False, server_default="1"),
+    Column("reply", Text),
+    Column("question", JSONB),
+    Column("state_revision", Integer),
+    Column("error_code", String(64)),
+    Column("error_message", String(500)),
+    Column("model", String(64)),
+    Column("latency_ms", Integer),
+    Column("prompt_tokens", Integer),
+    Column("completion_tokens", Integer),
+    Column("total_tokens", Integer),
+    Column("created_at", DateTime(timezone=True), nullable=False, server_default=func.now()),
+    Column("updated_at", DateTime(timezone=True), nullable=False, server_default=func.now()),
+    ForeignKeyConstraint(
+        ["group_id", "user_id", "source_assignment_revision"],
+        ["role_interviews.group_id", "role_interviews.user_id", "role_interviews.source_assignment_revision"],
+    ),
+    UniqueConstraint("group_id", "user_id", "action_id", name="uq_role_interview_turns_action"),
+    CheckConstraint("kind in ('OPEN','ANSWER','EDIT')", name="kind"),
+    CheckConstraint("state in ('PENDING','RUNNING','SUCCEEDED','FAILED')", name="state"),
+    CheckConstraint("seq between 0 and 40", name="seq"),
+    CheckConstraint("(kind = 'OPEN') = (user_message is null)", name="message_unless_open"),
+    CheckConstraint("user_message is null or char_length(user_message) between 1 and 300", name="message_length"),
+    CheckConstraint("(answer_question_id is null) = (answer_option_id is null)", name="answer_pair"),
+    Index(
+        "uq_role_interview_turns_open", "group_id", "user_id", "source_assignment_revision", unique=True,
+        postgresql_where=text("state in ('PENDING','RUNNING','FAILED')"),
+    ),
+)
+
+# The private MemberState of the post-assignment interview, one immutable row per revision. Owner-only.
+role_member_states = Table(
+    "role_member_states",
+    metadata,
+    Column("group_id", String(36), primary_key=True),
+    Column("user_id", String(36), primary_key=True),
+    Column("source_assignment_revision", Integer, primary_key=True),
+    Column("revision", Integer, primary_key=True),
+    Column("state", JSONB, nullable=False),
+    Column("source_turn_seq", Integer, nullable=False),
+    Column("created_at", DateTime(timezone=True), nullable=False, server_default=func.now()),
+    ForeignKeyConstraint(
+        ["group_id", "user_id", "source_assignment_revision"],
+        ["role_interviews.group_id", "role_interviews.user_id", "role_interviews.source_assignment_revision"],
+    ),
+    CheckConstraint("revision >= 1", name="revision"),
+)
+
+# The confirmed interview input for the todo draft (stage 4 session B), written once when the member confirms.
+# `provider_input` holds only D-B1 B3 fields (a KNOWN value or "UNKNOWN"); the raw constraints stay in
+# `private_constraints` and the date/weekday limits for the server's deadline check in `deadline_limits`.
+role_interview_snapshots = Table(
+    "role_interview_snapshots",
+    metadata,
+    Column("group_id", String(36), primary_key=True),
+    Column("user_id", String(36), primary_key=True),
+    Column("source_assignment_revision", Integer, primary_key=True),
+    Column("member_state_revision", Integer, nullable=False),
+    Column("provider_input", JSONB, nullable=False),
+    Column("private_constraints", JSONB, nullable=False),
+    Column("deadline_limits", JSONB, nullable=False),
+    Column("stale_at", DateTime(timezone=True)),
+    Column("created_at", DateTime(timezone=True), nullable=False, server_default=func.now()),
+    ForeignKeyConstraint(
+        ["group_id", "user_id", "source_assignment_revision"],
+        ["role_interviews.group_id", "role_interviews.user_id", "role_interviews.source_assignment_revision"],
+    ),
 )

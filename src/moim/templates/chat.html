@@ -264,6 +264,9 @@ main{flex:1;min-height:0;width:100%;max-width:1160px;margin:0 auto;padding:16px 
             <p class="gd">기한은 <b id="goalDue"></b>까지</p>
             <div class="crew" aria-hidden="true"><span class="m c"><i></i><i></i></span><span class="m a"><i></i><i></i></span><span class="m q"><i></i><i></i></span></div>
           </div>
+          <div class="rolebox" id="rolebox" hidden>
+            <span class="rl">내 역할</span><b id="roleName"></b><span class="rp" id="roleRank"></span>
+          </div>
           <p class="sect" id="rankHead" hidden>내 역할 순위</p>
           <div id="rankRows"></div>
           <div class="empty" id="empty">
@@ -275,6 +278,7 @@ main{flex:1;min-height:0;width:100%;max-width:1160px;margin:0 auto;padding:16px 
         <div class="addrow" hidden><button class="add" id="add" type="button" disabled>+ 직접 추가하기</button></div>
         <div class="pfoot">
           <button class="confirm primary" id="submitRank" type="button" hidden>순위 제출하기</button>
+          <button class="confirm" id="retryCoverage" type="button" hidden>팀 결과물 분담 다시 만들기</button>
           <button class="confirm" id="confirm" type="button" disabled hidden>투두 확정하기</button>
           <p class="msg" id="msg" role="status" aria-live="polite"></p>
         </div>
