@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import asyncio
 import logging
+import os
 from contextlib import asynccontextmanager
 from pathlib import Path
 from typing import Callable, Mapping
@@ -21,6 +22,9 @@ from .auth.sessions import SessionStore
 from .auth.throttle import Throttle
 from .config import Settings, load_settings
 from .db import make_engine, make_session_factory
+from .execution.files import Storage
+from .execution.routes import make_router as make_execution_router
+from .execution.service import ExecutionService
 from .groups.goals import GoalService
 from .groups.routes import make_router as make_group_router
 from .groups.service import GroupService
@@ -37,6 +41,8 @@ from .jobs import Handler, JobStore
 from .logging_utils import install_redaction
 
 STATIC_DIR = Path(__file__).parent / "static"
+# Attachments live outside the repository's tracked files (`.local/` is git-ignored). MOIM_UPLOAD_DIR overrides it.
+DEFAULT_UPLOAD_DIR = Path(__file__).resolve().parents[2] / ".local" / "uploads"
 TEMPLATES_DIR = Path(__file__).parent / "templates"
 
 
@@ -72,6 +78,8 @@ def create_app(
     goal_client_factory: Callable[[], object] | None = None,
     ai_client_factory: Callable[[], object] | None = None,
     rng_factory: Callable[[], object] | None = None,
+    upload_dir: str | Path | None = None,
+    review_enabled: bool = True,
 ) -> FastAPI:
     """`goal_client_factory` and `ai_client_factory` (role candidates) exist for deterministic tests only;
     the product always uses the Timely client."""
@@ -91,6 +99,9 @@ def create_app(
     todo_service = TodoService(make_session_factory(engine), ai_client_factory)
     role_interview_service = RoleInterviewService(make_session_factory(engine), ai_client_factory, todos=todo_service)
     reassign_service = ReassignmentService(make_session_factory(engine), assignment_service)
+    # Stage 5: M2.review is enabled by D-D1 (GATE D). `review_enabled=False` keeps manual completion only.
+    storage = Storage(upload_dir or os.environ.get("MOIM_UPLOAD_DIR") or DEFAULT_UPLOAD_DIR)
+    execution_service = ExecutionService(make_session_factory(engine), ai_client_factory, storage, review_enabled=review_enabled)
 
     @asynccontextmanager
     async def lifespan(app: FastAPI):
@@ -112,6 +123,9 @@ def create_app(
         lost_turns = role_interview_service.fail_interrupted()
         if lost_turns:
             log.warning("marked %d interrupted interview step(s) as FAILED (SERVER_RESTARTED)", lost_turns)
+        lost_reviews = execution_service.fail_interrupted()
+        if lost_reviews:
+            log.warning("marked %d interrupted attachment review(s) as FAILED (SERVER_RESTARTED)", lost_reviews)
         lost_todo_steps = todo_service.fail_interrupted()
         if lost_todo_steps:
             log.warning("marked %d interrupted todo step(s) as FAILED (SERVER_RESTARTED)", lost_todo_steps)
@@ -145,6 +159,7 @@ def create_app(
     app.state.role_interview = role_interview_service
     app.state.todos = todo_service
     app.state.reassign = reassign_service
+    app.state.execution = execution_service
     app.add_middleware(SecurityMiddleware, hsts=settings.secure_cookies)
     app.add_exception_handler(AuthError, auth_error_handler)
 
@@ -161,6 +176,7 @@ def create_app(
         settings, group_service, goal_service, candidate_service, ranking_service, templates,
         coverage=coverage_service, role_interview=role_interview_service, todos=todo_service, reassign=reassign_service,
     ))
+    app.include_router(make_execution_router(execution_service))
     app.mount("/static", RevalidatedStaticFiles(directory=STATIC_DIR), name="static")
 
     @app.get("/healthz")

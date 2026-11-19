@@ -695,28 +695,9 @@ class TodoService:
         Shown: the newest confirmation of the CURRENT assignment (an earlier one stays until a re-confirmation, B7), or,
         after a ProjectBrief change (B8), the newest confirmation of the BRIEF_CHANGED revision, read-only, until the
         member confirms again. A confirmation of a revision replaced by a reassignment is STALE and not shown (B4)."""
-        from .reassign import BRIEF_CHANGED
-
         with self._sf() as s:
             RankingService._cohort_group(s, group_id, user_id)
-            confs = s.execute(
-                select(todo_confirmations.c.user_id, todo_confirmations.c.source_assignment_revision,
-                       todo_confirmations.c.revision, todo_confirmations.c.stale_at,
-                       role_assignments.c.state, role_assignments.c.stale_reason)
-                .join(role_assignments, (role_assignments.c.group_id == todo_confirmations.c.group_id)
-                      & (role_assignments.c.revision == todo_confirmations.c.source_assignment_revision))
-                .where(todo_confirmations.c.group_id == group_id)
-                .order_by(todo_confirmations.c.user_id, todo_confirmations.c.source_assignment_revision.desc(),
-                          todo_confirmations.c.revision.desc())
-            ).all()
-            shown: dict[str, tuple[int, int]] = {}
-            seen: set[str] = set()
-            for c in confs:
-                if c.user_id in seen:
-                    continue
-                seen.add(c.user_id)  # only the member's newest confirmation counts
-                if (c.state == "CURRENT" and c.stale_at is None) or c.stale_reason == BRIEF_CHANGED:
-                    shown[c.user_id] = (c.source_assignment_revision, c.revision)
+            shown = self.shown_confirmations(s, group_id)
             out = []
             for uid, (rev, conf) in shown.items():
                 m = s.execute(
@@ -734,3 +715,33 @@ class TodoService:
                 out.append((-rev, int(m.slot_id[1:]), {"role_name": m.role_name,
                             "todos": [{"title": r.title, "due_date": r.due_date.isoformat()} for r in rows]}))
         return {"assignments": [x[2] for x in sorted(out, key=lambda x: (x[0], x[1]))]}
+
+    @staticmethod
+    def shown_confirmations(s: Session, group_id: str) -> dict[str, tuple[int, int]]:
+        """user_id -> (assignment revision, confirmation revision) of the confirmation the group sees for that member.
+
+        The member's newest confirmation, when it belongs to the CURRENT assignment and is not stale, or, after a
+        ProjectBrief change (B8), belongs to the BRIEF_CHANGED revision (read-only until the member confirms again).
+        A confirmation of a revision replaced by a reassignment is not shown (B4). Stage 5 execution uses the same rule:
+        only these items can be completed or submitted against."""
+        from .reassign import BRIEF_CHANGED
+
+        confs = s.execute(
+            select(todo_confirmations.c.user_id, todo_confirmations.c.source_assignment_revision,
+                   todo_confirmations.c.revision, todo_confirmations.c.stale_at,
+                   role_assignments.c.state, role_assignments.c.stale_reason)
+            .join(role_assignments, (role_assignments.c.group_id == todo_confirmations.c.group_id)
+                  & (role_assignments.c.revision == todo_confirmations.c.source_assignment_revision))
+            .where(todo_confirmations.c.group_id == group_id)
+            .order_by(todo_confirmations.c.user_id, todo_confirmations.c.source_assignment_revision.desc(),
+                      todo_confirmations.c.revision.desc())
+        ).all()
+        shown: dict[str, tuple[int, int]] = {}
+        seen: set[str] = set()
+        for c in confs:
+            if c.user_id in seen:
+                continue
+            seen.add(c.user_id)  # only the member's newest confirmation counts
+            if (c.state == "CURRENT" and c.stale_at is None) or c.stale_reason == BRIEF_CHANGED:
+                shown[c.user_id] = (c.source_assignment_revision, c.revision)
+        return shown

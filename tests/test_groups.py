@@ -1084,15 +1084,18 @@ def test_group_page_matches_the_original_structure(db, mk):
     html = lead.c.get(f"/groups/{gid}").text
     for needle in ('class="g-head"', 'class="dday"', 'class="g-goal"', 'class="goal-tag"', 'class="members"', 'class="you"'):
         assert needle in html, needle
-    # no execution areas before stage 5 (the original's CSS comments are not content)
+    # Stage 5 builds the group's execution areas (original structure); the dashboard still has none of them.
+    # (Originally "no execution areas before stage 5"; the original's CSS comments are not content.)
     import re
 
     def body_of(page):
         return re.sub(r"<style>.*?</style>", "", page, flags=re.S)
 
     dash = body_of(lead.c.get("/dashboard").text)
+    for area in ("목표 진척도", "팀 활동", "내 할 일", "업로드", "완료한 할 일", "팀원 완료 기록"):
+        assert area in body_of(html), area
     for banned in ("목표 진척도", "팀 활동", "내 할 일", "업로드", "완료한 할 일", "최근 팀 소식", "오늘의 할 일"):
-        assert banned not in body_of(html) and banned not in dash, banned
+        assert banned not in dash, banned
     member_html = m.c.get(f"/groups/{gid}").text
     assert "프로젝트 정보 수정" in html and "프로젝트 정보 수정" not in member_html
     assert "그룹장" in html and "팀원" in html
@@ -1107,7 +1110,7 @@ def test_generated_pages_have_no_inline_scripts_or_storage():
             attrs = m.group(1)
             assert "src=" in attrs or "application/json" in attrs, (name, attrs)
         assert "innerHTML" not in html and "localStorage" not in html
-    for js in ("shell.js", "dashboard.js", "invite.js", "group.js"):
+    for js in ("shell.js", "dashboard.js", "invite.js", "group.js", "group-exec.js"):
         text_ = (SRC / "static" / js).read_text(encoding="utf-8")
         assert "innerHTML" not in text_ and "localStorage" not in text_ and "sessionStorage" not in text_, js
     gc = (SRC / "static" / "group-create.js").read_text(encoding="utf-8")

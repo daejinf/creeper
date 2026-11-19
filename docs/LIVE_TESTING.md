@@ -475,3 +475,20 @@ GATE D vision 사전 확인 LIVE 기록(2026-11-19, 호출 191~205, 15회, 누�
 - 표본 15회(성공 14). 성공 latency 최소 2922 / 중앙값 3734 / 최대 12549ms. PDF file 파트가 가장 느렸다(11~13초). 이미지 한 장(1200×800) 입력 1666 토큰, 2400×1600은 5026 토큰.
 - 결과 판정 14/14가 기대와 같았고 주입 문구 2회 모두 PASS로 넘어가지 않았다. 표본이 작아 정확도를 주장하지 않는다.
 - 현재 `TimelyClient`의 `VISION_NOT_SUPPORTED` 분류는 `image_url`만 보며 `file` 파트 거절은 `INVALID_REQUEST`로 나온다(5단계 구현 때 처리).
+
+5단계 M2.review LIVE 기록(2026-11-19, 호출 206~212, 7회, 누적 212회. D-A8 범위·단일 작업 100회 미만이라 사전 승인 대상 아님. GATE D vision 확인(이미지·PDF 파일 파트·DOCX 추출·주입 무시)은 반복하지 않았다): 저장소 밖 일회용 스크립트가 제품 코드 `moim.execution.review_ai.build_messages` → 실제 `TimelyClient.complete_json(CompletionReview)` → `review_ai.check`를 6회, 개발 DB의 fixture 그룹에서 `ExecutionService.submit` + `run_review`를 1회 실행했다. 입력은 생성한 비민감 fixture(와이어프레임 PNG, 무관한 PNG, 한글 기능 명세 PDF·DOCX, HWP 제외 혼합)뿐이다. 콘솔에는 호출 로그 줄·decision·기준별 상태·안내 한 줄만 찍었다.
+
+| 호출 | call_id | request_id | 시나리오 | ok | 기대 → 결과 | 결정적 검사 | latency | 토큰 |
+|---:|---|---|---|---|---|---|---:|---|
+| 206 | 47a58e55-a31d-40c4-8a83-a8165acf857f | chatcmpl-ElsHyCnoke6VTwoye202azWtJ0Qfn | PNG 와이어프레임 일치 | true | PASS → PASS | 통과 | 5198ms | 2230/291/2521 |
+| 207 | 5e923b3f-2047-4c54-bd6f-eff1f775133f | chatcmpl-ElsI3CGmF4VcWOGxIhr7FmnwYqemY | PNG 무관 | true | REVIEW_NEEDED → REVIEW_NEEDED | 통과 | 5880ms | 2230/383/2613 |
+| 208 | 5753393f-d346-4fb5-9389-6ecd79522c58 | chatcmpl-ElsI8qSdPegEJNRSoaHKbWSVDHp6v | PDF 파일 파트(메타데이터 제거 사본) 일치 | true | PASS → PASS | 통과 | 5143ms | 1392/353/1745 |
+| 209 | 9bd44059-3be0-457b-9d02-57476d2e87a3 | chatcmpl-ElsIEULZOwS9txI6XAOal1Yhcc9GX | DOCX 추출 텍스트 일치 | true | PASS → PASS | 통과 | 5093ms | 1147/315/1462 |
+| 210 | cab25f82-db82-48bc-9de5-a3158e1a6ace | chatcmpl-ElsIJSAn1AkRbImYcFeL5QcQpx3Uz | DOCX 두 기능 설명 누락 | true | 미충족 → REVIEW_NEEDED | 통과 | 5552ms | 1112/381/1493 |
+| 211 | 25083d6f-08f9-4dd5-842b-860d6eb56211 | chatcmpl-ElsIObmJnG3GyuJRYodCOAiUToHaJ | PNG 1화면 + HWP 제외(고정 문구) | true | NEEDS_INPUT → NEEDS_INPUT | 통과 | 5999ms | 2256/392/2648 |
+| 212 | 98eb6fd0-163a-4bee-bbfc-8a3334d5afcb | chatcmpl-ElsIXT8yWLYKgiZKaEw0GFAaHjXVy | E2E `run_review`(개발 DB, DOCX) | true | SUCCEEDED/PASS, model·request_id·latency·토큰 저장 | 통과 | 5028ms | 1114/260/1374 |
+
+- 판정: **LIVE PASS**. 7/7 성공, 기대 판정 7/7 일치, 실제 출력 7/7이 결정적 검사(기준 원문·순서·근거 id·decision 일관성)를 통과했다. latency 5028~5999ms(중앙값 5198ms). 1쪽 PDF 파일 파트는 GATE D(2쪽, 11~13초)보다 빨랐다. 표본이 작아 정확도를 주장하지 않는다.
+- 안내 한 줄은 기준 문장을 그대로 옮기지 않고 보완할 점을 말했다(예: "그룹 상세와 그룹 생성 화면의 와이어프레임 이미지를 검토 가능한 형식으로 추가해 주세요."). PASS는 화면에 고정 문구만 쓴다.
+- 관찰(OPEN, 사용자 판단): 호출 212의 fixture 기준은 "결과를 팀 공유 폴더에 올렸다"처럼 자료로는 확인할 수 없는 행위였고, M2는 설명과 문서의 "업로드 완료" 문장을 근거로 PASS를 냈다. 기준이 행위 확인형이면 M2가 자기 진술을 근거로 삼는다. 4단계 기준 생성이 자료로 확인 가능한 기준을 만들도록 할지는 품질 판정 대상이다.
+- `TimelyClient`는 이제 `file` 파트 거절도 `VISION_NOT_SUPPORTED`로 분류한다(GATE D에서 넘긴 항목).

@@ -102,6 +102,17 @@ AI가 DB를 직접 임의 수정하지 않는다. 구조화된 변경안, 권한
   - `BRIEF_CHANGED`(`GroupService.update_brief`, 같은 트랜잭션·같은 그룹 lock): 새 후보 revision을 만들고 `WAITING_ASSIGNMENT`·`ROLE_TODOS` 구성원 전원을 `INTERVIEW`(순위 미제출)로 되돌린다. 확정 투두는 **읽기 전용으로 남아** 그 구성원이 새 assignment에서 다시 확정할 때까지 그룹 조회에 그대로 나온다(응답 필드는 세 개 그대로라 "읽기 전용" 표시는 없다. D-D1은 정하지 않았으며 5단계에서 개인정보 범위를 넓히지 않는 기술 세부로 정하고, 제품 의미가 달라지면 승인받는다).
   - cohort는 활성화 뒤 바뀌지 않고(신규 합류 차단), 순위 제출은 `ROLE_TODOS`에서 409 `ALREADY_SUBMITTED`라 바뀔 수 없다. 둘이 바뀌는 경로는 ProjectBrief 변경(순위 재제출)뿐이다.
 
+### 실행·첨부·투두별 M2 평가 (5단계, D-D1)
+
+- 모듈(`src/moim/execution/`): `files`(팀 첨부 11형식 내용 검증·한도·압축 검사·저장, M2 검토 사본), `review_ai`(M2 입력·출력 검사·표시 한 줄, `wemeet_ai.m2`의 `CompletionReview` 계약과 `REVIEW_POLICY` 재사용), `service`(`ExecutionService`: 화면 데이터·기록·되돌리기·다운로드·검토 실행), `routes`. 화면은 `templates/group.html`(원본 group 본문 구조)과 `static/group-exec.js`.
+- 연결 키: 기록(`execution_records`)은 제출자 본인의 `task_id` + 그때 그룹에 보이던 `(source_assignment_revision, confirmation_revision)`에 DB 외래키로 묶인다(`todo_confirmed_items`). 어떤 확정이 "보이는" 확정인지는 `TodoService.shown_confirmations` 하나가 정한다(4단계 그룹 조회와 같은 규칙). 다른 확정 revision으로 보낸 요청은 409 `REVISION_CONFLICT`이며 다른 revision에 다시 묶지 않는다.
+- 완료: `marks_done` 기록이 있으면 그 투두는 완료다(`task_id`당 하나, 부분 유일 인덱스). 체크박스(`cb`)와 `첨부하면 이 할 일을 완료로 표시`는 즉시 수동 완료이고 M2 결과는 완료에 영향이 없다(D2). `되돌리기`는 본인 완료 기록만, 첨부가 있으면 `confirm_delete` 없이는 409 `CONFIRM_REQUIRED`이고 확인하면 기록·파일·검토를 즉시 영구 삭제한다(D5). `기타`는 제목·설명만 남는 기록(파일 불가, 검토 없음).
+- 검토 흐름: 파일이 있는 투두 기록마다 `execution_reviews` 한 행. M2가 읽을 수 있는 파일이 없으면 즉시 `SKIPPED/UNSUPPORTED`(호출 없음). 아니면 `PENDING` → 백그라운드 `run_review`: 저장 원본에서 검토 사본을 만들고 한도(PDF 합계 20쪽, 추출 텍스트 합계 20,000자)를 넘으면 `SKIPPED/OVER_LIMIT`(호출 없음), 아니면 Timely 1회 → 결정적 검사(`review_ai.check`: 기준 수·순서·원문, 근거 id, MET 근거 필수, decision 일관성) → `SUCCEEDED`(decision·기준별 결과·안내 한 줄) 또는 `FAILED`. 자동 재시도 없음. 사용자의 `다시 시도`만 attempt를 올려 새 호출. 서버 재시작 때 `PENDING`/`RUNNING`은 `FAILED/SERVER_RESTARTED`.
+- M2 입력(D1): 그 투두 확정 snapshot(제목·`deliverable`·`completion_criteria`·허용 증거) + 그 기록의 제목·설명 + 검토 가능한 파일(이미지: 메타데이터 없는 새 이미지, 긴 변 2048px / PDF: 문서 메타데이터를 지운 사본을 `file` 파트로, 파일명은 `evidence-N.pdf` / DOCX·TXT·MD: 서버 추출 텍스트) + 제외 파일의 고정 문구(`검토에서 제외된 HWP 1개`). 이름·user_id·group_id·task_id·사용자 파일명·MemberState·대화·다른 투두는 없다.
+- 테이블·마이그레이션 `0011_execution`(새 테이블만): `execution_records`, `execution_files`(기록 삭제 시 cascade), `execution_reviews`(cascade), `execution_events`(감사: 종류·사용자·task·revision·파일 수·결정/오류 코드·시각만, 기록 삭제 뒤에도 남음).
+- API(로그인, 현재 활성 구성원만, 아니면 404): `GET /api/groups/{id}/execution`, `POST /api/groups/{id}/records`(multipart, CSRF, `action_id` 멱등), `POST …/records/{record_id}/undo`, `GET …/records/{record_id}/review`, `POST …/records/{record_id}/review/retry`(본인만), `GET /api/groups/{id}/files/{file_id}`(항상 `attachment`·`application/octet-stream`).
+- 저장: `MOIM_UPLOAD_DIR`(기본 `.local/uploads`, Git 제외) 아래 `<group_id>/<file_id>`. 둘 다 서버 uuid이고 경로를 만들 때마다 다시 검사한다. 사용자 파일명은 DB에 표시용으로만 있다.
+
 ## 2. 모듈 판정표
 
 판정: KEEP(그대로) / ADAPT(어댑터 또는 내부 수정) / REPLACE(새로 구현) / DROP(사용 안 함). 줄 번호는 2026-11-18 기준 `src/wemeet_ai/` 아래 경로다. "테스트"는 크리퍼 `tests/`에 있는 파일이다. 0B-1에서 격리한 복사본으로 실행한 결과는 이 절 끝의 `0B-1 재확인 결과`에 있다(이 저장소의 `tests/`는 MOIM 자체 테스트다).
@@ -181,6 +192,7 @@ AI가 DB를 직접 임의 수정하지 않는다. 구조화된 변경안, 권한
 - 개인정보 경계: 이미지 data URL 마스킹(`m0/tracing.py:29`), 프롬프트가 성실성·정직성·투표 판단을 금지(`m2/prompts.py`). 첨부 파일 보관·접근·삭제는 GATE D 승인(D-D1, 2026-11-19)과 `docs/SECURITY.md` 3절을 따른다.
 - 테스트: `test_m2.py` 7개, `test_m2_evidence.py` 14개 통과(0B-1 실행). 판정 변경 없음.
 - 복잡도: `evidence.py` 439줄이 가장 크며 PyMuPDF·Pillow·python-docx에 의존한다.
+- 5단계 재사용(2026-11-19): `CompletionReview`·`CriterionResult` 계약과 `REVIEW_POLICY`를 그대로 쓰고, 요청 계약(`CompletionReviewRequest`)과 `evidence.py`는 쓰지 않았다. 요청 계약은 group·task·plan·owner id와 원래 파일명을 공급자에 보내 MOIM 개인정보 경계(D1·D4)에 맞지 않고, `evidence.py`는 이미지 1600px·PDF 쪽 이미지 렌더·DOCX 외부 관계 거절이 D-D1과 달라서다. 검사 규칙은 `_validate_review`와 같은 내용을 `moim.execution.review_ai.check`로 옮겼다.
 - 수정 비용: 낮다. M2 검토 형식은 D-D1 D4(이미지는 2048px 메타데이터 제거 사본, PDF, DOCX·TXT·MD 텍스트, HWPX는 결정적 추출 테스트 통과 뒤, 제외 파일은 형식·개수 고정 문구만)에 맞춰 조정한다.
 
 ### persistence — REPLACE

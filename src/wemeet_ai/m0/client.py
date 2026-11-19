@@ -135,7 +135,7 @@ class TimelyClient:
         if status >= 400:
             has_image = any(
                 isinstance(message.get("content"), list)
-                and any(isinstance(part, dict) and part.get("type") == "image_url" for part in message["content"])
+                and any(isinstance(part, dict) and part.get("type") in ("image_url", "file") for part in message["content"])
                 for message in messages
                 if isinstance(message, dict)
             )

@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 from sqlalchemy import (
+    BigInteger,
     Boolean,
     CheckConstraint,
     Column,
@@ -9,6 +10,7 @@ from sqlalchemy import (
     DateTime,
     ForeignKey,
     ForeignKeyConstraint,
+    Identity,
     Index,
     Integer,
     String,
@@ -730,4 +732,114 @@ role_reassignments = Table(
     CheckConstraint("(state = 'ACCEPTED') = (result_assignment_revision is not null)", name="result_iff_accepted"),
     CheckConstraint("(state = 'REQUESTED') = (decided_at is null)", name="decided_unless_requested"),
     Index("uq_role_reassignments_open", "group_id", unique=True, postgresql_where=text("state = 'REQUESTED'")),
+)
+
+
+# ---- stage 5: execution records, attachments, M2 reviews, audit (D-D1) ----------------------------------------------
+# One record = one row of `팀원 완료 기록`. A todo record points at exactly one confirmed item of its submitter
+# (task_id + the confirmation revision it was made against); an `기타` note points at none and carries no file.
+# Files and the review are deleted with the record (`되돌리기`, D-D1 D5). The audit log keeps metadata only.
+FILE_KINDS = ("PNG", "JPEG", "WEBP", "PDF", "DOCX", "HWP", "HWPX", "TXT", "MD", "PPTX", "XLSX")
+
+execution_records = Table(
+    "execution_records",
+    metadata,
+    Column("id", String(36), primary_key=True),
+    Column("group_id", String(36), ForeignKey("groups.id"), nullable=False),
+    Column("user_id", String(36), ForeignKey("users.id"), nullable=False),
+    Column("action_id", String(64), nullable=False),
+    Column("task_id", String(36)),
+    Column("source_assignment_revision", Integer),
+    Column("confirmation_revision", Integer),
+    Column("title", String(40)),
+    Column("memo", Text),
+    Column("marks_done", Boolean, nullable=False),
+    Column("file_count", Integer, nullable=False, server_default="0"),
+    Column("created_at", DateTime(timezone=True), nullable=False, server_default=func.now()),
+    ForeignKeyConstraint(
+        ["group_id", "user_id", "source_assignment_revision", "confirmation_revision", "task_id"],
+        ["todo_confirmed_items.group_id", "todo_confirmed_items.user_id", "todo_confirmed_items.source_assignment_revision",
+         "todo_confirmed_items.confirmation_revision", "todo_confirmed_items.task_id"],
+        name="fk_execution_records_confirmed_item",
+    ),
+    UniqueConstraint("group_id", "user_id", "action_id", name="uq_execution_records_action"),
+    CheckConstraint("(task_id is null) = (confirmation_revision is null) and (task_id is null) = (source_assignment_revision is null)",
+                    name="task_ref"),
+    CheckConstraint("task_id is not null or (not marks_done and file_count = 0)", name="etc"),
+    CheckConstraint("memo is null or char_length(memo) <= 1000", name="memo"),
+    CheckConstraint("file_count between 0 and 5", name="file_count"),
+    Index("uq_execution_records_done", "task_id", unique=True, postgresql_where=text("marks_done")),
+    Index("ix_execution_records_group", "group_id", "created_at"),
+)
+
+execution_files = Table(
+    "execution_files",
+    metadata,
+    Column("id", String(36), primary_key=True),
+    Column("record_id", String(36), ForeignKey("execution_records.id", ondelete="CASCADE"), nullable=False),
+    Column("group_id", String(36), ForeignKey("groups.id"), nullable=False),
+    Column("position", Integer, nullable=False),
+    Column("original_name", String(255), nullable=False),
+    Column("kind", String(8), nullable=False),
+    Column("size_bytes", Integer, nullable=False),
+    Column("sha256", String(64), nullable=False),
+    Column("review_kind", String(8)),
+    Column("embedded_images", Boolean, nullable=False, server_default=false()),
+    Column("created_at", DateTime(timezone=True), nullable=False, server_default=func.now()),
+    UniqueConstraint("record_id", "position", name="uq_execution_files_position"),
+    CheckConstraint("kind in ('PNG','JPEG','WEBP','PDF','DOCX','HWP','HWPX','TXT','MD','PPTX','XLSX')", name="kind"),
+    CheckConstraint("review_kind is null or review_kind in ('IMAGE','PDF','TEXT')", name="review_kind"),
+    CheckConstraint("size_bytes between 1 and 10485760", name="size"),
+    Index("ix_execution_files_group", "group_id"),
+)
+
+execution_reviews = Table(
+    "execution_reviews",
+    metadata,
+    Column("record_id", String(36), ForeignKey("execution_records.id", ondelete="CASCADE"), primary_key=True),
+    Column("state", String(10), nullable=False),
+    Column("skip_reason", String(16)),
+    Column("attempt", Integer, nullable=False, server_default="1"),
+    Column("decision", String(14)),
+    Column("criteria_results", JSONB),
+    Column("guidance", Text),
+    Column("reviewed_files", Integer, nullable=False, server_default="0"),
+    Column("excluded_files", Integer, nullable=False, server_default="0"),
+    Column("embedded_images_skipped", Boolean, nullable=False, server_default=false()),
+    Column("error_code", String(64)),
+    Column("model", String(64)),
+    Column("request_id", String(128)),
+    Column("latency_ms", Integer),
+    Column("prompt_tokens", Integer),
+    Column("completion_tokens", Integer),
+    Column("total_tokens", Integer),
+    Column("created_at", DateTime(timezone=True), nullable=False, server_default=func.now()),
+    Column("started_at", DateTime(timezone=True)),
+    Column("finished_at", DateTime(timezone=True)),
+    CheckConstraint("state in ('PENDING','RUNNING','SUCCEEDED','FAILED','SKIPPED')", name="state"),
+    CheckConstraint("skip_reason is null or skip_reason in ('UNSUPPORTED','OVER_LIMIT','DISABLED')", name="skip_reason"),
+    CheckConstraint("(state = 'SKIPPED') = (skip_reason is not null)", name="skip_iff"),
+    CheckConstraint("decision is null or decision in ('PASS','REVIEW_NEEDED','NEEDS_INPUT')", name="decision"),
+    CheckConstraint("(state = 'SUCCEEDED') = (decision is not null)", name="decision_iff"),
+)
+
+execution_events = Table(
+    "execution_events",
+    metadata,
+    Column("id", BigInteger, Identity(), primary_key=True),
+    Column("group_id", String(36), ForeignKey("groups.id"), nullable=False),
+    Column("user_id", String(36), ForeignKey("users.id"), nullable=False),
+    Column("kind", String(16), nullable=False),
+    Column("record_id", String(36)),
+    Column("task_id", String(36)),
+    Column("source_assignment_revision", Integer),
+    Column("confirmation_revision", Integer),
+    Column("file_count", Integer, nullable=False, server_default="0"),
+    Column("detail", String(32)),
+    Column("created_at", DateTime(timezone=True), nullable=False, server_default=func.now()),
+    CheckConstraint(
+        "kind in ('COMPLETE','SUBMIT','NOTE','UNDO','REVIEW_START','REVIEW_RETRY','REVIEW_DONE','REVIEW_FAILED','REVIEW_SKIPPED')",
+        name="kind",
+    ),
+    Index("ix_execution_events_group", "group_id", "created_at"),
 )

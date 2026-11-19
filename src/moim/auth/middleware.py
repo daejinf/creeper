@@ -5,11 +5,15 @@ import json
 
 AUTH_BODY_LIMIT = 8 * 1024
 GROUP_BODY_LIMIT = 32 * 1024  # a ProjectBrief (1000-character content, types, milestones) fits with room to spare
+# Stage 5 upload (`POST /api/groups/{id}/records`): 5 files x 10MB plus the text fields and multipart framing (D-D1 D4).
+UPLOAD_BODY_LIMIT = 5 * 10 * 1024 * 1024 + 256 * 1024
 
 
 def body_limit(path: str) -> int | None:
     if path.startswith("/api/auth/"):
         return AUTH_BODY_LIMIT
+    if path.startswith("/api/groups/") and path.endswith("/records") and path.count("/") == 4:
+        return UPLOAD_BODY_LIMIT
     if path.startswith("/api/groups"):
         return GROUP_BODY_LIMIT
     return None

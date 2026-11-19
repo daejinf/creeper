@@ -508,6 +508,13 @@ button.login{border:0;background:none;font-family:inherit;font-size:14px;font-we
 [hidden]{display:none!important}
 .day-empty{padding:16px;text-align:center;font-size:13px;color:#8A90A0;border:1px dashed #DCE0E8;border-radius:14px}
 .notice{margin:0 0 16px}
+.up-msg .goal-retry,.detail .goal-retry{margin-left:auto;flex:0 0 auto}
+.detail .ai-line{color:var(--mute)}
+/* 5단계: 팀원 막대 색은 원본의 팀원별 색(도형 색)과 같다 */
+.mem[data-shape="c"] .bar span{background:var(--coral)}
+.mem[data-shape="a"] .bar span{background:var(--blue)}
+.mem[data-shape="q"] .bar span{background:var(--sun)}
+.mem[data-shape="t"] .bar span{background:#5A6074}
 </style>
 </head>
 <body>
@@ -585,20 +592,96 @@ button.login{border:0;background:none;font-family:inherit;font-size:14px;font-we
         </div>
         <p class="g-goal" id="goal" data-group="{{ group_id }}" data-state="{{ goal.state }}" data-revision="{{ goal.brief_revision }}" data-attempt="{{ goal.attempt }}"><span class="goal-tag"><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 21V3.5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><path d="M6 3.5h12.5l-2.8 4.75 2.8 4.75H6z" fill="currentColor"/></svg>팀 목표</span><span class="goal-text{% if goal.state != 'SUCCEEDED' %} quiet{% endif %}" id="goalText" role="status" aria-live="polite">{% if goal.state == 'SUCCEEDED' %}{{ goal.text }}{% elif goal.state in ('PENDING', 'RUNNING') %}팀 목표를 정리하고 있어요…{% elif goal.state == 'EMPTY' %}프로젝트 내용을 입력하면 팀 목표가 여기에 표시돼요.{% else %}{{ goal.error_message }}{% endif %}</span><button class="goal-retry" id="goalRetry" type="button" hidden>다시 시도</button></p>
 
+        <!-- 목표 진척 상황 -->
+        <section class="progress" aria-labelledby="pLabel" id="exec" data-group="{{ group_id }}">
+          <div class="p-top">
+            <h2 class="p-label" id="pLabel">목표 진척도</h2>
+            <div class="p-num"><b id="pPct">0%</b><span id="pTxt">0개 중 0개 완료</span></div>
+          </div>
+          <div class="stack" id="stack" role="img" aria-label="0개 중 0개 완료"></div>
+
+          <div class="activity">
+            <div class="act-head">
+              <div class="act-title"><h3>팀 활동</h3><span id="actSum"></span></div>
+              <div class="act-legend" aria-hidden="true">적음<i class="l0"></i><i class="l1"></i><i class="l2"></i><i class="l3"></i><i class="l4"></i>많음</div>
+            </div>
+            <div class="act-box">
+              <div class="act-names" id="actNames"></div>
+              <div class="act-scroll" id="actScroll">
+                <div class="act-months" id="actMonths" aria-hidden="true"></div>
+                <div class="act-rows" id="actRows" role="img" aria-label="팀원별 날짜별 활동"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 팀원 -->
         <div class="sec-head"><h2>팀원</h2></div>
         <div class="members" id="members">
           {% for m in members %}
-          <div class="mem static">
+          <button class="mem" type="button" data-who="m{{ loop.index }}" data-shape="{{ m.shape }}" aria-pressed="false">
             <span class="mem-top"><span class="m {{ m.shape }}" aria-hidden="true"><i></i><i></i></span><span class="who"><span class="name-line"><b>{{ m.name }}</b>{% if m.is_me %}<span class="you">나</span>{% endif %}</span><small class="role">{{ '그룹장' if m.role == 'LEADER' else '팀원' }}</small></span></span>
-          </div>
+            <span class="mem-meta"><small>완료 현황</small><span class="frac"><b>0</b><span>/0</span></span></span>
+            <span class="bar" aria-hidden="true"><span></span></span>
+            <span class="contrib"></span>
+          </button>
           {% endfor %}
         </div>
+        <div class="mem-todos" id="memTodos" hidden></div>
 
-        <a class="chat-link wide" href="/groups/{{ group_id }}/chat">
-          내 AI와 대화 시작하기
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
-        </a>
+        <!-- 팀원별 완료된 할 일 -->
+        <div class="sec-head"><h2>팀원 완료 기록</h2></div>
+        <div class="done-feed" id="feed">
+          <div class="feed-empty" id="feedEmpty">아직 완료한 할 일이 없어요.</div>
+        </div>
       </main>
+
+      <!-- ========== 오른쪽: 내 할 일 ========== -->
+      <aside class="panel" aria-label="내 할 일">
+        <section>
+          <h2>내 할 일 <span class="count" id="todoCount">0</span><span class="ai">AI 생성</span></h2>
+          <ul class="todo-list" id="todoList"></ul>
+          <div class="empty-note" id="todoEmpty">남은 할 일이 없어요. 수고했어요!</div>
+          <a class="chat-link" id="chatLink" href="/groups/{{ group_id }}/chat">
+            <span id="chatText">내 AI와 대화 시작하기</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+          </a>
+        </section>
+
+        <section>
+          <h2 style="margin-bottom:14px">업로드</h2>
+          <label class="upload" id="drop">
+            <input type="file" id="fileInput" multiple accept=".png,.jpg,.jpeg,.webp,.pdf,.docx,.hwp,.hwpx,.txt,.md,.pptx,.xlsx">
+            <span class="plus" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+            </span>
+            <b>파일 선택</b>
+            <small>끌어다 놓거나 눌러서 고르세요</small>
+          </label>
+          <div class="staged" id="staged"></div>
+
+          <div class="up-form" id="upForm">
+            <label class="lbl" for="upTitle">제목</label>
+            <input class="field" id="upTitle" type="text" maxlength="40" placeholder="제목을 입력하세요">
+            <label class="lbl" for="upMemo">설명</label>
+            <textarea id="upMemo" rows="2" maxlength="1000" placeholder="설명을 입력하세요"></textarea>
+            <div class="todo-pick" id="todoPick">
+              <label class="lbl" for="upTodo">어떤 할 일인가요?</label>
+              <select id="upTodo"></select>
+              <label class="mark-done"><input type="checkbox" id="upDone" checked> 첨부하면 이 할 일을 완료로 표시</label>
+            </div>
+            <button class="up-btn" id="upBtn" type="button" disabled>첨부하기</button>
+          </div>
+          <div class="up-msg" id="upMsg" role="status" aria-live="polite"></div>
+        </section>
+
+        <div class="divider" role="presentation"></div>
+
+        <section>
+          <h2>완료한 할 일 <span class="count" id="doneCount">0</span></h2>
+          <ul class="done-list" id="doneList"></ul>
+        </section>
+      </aside>
     </div>
   </div>
 </div>
@@ -606,5 +689,6 @@ button.login{border:0;background:none;font-family:inherit;font-size:14px;font-we
 <script src="/static/auth-common.js"></script>
 <script src="/static/shell.js"></script>
 <script src="/static/group.js"></script>
+<script src="/static/group-exec.js"></script>
 </body>
 </html>

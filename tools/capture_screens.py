@@ -76,6 +76,12 @@ def apply_dev_seed() -> dict:
     shot = "(select id from users where username like 'shot%')"
     owned = f"(select id from groups where owner_id in {shot})"
     with sf.begin() as s:
+        # A seeded group that reached `투두 확정하기` (stage 5 `--execution`) cannot be deleted: confirmed todos are
+        # immutable (DB trigger). Its seed users are retired instead: renamed out of the `shot` prefix, signed out.
+        confirmed = "(select user_id from cohort_members where group_id in (select group_id from todo_confirmations))"
+        s.execute(text(f"delete from auth_sessions where user_id in {shot} and user_id in {confirmed}"))
+        s.execute(text(f"update users set username = 'oldshot' || substr(replace(id, '-', ''), 1, 12) "
+                       f"where username like 'shot%' and id in {confirmed}"))
         for sql in (
             f"delete from member_progress where group_id in {owned}",
             f"delete from preference_submissions where group_id in {owned}",
@@ -187,6 +193,8 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--browser", default="auto", choices=["auto", "chromium", "msedge", "chrome"])
     ap.add_argument("--full-page", action="store_true",
                     help="capture the whole scrollable page instead of exactly 1440x900 (sizes then vary)")
+    ap.add_argument("--execution", action="store_true",
+                    help="also seed the stage 5 group screen (confirmed todos and records; fixture AI, not LIVE)")
     ap.add_argument("--only", action="append", help="capture only this original file name (repeatable)")
     ap.add_argument("--route", action="append", default=[], metavar="FILE=/path",
                     help="override an implementation route for this run, e.g. moim-login.html=/login")
@@ -204,6 +212,11 @@ def main(argv: list[str] | None = None) -> int:
         raise SystemExit(f"unknown screen(s): {', '.join(unknown)}")
 
     seed = apply_dev_seed()
+    if args.execution and seed.get("vars"):
+        sys.path.insert(0, str(ROOT / "tools"))
+        from seed_execution import seed_execution
+
+        print("seed:", seed_execution(seed))
     print("seed:", seed["note"])
     fill = seed.get("vars", {})
     tokens = seed.get("tokens", {})
