@@ -311,6 +311,33 @@ def test_no_assignment_until_the_whole_cohort_submits_then_exactly_one(db, mk, a
     assert roles[c.id] == "r2" and sorted(roles.values()) in (["r1", "r2", "r3"],)
 
 
+def test_a_cohort_that_finished_without_its_assignment_is_assigned_once_at_server_start(db, app, mk, ai):
+    """The assignment step did not run with the last submission (old code / a dead process): startup recovers it."""
+    gid, (a, b, c) = team(mk, 3)
+    ranking = app.state.ranking
+    kept, ranking._assignment = ranking._assignment, None  # the old process: submissions without the assignment step
+    try:
+        for u, r in ((a, ["r1", "r2", "r3"]), (b, ["r2", "r1", "r3"]), (c, ["r3", "r1", "r2"])):
+            assert rank(u, gid, r).status_code == 201
+    finally:
+        ranking._assignment = kept
+    assert scalar(db, "select count(*) from role_assignments") == 0
+    assert screen(a, gid)["phase"] == "WAITING_ASSIGNMENT"
+    assert ranking.assign_waiting() == [(gid, 1)]
+    assert col(db, "select status from member_progress where group_id=:g", g=gid) == ["ROLE_TODOS"] * 3
+    assert scalar(db, "select count(*) from team_coverages where group_id=:g", g=gid) == 1
+    assert scalar(db, "select count(*) from role_interviews where group_id=:g", g=gid) == 3
+    assert ranking.assign_waiting() == []  # never draws twice
+    assert scalar(db, "select count(*) from role_assignments") == 1
+
+
+def test_server_start_does_not_assign_a_cohort_that_has_not_finished(db, app, mk, ai):
+    gid, (a, b, c) = team(mk, 3)
+    assert rank(a, gid, ["r1", "r2", "r3"]).status_code == 201
+    assert app.state.ranking.assign_waiting() == []
+    assert scalar(db, "select count(*) from role_assignments") == 0
+
+
 def test_refresh_reconnect_and_a_replayed_submit_never_draw_again(db, app, mk, ai):
     gid, (a, b, c) = team(mk, 3)
     assert rank(a, gid, ["r1", "r2", "r3"]).status_code == 201

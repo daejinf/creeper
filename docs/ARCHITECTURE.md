@@ -82,12 +82,25 @@ AI가 DB를 직접 임의 수정하지 않는다. 구조화된 변경안, 권한
 - API: `GET /api/groups/{id}/roles`(후보·내 순위 상태·`N/M` 집계를 한 번에), `POST /api/groups/{id}/preferences`(순위 제출), `POST /api/groups/{id}/roles/candidates/retry`. 옛 `/interview*` 경로는 없다.
 - 테이블(마이그레이션 `0005_interview`, `0006`, `0007_interview_deprecated`): `role_candidate_sets`(ProjectBrief revision당 한 행, 후보 revision = `source_project_brief_revision`), `preference_submissions`(불변 revision, 1·2·3순위 서로 다름을 DB가 검사), `member_progress`(저장된 `INTERVIEW | WAITING_ASSIGNMENT`. `INTERVIEW`는 이제 "순위 미제출"이다). **사용 중단·보존:** `interview_turns`, `member_states`, `member_progress.interview_closed_at`은 삭제·변경하지 않고 DB 주석으로 DEPRECATED를 표시했다(`0007`은 주석만 바꾸고 데이터를 건드리지 않으며 downgrade로 주석만 제거). 3단계는 이 테이블을 쓰지도 읽지도 않는다.
 - 순위 제출: 인터뷰·MemberState 없이 후보가 `SUCCEEDED`이면 바로 제출할 수 있다. 제출 전 선택은 화면에만 있고(자유롭게 변경) 제출이 immutable revision이다. 멤버별 advisory lock 아래서 같은 `action_id`는 재생(False), 다른 `action_id`로 이미 제출했으면 409 `ALREADY_SUBMITTED`라 동시 제출도 한 번만 저장한다.
-- 역할 후보: ProjectBrief revision이 만들어질 때(활성화·수정) 같은 트랜잭션에서 `PENDING` 행이 생기고 백그라운드로 Timely를 1회 호출한다. 입력은 ProjectBrief(이름·내용·기간·결과물·중간 일정)뿐이다(D-B1 B5). 후보 수는 프롬프트에서 6~8개로 요청하고(cohort 최대 6명), 서버가 3~8개·인원 수 이상을 검사한다. 3~8개·인원 수 이상·이름 ≤12자·설명 ≤60자·이름 중복 없음을 서버가 검사하고 id(`r1`…)는 서버가 붙인다. 성공하면 다시 쓰지 않는다. 실패는 `FAILED`와 오류, 명시적 다시 시도(`action_id`로 멱등)이며 고정 목록·이전 revision으로 대체하지 않는다. 새로고침·재접속·다른 구성원 조회는 저장된 행만 읽는다.
+- 역할 후보: ProjectBrief revision이 만들어질 때(활성화·수정) 같은 트랜잭션에서 `PENDING` 행이 생기고 백그라운드로 Timely를 1회 호출한다. 입력은 ProjectBrief(이름·내용·기간·결과물·중간 일정)와 cohort 인원 수(숫자만, 구성원 식별 정보 없음)다(D-B1 B5). 후보 수는 `max(3, 인원)` 이상 `+2` 이하(3~8 안)로, 한 사람이 하나씩 맡는 굵은 역할 단위를 요청한다(2026-11-19: 2명 팀에 8개처럼 잘게 쪼개지던 문제 수정). 서버가 그 범위·이름 ≤12자·설명 ≤60자·이름 중복 없음을 서버가 검사하고 id(`r1`…)는 서버가 붙인다. 성공하면 다시 쓰지 않는다. 실패는 `FAILED`와 오류, 명시적 다시 시도(`action_id`로 멱등)이며 고정 목록·이전 revision으로 대체하지 않는다. 새로고침·재접속·다른 구성원 조회는 저장된 행만 읽는다.
 - (사용 중단, D-B3) 인터뷰(D-B2 AI 주도): 메시지·버튼 하나가 AI 한 번(Timely 한 번)이다. `interview/coach.py`의 `run_turn`이 `e_member_plan.interview_turn`(`TurnModel`: understood·value·quote·extras·reply·next{field,text,options})을 한 번 호출한다. AI가 답 해석과 다음 질문·버튼 작성을 맡고, 코드가 모든 부분을 검사한다: 인용은 사용자 메시지 안에 있어야 하고(문자열 값은 사용자 말과 글자쌍 50% 이상 겹쳐야 하며 아니면 인용을 저장), 숫자·목록은 사용자 말 안에 근거가 있어야 하고, 부가 `scope`는 의도 표현이 필요하며, 이미 아는 항목은 고쳐 말할 때만 바뀐다. 다음 질문은 새 항목 또는 재질문, 버튼 2~4개(값은 서버에만 저장, 브라우저는 id·문구만), 내부 표현 없음을 만족해야 하고 아니면 서버의 기본 질문(첫 누락 필수 항목)으로 바꾼다(`interview_event … ai_next_question_replaced_by_server_question` 로그). 질문·버튼 값은 `member_states.state.question`에 있다. 완료는 서버: `missing_required`(필수 4개가 알려졌거나 "모름" 두 번), 턴 한도에서는 항상 닫기 가능. 의미 없는 입력은 422 `UNCLEAR_ANSWER`로 거절한다. 옛 자유 대화 `coach_member_goal`은 MOIM이 호출하지 않는다. 속도: `Runtime(extra_options={"reasoning_effort": "low"})`(`minimal`은 공급자가 거절), 프롬프트 약 1.6k·완료 130~213 토큰.
 - (사용 중단, 4단계 재사용용) E.coach 변경(ADAPT, 모듈 판정 유지): `coach_member_goal(extra_policy=)` 인자 추가(턴 예산·필수 항목·답변 길이 정책), `Runtime(extra_options=)` 추가, LIVE에서 드러난 실패를 고쳤다(질문 필드가 진단 항목에 없으면 실패 대신 그 항목을 더한다는 것 포함). ① 모델이 `AI_SUGGESTED`/공동 목표 근거로 만든 `scope` "사실"은 저장하지 않고 버린다(없는 사용자 메시지를 근거로 대는 사실은 여전히 실패). ② 사용하지 않는 답변 버튼 선택지의 값이 틀려도 그 선택지만 버리고 턴은 실패시키지 않는다. 둘 다 호출을 더 하지 않는 결정적 코드이고 저장되는 사실의 근거 조건은 그대로다.
 - STALE: ProjectBrief가 바뀌어 새 revision이 생기면(`update_brief`, 같은 트랜잭션) 이전 후보는 현재가 아니므로 제공하지 않고, 그 후보를 참조해 `WAITING_ASSIGNMENT`이던 구성원은 `INTERVIEW`(순위 미제출)로 돌아가 새 후보에서 다시 고른다(이전 제출 행은 기록으로 남는다).
 - 복구: 서버가 시작될 때 `PENDING`·`RUNNING`으로 남은 후보는 `FAILED / SERVER_RESTARTED`가 된다(옛 턴은 더 이상 만들어지지 않는다). 화면은 `GET /api/groups/{id}/roles` 하나로 후보·내 순위·집계를 한 번에 읽어 왼쪽과 오른쪽이 같은 서버 상태를 쓴다. 범용 `/api/jobs`는 쓰지 않는다.
 - 이 단계에는 역할 배정, 투두 draft, 숨겨진 평가 기준이 없다(테스트가 테이블·컬럼·응답 키를 검사한다).
+
+### 역할 배정·배정 후 인터뷰·투두·재배정 (4단계, D-B1 B4~B9, D-B4)
+
+- 모듈(`src/moim/roles/`): `assignment`(서버 배정, AI 없음), `coverage`(팀 결과물 분담, Timely 1회), `interview_ai`·`interview`(배정 후 AI 주도 인터뷰), `todo_ai`·`todos`(투두 초안·직접/자연어 수정·숨겨진 기준·확정·그룹 조회), `reassign`(재배정 operation과 STALE 전파). 라우트는 `interview/routes.py`, 화면은 3단계와 같은 `chat.html`·`chat.js`(재배정 화면은 없다). 3단계의 `coach.py`·`turns.py`·옛 인터뷰 테이블은 다시 연결하지 않았다.
+- 흐름: 마지막 순위 제출 트랜잭션 안에서 그룹 advisory lock(`assignment:{group_id}`) 아래 한 번 배정 → cohort 전원 `ROLE_TODOS` + `assignment_revision` → 배정 직후 coverage(백그라운드) → 구성원별 인터뷰(`ASKING → CONFIRMING → DONE` + snapshot) → 인터뷰 DONE + coverage SUCCEEDED일 때 투두 초안 → 수정 → `투두 확정하기`(불변 확정 revision, 숨겨진 기준 함께 고정) → 그룹 조회 API(역할명·제목·마감일). 세부 규칙과 수치는 `docs/HANDOFF.md`의 `4단계 진행` 절이 단일 기록이다.
+- 연결 키: 모든 파생 행은 `source_assignment_revision`으로 하나의 assignment revision에 묶인다(`team_coverages`, `role_interviews`·`role_interview_turns`·`role_member_states`·`role_interview_snapshots`, `todo_drafts`·`todo_items`·`todo_ai_steps`·`todo_actions`·`todo_confirmations`·`todo_confirmed_items`). 그룹당 CURRENT assignment는 부분 유일 인덱스로 하나다.
+- 테이블·마이그레이션: `0008_role_assignment`(배정·coverage·인터뷰, `member_progress.ROLE_TODOS`), `0009_todos`(투두·확정, 불변 트리거), `0010_reassignment`(`role_reassignments`). downgrade는 각자 만든 테이블만 지운다.
+- API(로그인·CSRF·`action_id` 멱등, cohort 밖은 404): `role-interview/start|answer|retry`, `coverage/retry`, `todos/start|edit|revise|confirm|unlock|retry`, `GET /api/groups/{id}/todos`(그룹), `POST /api/groups/{id}/reassignments`(그룹장), `GET /api/groups/{id}/reassignments`(내 요청·내게 온 요청), `POST /api/groups/{id}/reassignments/{request_id}/respond`(대상자 본인, `accept` true/false). 화면 데이터는 `GET /api/groups/{id}/roles`의 `role` 키 하나다.
+- **재배정(D-B1 B4, 수행 11)**: 그룹장 요청(`assignment_revision`, `target_user_id`) + 대상자 본인의 동의가 있을 때만 서버가 새 revision(`operation='REASSIGN'`)을 쓴다. 요청·동의 본문에는 역할이 없다(역할 필드는 400). 입력은 현재 revision과 같은 cohort·후보 revision·순위 제출이다. 대상자의 새 역할은 **대상자 본인의 1→2→3순위 중 자리가 남은 역할**(떠나는 역할 제외)이고, 하나도 없을 때만 서버 RNG가 남은 역할 중에서 고른다(`draw_audit`에 기록). 동의하지 않은 다른 구성원의 역할·slot은 그대로다. 다른 구성원을 옮겨야만 하는 경우(남은 자리 없음)는 요청 단계에서 409 `NO_FREE_ROLE`로 거절한다. 그룹당 열린 요청은 하나(부분 유일 인덱스)이고, 요청·응답은 `action_id`로 멱등, 동의는 그룹 lock 아래에서 한 번만 성공한다. 거절은 `DECLINED`이고 아무것도 바뀌지 않는다.
+- **STALE 전파(D-B1 B8, `reassign.mark_assignment_stale`)**: 이전 revision을 `STALE`(+`stale_reason`)로 바꾸고 그 revision의 coverage·인터뷰·snapshot·draft·확정 revision(숨겨진 기준 포함)에 `stale_at`을 쓴다. 지우거나 내용을 바꾸지 않는다. 각 서비스는 STALE 행을 현재 입력으로 쓰지 않는다(수정·확정·재시도 409, 진행 중 AI 결과 폐기, STALE coverage는 호출하지 않음). 열린 재배정 요청은 `SUPERSEDED`.
+  - `REASSIGNED`: 순위와 MemberState는 유지된다. 역할이 그대로인 구성원 중 인터뷰를 마친 사람은 확인된 인터뷰 입력(MemberState·snapshot)을 새 revision으로 복사해 다시 묻지 않는다. 재배정된 사람과 인터뷰를 마치지 않은 사람은 새 인터뷰를 한다. 새 revision의 coverage를 다시 만들고(Timely 1회) 모든 구성원이 새 초안·확정을 한다. 이전 확정은 그룹 조회에서 빠진다.
+  - `BRIEF_CHANGED`(`GroupService.update_brief`, 같은 트랜잭션·같은 그룹 lock): 새 후보 revision을 만들고 `WAITING_ASSIGNMENT`·`ROLE_TODOS` 구성원 전원을 `INTERVIEW`(순위 미제출)로 되돌린다. 확정 투두는 **읽기 전용으로 남아** 그 구성원이 새 assignment에서 다시 확정할 때까지 그룹 조회에 그대로 나온다(응답 필드는 세 개 그대로라 "읽기 전용" 표시는 없다. D-D1은 정하지 않았으며 5단계에서 개인정보 범위를 넓히지 않는 기술 세부로 정하고, 제품 의미가 달라지면 승인받는다).
+  - cohort는 활성화 뒤 바뀌지 않고(신규 합류 차단), 순위 제출은 `ROLE_TODOS`에서 409 `ALREADY_SUBMITTED`라 바뀔 수 없다. 둘이 바뀌는 경로는 ProjectBrief 변경(순위 재제출)뿐이다.
 
 ## 2. 모듈 판정표
 
@@ -165,10 +178,10 @@ AI가 DB를 직접 임의 수정하지 않는다. 구조화된 변경안, 권한
 ### M2 — KEEP
 
 - 계약 일치: `TaskSnapshot`이 MOIM 투두 계약과 같고, `review_completion`의 `_validate_review`가 기준 개수·순서·근거 참조·`decision` 일관성을 결정적으로 검사한다(`m2/completion_review.py`). `PASS`/`REVIEW_NEEDED`/`NEEDS_INPUT`이 MOIM 정의와 같다. GATE D 승인 전에는 실행 경로를 비활성으로 둔다.
-- 개인정보 경계: 이미지 data URL 마스킹(`m0/tracing.py:29`), 프롬프트가 성실성·정직성·투표 판단을 금지(`m2/prompts.py`). 첨부 파일 보관은 GATE D 결정 전까지 확정하지 않는다.
+- 개인정보 경계: 이미지 data URL 마스킹(`m0/tracing.py:29`), 프롬프트가 성실성·정직성·투표 판단을 금지(`m2/prompts.py`). 첨부 파일 보관·접근·삭제는 GATE D 승인(D-D1, 2026-11-19)과 `docs/SECURITY.md` 3절을 따른다.
 - 테스트: `test_m2.py` 7개, `test_m2_evidence.py` 14개 통과(0B-1 실행). 판정 변경 없음.
 - 복잡도: `evidence.py` 439줄이 가장 크며 PyMuPDF·Pillow·python-docx에 의존한다.
-- 수정 비용: 낮다. 허용 범위는 GATE D의 결정(이미지·PDF·DOCX)에 맞춰 조정한다.
+- 수정 비용: 낮다. M2 검토 형식은 D-D1 D4(이미지는 2048px 메타데이터 제거 사본, PDF, DOCX·TXT·MD 텍스트, HWPX는 결정적 추출 테스트 통과 뒤, 제외 파일은 형식·개수 고정 문구만)에 맞춰 조정한다.
 
 ### persistence — REPLACE
 

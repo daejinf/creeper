@@ -13,6 +13,9 @@
 - 2단계 대시보드·그룹·ProjectBrief 구현·검증 완료(2026-11-18, 아래 `2단계 그룹·ProjectBrief` 절). 팀 목표 표시문 LIVE 2회 성공(누적 LIVE 8회). `/dashboard`는 이제 실제 화면이고 로그인 확인용 임시 화면은 지웠다. `/groups/{id}/chat`은 3단계 전까지 임시 화면이다.
 - **D-B3(2026-11-19, 제품 흐름 변경 승인)**: 3단계에서 개인 AI 인터뷰를 없애고 공용 역할 후보의 비공개 1·2·3순위만 제출받는다. 인터뷰는 배정 뒤 4단계로 옮겼다. 기록·변경 전후 문장은 `docs/PRODUCT.md` D-B3, 헌법은 `AGENTS.md` 1절(4·5번 흐름 항목, 본문 두 문장)만 바꿨다. 3단계 구현은 새 흐름으로 바뀌었고 **사용자가 디자인 눈 확인을 완료했다고 알려와(2026-11-19) 3단계는 완료**다. 4단계 확정 정책은 `docs/PRODUCT.md` D-B4로 기록했다. 4단계는 시작하지 않았다. 아래 `3단계 공용 후보·순위 제출(D-B3)` 절.
 - **4단계 세션 A 완료(2026-11-19)**: 서버 역할 배정(assignment revision 1회), `ROLE_TODOS`, 팀 coverage, 배정 안내, AI 주도 배정 후 인터뷰와 확인 단계, 입력 snapshot. 4단계 전체는 세션 B(투두 초안·수정·확정)와 세션 C(재배정·STALE·문서 정리)가 끝나야 완료다. 아래 `4단계 진행` 절.
+- **4단계 세션 B 완료(2026-11-19)**: 역할 맞춤 투두 초안(숨겨진 결과물·완료 기준·증거 enum), 직접·자연어 수정, 수정·추가 투두의 기준 재생성, `투두 확정하기`(불변 revision·멱등·`task_id` 유지)·확정 풀기, 그룹 조회 API(역할명·제목·마감일). LIVE 66회(누적 169회). 아래 `4단계 진행 > 세션 B 완료` 절. 4단계 완료는 세션 C 뒤다.
+- **4단계 완료(2026-11-19)**: 세션 C(재배정 operation, STALE 전파, 문서 정리, 단계 종료 검증) 뒤 사용자가 `artifacts\screens\stage4-chat.html` 디자인 눈 확인과 재배정 규칙 해석을 함께 확인했다("Both OK"). ROADMAP을 완료로 바꾸고 4단계 코드와 GATE D 문서를 함께 커밋했다. 아래 `세션 C 완료`.
+- **GATE D 승인 완료(D-D1, 2026-11-19)**: vision 사전 확인 LIVE 15회(호출 191~205, 누적 205회, `docs/LIVE_TESTING.md`)로 M2.review 활성 가능을 확인했고, 사용자가 D1~D7을 보정 두 차례 뒤 최종 승인했다. 요지: M2 입력은 그 투두 snapshot+제출 자료만, 체크박스는 원본대로 수동 완료(PASS 자동 완료 없음), 결과는 `up-msg`와 내 완료 기록 줄에 본인만, 팀 첨부 11형식과 M2 검토 형식 분리(HWPX는 결정적 추출 테스트 전까지 M2 미지원), 이미지 2048px 메타데이터 제거 사본, 제외 파일명 비전송, 접근은 현재 활성 구성원만, 첨부 있는 되돌리기는 재확인 뒤 영구 삭제, 그룹 나가기·그룹장 승계·계정 삭제. 기록: `docs/PRODUCT.md` D-D1, `docs/ROADMAP.md` GATE D, `docs/SECURITY.md` 2·3절, `docs/ARCHITECTURE.md` M2 판정 두 줄. 문서만 바꿨고 코드·원본 HTML은 변경하지 않았다. 승인 뒤 M2 LIVE 호출은 하지 않았다. 5단계는 시작하지 않았다.
 - GATE B 승인 완료(D-B1, 2026-11-18): 인터뷰 항목·턴, chat 네 상태 문구와 `N/M명 제출 완료` 집계, 공급자 입력 필드, 미제출·신규 합류(차단 유지)·재배정·중복 역할, 역할 후보 생성(revision당 1회), 이름·순위 비노출 안내 문구(원본과 다른 제품 차이), 투두 공개·재확정, STALE 규칙. 이번 작업은 문서만 바꿨고 코드·테스트·원본 HTML은 변경하지 않았다.
 
 ## 환경 스냅샷 (2026-11-18, 확인한 사실만)
@@ -25,7 +28,7 @@
 | 마이그레이션 | Alembic `0001_foundation`, `0002_ai_jobs`, `0003_auth`, `0004_groups`, `0005_interview`, `0006_interview_d_b2`, `0007_interview_deprecated`(주석만), `0008_role_assignment`(4단계 세션 A). `upgrade → downgrade base → upgrade` 확인(테스트가 매번 실행), 0008은 `downgrade 0007 → upgrade`를 데이터와 함께 확인 |
 | PostgreSQL | 16, 포트 54329, 로컬 데이터 `.local/pgdata`. 개발 DB `moim_dev`, 테스트 DB `moim_test`. 역할은 아직 `moim` 하나(superuser)다. 테스트의 `DROP SCHEMA public CASCADE`는 호스트 localhost·포트 54329·DB명 정확히 `moim_test`·`MOIM_ENV=test`를 모두 확인한 뒤에만 실행한다(`tests/dbsafety.py`) |
 | 설정 | `.env`(Git 제외)와 `.env.example`. **앱은 `.env`를 자동으로 읽지 않는다.** 환경변수로만 읽으며 `MOIM_ENV`, `MOIM_DATABASE_URL`이 없으면 `ConfigError`로 실패한다. `alembic`은 환경변수를 먼저 불러온 셸에서 실행한다. 테스트는 `tests/conftest.py`가 설정한다 |
-| 테스트 | `.\.venv\Scripts\python.exe -m pytest -q`: 393개 통과(2026-11-19 4단계 세션 A 뒤, `test_role_assignment.py` 45개 추가). 그 전 348개(2026-11-19 D-B3 뒤. 옛 `test_interview.py` 30개를 `test_ranking.py` 26개로 교체해 352에서 줄었다. 기반·공급자 계약·작업 상태·패키징·Runtime 계약·DROP 가드 164 + 인증 84 + 그룹 74 + 순위 26). 환경변수(`MOIM_*`)를 먼저 불러온 셸에서 실행한다 |
+| 테스트 | `.\.venv\Scripts\python.exe -m pytest -q`: 441개 통과(2026-11-19 4단계 세션 B 뒤, `test_todos.py` 48개 추가). 그 전 393개(4단계 세션 A 뒤, `test_role_assignment.py` 45개 추가). 그 전 348개(2026-11-19 D-B3 뒤. 옛 `test_interview.py` 30개를 `test_ranking.py` 26개로 교체해 352에서 줄었다. 기반·공급자 계약·작업 상태·패키징·Runtime 계약·DROP 가드 164 + 인증 84 + 그룹 74 + 순위 26). 환경변수(`MOIM_*`)를 먼저 불러온 셸에서 실행한다 |
 | 깨끗한 환경 검증 | 0B 보정 커밋 직전, 스테이징한 내용을 새 폴더로 내보내 새 venv에서 `pip install -e ".[test,visual]"`, import, `pytest` 164개 통과(건너뜀 0), 해시 9/9(2회), 프롬프트 검증 14개를 확인했다. 마이그레이션 up/down/up은 테스트와 개발 DB 직접 실행으로 확인 |
 | 크리퍼 재확인 | 격리 복사본·격리 DB `creeper_scratch`로 225개 실행, 223 통과·2 실패(원인과 판정 영향 없음은 `docs/ARCHITECTURE.md`의 `0B-1 재확인 결과`) |
 | 주의 | 크리퍼의 `tools/db/cutover.py`·`bootstrap.py`와 테스트 일부는 Windows 사용자 레지스트리(`HKCU\Environment`)로 실제 크리퍼 DB(55432)를 읽거나 쓴다. 원본에서 실행하지 않는다. MOIM에 이 방식을 가져오지 않는다 |
@@ -174,9 +177,100 @@ $env:MOIM_ENV='development'; .\.venv\Scripts\python.exe tools\capture_screens.py
   - LIVE용 개발 DB에 일회용 사용자 `live4…a/b/c`(그룹 2개)가 남아 있다.
 - **남은 OPEN(세션 A 범위)**: LIVE에서 AI가 매번 다섯 항목을 모두 물었다. "도구·선호 시간·제약은 필요할 때만"이 실제로는 거의 줄지 않았다. 정책 위반은 아니지만 사용자 판정 대상으로 남긴다. 역할별 질문 품질 차이도 사람(사용자)의 판정이 필요하다.
 
+### 세션 B 완료 (수행 7~10: 투두 초안, 수정, 확정, 그룹 조회 API)
+
+- 선행 게이트: 3단계 완료 기록, D-B4 승인, 위 `세션 A 완료`를 확인했다. 커밋하지 않았다.
+- **코드**: `src/moim/roles/todo_ai.py`(순수 로직: 증거 enum, 공급자 계약, 프롬프트 3개, 서버 검사), `src/moim/roles/todos.py`(`TodoService`), `interview/routes.py`(새 API), `main.py`(연결·재시작 처리), `roles/interview.py`(`role_view`에 `todos` 키), `static/chat.js`·`templates/chat.html`(오른쪽 패널).
+- **초안**(수행 7): 인터뷰 `DONE` + 그 assignment revision의 coverage `SUCCEEDED`일 때만 시작한다(`POST …/todos/start`, 화면이 자동 호출, action_id 1회). Timely 1회, 서버 검사를 통과해야만 저장한다.
+  - 공급자 입력(B3만): ProjectBrief(결과물 `d1`…, milestone `m1`…), 내 역할, 이름 없는 팀 표(slot·역할·그 slot의 coverage parts·`is_me`), 내 parts(=scope), snapshot의 수준·주간 시간·도구·선호 시간("UNKNOWN" 그대로), 기간(`first_day`=max(시작일, 오늘)), 업무량 한도(`weekly_budget_minutes`, 7일 기간별 `windows`, `max_minutes_per_todo`=예산÷3, `max_todos_per_window`=3). 제약 원문·마감 제한 날짜·순위·대화·이름·user_id는 보내지 않는다.
+  - 서버 검사(`check_draft`): 개수 4~8(예산이 아주 작으면 최소 2까지), 제목 4~60자·중복 금지·일반 제목 금지(역할명과 일반 단어를 빼면 남는 게 없거나 프로젝트·parts와 겹치는 말이 없으면 거절), 내 parts만·모든 parts 덮기, 기간 안, 같은 날 최대 2개, 기간의 40% 이상에 퍼짐, part 안에서 단계 순서(RESEARCH→DRAFT→REVIEW→SUBMIT), milestone 표시 투두는 그 날짜 이전·기간 안 milestone 전에 투두 1개 이상, 7일 기간별 예상 분 합계 ≤ 주간 시간(UNKNOWN이면 300분, 아는 값은 최소 60분), 결과물 4~100자, 완료 기준 1~4개(10~120자, 날짜 표현 금지), 증거 1~3개(enum), 예상 30~480분.
+  - 인터뷰에서 막은 요일·날짜에 걸린 마감은 **코드가** 가장 가까운 이전 날(없으면 이후)로 옮긴 뒤 검사한다(제약은 공급자에 가지 않는다).
+  - 실패: 저장하지 않고 단계 FAILED + 왼쪽 오류 말풍선 + `다시 시도`. 고정 템플릿 대체 없음. 저장 중 예외도 전체 롤백 후 `SAVE_FAILED`로 재시도 가능.
+- **증거 enum**: `todo_ai.EvidenceType`(DOCUMENT, SLIDES, IMAGE, DESIGN_FILE, SOURCE_CODE, LINK, SPREADSHEET, VIDEO, TEXT_NOTE) 한 곳에서만 정의. `UPLOAD_FORMATS_ACTIVE = False`이며 업로드 형식은 GATE D 뒤에 정한다.
+- **직접 수정**(수행 8): `POST …/todos/edit` {op: update(제목·마감)|add(제목, 마감 선택)|delete, key, draft_revision}. 최대 8개(원본 MAX_TODOS), 마감은 `first_day`~기한, 제목 1~60자. AI 호출 없음. 기대 draft_revision이 다르면 409 `CONFLICT`, AI 단계 진행 중이면 409 `BUSY`, 확정 상태면 409 `CONFIRMED`. 본문에 다른 필드(역할·user_id 등)가 있으면 400(스키마 extra 금지). 사용자가 고른 마감은 인터뷰 제약일이어도 막지 않는다(본인 선택).
+- **자연어 수정**: `POST …/todos/revise` {message}. 의미 없는 입력은 422로 저장·호출 없음. 새 스키마 `ReviseOutput`{understood, changes[{op: update|add|delete, ref(t1…), title, due_date, part(add만)}], reply}(extra 금지: 역할·담당자·기준 필드가 오면 SCHEMA_INVALID). 서버(`check_revision`)가 ref 존재·중복, 기간, 인터뷰 제약일, 일반 제목, 내 parts, 최대 8개, 업무량(기준 없는 투두는 `max_minutes_per_todo` 가정, 최대 120분)을 검사한다. 규칙 위반은 초안을 그대로 두고 이유 말풍선(단계는 SUCCEEDED, `error_code=NOT_APPLIED_*`), 공급자 실패·형식 오류는 FAILED + `다시 시도`(현재 draft 기준으로 다시 실행).
+- **숨겨진 기준 재생성**: 제목이 바뀐 투두와 추가된 투두(`criteria_for_title != title`)만 `투두 확정하기` 때 한 번의 CRITERIA 호출로 다시 만들고 검사한다. 성공하면 같은 트랜잭션에서 확정까지 하고, 실패하면 확정하지 않는다(이전·고정 기준 사용 없음). 마감만 바뀐 투두는 기준을 다시 만들지 않는다(완료 기준에 날짜를 쓰지 못하게 검사하므로 마감과 무관하다. 에이전트 판단, 아래 OPEN).
+- **확정**(수행 9): `POST …/todos/confirm` {draft_revision} → 즉시 확정(201) 또는 기준 생성 후 확정(202). 같은 action 재전송·두 번째 클릭은 200(멱등). `todo_confirmations`(revision 1, 2, …)·`todo_confirmed_items`에 보이는 필드와 숨겨진 기준을 함께 복사한다. DB 트리거가 UPDATE(확정 행의 `stale_at` 제외)·DELETE를 막는다. `확정 풀기`는 `POST …/todos/unlock`(같은 버튼, 문구만 바뀜). 재확정 전까지 그룹 API는 이전 revision을 돌려준다. `task_id`는 서버가 uuid4로 만들고 재확정에도 유지되며, 삭제된 투두 행은 `deleted_at`으로 남아 id가 재사용되지 않는다. 확정 직후 원본의 `역할과 투두가 정해졌어요` 오버레이를 보이고 누르면 그룹 화면(`/groups/{id}`)으로 간다. 체크 칸은 원본 모양 그대로 비활성(5단계).
+- **그룹 조회 API**(수행 10): `GET /api/groups/{id}/todos` → `{"assignments": [{"role_name", "todos": [{"title", "due_date"}]}]}`. cohort 구성원만(아니면 404). CURRENT assignment의 각 구성원 최신 확정(stale 아님)만, slot 순서, 이름·user_id·slot·task_id·revision·순위·기준 없음. 렌더링은 5단계.
+- **화면**: 오른쪽 패널에 원본 투두 줄(체크 칸·제목 입력·마감 알약+달력·×), `+ 직접 추가하기`, `투두 확정하기`/`확정 풀기`, `내 투두 N` pill과 개수를 표시한다. 달력·SVG는 DOM으로 만들고(`innerHTML` 없음) 텍스트는 `textContent`. 왼쪽에는 초안 안내·자연어 요청·AI 답·오류가 기존 말풍선으로 이어지고, 초안이 있으면 입력창이 자연어 수정 입력이 된다. 브라우저에는 `key`(draft 안 번호 `k1`…)·제목·마감만 간다.
+- **새 테이블·마이그레이션** `migrations/versions/0009_todos.py`(새 테이블만, downgrade는 이것만 지움):
+  - `todo_drafts`(group, user, `source_assignment_revision` PK; FK → `role_interview_snapshots`, `team_coverages`; `member_state_revision`, `draft_revision`, `next_item_no`, `mode` EDITING|CONFIRMED, `confirmed_revision`, `stale_at`)
+  - `todo_items`(`task_id` PK, draft FK, `item_no`, `position`, `title`, `due_date`, `origin` AI|USER, `part_id`, `phase`, `milestone_id`, 숨겨진 `deliverable`·`completion_criteria`·`evidence_types`·`estimated_minutes`·`criteria_for_title`(함께 null/not null), `deleted_at`)
+  - `todo_ai_steps`(DRAFT|REVISE|CRITERIA, action_id 유일, 진행 중 하나만, `base_draft_revision`·`result_draft_revision`, model·request_id·latency·tokens)
+  - `todo_actions`(직접 수정·확정·풀기 멱등), `todo_confirmations`, `todo_confirmed_items`(불변 트리거 `moim_todo_confirmed_immutable`)
+  - 개발 DB `moim_dev`도 0009로 올렸다.
+- **세션 C가 알아야 할 사실**:
+  - STALE 대상 컬럼: `todo_drafts.stale_at`, `todo_confirmations.stale_at`(트리거가 이 컬럼만 허용). `todo_items`·`todo_confirmed_items`에는 stale 컬럼이 없다(draft·확정 revision 단위로 판단). `stale_at`이 있으면 `TodoService`의 수정·확정·재시도는 409 `STALE`, 그룹 API는 그 확정을 빼고, 진행 중 AI 결과는 버린다(FAILED `STALE`). 재배정 뒤에는 새 assignment revision에 새 draft가 생긴다(draft PK가 revision 포함).
+  - ProjectBrief 변경 때 "확정 투두는 읽기 전용 유지"(B8)는 아직 구현하지 않았다(수행 11).
+  - 브라우저 캡처(1440×900: 투두 초안·수정 후·확정 뒤)는 `artifacts/screens`에 저장하지 않았다. 이번 세션은 내장 브라우저로 개발 서버(포트 8001, 새 코드)에서 초안 화면 → 제목 수정 → 달력으로 마감 변경 → `투두 확정하기`(LIVE 기준 호출) → 완료 오버레이 → 그룹 화면 → 새로고침 뒤 확정 상태 복구 → `확정 풀기`를 직접 확인했다. 콘솔 오류 없음(수정 전 버그 1건, 아래), localStorage·sessionStorage 비어 있음. 저장 캡처와 처음부터 끝까지의 흐름은 세션 C 몫이다.
+  - 확인용 포트 8001 개발 서버는 이 세션이 띄웠다가 껐다. 포트 8000(이전 코드)은 건드리지 않았다.
+  - LIVE용 일회용 사용자 `live541c4d9…`(그룹 A·B)가 개발 DB에 남아 있다. A 화면설계 구성원은 확정 뒤 `확정 풀기`한 상태(확정 revision 1 존재), B 요구사항정리 구성원은 확정 상태, B 프론트개발은 초안 FAILED 상태다.
+- **고친 3단계 경계 테스트**: `tests/test_ranking.py::test_nothing_is_assigned_before_everyone_submits_and_nothing_is_drafted_after`가 "todo·criteria 이름의 테이블·컬럼이 없다"를 검사했는데 0009가 그 테이블을 만들었다. 같은 의미를 유지해 "그 그룹의 todo 테이블 5개에 행이 0개이고 todo AI 호출이 없다"로 바꿨다(약화 아님: 마지막 제출 직후에도 초안이 없음을 행 단위로 검사).
+- **검증**:
+  - 결정적: `tests/test_todos.py` 48개(초안 조건·B3 입력·잘못된 초안 14종·공급자 실패·재시작·저장 실패·제약일 이동·업무량 고정 상한·milestone·일반 제목·증거 enum 단일 정의, 직접 수정·한도·충돌·멱등, 역할·담당자 변경 차단·교차 사용자·외부인 404, 진행 중 단계 대기, 자연어 수정 적용·규칙 위반 4종·업무량·이해 못 함·의미 없는 입력·재전송·실패 재시도, 확정 멱등·불변 revision·확정 풀기→재확정 task_id 유지·삭제 id 비재사용·이전 revision 기준 불변·기준 재생성 실패 시 확정 차단·마감 누락·저장 실패 롤백·DB 트리거, 비공개·그룹 API 세 필드·로그, 로그인·CSRF, XSS·innerHTML 없음, 새로고침·재시작 복구, 한 구성원 실패가 남을 막지 않음, 0009 down/up).
+  - 전체 결정적 테스트·원본 해시·프롬프트 검증 결과는 아래 `세션 B 검증 실행`에 적었다.
+  - LIVE: 66회(호출 104~169), `docs/LIVE_TESTING.md` `4단계 세션 B LIVE 기록`. 역할 3종 × 조건 2종(초보·주 2시간 / 숙련·주 10시간). 최종 코드에서 초보 3명·숙련 2명 초안 통과, 숙련 프론트개발 1명은 3회 연속 서로 다른 이유(milestone 뒤 마감, enum 밖 증거, 출력 형식)로 저장되지 않았다(숨기지 않음). 품질 판정표 ①~⑥은 사용자가 채운다.
+  - LIVE로 찾아 고친 것: ① 초보 조건 초안이 주간 시간을 넘김(같은 원인 3회 → 기간별 합 대신 투두당 분·기간당 개수 한도를 입력에 추가, 최종 코드에서 초보 3/3 통과) ② 자연어로 투두를 둘로 나누면 추가 투두를 120분으로 가정해 거절(예산 기준 크기로 고침, 재실행 적용) ③ 브라우저에서 제목 저장이 안 됨(`chat.js`의 내 함수 `send`가 기존 보내기 버튼 변수에 가려짐 → `saveEdit`로 이름 변경, 재확인) ④ `request_id`를 잘못된 필드 이름으로 읽어 비어 저장됨(`provider_request_id`로 고침) ⑤ 재시도 때 이전 시도의 사용량 컬럼이 남음(재시도 시 비움). 목록은 마감일 순으로 보이게 바꿨다.
+- **남은 OPEN(세션 B 범위)**:
+  - 투두 품질 판정(①~⑥)은 사용자 몫이다. 숙련·결과물 3개 역할(투두 8개)에서 초안 실패가 잦았다(최종 코드 3/3 실패). 사용자가 초안을 받으려면 `다시 시도`를 여러 번 눌러야 할 수 있다. 후보 대안(승인 불필요한 기술 결정이지만 LIVE가 더 필요): 그 경우 출력 길이를 줄이도록 투두 상한을 7로 낮추기, milestone 표시 규칙 단순화.
+  - 자연어 수정이 milestone 표시 투두를 milestone 뒤로 옮길 수 있다(사용자 요청이라 막지 않음). 막을지는 제품 판단이다.
+  - 마감만 바뀐 투두는 숨겨진 기준을 다시 만들지 않는다(위). 승인 결정 문구("수정·추가된 투두")를 마감 변경까지 포함으로 읽어야 하면 바꿔야 한다.
+  - 첫 투두 마감이 오늘로 잡히는 경우가 있다(`first_day`=오늘). 서버 검사는 허용한다.
+
+### 세션 B 검증 실행 (2026-11-19)
+
+- 전체 결정적 테스트 441개 통과(실패·건너뜀 0, 세션 A 393 + `test_todos.py` 48). 최종 코드(아래 버그 수정 포함)로 실행했다.
+- 원본 HTML 해시 9/9 일치(`tools/check_design_hashes.py`), `prompts/validate-prompts.ps1` 14개 PASS, `git diff --check` 깨끗함.
+- 마이그레이션 0009 upgrade → downgrade(0008) → upgrade는 `test_migration_0009_down_and_up_keeps_the_stage_4_interview_data`로 확인했다(세션 A의 0008 down/up 테스트도 0009를 거쳐 통과).
+- 교차 단계 전체 회귀는 세션 C가 단계 종료 때 다시 한 번 실행한다.
+
+### 세션 C 완료 (수행 11~13, 단계 종료 검증)
+
+- 선행 게이트: 3단계 완료 기록, D-B4 승인, 위 `세션 A 완료`·`세션 B 완료`를 확인했다. 커밋하지 않았다(세션 A 커밋 `ec7d3c7` 위에 세션 B·C 변경이 함께 있다).
+- **재배정**(`src/moim/roles/reassign.py`, 마이그레이션 `0010_reassignment.py`의 `role_reassignments`, 화면 없음):
+  - API: `POST /api/groups/{id}/reassignments` {action_id, assignment_revision, target_user_id}(그룹장만, 구성원 403), `GET /api/groups/{id}/reassignments`(내게 온 요청 `incoming`, 내가 한 요청 `outgoing`: request_id·state·assignment_revision만), `POST /api/groups/{id}/reassignments/{request_id}/respond` {action_id, accept}(대상자 본인만, 나머지 404). 요청·동의 본문에 역할 필드는 없다(넣으면 400).
+  - 규칙(에이전트 해석, 아래 OPEN): "같은 입력"(같은 cohort·후보 revision·순위 제출)에서 **대상자만** 옮긴다. 새 역할은 대상자 본인의 1→2→3순위 중 자리가 남은 역할(떠나는 역할 제외), 없으면 남은 역할 중 서버 RNG(`draw_audit`). 다른 구성원의 역할·slot은 그대로다. 남은 자리가 없으면(다른 사람을 옮겨야 하면) 요청 단계에서 409 `NO_FREE_ROLE`. 그룹당 열린 요청 하나, 요청·응답 `action_id` 멱등, 동의는 그룹 lock 아래 한 번만(동시 3건 → 1건 성공). 거절은 `DECLINED`.
+  - 결과: 새 revision `operation='REASSIGN'`, cohort 전원 `assignment_revision` 갱신, 새 coverage PENDING(백그라운드 Timely 1회). 역할이 그대로이고 인터뷰를 마친 구성원은 MemberState·snapshot을 새 revision으로 복사해 다시 묻지 않는다(B8 "MemberState 유지"). 재배정된 사람과 인터뷰를 마치지 않은 사람은 새 인터뷰를 한다.
+- **STALE 전파**(`mark_assignment_stale`): 이전 revision `STALE`+`stale_reason`, 그 revision의 `team_coverages`·`role_interviews`·`role_interview_snapshots`·`todo_drafts`·`todo_confirmations`에 `stale_at`. 지우지 않는다. 열린 재배정 요청은 `SUPERSEDED`. STALE coverage는 Timely를 부르지 않고 진행 중 결과는 버린다(`coverage._cas`에 `stale_at is null`).
+  - `REASSIGNED`: 이전 확정은 그룹 조회에서 빠진다(새로 확정하면 다시 보인다).
+  - `BRIEF_CHANGED`(`GroupService.update_brief`가 같은 트랜잭션에서 그룹 assignment lock을 잡고 `stale_for_new_brief` 호출): `WAITING_ASSIGNMENT`·`ROLE_TODOS` 전원이 `INTERVIEW`(순위 미제출, `ranking_reset`)로 돌아가 새 후보에서 다시 고른다. 이전 assignment가 CURRENT가 아니므로 전원 제출 시 새 `INITIAL` 배정이 된다. **B8 읽기 전용**: 마지막 확정 투두는 지우지 않고 수정·풀기도 막힌 채(409) 그 구성원이 새 assignment에서 다시 확정할 때까지 그룹 조회(`TodoService.group_view`)에 그대로 나온다. 응답은 세 필드 그대로라 "읽기 전용" 표시는 없다.
+  - cohort는 활성화 뒤 바뀌지 않고 순위 제출은 `ROLE_TODOS`에서 409라 바뀔 수 없다(테스트). 둘이 바뀌는 경로는 ProjectBrief 변경뿐이다.
+- **브라우저 흐름에서 찾아 고친 결함**: 열린 chat 화면이 재배정으로 새 revision이 생기면 페이지당 하나였던 인터뷰 시작 `action_id`를 다시 보내 `uq_role_interview_turns_action`에 걸려 500이 났다(투두 초안 시작 id도 같은 구조). `chat.js`는 assignment revision이 바뀌면 새 id를 만들고, 서버(`interview.start`·`todos.start`)는 다른 revision에 쓴 id면 409 `ACTION_REUSED`로 거절한다. 회귀 테스트를 더했고 고친 코드로 브라우저에서 다시 확인했다(콘솔 오류 0).
+- **수행 12 점검**: `static/`·`templates/`에 `innerHTML`·`outerHTML`·`insertAdjacentHTML`·`document.write`·`|safe`·Timely·키 문자열이 없다(grep). Timely 클라이언트는 `main.py`에서만 만들고 모든 AI 호출(coverage·인터뷰·초안·자연어 수정·기준)은 서버 서비스에서만 한다.
+- **수행 13 문서**: `docs/ARCHITECTURE.md`에 4단계 절(모듈·연결 키·API·재배정·STALE), `docs/SECURITY.md` 4-5(4단계 인가·개인정보·STALE·로그), `docs/LIVE_TESTING.md` 세션 C 기록, `docs/ROADMAP.md` 현재 상태에 4단계 "완료 대기". `docs/PRODUCT.md`는 바꾸지 않았다. D-B4와의 대조 결과는 아래 OPEN. 3단계 경계 테스트는 세션 A·B가 이미 4단계에 맞게 고쳤고(위), 이번에 남은 것은 없었다(`test_ranking.py`의 ProjectBrief STALE 테스트는 `WAITING_ASSIGNMENT`만 다루어 그대로 통과).
+- **검증**:
+  - 결정적: `tests/test_reassign.py` 15개(순수 규칙·자리 없음·중복 역할 용량, 그룹장 요청+대상자 동의·권한 403/404·역할 필드 400·재전송·열린 요청 하나, 새 revision과 STALE 전파 전체·삭제 없음·그룹 조회 제외·coverage 재생성·인터뷰 입력 복사, 거절, 그룹장 자신이 대상, 동시 동의, STALE coverage 호출 없음, 개인정보·로그인·CSRF·로그, 새로고침·서버 재시작 복구, ProjectBrief 변경 B8(전원 순위 재제출·읽기 전용 유지·새 INITIAL 배정·재확정 뒤 교체), 배정 뒤 순위 변경 불가, 0010 down/up, 재사용 action id).
+  - 전체 결정적 테스트·해시·프롬프트·마이그레이션 결과는 아래 `세션 C 검증 실행`.
+  - LIVE: 18회(호출 170~187, 누적 187), 모두 성공. 기록은 `docs/LIVE_TESTING.md` `4단계 세션 C LIVE 기록`. 이 세션은 AI 프롬프트·출력 검증 코드를 바꾸지 않았고 최종 코드로 브라우저 흐름을 LIVE로 걸었다.
+  - 브라우저(Playwright Chromium, 개발 서버 포트 8001, 개발 DB `moim_dev` 0010): 두 사람이 칩으로 순위 제출 → 배정 안내(`화면 설계 · 2순위로 배정`) → AI 인터뷰(버튼 4번 + `맞아요`) → 초안 4개 → 제목 직접 수정 → 자연어 "마감을 조금 더 여유 있게 뒤로 미뤄 줘"(4개 마감 이동) → `투두 확정하기` → 완료 오버레이 → 새로고침 뒤 `확정 풀기` 복구 → 그룹 API 세 필드 → 재배정 API(동의) → 그룹 API에서 이전 확정 빠짐 → 그룹장 새 초안(인터뷰 입력 복사). localStorage·sessionStorage 비어 있음, 고친 코드에서 콘솔 오류 0.
+  - 캡처(1440×900, `artifacts\screens\moim-chat.html\`): `impl-assigned.png`(배정 안내), `impl-interview.png`(인터뷰 중), `impl-todo-draft.png`(투두 초안), `impl-todo-edited.png`(수정 후), `impl-todo-confirmed.png`(확정 직후 오버레이), `impl-todo-confirmed-reload.png`(확정 뒤 새로고침), `impl-after-reassign-target.png`(재배정 뒤 대상자). 원본과 나란히 보는 `artifacts\screens\stage4-chat.html`. 디자인 눈 확인은 사용자가 한다.
+  - 개발 서버는 이 세션이 띄웠다가 껐다. 포트 8000은 건드리지 않았다. 개발 DB에 일회용 사용자 `e2ec2e735f…` 2명과 그 그룹(assignment revision 3 CURRENT)이 남아 있다.
+- **세션 C 범위 사용자 판단 결과**:
+  - 재배정 규칙의 해석(2026-11-19 사용자 확인 "Both OK"): D-B1 B4는 "그룹장 요청 + 대상자 동의, 같은 입력으로 새 revision"까지만 정했다. 구현은 동의하지 않은 사람을 옮기지 않으려고 대상자만 본인 순위대로 옮기고, 자리가 없으면 거절한다(맞바꾸기 없음). 다른 해석(전체 재추첨 등)이 필요해지면 제품 결정이다.
+  - 재배정 뒤 역할이 그대로인 구성원도 이전 확정 투두가 STALE이 되어 다시 확정해야 한다(B4 문구대로). 대화 기록(인터뷰 말풍선)은 새 revision에 복사하지 않아 그 화면 왼쪽에는 배정 안내와 투두 대화만 보인다.
+  - ProjectBrief 변경 뒤 읽기 전용으로 남은 확정 투두를 그룹 응답에서 구분하는 표시가 없다(세 필드 제한). D-D1은 정하지 않았으며 5단계에서 개인정보 범위를 넓히지 않는 기술 세부로 정하고, 제품 의미가 달라지면 승인받는다.
+  - D-B4 대조: 나머지는 구현과 일치한다. 세션 B의 OPEN(마감만 바뀐 투두는 숨겨진 기준을 다시 만들지 않음, 자연어 수정이 milestone 표시 투두를 milestone 뒤로 옮길 수 있음, 숙련·결과물 많은 역할의 초안 실패율)은 그대로 남아 있다. D-B4 문구는 바꾸지 않았다.
+
+### 세션 C 검증 실행 (2026-11-19)
+
+- 전체 결정적 테스트 456개 통과(실패·건너뜀 0, 세션 B 441 + `test_reassign.py` 15, 최종 코드). 첫 전체 실행은 내가 같은 테스트 DB에서 `test_reassign.py`를 동시에 돌려 마이그레이션 테스트끼리 간섭해 2건이 실패했다(`auth_sessions` 없음). 동시 실행 없이 다시 돌린 결과가 앞의 숫자다.
+- 원본 HTML 해시 9/9 일치, `prompts/validate-prompts.ps1` 14개 PASS, `git diff --check` 깨끗함.
+- 마이그레이션 upgrade → downgrade → upgrade: 0010은 `test_migration_0010_down_and_up_keeps_reassigned_revisions`, 0009·0008은 세션 A·B 테스트가 0010을 거쳐 통과. 개발 DB도 `alembic upgrade head`(0010).
+- 교차 단계 회귀(`prompts/VALIDATION.md`): 전체 결정적 테스트에 1~3단계 테스트가 모두 포함된다.
+
+### 사용자 보정 (2026-11-19)
+
+- 중간 일정 날짜 칸: 브라우저 기본 `input[type=date]` 대신 프로젝트 기간과 같은 달력(`.range` 버튼 + `.cal` 팝업)을 쓴다. 고를 수 있는 날은 프로젝트 기간(없으면 오늘 이후)으로 제한한다(`group-create.js`, `group_create.html` CSS만 변경, 새 스타일 없음). 사용자 지시에 따른 원본 대비 차이다.
+- 역할 후보 수: 프롬프트가 6~8개를 요구해 2명 팀에도 8개짜리 잘게 쪼갠 역할이 나왔다. 이제 `max(3, 인원)`~`+2`(3~8 안, D-B1 B5 범위 그대로)로 요청·검사하고, 한 사람이 하나씩 맡는 굵은 역할 단위를 요구한다. Timely 입력에 인원 수(숫자만)를 추가했다. 이미 SUCCEEDED인 기존 그룹 후보는 바뀌지 않는다(불변 규칙). 새 ProjectBrief revision부터 적용된다.
+- 검증: 전체 결정적 테스트 통과, 렌더한 폼에서 달력 열기·날짜 선택·닫힘 확인. LIVE 호출은 하지 않았다.
+- 2/2 제출 뒤 역할 배정이 안 되던 문제: 포트 8000 서버가 4단계 코드 이전(01:22)에 `--reload` 없이 떠 있어 배정 단계가 없는 코드로 제출을 받았다. 배정은 마지막 제출 트랜잭션에서만 돌기 때문에 그 그룹은 영원히 대기했다. 서버 시작 시 `RankingService.assign_waiting()`이 cohort 전원이 제출했는데 CURRENT 배정이 없는 ACTIVE 그룹을 같은 그룹 잠금·`assign_if_ready`로 한 번 배정하고 coverage를 백그라운드로 시작한다(두 번 뽑지 않음, 테스트 2개 추가). 개발 DB의 해당 그룹은 8001 서버 재시작 때 복구되었다.
+- 그 뒤 8000에서 만든 2인 그룹(`a9db4833…`)도 옛 프롬프트로 후보 8개가 나왔다(8000이 여전히 옛 코드). 8000 서버를 종료하고 `.env`를 읽어 `--reload`로 다시 띄웠다(현재 코드 제공 확인). 그 그룹의 SUCCEEDED 후보는 불변 규칙대로 그대로이며, 새 그룹을 만들거나 ProjectBrief를 수정해야 새 규칙으로 다시 만들어진다. 새 프롬프트의 LIVE 확인 호출은 실행 권한 확인에서 막혀 하지 못했다(OPEN: 모델이 `max_count`를 넘기면 `CANDIDATES_INVALID`로 실패하고 다시 시도 버튼이 나온다).
+
 ## 다음 한 단계
 
-**다음 한 단계: 4단계 세션 B(`prompts/04-split/04B-todos-confirm.md`, 수행 7~10: 투두 초안·수정·확정과 그룹 조회 API).** 입력 연결 키는 위 `4단계 진행 > 세션 A 완료 > 세션 B가 읽을 연결 키`에 있다. 아래 목록은 4단계 시작 전에 적어 둔 메모이며, 세션 A에서 처리된 항목(배정 입력 기준, `ROLE_TODOS` 추가, 배정 뒤 인터뷰)은 위 절이 현재 사실이다.
+**다음 한 단계: 5단계 실행과 투두별 M2 평가(`prompts/05-execution-review.md`, D-D1 적용). 4단계 완료와 GATE D 승인은 커밋됐다. 5단계는 아직 시작하지 않았다.** 5단계로 넘길 기술 세부: 이미지 해상도·총 픽셀 안전 상한, 압축 해제 상한, HWPX 추출 결정적 테스트, `TimelyClient`가 `file` 파트 거절을 `INVALID_REQUEST`로 분류하는 문제, `task_id`·revision 노출과 ProjectBrief 변경 뒤 읽기 전용 확정 투두 표시(D-B4가 GATE D로 넘겼으나 D-D1은 정하지 않음 — 5단계 렌더링에서 개인정보 범위를 넓히지 않는 선으로 정하고 제품 의미가 바뀌면 승인).
+
+이전 메모(세션 B 시작 전): 4단계 세션 B(`prompts/04-split/04B-todos-confirm.md`, 수행 7~10)의 입력 연결 키는 위 `4단계 진행 > 세션 A 완료 > 세션 B가 읽을 연결 키`에 있다. 아래 목록은 4단계 시작 전에 적어 둔 메모이며, 세션 A에서 처리된 항목(배정 입력 기준, `ROLE_TODOS` 추가, 배정 뒤 인터뷰)은 위 절이 현재 사실이다.
 
 4단계 구현 전 메모(2026-11-19, 세션 A 이전):
 
@@ -187,7 +281,7 @@ $env:MOIM_ENV='development'; .\.venv\Scripts\python.exe tools\capture_screens.py
 
 ## OPEN
 
-`docs/PRODUCT.md` 5절, `docs/ROADMAP.md`의 GATE B·GATE D 목록을 본다. BLOCKED 항목은 없다.
+`docs/PRODUCT.md` 5절을 본다. GATE B(D-B1)와 GATE D(D-D1, 2026-11-19)는 승인 완료다. 5단계로 넘긴 기술 세부는 위 `다음 한 단계`에 있다. BLOCKED 항목은 없다.
 
 3단계 관련 OPEN: 10턴 한도 막다른 길은 D-B3로 해소됐다. E.coach 지연 단축 항목은 배정 뒤 인터뷰를 4단계에서 정할 때 다시 본다. 배정 뒤 인터뷰의 항목·턴·종료 조건은 4단계에서 정한다(제품 의미가 바뀌면 승인).
 

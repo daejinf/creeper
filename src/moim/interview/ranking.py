@@ -16,7 +16,7 @@ from sqlalchemy.orm import Session, sessionmaker
 
 from ..auth.errors import AuthError
 from ..groups.service import ACTIVE, is_group_id
-from ..models import cohort_members, groups, member_progress, preference_submissions, role_candidate_sets
+from ..models import cohort_members, groups, member_progress, preference_submissions, role_assignments, role_candidate_sets
 from ..timeutil import utcnow
 from .candidates import SUCCEEDED as CANDIDATES_READY
 
@@ -208,3 +208,41 @@ class RankingService:
                 assigned = self._assignment.assign_if_ready(s, g, now)
         log.info("ranking_event group_id=%s user_id=%s state=WAITING_ASSIGNMENT submission_revision=%d", group_id, user_id, revision)
         return True, assigned
+
+    def assign_waiting(self) -> list[tuple[str, int]]:
+        """Server start: assign every ACTIVE group whose whole cohort already submitted but has no assignment.
+
+        The assignment normally runs inside the last submission's transaction. A cohort that completed while that
+        step did not run (a process that died mid-request, or one running code from before the assignment existed)
+        would otherwise wait forever, because no further submission will come. Same lock and same `assign_if_ready`
+        as a submission, so it never draws twice. Returns [(group_id, new assignment revision)].
+        """
+        if self._assignment is None:
+            return []
+        with self._sf() as s:
+            waiting = [
+                r[0]
+                for r in s.execute(
+                    select(member_progress.c.group_id)
+                    .join(groups, groups.c.id == member_progress.c.group_id)
+                    .where(member_progress.c.status == WAITING_ASSIGNMENT, groups.c.status == ACTIVE)
+                    .where(
+                        ~select(role_assignments.c.group_id)
+                        .where(role_assignments.c.group_id == member_progress.c.group_id, role_assignments.c.state == "CURRENT")
+                        .exists()
+                    )
+                    .distinct()
+                )
+            ]
+        made = []
+        for group_id in waiting:
+            with self._sf.begin() as s:
+                self._assignment.lock_group(s, group_id)
+                g = s.execute(select(groups).where(groups.c.id == group_id)).one()
+                if g.status != ACTIVE:
+                    continue
+                revision = self._assignment.assign_if_ready(s, g, self._clock())
+            if revision is not None:
+                made.append((group_id, revision))
+                log.info("assignment_recovered group_id=%s revision=%d", group_id, revision)
+        return made

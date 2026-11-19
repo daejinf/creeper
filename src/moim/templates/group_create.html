@@ -135,10 +135,13 @@ input[type=date].empty{color:#A3A9B6}
 /* 중간 일정 */
 .ms{display:flex;flex-direction:column;gap:8px;margin:0;padding:0;list-style:none}
 .ms:empty{display:none}
-.ms li{display:flex;align-items:center;gap:8px;animation:in .25s ease both}
+.ms li{position:relative;display:flex;align-items:center;gap:8px;animation:in .25s ease both}
 @keyframes in{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+.ms li.has-cal{z-index:30}
 .ms .name{flex:1;min-width:0}
-.ms input[type=date]{flex:0 0 170px}
+.ms .msd{flex:0 0 170px;max-width:none}
+.ms .msd.bad{border-color:#EBA190}
+.ms .cal{top:54px;left:auto;right:40px}
 .ms .rm{flex:none;width:32px;height:32px;display:grid;place-items:center;border:0;border-radius:8px;background:transparent;color:#A3A9B6;cursor:pointer;transition:color .15s}
 .ms .rm:hover{color:var(--ink)}
 .add{
@@ -161,8 +164,9 @@ input[type=date].empty{color:#A3A9B6}
 @media (max-width:520px){
   .ms li{flex-wrap:wrap}
   .ms .name{flex:1 1 100%}
-  .ms input[type=date]{flex:1 1 0;min-width:0}
+  .ms .msd{flex:1 1 0;min-width:0}
   .cal{width:100%}
+  .ms .cal{right:0}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 

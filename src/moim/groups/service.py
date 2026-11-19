@@ -394,6 +394,9 @@ class GroupService:
 
     def update_brief(self, user_id: str, group_id: str, base_revision: int, brief: BriefData) -> tuple[int, bool]:
         """New revision on top of `base_revision`. Returns (revision, changed). A stale base is a conflict."""
+        from ..roles.assignment import AssignmentService  # local: the stage 4 modules import this one
+        from ..roles.reassign import stale_for_new_brief
+
         with self._sf.begin() as s:
             g, role = self._require_member(s, group_id, user_id)
             if role != LEADER:
@@ -407,6 +410,8 @@ class GroupService:
             current = self._brief_row(s, group_id, g.brief_revision)
             if current is not None and _same(current, brief):
                 return g.brief_revision, False
+            # Same lock as the server assignment, so a last ranking submission and a brief change never interleave.
+            AssignmentService.lock_group(s, group_id)
             now = self._clock()
             if current is not None and brief.start_date != current.start_date and brief.start_date < today_kst(now):
                 raise GroupError(422, "INVALID", "시작일은 오늘 이후여야 해요.", field="period")
@@ -420,6 +425,9 @@ class GroupService:
                 .where(member_progress.c.group_id == group_id, member_progress.c.status == "WAITING_ASSIGNMENT")
                 .values(status="INTERVIEW", submission_revision=None, updated_at=now)
             )
+            # D-B1 B8: the CURRENT assignment and everything made from it (coverage, interviews, snapshots, drafts,
+            # confirmed todos with their hidden criteria) are STALE; assigned members rank again from the new candidates.
+            stale_for_new_brief(s, group_id, now)
         log.info("group.brief_revised group_id=%s revision=%d", group_id, revision)
         return revision, True
 

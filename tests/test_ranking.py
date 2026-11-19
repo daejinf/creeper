@@ -199,7 +199,10 @@ def test_candidate_provider_input_is_the_project_brief_only(db, mk, ai):
     gid, lead, members = team(mk, ai, 3)
     sent = json.dumps(ai.kinds("CandidateOutput")[0], ensure_ascii=False)
     assert "캡스톤 디자인" in sent and "팀플 협업 서비스" in sent
-    assert "min_count" not in sent and set(json.loads(ai.kinds("CandidateOutput")[0][-1]["content"])) == {"project"}
+    sent_input = json.loads(ai.kinds("CandidateOutput")[0][-1]["content"])
+    # ProjectBrief plus the head count only: no member id, name or private state
+    assert set(sent_input) == {"project", "team_size", "min_count", "max_count"}
+    assert (sent_input["team_size"], sent_input["min_count"], sent_input["max_count"]) == (3, 3, 5)
     for u in (lead, *members):
         assert u.id not in sent and u.name not in sent
 
@@ -236,6 +239,10 @@ def test_invalid_candidate_sets_are_failures(db, mk, ai):
             check_candidates([CandidateItem(name=n, description=d) for n, d in bad], 3)
     with pytest.raises(CandidateError):  # fewer candidates than people
         check_candidates([CandidateItem(name=f"역할{i}", description="설명") for i in range(3)], 5)
+    with pytest.raises(CandidateError):  # far more roles than people: too fine-grained for a 2-person team
+        check_candidates([CandidateItem(name=f"역할{i}", description="설명") for i in range(8)], 2)
+    assert len(check_candidates([CandidateItem(name=f"역할{i}", description="설명") for i in range(5)], 2)) == 5
+    assert len(check_candidates([CandidateItem(name=f"역할{i}", description="설명") for i in range(3)], 2)) == 3
     ai.cand_script.append(too_few)
     gid, lead, _ = team(mk, ai, 3)
     c = screen(lead, gid)["candidates"]
@@ -537,14 +544,14 @@ def test_brief_change_makes_candidates_and_rankings_stale(db, mk, ai):
 def test_nothing_is_assigned_before_everyone_submits_and_nothing_is_drafted_after(db, mk, ai):
     """Stage 4 contract (changed from the stage 3 "nothing is ever assigned" check, see docs/HANDOFF.md): before the
     last submission there is no assignment, coverage or interview; the last submission makes exactly one assignment
-    revision. No todo, hidden criteria or old interview data appears in this flow, and no interview AI call is made."""
+    revision. No todo, hidden criteria or old interview data appears in this flow, and no interview or todo AI call is
+    made. (Stage 4 session B added the todo tables, so this now checks that they hold no row for the group instead of
+    checking that no such table exists: a draft only starts after the member's own post-assignment interview.)"""
     gid, lead, (m1, m2) = team(mk, ai, 3)
 
     def check_nothing(last: bool):
-        tables = col(db, "select table_name from information_schema.tables where table_schema='public'")
-        assert not [t for t in tables if re.search(r"todo|criteri|deliverable_hidden", t)], tables
-        columns = col(db, "select column_name from information_schema.columns where table_schema='public'")
-        assert not [c for c in columns if re.search(r"completion_criteria|^deliverable$|todo", c)], columns
+        for t in ("todo_drafts", "todo_items", "todo_ai_steps", "todo_confirmations", "todo_confirmed_items"):
+            assert scalar(db, f"select count(*) from {t} where group_id=:g", g=gid) == 0, t
         assert scalar(db, "select count(*) from member_states") == 0 and scalar(db, "select count(*) from interview_turns") == 0
         assert scalar(db, "select status from groups where id=:g", g=gid) == "ACTIVE"
         assert scalar(db, "select count(*) from role_assignments where group_id=:g", g=gid) == (1 if last else 0)

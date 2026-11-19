@@ -71,6 +71,46 @@ class CoverageRetryBody(_Body):
     expected_attempt: int = Field(ge=1, le=1_000_000)
 
 
+class ReassignRequestBody(_Body):
+    action_id: str = Field(min_length=8, max_length=64)
+    assignment_revision: int = Field(ge=1, le=1_000_000)
+    target_user_id: str = Field(min_length=1, max_length=36)
+
+
+class ReassignRespondBody(_Body):
+    action_id: str = Field(min_length=8, max_length=64)
+    accept: bool
+
+
+class TodoStartBody(_Body):
+    action_id: str = Field(min_length=8, max_length=64)
+
+
+class TodoEditBody(_Body):
+    action_id: str = Field(min_length=8, max_length=64)
+    draft_revision: int = Field(ge=1, le=1_000_000)
+    op: str = Field(max_length=8)
+    key: str | None = Field(default=None, max_length=8)
+    title: str | None = Field(default=None, max_length=200)
+    due_date: str | None = Field(default=None, max_length=10)
+
+
+class TodoReviseBody(_Body):
+    action_id: str = Field(min_length=8, max_length=64)
+    message: str = Field(max_length=1000)
+
+
+class TodoConfirmBody(_Body):
+    action_id: str = Field(min_length=8, max_length=64)
+    draft_revision: int = Field(ge=1, le=1_000_000)
+
+
+class TodoRetryBody(_Body):
+    action_id: str = Field(min_length=8, max_length=64)
+    seq: int = Field(ge=1, le=60)
+    expected_attempt: int = Field(ge=1, le=1_000_000)
+
+
 def make_router(
     settings: Settings,
     groups: GroupService,
@@ -80,8 +120,11 @@ def make_router(
     templates: Jinja2Templates,
     coverage=None,
     role_interview=None,
+    todos=None,
+    reassign=None,
 ) -> APIRouter:
-    """`coverage` (CoverageService) and `role_interview` (RoleInterviewService) are the stage 4 services."""
+    """`coverage` (CoverageService), `role_interview` (RoleInterviewService), `todos` (TodoService) and `reassign`
+    (ReassignmentService) are the stage 4 services."""
     router = APIRouter()
     secure = settings.secure_cookies
 
@@ -195,5 +238,75 @@ def make_router(
         if outcome == "started":
             background.add_task(coverage.run, group_id, body.assignment_revision)
         return json_ok(screen(user, group_id), 202)
+
+    # ---- stage 4 session B: todo draft, edits, confirmation, group read ----------------------------------------
+
+    @router.post("/api/groups/{group_id}/todos/start", dependencies=[Depends(verify_csrf)])
+    def todos_start(group_id: str, body: TodoStartBody, background: BackgroundTasks, user: SessionUser = Depends(require_user)):
+        outcome, rev = todos.start(user.user_id, group_id, body.action_id)
+        if outcome == "started":
+            background.add_task(todos.run, group_id, user.user_id, rev, 1)
+        return json_ok(screen(user, group_id), 202 if outcome == "started" else 200)
+
+    @router.post("/api/groups/{group_id}/todos/edit", dependencies=[Depends(verify_csrf)])
+    def todos_edit(group_id: str, body: TodoEditBody, user: SessionUser = Depends(require_user)):
+        outcome = todos.edit(user.user_id, group_id, body.action_id, body.draft_revision, body.op, body.key, body.title, body.due_date)
+        return json_ok(screen(user, group_id), 201 if outcome == "done" else 200)
+
+    @router.post("/api/groups/{group_id}/todos/revise", dependencies=[Depends(verify_csrf)])
+    def todos_revise(group_id: str, body: TodoReviseBody, background: BackgroundTasks, user: SessionUser = Depends(require_user)):
+        outcome, rev, seq = todos.revise(user.user_id, group_id, body.action_id, body.message)
+        if outcome == "started":
+            background.add_task(todos.run, group_id, user.user_id, rev, seq)
+        return json_ok(screen(user, group_id), 202 if outcome == "started" else 200)
+
+    @router.post("/api/groups/{group_id}/todos/confirm", dependencies=[Depends(verify_csrf)])
+    def todos_confirm(group_id: str, body: TodoConfirmBody, background: BackgroundTasks, user: SessionUser = Depends(require_user)):
+        outcome, rev, seq = todos.confirm(user.user_id, group_id, body.action_id, body.draft_revision)
+        if outcome == "started":
+            background.add_task(todos.run, group_id, user.user_id, rev, seq)
+        return json_ok(screen(user, group_id), {"started": 202, "confirmed": 201}.get(outcome, 200))
+
+    @router.post("/api/groups/{group_id}/todos/unlock", dependencies=[Depends(verify_csrf)])
+    def todos_unlock(group_id: str, body: TodoStartBody, user: SessionUser = Depends(require_user)):
+        outcome = todos.unlock(user.user_id, group_id, body.action_id)
+        return json_ok(screen(user, group_id), 201 if outcome == "done" else 200)
+
+    @router.post("/api/groups/{group_id}/todos/retry", dependencies=[Depends(verify_csrf)])
+    def todos_retry(group_id: str, body: TodoRetryBody, background: BackgroundTasks, user: SessionUser = Depends(require_user)):
+        outcome, rev = todos.retry(user.user_id, group_id, body.seq, body.expected_attempt)
+        if outcome == "refused":
+            raise AuthError(409, "NOT_RETRYABLE", MSG_NOT_RETRYABLE)
+        if outcome == "started":
+            background.add_task(todos.run, group_id, user.user_id, rev, body.seq)
+        return json_ok(screen(user, group_id), 202)
+
+    @router.get("/api/groups/{group_id}/todos")
+    def group_todos(group_id: str, user: SessionUser = Depends(require_user)):
+        """Every cohort member may read this: role name, todo title and due date of each confirmed member, nothing else.
+        Rendering is stage 5."""
+        return json_ok(todos.group_view(user.user_id, group_id))
+
+    # ---- stage 4 session C: reassignment (server API only, no screen; D-B1 B4) ------------------------------------
+
+    @router.post("/api/groups/{group_id}/reassignments", dependencies=[Depends(verify_csrf)])
+    def reassign_request(group_id: str, body: ReassignRequestBody, user: SessionUser = Depends(require_user)):
+        """The leader asks; nothing changes until the target consents. The body never carries a role."""
+        stored, view = reassign.request(user.user_id, group_id, body.action_id, body.assignment_revision, body.target_user_id)
+        return json_ok({"request": view}, 201 if stored else 200)
+
+    @router.get("/api/groups/{group_id}/reassignments")
+    def reassign_mine(group_id: str, user: SessionUser = Depends(require_user)):
+        return json_ok(reassign.mine(user.user_id, group_id))
+
+    @router.post("/api/groups/{group_id}/reassignments/{request_id}/respond", dependencies=[Depends(verify_csrf)])
+    def reassign_respond(group_id: str, request_id: str, body: ReassignRespondBody, background: BackgroundTasks,
+                         user: SessionUser = Depends(require_user)):
+        """The target's own consent (accept) or refusal. Accepting writes the new assignment revision; its team
+        coverage is made once in the background, like the first assignment."""
+        outcome, rev = reassign.respond(user.user_id, group_id, request_id, body.action_id, body.accept)
+        if outcome == "accepted":
+            background.add_task(coverage.run, group_id, rev)
+        return json_ok({"outcome": outcome, **screen(user, group_id)}, 201 if outcome in ("accepted", "declined") else 200)
 
     return router

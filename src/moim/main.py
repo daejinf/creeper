@@ -1,6 +1,7 @@
 """FastAPI entrypoint: health check, the AI job API, auth, and the stage 2 group screens. Later stages add their own."""
 from __future__ import annotations
 
+import asyncio
 import logging
 from contextlib import asynccontextmanager
 from pathlib import Path
@@ -28,7 +29,9 @@ from .interview.routes import make_router as make_interview_router
 from .interview.ranking import RankingService
 from .roles.assignment import AssignmentService
 from .roles.coverage import CoverageService
+from .roles.reassign import ReassignmentService
 from .roles.interview import RoleInterviewService
+from .roles.todos import TodoService
 from .job_routes import make_router
 from .jobs import Handler, JobStore
 from .logging_utils import install_redaction
@@ -85,7 +88,9 @@ def create_app(
     assignment_service = AssignmentService(rng_factory) if rng_factory is not None else AssignmentService()
     ranking_service = RankingService(make_session_factory(engine), assignment=assignment_service)
     coverage_service = CoverageService(make_session_factory(engine), ai_client_factory)
-    role_interview_service = RoleInterviewService(make_session_factory(engine), ai_client_factory)
+    todo_service = TodoService(make_session_factory(engine), ai_client_factory)
+    role_interview_service = RoleInterviewService(make_session_factory(engine), ai_client_factory, todos=todo_service)
+    reassign_service = ReassignmentService(make_session_factory(engine), assignment_service)
 
     @asynccontextmanager
     async def lifespan(app: FastAPI):
@@ -107,6 +112,17 @@ def create_app(
         lost_turns = role_interview_service.fail_interrupted()
         if lost_turns:
             log.warning("marked %d interrupted interview step(s) as FAILED (SERVER_RESTARTED)", lost_turns)
+        lost_todo_steps = todo_service.fail_interrupted()
+        if lost_todo_steps:
+            log.warning("marked %d interrupted todo step(s) as FAILED (SERVER_RESTARTED)", lost_todo_steps)
+        # A cohort that finished submitting without its assignment (the step did not run) is assigned now, once,
+        # and its team coverage starts in the background exactly as after a normal last submission.
+        recovered = ranking_service.assign_waiting()
+        if recovered:
+            log.warning("assigned %d group(s) whose cohort had finished submitting without an assignment", len(recovered))
+            loop = asyncio.get_running_loop()
+            for gid, rev in recovered:
+                loop.run_in_executor(None, coverage_service.run, gid, rev)
         yield
         engine.dispose()
 
@@ -127,6 +143,8 @@ def create_app(
     app.state.assignment = assignment_service
     app.state.coverage = coverage_service
     app.state.role_interview = role_interview_service
+    app.state.todos = todo_service
+    app.state.reassign = reassign_service
     app.add_middleware(SecurityMiddleware, hsts=settings.secure_cookies)
     app.add_exception_handler(AuthError, auth_error_handler)
 
@@ -141,7 +159,7 @@ def create_app(
     app.include_router(make_group_router(settings, group_service, goal_service, candidate_service, throttle, templates))
     app.include_router(make_interview_router(
         settings, group_service, goal_service, candidate_service, ranking_service, templates,
-        coverage=coverage_service, role_interview=role_interview_service,
+        coverage=coverage_service, role_interview=role_interview_service, todos=todo_service, reassign=reassign_service,
     ))
     app.mount("/static", RevalidatedStaticFiles(directory=STATIC_DIR), name="static")
 

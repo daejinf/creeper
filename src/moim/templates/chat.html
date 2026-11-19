@@ -218,6 +218,13 @@ main{flex:1;min-height:0;width:100%;max-width:1160px;margin:0 auto;padding:16px 
 .sect{margin:12px 2px 0;font-size:12.5px;font-weight:700;color:var(--mute)}
 .sect[hidden]{display:none}
 .pill[hidden],.count[hidden],.addrow[hidden],.confirm[hidden]{display:none}
+.empty[hidden]{display:none}
+.n:disabled,.due:disabled,.x:disabled{cursor:default}
+.n:disabled:hover{border-color:#C9CEDB}
+.due:disabled:hover{color:var(--mute)}
+.x:disabled{opacity:.5}
+.x:disabled:hover{background:transparent;color:#A4AABA}
+.todo .t[readonly]{cursor:default}
 </style>
 </head>
 <body>
@@ -229,7 +236,7 @@ main{flex:1;min-height:0;width:100%;max-width:1160px;margin:0 auto;padding:16px 
     </a>
   </header>
 
-  <main id="main" data-group="{{ group_id }}">
+  <main id="main" data-group="{{ group_id }}" data-name="{{ display_name }}">
     <div class="head">
       <div class="ttl">
         <h1>역할 배정 &amp; 내 투두 만들기</h1>
@@ -286,6 +293,18 @@ main{flex:1;min-height:0;width:100%;max-width:1160px;margin:0 auto;padding:16px 
     </div>
 
   </main>
+</div>
+
+<div class="cal" id="cal" role="dialog" aria-label="마감일 고르기" hidden></div>
+
+<div class="done" id="done" role="dialog" aria-modal="true" aria-labelledby="doneTitle" tabindex="-1">
+  <div class="done-card">
+    <div class="check" aria-hidden="true">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>
+    </div>
+    <h2 id="doneTitle">역할과 투두가 정해졌어요</h2>
+    <p id="doneText"></p>
+  </div>
 </div>
 
 <script src="/static/auth-common.js"></script>

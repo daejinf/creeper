@@ -161,40 +161,142 @@
   etcIn.addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); addEtc(); } });
 
   // ---------- 중간 일정 ----------
+  // 날짜 칸은 프로젝트 기간과 같은 달력(.range + .cal)을 써요. 고를 수 있는 날은 프로젝트 기간 안으로 제한해요.
+  function calIcon() {
+    var s = icon('', 18, 1.8, 'M3.5 10h17M8 3v4M16 3v4');
+    var r = document.createElementNS(SVGNS, 'rect');
+    r.setAttribute('x', '3.5'); r.setAttribute('y', '5'); r.setAttribute('width', '17'); r.setAttribute('height', '15.5'); r.setAttribute('rx', '3');
+    s.insertBefore(r, s.firstChild);
+    return s;
+  }
+  function msVal(btn) { return btn.getAttribute('data-v') || ''; }
+  function setMsVal(btn, v) {
+    if (v) btn.setAttribute('data-v', v); else btn.removeAttribute('data-v');
+    var t = btn.querySelector('.v'); t.textContent = '';
+    var s = document.createElement('span');
+    if (!v) s.className = 'ph';
+    s.textContent = v ? dot(v) : '연도-월-일';
+    t.appendChild(s);
+  }
   function addMs() {
     var li = document.createElement('li');
     var nm = document.createElement('input');
     nm.className = 'inp name'; nm.type = 'text'; nm.maxLength = 20; nm.autocomplete = 'off';
     nm.placeholder = '예) 중간 발표'; nm.setAttribute('aria-label', '일정 이름');
-    var dt = document.createElement('input');
-    dt.className = 'inp empty'; dt.type = 'date'; dt.setAttribute('aria-label', '일정 날짜');
+    var dt = document.createElement('button');
+    dt.type = 'button'; dt.className = 'range msd'; dt.setAttribute('aria-haspopup', 'dialog'); dt.setAttribute('aria-expanded', 'false');
+    dt.setAttribute('aria-label', '일정 날짜');
+    var dv = document.createElement('span'); dv.className = 'v'; dt.appendChild(dv);
+    dt.appendChild(calIcon());
+    setMsVal(dt, '');
     var rm = document.createElement('button');
     rm.type = 'button'; rm.className = 'rm'; rm.setAttribute('aria-label', '일정 삭제');
     rm.appendChild(xIcon('', 14, 2.4));
     li.appendChild(nm); li.appendChild(dt); li.appendChild(rm);
     ms.appendChild(li);
-    syncMsBounds();
     li.querySelector('.name').focus();
   }
-  function syncMsBounds() {
-    ms.querySelectorAll('input[type=date]').forEach(function (d) { d.min = start || today; d.max = end || ''; });
+
+  // 하나의 달력 팝업을 열린 일정 줄에 붙여 써요.
+  var msCal = document.createElement('div');
+  msCal.className = 'cal'; msCal.setAttribute('role', 'dialog'); msCal.setAttribute('aria-label', '일정 날짜 선택'); msCal.hidden = true;
+  var msHead = document.createElement('div'); msHead.className = 'cal-h';
+  function navBtn(label, d) { var b = document.createElement('button'); b.type = 'button'; b.setAttribute('aria-label', label); b.appendChild(icon('', 16, 2.2, d)); return b; }
+  var msPrev = navBtn('이전 달', 'M15 6l-6 6 6 6'), msNext = navBtn('다음 달', 'M9 6l6 6-6 6');
+  var msTitle = document.createElement('b'); msTitle.setAttribute('aria-live', 'polite');
+  msHead.appendChild(msPrev); msHead.appendChild(msTitle); msHead.appendChild(msNext);
+  var msWk = document.createElement('div'); msWk.className = 'wk'; msWk.setAttribute('aria-hidden', 'true');
+  ['일', '월', '화', '수', '목', '금', '토'].forEach(function (w) { var s = document.createElement('span'); s.textContent = w; msWk.appendChild(s); });
+  var msDays = document.createElement('div'); msDays.className = 'days';
+  var msFoot = document.createElement('div'); msFoot.className = 'cal-f';
+  var msHint = document.createElement('span');
+  var msClear = document.createElement('button'); msClear.type = 'button'; msClear.textContent = '초기화';
+  msFoot.appendChild(msHint); msFoot.appendChild(msClear);
+  msCal.appendChild(msHead); msCal.appendChild(msWk); msCal.appendChild(msDays); msCal.appendChild(msFoot);
+  var msBtn = null, msView = new Date(now.getFullYear(), now.getMonth(), 1);
+
+  function msMin() { return start || today; }
+  function renderMsCal() {
+    var y = msView.getFullYear(), m = msView.getMonth();
+    var lo = msMin(), hi = end || '';
+    msTitle.textContent = y + '년 ' + (m + 1) + '월';
+    var firstV = y + '-' + String(m + 1).padStart(2, '0') + '-01';
+    var lastD = new Date(y, m + 1, 0).getDate();
+    var lastV = y + '-' + String(m + 1).padStart(2, '0') + '-' + String(lastD).padStart(2, '0');
+    msPrev.disabled = firstV <= lo;
+    msNext.disabled = !!hi && lastV >= hi;
+    msDays.textContent = '';
+    for (var i = 0, first = new Date(y, m, 1).getDay(); i < first; i++) {
+      var o = document.createElement('button');
+      o.type = 'button'; o.className = 'out'; o.tabIndex = -1; o.setAttribute('aria-hidden', 'true');
+      msDays.appendChild(o);
+    }
+    var cur = msBtn ? msVal(msBtn) : '';
+    for (var d = 1; d <= lastD; d++) {
+      var v = y + '-' + String(m + 1).padStart(2, '0') + '-' + String(d).padStart(2, '0');
+      var db = document.createElement('button');
+      db.type = 'button'; db.setAttribute('data-v', v);
+      if (v < lo || (hi && v > hi)) db.disabled = true;
+      db.setAttribute('aria-label', (m + 1) + '월 ' + d + '일');
+      if (v === today) db.classList.add('today');
+      if (v === cur) { db.classList.add('s', 'e'); db.setAttribute('aria-pressed', 'true'); }
+      var ds = document.createElement('span'); ds.textContent = String(d); db.appendChild(ds);
+      msDays.appendChild(db);
+    }
+    msHint.textContent = start && end ? '프로젝트 기간 안에서 골라주세요' : '오늘 이후 날짜를 골라주세요';
   }
+  function closeMsCal(focus) {
+    if (!msBtn) return;
+    var b = msBtn; msBtn = null;
+    msCal.hidden = true;
+    b.setAttribute('aria-expanded', 'false');
+    b.closest('li').classList.remove('has-cal');
+    if (focus) b.focus();
+  }
+  function openMsCal(btn) {
+    closeMsCal(false);
+    openCal(false);
+    msBtn = btn;
+    var li = btn.closest('li');
+    li.appendChild(msCal); li.classList.add('has-cal');
+    btn.setAttribute('aria-expanded', 'true');
+    var v = msVal(btn), lo = msMin();
+    var base = new Date((v || (today > lo ? today : lo)) + 'T00:00');
+    msView = new Date(base.getFullYear(), base.getMonth(), 1);
+    msCal.hidden = false;
+    renderMsCal();
+  }
+  // 날짜를 누르면 칸을 다시 그리므로, 바깥 클릭 판정에 닿지 않게 달력 안 클릭은 여기서 멈춰요.
+  msCal.addEventListener('click', function (e) { e.stopPropagation(); });
+  msPrev.addEventListener('click', function () { msView.setMonth(msView.getMonth() - 1); renderMsCal(); });
+  msNext.addEventListener('click', function () { msView.setMonth(msView.getMonth() + 1); renderMsCal(); });
+  msClear.addEventListener('click', function () { if (msBtn) { setMsVal(msBtn, ''); renderMsCal(); update(); } });
+  msDays.addEventListener('click', function (e) {
+    var b = e.target.closest('button[data-v]'); if (!b || b.disabled || !msBtn) return;
+    setMsVal(msBtn, b.dataset.v); renderMsCal(); update();
+    setTimeout(function () { closeMsCal(true); }, 180);
+  });
+  range.addEventListener('click', function () { closeMsCal(false); });
+  document.addEventListener('click', function (e) {
+    if (msBtn && !msBtn.closest('li').contains(e.target)) closeMsCal(false);
+  });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && msBtn) closeMsCal(true); });
+
   $('msAdd').addEventListener('click', function () { addMs(); update(); });
   ms.addEventListener('click', function (e) {
-    var rm = e.target.closest('.rm'); if (!rm) return;
-    rm.closest('li').remove(); update();
+    if (msCal.contains(e.target)) return;
+    var rm = e.target.closest('.rm');
+    if (rm) { if (msBtn && rm.closest('li') === msBtn.closest('li')) closeMsCal(false); rm.closest('li').remove(); update(); return; }
+    var dt = e.target.closest('.msd');
+    if (dt) { if (msBtn === dt) closeMsCal(false); else openMsCal(dt); }
   });
-  ms.addEventListener('input', function (e) {
-    if (e.target.type === 'date') e.target.classList.toggle('empty', !e.target.value);
-    update();
-  });
+  ms.addEventListener('input', function () { update(); });
 
   // ---------- 상태 ----------
   function update() {
-    syncMsBounds();
     var msBad = '';
-    ms.querySelectorAll('input[type=date]').forEach(function (d) {
-      var v = d.value, bad = false;
+    ms.querySelectorAll('.msd').forEach(function (d) {
+      var v = msVal(d), bad = false;
       if (v && v < (start || today)) { bad = true; msBad = start ? '중간 일정은 프로젝트 기간 안에 있어야 해요.' : '오늘 이후 날짜를 골라주세요.'; }
       if (v && end && v > end) { bad = true; msBad = '중간 일정은 프로젝트 기간 안에 있어야 해요.'; }
       d.classList.toggle('bad', bad);
@@ -213,7 +315,7 @@
   function milestones() {
     var out = [];
     [].slice.call(ms.querySelectorAll('li')).forEach(function (li) {
-      var n = li.querySelector('.name').value.trim(), d = li.querySelector('input[type=date]').value;
+      var n = li.querySelector('.name').value.trim(), d = msVal(li.querySelector('.msd'));
       if (n || d) out.push({ name: n, date: d });
     });
     return out;
@@ -239,8 +341,7 @@
         addMs();
         var li = ms.lastElementChild;
         li.querySelector('.name').value = m.name;
-        var d = li.querySelector('input[type=date]');
-        d.value = m.date; d.classList.remove('empty');
+        setMsVal(li.querySelector('.msd'), m.date);
       });
       name.blur();
     } catch (e) { formErr.textContent = '저장된 내용을 불러오지 못했어요. 새로고침해 주세요.'; }

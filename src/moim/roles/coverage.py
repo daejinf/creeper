@@ -167,6 +167,7 @@ class CoverageService:
                 team_coverages.c.source_assignment_revision == revision,
                 team_coverages.c.attempt == attempt,
                 team_coverages.c.state == from_state,
+                team_coverages.c.stale_at.is_(None),  # a reassignment or brief change during the call drops the result
             )
             .values(updated_at=self._clock(), **values)
         )
@@ -177,7 +178,8 @@ class CoverageService:
         """Background task: PENDING -> RUNNING -> SUCCEEDED | FAILED. Safe to call twice."""
         with self._sf() as s:
             row = s.execute(
-                select(team_coverages.c.attempt, team_coverages.c.state, role_assignments.c.source_candidate_revision)
+                select(team_coverages.c.attempt, team_coverages.c.state, team_coverages.c.stale_at,
+                       role_assignments.c.source_candidate_revision)
                 .join(
                     role_assignments,
                     (role_assignments.c.group_id == team_coverages.c.group_id)
@@ -185,7 +187,7 @@ class CoverageService:
                 )
                 .where(team_coverages.c.group_id == group_id, team_coverages.c.source_assignment_revision == revision)
             ).one_or_none()
-            if row is None or row.state != PENDING:
+            if row is None or row.state != PENDING or row.stale_at is not None:  # STALE: never spend a call on it
                 return
             brief = s.execute(
                 select(project_briefs).where(

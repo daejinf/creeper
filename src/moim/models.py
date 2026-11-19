@@ -533,3 +533,201 @@ role_interview_snapshots = Table(
         ["role_interviews.group_id", "role_interviews.user_id", "role_interviews.source_assignment_revision"],
     ),
 )
+
+# ---- stage 4 session B: todo draft, edits, confirmation -------------------------------------------------
+# One todo draft per member and assignment revision, made from the confirmed interview snapshot and the fixed team
+# coverage of that revision (both FKs below are the `source_assignment_revision` link session C marks STALE).
+# `draft_revision` grows with every saved change (0 = nothing generated yet). Owner-only.
+todo_drafts = Table(
+    "todo_drafts",
+    metadata,
+    Column("group_id", String(36), primary_key=True),
+    Column("user_id", String(36), primary_key=True),
+    Column("source_assignment_revision", Integer, primary_key=True),
+    Column("member_state_revision", Integer, nullable=False),
+    Column("draft_revision", Integer, nullable=False, server_default="0"),
+    Column("next_item_no", Integer, nullable=False, server_default="1"),
+    Column("mode", String(10), nullable=False, server_default="EDITING"),
+    Column("confirmed_revision", Integer),
+    Column("stale_at", DateTime(timezone=True)),
+    Column("created_at", DateTime(timezone=True), nullable=False, server_default=func.now()),
+    Column("updated_at", DateTime(timezone=True), nullable=False, server_default=func.now()),
+    ForeignKeyConstraint(
+        ["group_id", "user_id", "source_assignment_revision"],
+        ["role_interview_snapshots.group_id", "role_interview_snapshots.user_id",
+         "role_interview_snapshots.source_assignment_revision"],
+    ),
+    ForeignKeyConstraint(
+        ["group_id", "source_assignment_revision"],
+        ["team_coverages.group_id", "team_coverages.source_assignment_revision"],
+    ),
+    CheckConstraint("draft_revision >= 0", name="draft_revision"),
+    CheckConstraint("mode in ('EDITING','CONFIRMED')", name="mode"),
+    CheckConstraint("mode = 'EDITING' or confirmed_revision is not null", name="confirmed_has_revision"),
+)
+
+_DRAFT_KEY = ["group_id", "user_id", "source_assignment_revision"]
+_DRAFT_REF = ["todo_drafts.group_id", "todo_drafts.user_id", "todo_drafts.source_assignment_revision"]
+
+# The working copy. `task_id` is given by the server when a todo is first made and never reused (a deleted todo keeps
+# its row with `deleted_at`). `item_no` is the draft-local handle of the owner's browser; `task_id` never leaves the
+# server. The hidden criteria (deliverable, completion criteria, evidence types, estimate) are valid only while
+# `criteria_for_title` equals the current title.
+todo_items = Table(
+    "todo_items",
+    metadata,
+    Column("task_id", String(36), primary_key=True),
+    Column("group_id", String(36), nullable=False),
+    Column("user_id", String(36), nullable=False),
+    Column("source_assignment_revision", Integer, nullable=False),
+    Column("item_no", Integer, nullable=False),
+    Column("position", Integer, nullable=False),
+    Column("title", String(60), nullable=False),
+    Column("due_date", Date),
+    Column("origin", String(8), nullable=False),
+    Column("part_id", String(8)),
+    Column("phase", String(10)),
+    Column("milestone_id", String(8)),
+    Column("deliverable", Text),
+    Column("completion_criteria", JSONB),
+    Column("evidence_types", JSONB),
+    Column("estimated_minutes", Integer),
+    Column("criteria_for_title", String(60)),
+    Column("deleted_at", DateTime(timezone=True)),
+    Column("created_at", DateTime(timezone=True), nullable=False, server_default=func.now()),
+    Column("updated_at", DateTime(timezone=True), nullable=False, server_default=func.now()),
+    ForeignKeyConstraint(_DRAFT_KEY, _DRAFT_REF),
+    UniqueConstraint("group_id", "user_id", "source_assignment_revision", "item_no", name="uq_todo_items_item_no"),
+    CheckConstraint("char_length(title) between 1 and 60", name="title"),
+    CheckConstraint("origin in ('AI','USER')", name="origin"),
+    CheckConstraint(
+        "(deliverable is null) = (completion_criteria is null) and (deliverable is null) = (evidence_types is null)"
+        " and (deliverable is null) = (criteria_for_title is null) and (deliverable is null) = (estimated_minutes is null)",
+        name="criteria_together",
+    ),
+)
+
+# Every AI step of a draft: DRAFT (first generation), REVISE (one natural-language change request; `user_message` is
+# the member's own request) and CRITERIA (hidden criteria for changed / added todos, started by `투두 확정하기`).
+# Background PENDING -> RUNNING -> SUCCEEDED | FAILED; a failure is an explicit retry, never an automatic one.
+todo_ai_steps = Table(
+    "todo_ai_steps",
+    metadata,
+    Column("group_id", String(36), primary_key=True),
+    Column("user_id", String(36), primary_key=True),
+    Column("source_assignment_revision", Integer, primary_key=True),
+    Column("seq", Integer, primary_key=True),
+    Column("kind", String(10), nullable=False),
+    Column("action_id", String(64), nullable=False),
+    Column("user_message", Text),
+    Column("state", String(12), nullable=False),
+    Column("attempt", Integer, nullable=False, server_default="1"),
+    Column("base_draft_revision", Integer),
+    Column("result_draft_revision", Integer),
+    Column("reply", Text),
+    Column("error_code", String(64)),
+    Column("error_message", String(500)),
+    Column("model", String(64)),
+    Column("request_id", String(128)),
+    Column("latency_ms", Integer),
+    Column("prompt_tokens", Integer),
+    Column("completion_tokens", Integer),
+    Column("total_tokens", Integer),
+    Column("created_at", DateTime(timezone=True), nullable=False, server_default=func.now()),
+    Column("updated_at", DateTime(timezone=True), nullable=False, server_default=func.now()),
+    ForeignKeyConstraint(_DRAFT_KEY, _DRAFT_REF),
+    UniqueConstraint("group_id", "user_id", "action_id", name="uq_todo_ai_steps_action"),
+    CheckConstraint("kind in ('DRAFT','REVISE','CRITERIA')", name="kind"),
+    CheckConstraint("state in ('PENDING','RUNNING','SUCCEEDED','FAILED')", name="state"),
+    CheckConstraint("(kind = 'REVISE') = (user_message is not null)", name="message_iff_revise"),
+    CheckConstraint("user_message is null or char_length(user_message) between 1 and 300", name="message_length"),
+    Index(
+        "uq_todo_ai_steps_running", "group_id", "user_id", "source_assignment_revision", unique=True,
+        postgresql_where=text("state in ('PENDING','RUNNING')"),
+    ),
+)
+
+# Idempotency of the plain (non-AI) actions: direct edits, confirm and unlock.
+todo_actions = Table(
+    "todo_actions",
+    metadata,
+    Column("group_id", String(36), primary_key=True),
+    Column("user_id", String(36), primary_key=True),
+    Column("action_id", String(64), primary_key=True),
+    Column("source_assignment_revision", Integer, nullable=False),
+    Column("kind", String(10), nullable=False),
+    Column("created_at", DateTime(timezone=True), nullable=False, server_default=func.now()),
+    ForeignKeyConstraint(_DRAFT_KEY, _DRAFT_REF),
+)
+
+# One immutable revision per `투두 확정하기`. A trigger allows no UPDATE except `stale_at` (session C) and no DELETE.
+# The group sees the newest revision until a newer one is confirmed (D-B1 B7).
+todo_confirmations = Table(
+    "todo_confirmations",
+    metadata,
+    Column("group_id", String(36), primary_key=True),
+    Column("user_id", String(36), primary_key=True),
+    Column("source_assignment_revision", Integer, primary_key=True),
+    Column("revision", Integer, primary_key=True),
+    Column("draft_revision", Integer, nullable=False),
+    Column("member_state_revision", Integer, nullable=False),
+    Column("action_id", String(64), nullable=False),
+    Column("stale_at", DateTime(timezone=True)),
+    Column("created_at", DateTime(timezone=True), nullable=False, server_default=func.now()),
+    ForeignKeyConstraint(_DRAFT_KEY, _DRAFT_REF),
+    CheckConstraint("revision >= 1", name="revision"),
+)
+
+# The todos of one confirmation: visible fields and hidden criteria fixed together. Immutable (trigger: no UPDATE, no
+# DELETE), so a stage 5 attachment bound to (task_id, confirmation revision) always finds the criteria it was made for.
+todo_confirmed_items = Table(
+    "todo_confirmed_items",
+    metadata,
+    Column("group_id", String(36), primary_key=True),
+    Column("user_id", String(36), primary_key=True),
+    Column("source_assignment_revision", Integer, primary_key=True),
+    Column("confirmation_revision", Integer, primary_key=True),
+    Column("task_id", String(36), ForeignKey("todo_items.task_id"), primary_key=True),
+    Column("position", Integer, nullable=False),
+    Column("title", String(60), nullable=False),
+    Column("due_date", Date, nullable=False),
+    Column("part_id", String(8), nullable=False),
+    Column("deliverable", Text, nullable=False),
+    Column("completion_criteria", JSONB, nullable=False),
+    Column("evidence_types", JSONB, nullable=False),
+    Column("estimated_minutes", Integer, nullable=False),
+    ForeignKeyConstraint(
+        ["group_id", "user_id", "source_assignment_revision", "confirmation_revision"],
+        ["todo_confirmations.group_id", "todo_confirmations.user_id", "todo_confirmations.source_assignment_revision",
+         "todo_confirmations.revision"],
+    ),
+)
+
+# ---- stage 4 session C: reassignment requests (D-B1 B4) ---------------------------------------------------------
+# A leader asks to reassign one member of the CURRENT assignment revision; only that member's own consent makes the
+# server write a new assignment revision (operation REASSIGN) from the same inputs (cohort, candidate revision and
+# preference submissions). The request never carries a role: neither the leader nor the member picks one.
+# At most one open request per group. Nothing here is shown to anyone but the leader and the target.
+role_reassignments = Table(
+    "role_reassignments",
+    metadata,
+    Column("id", String(36), primary_key=True),
+    Column("group_id", String(36), nullable=False),
+    Column("source_assignment_revision", Integer, nullable=False),
+    Column("target_user_id", String(36), ForeignKey("users.id"), nullable=False),
+    Column("requested_by", String(36), ForeignKey("users.id"), nullable=False),
+    Column("request_action_id", String(64), nullable=False),
+    Column("state", String(12), nullable=False),
+    Column("response_action_id", String(64)),
+    Column("result_assignment_revision", Integer),
+    Column("created_at", DateTime(timezone=True), nullable=False, server_default=func.now()),
+    Column("decided_at", DateTime(timezone=True)),
+    ForeignKeyConstraint(["group_id"], ["groups.id"]),
+    ForeignKeyConstraint(["group_id", "source_assignment_revision"], ["role_assignments.group_id", "role_assignments.revision"]),
+    ForeignKeyConstraint(["group_id", "result_assignment_revision"], ["role_assignments.group_id", "role_assignments.revision"]),
+    UniqueConstraint("group_id", "requested_by", "request_action_id", name="uq_role_reassignments_action"),
+    CheckConstraint("state in ('REQUESTED','ACCEPTED','DECLINED','SUPERSEDED')", name="state"),
+    CheckConstraint("(state = 'ACCEPTED') = (result_assignment_revision is not null)", name="result_iff_accepted"),
+    CheckConstraint("(state = 'REQUESTED') = (decided_at is null)", name="decided_unless_requested"),
+    Index("uq_role_reassignments_open", "group_id", unique=True, postgresql_where=text("state = 'REQUESTED'")),
+)

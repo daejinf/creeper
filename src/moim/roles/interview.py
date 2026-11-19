@@ -60,10 +60,11 @@ def _action(action_id: str) -> str:
 
 
 class RoleInterviewService:
-    def __init__(self, session_factory: sessionmaker[Session], client_factory: Callable[[], object], clock=utcnow):
+    def __init__(self, session_factory: sessionmaker[Session], client_factory: Callable[[], object], clock=utcnow, todos=None):
         self._sf = session_factory
         self._client_factory = client_factory
         self._clock = clock
+        self.todos = todos  # stage 4 session B: TodoService, whose owner view rides on the same `role` payload
 
     # ---- shared reads -----------------------------------------------------------------------
 
@@ -180,6 +181,8 @@ class RoleInterviewService:
             mine = AssignmentService.mine(s, group_id, user_id, current.revision)
             interview = self.view(s, group_id, user_id, current.revision)
             coverage = CoverageService.state_view(s, group_id, current.revision)
+            todos = (self.todos.view(s, group_id, user_id, current.revision, interview["state"] == DONE, coverage["state"])
+                     if self.todos is not None else None)
         rank = mine.assigned_rank
         rank_text = f"{rank}순위로 배정" if rank else "남은 역할로 배정"
         coverage["can_retry"] = coverage["state"] == "FAILED"
@@ -193,6 +196,7 @@ class RoleInterviewService:
             ],
             "interview": interview,
             "coverage": coverage,
+            "todos": todos,
         }
 
     # ---- start (the AI's first question) ----------------------------------------------------
@@ -213,6 +217,16 @@ class RoleInterviewService:
             ).scalar_one()
             if exists:
                 return "noop", None
+            # An action id already used for another (now STALE) assignment revision: a page left open across a
+            # reassignment or a brief change. Refuse cleanly instead of failing on the unique key.
+            reused = s.execute(
+                select(role_interview_turns.c.seq).where(
+                    role_interview_turns.c.group_id == group_id, role_interview_turns.c.user_id == user_id,
+                    role_interview_turns.c.action_id == action_id,
+                )
+            ).first()
+            if reused is not None:
+                raise InterviewError(409, "ACTION_REUSED", "이 화면이 오래됐어요. 새로고침해 주세요.")
             now = self._clock()
             s.execute(
                 insert(role_interview_turns).values(
