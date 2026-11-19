@@ -124,6 +124,7 @@ AI가 DB를 직접 임의 수정하지 않는다. 구조화된 변경안, 권한
 - 확정 투두 불변 트리거(0009)는 트랜잭션 범위 설정 `moim.lifecycle_purge = 'on'`(`SET LOCAL`)일 때만 UPDATE/DELETE를 통과시킨다. 이 설정은 `lifecycle.py`의 그룹 삭제·계정 삭제만 건다.
 - 비밀번호 변경: 현재 비밀번호 확인(`REAUTH_USER`) → 새 Argon2id 해시(현재 파라미터·새 salt, 확인한 해시가 그대로일 때만 저장) → 그 계정의 모든 세션 폐기 → 이 기기에 같은 `keep`으로 새 세션, CSRF 토큰 회전(응답 본문으로 새 토큰 전달, 쿠키는 HttpOnly).
 - 감사: `lifecycle_events`(kind·user_id·group_id·짧은 코드, FK 없음, 이름·아이디·본문 없음).
+- 삭제 기록(7단계, D-G1): `account/ledger.py`. 나가기·계정 삭제·실행 기록 `되돌리기`가 트랜잭션 안 커밋 직전에 DB·첨부 밖 `MOIM_DELETION_LEDGER_DIR`에 내부 id 한 줄을 쓴다(fail closed, 쓰기 실패면 롤백·503). 백업 복원 뒤 `LifecycleService.replay`(`tools/ops_db.py replay-deletions`)가 같은 코드로 다시 지운다. 절차는 `docs/OPERATIONS.md` 4절.
 
 ## 2. 모듈 판정표
 

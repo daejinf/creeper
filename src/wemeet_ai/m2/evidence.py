@@ -145,7 +145,7 @@ def _prepare_image(data: bytes, evidence_id: str, location: str, *, prefer_png: 
     try:
         with warnings.catch_warnings():
             warnings.simplefilter("error", Image.DecompressionBombWarning)
-            with Image.open(io.BytesIO(data)) as image:
+            with Image.open(io.BytesIO(data), formats=("PNG", "JPEG", "WEBP")) as image:  # no format sniffing
                 url = _image_data_url(image, prefer_png=prefer_png)
     except EvidenceError:
         raise

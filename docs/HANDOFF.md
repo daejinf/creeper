@@ -19,6 +19,7 @@
 - **5단계 완료(2026-11-19, D-D1·D-E1)**: 그룹 실행 화면(진척도·팀 활동·팀원·팀원 완료 기록·내 할 일·업로드·완료한 할 일)을 원본 group 구조로 실제 데이터에 연결했고, 첨부(팀 11형식 내용 검증)·수동 완료·`되돌리기`(첨부 있으면 재확인 뒤 영구 삭제)·투두별 M2 검토(본인에게만 `up-msg`와 내 기록 줄)를 D-D1대로 구현했다. 결정적 테스트 501개 통과, M2 LIVE 7회(호출 206~212, 누적 212회) 모두 성공. 사용자의 요청에 따라 에이전트가 1440×900 원본·구현과 팀원·업로드·기록 상세 캡처를 직접 비교해 디자인을 확인했고, 원본 구조를 유지하면서 D-E1 표시가 기존 카드·목록 안에 들어간 것을 확인한 뒤 완료 처리했다. 아래 `5단계 실행·첨부·M2` 절.
 - **6단계 구현·결정적 검증 완료(2026-11-19, D-D1 D6·D7, D-F1)**: 마이페이지(내 정보·이름 변경, 비밀번호 변경과 세션 회전, 참여 중인 그룹, 로그아웃, 회원 탈퇴), 그룹 화면 ⋯ 메뉴 `그룹 나가기`(영향 미리보기+브라우저 확인창), 그룹장 자동 승계, 마지막 구성원 그룹 삭제, 계정 삭제와 "탈퇴한 사용자" tombstone. 화면 차이 세 가지는 사용자가 D-F1로 승인했다. 사용자가 1440×900 캡처를 원본과 비교해 디자인을 확인했다("Design OK", 2026-11-19). **6단계 완료**, worktree 브랜치에 커밋했다. LIVE 호출 없음. 아래 `6단계 마이페이지·계정 생명주기` 절.
 - **1~6단계 총괄 재검증(2026-11-19)**: 6단계 코드 커밋 `ea5884e`와 HANDOFF 마감 정리만 추가된 현재 `main` `385fd59`에서 프로젝트 가상환경과 로컬 PostgreSQL 테스트 DB로 전체 결정적 테스트 **522개 통과**(실패·건너뜀 0), 원본 HTML 해시 9/9, 프롬프트 14개, `git diff --check`, 개발 DB migration `0012`를 다시 확인했다. 6단계 프롬프트의 재인증·CSRF·IDOR·세션 폐기·그룹장 승계/마지막 구성원·보관 FK·부분 실패·범위 밖 팀 보존·마이그레이션·디자인 증거를 코드와 `tests/test_lifecycle.py`에 항목별로 대조했다. 제품 코드 결함이나 BLOCKED 항목은 발견하지 않았다.
+- **7단계 운영 준비(2026-11-19~20, 판정 CONDITIONAL PASS)**: 사용자가 7단계 진행을 지시했다("가보자"). 보안 점검에서 찾은 결함 셋(Pillow 디코더 형식 미지정+공개 취약점, 본문 상한 없는 경로, 인증 없는 `/api/jobs` 노출)을 고쳤고, 운영 시작 점검·요청 id JSON 로그·DB 역할 분리·암호화 백업/복원 도구를 만들어 복원 리허설·장애 훈련·부하 표본을 실제로 실행했다. 배포 대상(TLS·비밀 저장소·로그/경보 연결)은 BLOCKED. 백업 보관·삭제 전파는 사용자가 승인했고(D-G1, 2026-11-20) 삭제 기록·복원 뒤 재처리를 구현해 리허설까지 통과했다. LIVE 호출 0회. 아래 `7단계 운영 준비` 절, 절차서 `docs/OPERATIONS.md`.
 - GATE B 승인 완료(D-B1, 2026-11-18): 인터뷰 항목·턴, chat 네 상태 문구와 `N/M명 제출 완료` 집계, 공급자 입력 필드, 미제출·신규 합류(차단 유지)·재배정·중복 역할, 역할 후보 생성(revision당 1회), 이름·순위 비노출 안내 문구(원본과 다른 제품 차이), 투두 공개·재확정, STALE 규칙. 이번 작업은 문서만 바꿨고 코드·테스트·원본 HTML은 변경하지 않았다.
 
 ## 환경 스냅샷 (2026-11-18, 확인한 사실만)
@@ -333,9 +334,37 @@ $env:MOIM_ENV='development'; .\.venv\Scripts\python.exe tools\capture_screens.py
 - 마이그레이션 0012 upgrade → downgrade(0011) → upgrade와 tombstone이 있을 때 downgrade 거절은 `test_migration_0012_down_and_up`. 개발 DB `moim_dev`도 0012.
 - 브라우저(Playwright Chromium, 개발 서버 8001, 일회용 계정): 가입 → 이름 변경(`<b>`는 글자로 표시) → 틀린/맞는 현재 비밀번호 → 세션 회전 뒤 다음 저장도 CSRF 통과 → 탈퇴는 옛 비밀번호 거절·새 비밀번호로 완료 → 랜딩 → `/mypage`는 로그인으로. localStorage·sessionStorage 비어 있음. 콘솔에는 일부러 틀린 비밀번호의 401 응답 2건만.
 
+## 7단계 운영 준비 (2026-11-19~20)
+
+- 판정: **CONDITIONAL PASS**. 코드·도구·절차 쪽 검증은 모두 통과했고 고위험 미해결 결함은 없다. 백업 보관 기간·삭제 전파는 D-G1(2026-11-20)로 승인·구현·리허설까지 끝났다. 남은 조건은 배포 대상 결정(BLOCKED, 외부 계정·비용) 하나이며, 그 환경에서 TLS·비밀 저장소·로그/경보를 확인하기 전에는 운영 출시를 PASS로 보지 않는다.
+- **D-G1 구현(2026-11-20, 사용자 "추천안 승인")**: `account/ledger.py` 삭제 기록(DB·첨부 밖, 하루 파일, 7일 자동 삭제, 내부 id·시각만). 그룹 나가기·계정 삭제·`되돌리기`가 같은 트랜잭션 안에서 커밋 직전 마지막 단계로 한 줄을 fsync로 쓰고, 쓸 수 없으면 삭제를 되돌리고 503 `DELETION_UNAVAILABLE`(기존 오류 자리에 "지금은 처리할 수 없어요. 잠시 후 다시 시도해 주세요."), 커밋이 실패하면 취소 줄을 붙인다(fail closed). `LifecycleService.replay`와 `tools/ops_db.py replay-deletions`(복원 뒤, 앱 시작 전), `ops_db.py prune`(백업 머리표가 있는 7일 지난 파일만), 운영 시작 점검 `DELETION_LEDGER_DIR_*` 3개. 승인 문장은 나가기·탈퇴였고, 같은 장치로 D5 `되돌리기`(첨부 영구 삭제)도 복원 뒤 다시 지우게 넓혔다(노출을 줄이는 쪽의 가역적 기술 선택, 제품 동작 변화 없음). 리허설: 백업 뒤 나가기 1·탈퇴 1 → 복원하면 되살아남(삭제 계정 id가 23개 표, canary 7행) → 재처리 2건 → 0개 표·canary 0 → 두 번째 실행 변화 없음. 증거 `artifacts\ops\rehearsal-replay-2026-11-20.txt`(worktree 밖 main 쪽 폴더).
+- **고친 것(코드)**:
+  - `execution/files.py`·`wemeet_ai/m2/evidence.py`: `Image.open(..., formats=...)`로 선언 형식 디코더만 쓰게 했다. 전에는 `.png`로 올린 TIFF·EPS·GIF 바이트가 그 디코더를 먼저 거쳤다. Pillow `>=13.0,<14`(12.3.0 공개 취약점 42건).
+  - `auth/middleware.py`: 본문 상한이 없던 경로에 상한(`/api/account` 8KB, 기본 64KB). FastAPI가 인증 전에 본문을 파싱하기 때문(독립 검토의 중간 등급 발견).
+  - `main.py`: 핸들러가 없으면 `/api/jobs` 라우터를 붙이지 않는다(404). `tests/test_jobs.py`의 기대값을 422 → 404(제출·조회·재시도 모두, 라우트 없음)로 바꿨다(약화 아님).
+- **새 코드**: `observability.py`(요청 id 미들웨어·`X-Request-ID`·경로 템플릿 접근 로그·JSON 형식), `preflight.py`(운영 시작 점검), `tools/ops_db.py`(역할 분리·백업·복원·검증·고아 정리), `tools/rehearse_restore.py`, `tools/drill_ai_failure.py`, `tools/load_sample.py`, `constraints.txt`(깨끗한 venv에서 해석한 정확한 버전), `pyproject.toml` extra `ops`(cryptography, 백업 도구 전용).
+- **에이전트가 정한 가역적 기술 결정**: 운영 구성(프록시 TLS + uvicorn 1프로세스 + `--proxy-headers`), owner/app 역할 분리, 백업 형식(AES-256-GCM 조각), 경보 기준값, RLS 도입 안 함, 악성 파일 검사 첫 출시 도입 안 함(근거는 `docs/SECURITY.md` 4-8), 성능 변경 없음.
+- **검증**:
+  - 기준선: 시작 시 전체 결정적 테스트 522개 통과(이 worktree, 변경 전).
+  - 깨끗한 환경: 추적·새 파일만 복사한 폴더에 새 venv(`pip install -e ".[test,visual,ops]"`, FastAPI 0.165.0·Pillow 13.0.0이 새로 해석됨)로 전체 결정적 테스트 — 결과는 아래 `7단계 검증 실행`.
+  - 복원 리허설 PASS, 장애 훈련 PASS, 부하 표본(10·40 가상 사용자, 오류 0) — 수치는 `docs/OPERATIONS.md` 5·6·8절, 증거는 이 worktree 밖 `C:\Users\user\Desktop\moim-design\artifacts\ops\`.
+  - 보안 스캔: pip-audit(남은 것 pytest 테스트 전용 1건, 오탐 판정), bandit(`src/` 중간·높음 0, 도구의 중간 16건은 개발 시드 상수 SQL 오탐). 근거는 `docs/SECURITY.md` 4-8.
+  - 원본 HTML 해시 9/9, 프롬프트 검증 14개, `git diff --check` 깨끗함(`evidence.py`는 baseline CRLF였고 수정하면서 LF로 정상화).
+  - 1440×900 캡처: 깨끗한 환경 코드의 개발 서버(포트 8003, 오프라인 스위치)로 9쌍 전부, 모두 1440×900. 이 worktree의 `artifacts\screens\index.html`. 화면 코드는 바꾸지 않았다(디자인 변화 없음). 개발 DB `moim_dev`의 `shot…` 시드가 다시 만들어졌다.
+- **환경 영향**: 공용 `.venv`에 잠시 Pillow 13·cryptography를 설치했다가 원래대로 되돌렸다(Pillow 12.3.0, cryptography 없음). 병합 뒤 공용 venv는 `pip install -e ".[test,visual,ops]" -c constraints.txt`로 맞춘다. 로컬 클러스터에 만든 리허설·훈련·부하 DB와 역할은 모두 지웠다.
+- **달랐던 사실**: 활성화 한 번의 팀 목표·역할 후보 호출은 같은 요청의 백그라운드 작업이라 순서대로 실행된다(팀 목표가 느리면 후보도 늦게 시작). 리허설 검사 스크립트의 결함 두 개(같은 fixture 문장, 완료 필드 이름)는 고쳤고 제품 결함은 아니었다.
+
+### 7단계 검증 실행
+
+- 깨끗한 환경 1차(추적·새 파일만 복사한 폴더, 새 venv): 548 통과·2 실패. (1) `test_original_htmls_are_untouched_by_this_stage`는 복사 폴더가 Git 저장소가 아니라 `git status`가 128로 끝난 것(환경 원인, 해시 검사 자체는 9/9 통과). (2) `test_reassign.py::test_privacy_login_csrf_and_logs`는 새 `test_operations.py`의 로깅 테스트가 루트 로거 수준을 INFO로 바꾸고 되돌리지 않아, 뒤 테스트의 준비 단계 INFO 로그(정책상 허용된 `user_id`)가 잡힌 순서 의존 문제. 제품 누출이 아니며 테스트가 수준을 복원하게 고쳤다.
+- 최종: 같은 새 venv로 이 worktree(Git 저장소)에서 전체 결정적 테스트 **550개 통과**(실패·건너뜀 0, 10분 8초). 기존 522 + `test_operations.py` 17 + `test_ops_tools.py` 11.
+- D-G1 뒤(2026-11-20): 같은 venv로 이 worktree 전체 결정적 테스트 **565개 통과**(실패 0). 550 + `test_deletion_ledger.py` 14 + 운영 시작 점검 삭제 기록 1. 원본 HTML 해시 9/9(`tools/check_design_hashes.py`), `git diff --check` 깨끗함. 복원 리허설(재처리 포함) PASS.
+
 ## 다음 한 단계
 
-**다음 한 단계: 1~6단계 MVP 범위가 끝났다. 7단계(`prompts/07-production-readiness.md`)는 실제 배포를 결정할 때만 진행한다(MVP 완료 조건 아님).**
+**다음 한 단계: 사용자가 배포 대상(호스팅·도메인·비밀 저장소·로그/경보)을 정하면, 그 환경에서 `docs/OPERATIONS.md` 2·7절의 BLOCKED 항목과 삭제 기록 저장소(`MOIM_DELETION_LEDGER_DIR`, DB·첨부와 다른 내구성 저장소)를 검증한다.**
+
+이전 메모: 1~6단계 MVP 범위가 끝났다. 7단계(`prompts/07-production-readiness.md`)는 실제 배포를 결정할 때만 진행한다(MVP 완료 조건 아님).
 
 이전 메모(6단계 시작 전): 다음 단계는 6단계 마이페이지와 계정 생명주기였다. 아래는 5단계 시작 전 메모다(처리 결과는 위 `5단계 실행·첨부·M2` 절): 이전 다음 단계는 5단계 실행과 투두별 M2 평가였다. 5단계로 넘긴 기술 세부는 이미지 해상도·총 픽셀 안전 상한, 압축 해제 상한, HWPX 추출 결정적 테스트, `TimelyClient`의 `file` 파트 거절 분류, `task_id`·revision 노출과 ProjectBrief 변경 뒤 읽기 전용 확정 투두 표시였고, 위 5단계 절에 처리 결과와 후속 품질 메모를 기록했다.
 
@@ -352,7 +381,14 @@ $env:MOIM_ENV='development'; .\.venv\Scripts\python.exe tools\capture_screens.py
 
 `docs/PRODUCT.md` 5절을 본다. GATE B(D-B1)·GATE D(D-D1)와 6단계 화면 차이(D-F1)는 승인 완료이고, 제품 OPEN 항목은 남아 있지 않다. BLOCKED 항목은 없다. (2026-11-19 MVP 마감 보정: 해결된 3단계 인터뷰 메모와 "1단계 전에 확인" 메모를 지우고 현재 사실로 바꿨다.)
 
-7단계(실제 배포를 결정할 때만)로 넘긴 기술 항목:
+7단계 OPEN/BLOCKED (2026-11-20):
+
+- **해결(APPROVED D-G1, 2026-11-20): 백업 보관 기간과 삭제 전파.** 롤링 7일, 장애 복구 전용, 복원 뒤 삭제 기록으로 나가기·탈퇴·되돌리기 재처리. 구현·테스트·리허설 완료(위 `7단계 운영 준비` 절).
+- **BLOCKED: 배포 대상.** 호스팅·도메인·TLS 인증서·비밀 저장소·로그 수집·경보 채널. 외부 계정과 비용이 들어 사용자가 정한다. 정해지면 `docs/OPERATIONS.md`의 해당 절을 그 환경에서 검증한다.
+- **OPEN: Timely 금액 기준 비용** — 요금표 확인 필요(토큰 추정은 `docs/OPERATIONS.md` 8절).
+- 7단계에서 처리한 이전 이월 항목: DB 역할 분리(도구·리허설), constraints 고정(해시 고정은 미적용: pip-tools 필요), `/api/jobs`(비노출), 프록시 주소(uvicorn 설정 검증), 백업 없음(도구·리허설), 고아 파일(정리 도구). 남은 것: LIVE 회귀(반복·한국어·긴 구조화 출력)와 토큰 상한 근거, 캡처 스크립트 "구현 없음" 보고 강화, 다중 프로세스 작업 소유, 대기방 스스로 나가기·수동 위임 화면(제품 기능, 범위 밖).
+
+이전 이월 기록(7단계 전):
 
 - PostgreSQL 역할 분리(migration·제한된 앱·테스트 역할)와 새 환경 DB 준비 스크립트·실행 문서. 지금은 `moim` superuser 하나다(0B 보정 때 진행하다 되돌렸고 로컬 클러스터는 역할 `moim` 하나로 복구).
 - 의존성 constraints/lock 고정, LIVE 회귀(반복·한국어·긴 구조화 출력·실제 Runtime 경로)와 토큰 상한 근거, 캡처 스크립트의 "구현 없음" 보고 강화.

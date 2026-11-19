@@ -36,6 +36,7 @@ MAX_NAME = 255
 MAX_IMAGE_SIDE = 12_000
 MAX_IMAGE_PIXELS = 40_000_000
 REVIEW_IMAGE_SIDE = 2048
+IMAGE_DECODERS = ("PNG", "JPEG", "WEBP")  # stage 7: the only Pillow decoders an upload may ever reach
 
 # Archive limits for DOCX, HWPX, PPTX, XLSX (5단계 기술 세부). Nothing is ever extracted to disk.
 MAX_ZIP_ENTRIES = 2000
@@ -143,7 +144,9 @@ def _image_check(data: bytes, kind: str) -> bool:
     try:
         with warnings.catch_warnings():
             warnings.simplefilter("error", Image.DecompressionBombWarning)
-            with Image.open(io.BytesIO(data)) as im:
+            # Stage 7: only the expected decoder may touch the bytes. Without `formats=` Pillow sniffs any of its
+            # ~40 formats (TIFF, EPS, GIF, ...) before the format check below runs.
+            with Image.open(io.BytesIO(data), formats=[kind]) as im:
                 if im.format != {"PNG": "PNG", "JPEG": "JPEG", "WEBP": "WEBP"}[kind]:
                     raise FileRejected("MISMATCH", MSG_MISMATCH)
                 w, h = im.size
@@ -280,7 +283,7 @@ class Storage:
 
 def review_image(data: bytes) -> str:
     """A metadata-free copy, upright, long side at most 2048px, as a PNG (alpha) or JPEG data URL."""
-    with Image.open(io.BytesIO(data)) as im:
+    with Image.open(io.BytesIO(data), formats=IMAGE_DECODERS) as im:
         im = ImageOps.exif_transpose(im)
         im.thumbnail((REVIEW_IMAGE_SIDE, REVIEW_IMAGE_SIDE), Image.Resampling.LANCZOS)
         alpha = im.mode in ("RGBA", "LA", "PA") or "transparency" in im.info

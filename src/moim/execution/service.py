@@ -30,6 +30,7 @@ from typing import Callable
 from sqlalchemy import delete, func, insert, select, text, update
 from sqlalchemy.orm import Session, sessionmaker
 
+from ..account.ledger import DeletionLedger, LedgerUnavailable
 from ..auth.errors import AuthError
 from ..groups.service import ACTIVE, GroupService, is_group_id, today_kst
 from ..models import (
@@ -65,6 +66,7 @@ MSG_ETC_FILE = "파일은 할 일을 골라야 첨부할 수 있어요."
 MSG_FILES = "한 번에 파일은 5개까지 첨부할 수 있어요."
 MSG_GROUP_FULL = "그룹의 첨부 용량(500MB)이 가득 차서 첨부하지 않았어요."
 MSG_CONFIRM = "첨부 자료도 삭제되며 복구할 수 없어요. 되돌릴까요?"
+MSG_UNAVAILABLE = "지금은 처리할 수 없어요. 잠시 후 다시 시도해 주세요."
 MSG_NOT_RETRYABLE = "지금은 다시 시도할 수 없어요. 새로고침해서 상태를 확인해 주세요."
 
 
@@ -94,12 +96,13 @@ def time_label(at: datetime, today: date) -> str:
 
 class ExecutionService:
     def __init__(self, session_factory: sessionmaker[Session], client_factory: Callable[[], object], storage: F.Storage,
-                 review_enabled: bool = True, clock=utcnow):
+                 review_enabled: bool = True, clock=utcnow, ledger: DeletionLedger | None = None):
         self._sf = session_factory
         self._client_factory = client_factory
         self.storage = storage
         self.review_enabled = review_enabled
         self._clock = clock
+        self.ledger = ledger or DeletionLedger(None)  # stage 7 (D-G1): undo is replayed after a backup restore
 
     # ---- access -------------------------------------------------------------------------------------------------------
 
@@ -366,19 +369,28 @@ class ExecutionService:
         are deleted permanently. Returns the number of deleted files."""
         if not UUID_RE.fullmatch(record_id or ""):
             raise not_found()
-        with self._sf() as s, s.begin():
-            self._member(s, group_id, user_id)
-            self._lock(s, group_id)
-            rec = s.execute(select(execution_records).where(
-                execution_records.c.id == record_id, execution_records.c.group_id == group_id,
-                execution_records.c.user_id == user_id, execution_records.c.marks_done)).one_or_none()
-            if rec is None:
-                raise not_found()
-            if rec.file_count and not confirm_delete:
-                raise ExecutionError(409, "CONFIRM_REQUIRED", MSG_CONFIRM)
-            fids = s.execute(select(execution_files.c.id).where(execution_files.c.record_id == record_id)).scalars().all()
-            s.execute(delete(execution_records).where(execution_records.c.id == record_id))  # files, review: cascade
-            self._event(s, group_id, user_id, "UNDO", rec, file_count=len(fids))
+        entry = None
+        try:
+            with self._sf() as s, s.begin():
+                self._member(s, group_id, user_id)
+                self._lock(s, group_id)
+                rec = s.execute(select(execution_records).where(
+                    execution_records.c.id == record_id, execution_records.c.group_id == group_id,
+                    execution_records.c.user_id == user_id, execution_records.c.marks_done)).one_or_none()
+                if rec is None:
+                    raise not_found()
+                if rec.file_count and not confirm_delete:
+                    raise ExecutionError(409, "CONFIRM_REQUIRED", MSG_CONFIRM)
+                fids = s.execute(select(execution_files.c.id).where(execution_files.c.record_id == record_id)).scalars().all()
+                s.execute(delete(execution_records).where(execution_records.c.id == record_id))  # files, review: cascade
+                self._event(s, group_id, user_id, "UNDO", rec, file_count=len(fids))
+                # D-G1, fail closed: the last step before the commit; no undo commits without its ledger line
+                entry = self.ledger.record("RECORD_UNDONE", user_id, group_id, record_id)
+        except LedgerUnavailable:
+            raise ExecutionError(503, "DELETION_UNAVAILABLE", MSG_UNAVAILABLE) from None
+        except BaseException:
+            self.ledger.cancel(entry)
+            raise
         for fid in fids:
             self.storage.delete(group_id, fid)
         log.info("execution_event group_id=%s user_id=%s record_id=%s kind=UNDO files=%d", group_id, user_id, record_id, len(fids))

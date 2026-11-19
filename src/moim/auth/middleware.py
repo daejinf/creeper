@@ -9,14 +9,19 @@ GROUP_BODY_LIMIT = 32 * 1024  # a ProjectBrief (1000-character content, types, m
 UPLOAD_BODY_LIMIT = 5 * 10 * 1024 * 1024 + 256 * 1024
 
 
-def body_limit(path: str) -> int | None:
-    if path.startswith("/api/auth/"):
+# Stage 7: every other request gets a cap too. FastAPI reads and parses a body before auth/CSRF dependencies run,
+# so an uncapped path would let a signed-out client make the worker buffer an arbitrarily large body.
+DEFAULT_BODY_LIMIT = 64 * 1024
+
+
+def body_limit(path: str) -> int:
+    if path.startswith(("/api/auth/", "/api/account")):
         return AUTH_BODY_LIMIT
     if path.startswith("/api/groups/") and path.endswith("/records") and path.count("/") == 4:
         return UPLOAD_BODY_LIMIT
     if path.startswith("/api/groups"):
         return GROUP_BODY_LIMIT
-    return None
+    return DEFAULT_BODY_LIMIT
 
 CSP = "; ".join(
     [
@@ -45,7 +50,7 @@ class SecurityMiddleware:
             return
 
         cap = body_limit(scope["path"])
-        limited = cap is not None
+        limited = True
         too_big = False
 
         async def guarded_receive():

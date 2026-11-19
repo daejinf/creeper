@@ -22,11 +22,16 @@ Deleting an account (D7): password check, then D6 for every group, then the call
 every group (also groups left earlier), the sessions and the user row. The username is released at once. What the
 team keeps (the immutable assignment record, cohort history, ProjectBrief authorship, reassignment and audit metadata)
 is moved to a fresh "탈퇴한 사용자" tombstone row with a new id, so nothing kept points at the deleted account.
+
+Every leave and account deletion also writes its internal ids to the deletion ledger (stage 7, D-G1, `ledger.py`)
+inside its transaction, just before the commit, so a backup restore can run it again (`replay`). The ledger fails
+closed: when the line cannot be written, the deletion is rolled back and reported as "try again later".
 """
 from __future__ import annotations
 
 import logging
 import uuid
+from contextlib import contextmanager
 from dataclasses import dataclass, field
 from datetime import datetime
 from typing import Callable
@@ -70,6 +75,7 @@ from ..models import (
     users,
 )
 from ..roles.assignment import AssignmentService
+from .ledger import DeletionLedger, LedgerUnavailable
 from ..timeutil import utcnow
 
 log = logging.getLogger("moim.lifecycle")
@@ -77,6 +83,7 @@ log = logging.getLogger("moim.lifecycle")
 TOMBSTONE_NAME = "탈퇴한 사용자"
 MSG_NOT_FOUND = "찾을 수 없어요."
 MSG_CONFIRM = "확인이 필요해요. 내용을 확인한 뒤 다시 시도해 주세요."
+MSG_UNAVAILABLE = "지금은 처리할 수 없어요. 잠시 후 다시 시도해 주세요."
 ROOM_NAME = "초대방"  # a FORMING room has no ProjectBrief name yet
 
 # The transaction-scoped switch the 0012 trigger honours for confirmed todos. Only this module sets it.
@@ -105,11 +112,12 @@ class Outcome:
 
 class LifecycleService:
     def __init__(self, session_factory: sessionmaker[Session], storage, assignment: AssignmentService,
-                 clock: Callable[[], datetime] = utcnow):
+                 clock: Callable[[], datetime] = utcnow, ledger: DeletionLedger | None = None):
         self._sf = session_factory
         self.storage = storage
         self._assignment = assignment
         self._clock = clock
+        self.ledger = ledger or DeletionLedger(None)
 
     # ---- shared reads -------------------------------------------------------------------------------------------------
 
@@ -184,19 +192,24 @@ class LifecycleService:
             raise not_found()  # a stranger, someone who already left and a missing group look the same
         return g, role
 
-    def leave_group(self, user_id: str, group_id: str, confirm: bool) -> tuple[dict, Outcome]:
-        """(impact that was applied, outcome). Without `confirm` nothing changes: 409 with the impact to show."""
+    def leave_group(self, user_id: str, group_id: str, confirm: bool, record: bool = True) -> tuple[dict, Outcome]:
+        """(impact that was applied, outcome). Without `confirm` nothing changes: 409 with the impact to show.
+        `record=False` only for `replay` (the entry is already in the ledger)."""
         out = Outcome()
-        with self._sf.begin() as s:
-            GroupService._lock_user(s, user_id)
-            g, role = self._active_member(s, group_id, user_id, lock=True)
-            self._assignment.lock_group(s, group_id)
-            _execution_lock(s, group_id)
-            impact = self._impact(s, g, user_id, role)
-            if not confirm:
-                raise LifecycleError(409, "CONFIRM_REQUIRED", MSG_CONFIRM, extra={"impact": impact})
-            now = self._clock()
-            self._leave(s, g, user_id, role, now, out)
+        entry: list[str | None] = []
+        with self._ledgered(entry):
+            with self._sf.begin() as s:
+                GroupService._lock_user(s, user_id)
+                g, role = self._active_member(s, group_id, user_id, lock=True)
+                self._assignment.lock_group(s, group_id)
+                _execution_lock(s, group_id)
+                impact = self._impact(s, g, user_id, role)
+                if not confirm:
+                    raise LifecycleError(409, "CONFIRM_REQUIRED", MSG_CONFIRM, extra={"impact": impact})
+                now = self._clock()
+                self._leave(s, g, user_id, role, now, out)
+                if record:
+                    entry.append(self.ledger.record("LEAVE", user_id, group_id))  # last step before the commit
         self._after_commit(out)
         log.info("lifecycle_event kind=LEAVE group_id=%s user_id=%s group_deleted=%s handed_over=%d",
                  group_id, user_id, bool(out.purged_groups), out.handed_over)
@@ -301,10 +314,11 @@ class LifecycleService:
         gs = s.execute(q.with_for_update() if lock else q).all()
         return [(g, LifecycleService._my_role(s, g.id, user_id)) for g in gs]
 
-    def delete_account(self, user_id: str) -> Outcome:
+    def delete_account(self, user_id: str, record: bool = True) -> Outcome:
         """The password was checked by the caller (outside the locks). Everything below is one transaction."""
         out = Outcome()
-        with self._sf.begin() as s:
+        entry: list[str | None] = []
+        with self._ledgered(entry), self._sf.begin() as s:
             GroupService._lock_user(s, user_id)
             me = s.execute(select(users).where(users.c.id == user_id, users.c.deleted_at.is_(None))).one_or_none()
             if me is None:
@@ -330,6 +344,8 @@ class LifecycleService:
             self._delete_own_data(s, user_id, out)
             out.tombstone = self._tombstone(s, user_id, now)
             s.execute(delete(users).where(users.c.id == user_id))  # sessions go with it (ON DELETE CASCADE)
+            if record:
+                entry.append(self.ledger.record("ACCOUNT_DELETED", user_id))  # last step before the commit
         self._after_commit(out)
         log.info("lifecycle_event kind=ACCOUNT_DELETED user_id=%s groups_left=%d groups_deleted=%d files=%d",
                  user_id, out.left, len(out.purged_groups), len(out.files))
@@ -397,6 +413,61 @@ class LifecycleService:
         s.execute(update(lifecycle_events).where(lifecycle_events.c.user_id == uid).values(user_id=tid))
         _event(s, "ACCOUNT_DELETED", tid, None, now)
         return needed
+
+    def _replay_undo(self, user_id: str, group_id: str, record_id: str) -> Outcome:
+        """D5 `되돌리기` again: the record, its files and its review go (cascade), as in `ExecutionService.undo`. The
+        membership is not checked: the user already confirmed this deletion when it was still a member."""
+        out = Outcome()
+        with self._sf.begin() as s:
+            _execution_lock(s, group_id)
+            hit = execution_records.c.id == record_id
+            mine = and_(hit, execution_records.c.group_id == group_id, execution_records.c.user_id == user_id)
+            if s.execute(select(func.count()).select_from(execution_records).where(mine)).scalar_one() == 0:
+                raise not_found()
+            out.files.extend((group_id, f) for f in s.execute(
+                select(execution_files.c.id).where(execution_files.c.record_id == record_id)).scalars())
+            s.execute(delete(execution_records).where(mine))
+        self._after_commit(out)
+        log.info("lifecycle_event kind=UNDO_REPLAYED group_id=%s user_id=%s files=%d", group_id, user_id, len(out.files))
+        return out
+
+    @contextmanager
+    def _ledgered(self, entry: list):
+        """Around the deletion's transaction: a ledger write failure becomes a 503 (the transaction is rolled back by
+        then), and a failure after the line was written (the commit) cancels that line."""
+        try:
+            yield
+        except LedgerUnavailable:
+            raise LifecycleError(503, "DELETION_UNAVAILABLE", MSG_UNAVAILABLE) from None
+        except BaseException:
+            for e in entry:
+                self.ledger.cancel(e)
+            raise
+
+    # ---- D-G1: run ledger deletions again after a backup restore -------------------------------------------------
+
+    def replay(self, entries: list[dict]) -> dict:
+        """Run each ledger entry again, oldest first, through the same code as the user's own request. An entry whose
+        effect is already in the database (account gone, not a member, group gone) is counted as `already`; that is
+        the normal case for entries older than the backup. Any other error stops the replay (nothing is guessed);
+        running it again is safe because every applied entry is then `already`."""
+        result: dict = {"applied": 0, "already": 0, "assigned": []}
+        for e in entries:
+            try:
+                if e["kind"] == "LEAVE":
+                    _, out = self.leave_group(e["user_id"], e["group_id"], confirm=True, record=False)
+                elif e["kind"] == "RECORD_UNDONE":
+                    out = self._replay_undo(e["user_id"], e["group_id"], e["record_id"])
+                else:
+                    out = self.delete_account(e["user_id"], record=False)
+            except LifecycleError as exc:
+                if exc.status == 404:
+                    result["already"] += 1
+                    continue
+                raise
+            result["applied"] += 1
+            result["assigned"].extend(out.assigned)
+        return result
 
     # ---- after commit -------------------------------------------------------------------------------------------------
 

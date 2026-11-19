@@ -300,9 +300,14 @@ def test_status_response_never_echoes_the_input(client):
 
 
 def test_no_handlers_means_nothing_can_be_submitted(db):
+    # Stage 7: with no handler the unauthenticated job API is not mounted at all (no submit, status or retry).
     with TestClient(create_app()) as c:
         r = c.post("/api/jobs", json={"operation_id": "op-1", "kind": "ok", "input": {"n": 1}})
-    assert r.status_code == 422
+        status = c.get("/api/jobs/00000000-0000-0000-0000-000000000000")
+        retry = c.post("/api/jobs/00000000-0000-0000-0000-000000000000/retry", json={"revision": 1})
+        paths = {getattr(route, "path", "") for route in c.app.routes}
+    assert r.status_code == 404 and status.status_code == 404 and retry.status_code == 404
+    assert not any(p.startswith("/api/jobs") for p in paths)
 
 
 def test_job_logs_do_not_contain_input_or_raw_errors(client, caplog):

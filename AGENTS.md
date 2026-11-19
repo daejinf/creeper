@@ -162,4 +162,5 @@ AI 공급자:
 | `docs/SECURITY.md` | 위협 모델, 데이터 분류, 테스트 매트릭스 |
 | `docs/LIVE_TESTING.md` | AI 로그·실패 처리, LIVE 예산과 기록 |
 | `docs/ROADMAP.md` | 단계 게이트, 로드맵, 완료 조건, OPEN 결정 |
+| `docs/OPERATIONS.md` | 운영 구성, 설정·비밀, DB 역할·백업·복원, 장애 대응, 로그·경보, 부하·비용 (7단계) |
 | `docs/HANDOFF.md` | 날짜가 있는 환경 스냅샷, 현재 상태, 다음 한 단계 |

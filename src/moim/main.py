@@ -16,6 +16,7 @@ from fastapi.templating import Jinja2Templates
 from sqlalchemy import text
 
 from .account.lifecycle import LifecycleService
+from .account.ledger import DeletionLedger
 from .account.routes import make_router as make_account_router
 from .account.service import AccountService
 from .auth.errors import AuthError, auth_error_handler
@@ -42,6 +43,8 @@ from .roles.todos import TodoService
 from .job_routes import make_router
 from .jobs import Handler, JobStore
 from .logging_utils import install_redaction
+from .observability import RequestContextMiddleware, configure_logging
+from .preflight import enforce_production
 
 STATIC_DIR = Path(__file__).parent / "static"
 # Attachments live outside the repository's tracked files (`.local/` is git-ignored). MOIM_UPLOAD_DIR overrides it.
@@ -83,6 +86,7 @@ def create_app(
     rng_factory: Callable[[], object] | None = None,
     upload_dir: str | Path | None = None,
     review_enabled: bool = True,
+    deletion_ledger_dir: str | Path | None = None,
 ) -> FastAPI:
     """`goal_client_factory` and `ai_client_factory` (role candidates) exist for deterministic tests only;
     the product always uses the Timely client."""
@@ -104,15 +108,19 @@ def create_app(
     reassign_service = ReassignmentService(make_session_factory(engine), assignment_service)
     # Stage 5: M2.review is enabled by D-D1 (GATE D). `review_enabled=False` keeps manual completion only.
     storage = Storage(upload_dir or os.environ.get("MOIM_UPLOAD_DIR") or DEFAULT_UPLOAD_DIR)
-    execution_service = ExecutionService(make_session_factory(engine), ai_client_factory, storage, review_enabled=review_enabled)
+    # Stage 7 (D-G1): undo, leaves and account deletions are also written to the deletion ledger outside the database.
+    ledger = DeletionLedger(deletion_ledger_dir or os.environ.get("MOIM_DELETION_LEDGER_DIR") or None)
+    execution_service = ExecutionService(make_session_factory(engine), ai_client_factory, storage,
+                                         review_enabled=review_enabled, ledger=ledger)
     # Stage 6: mypage and the account lifecycle (D-D1 D6/D7).
     account_service = AccountService(make_session_factory(engine))
-    lifecycle_service = LifecycleService(make_session_factory(engine), storage, assignment_service)
+    lifecycle_service = LifecycleService(make_session_factory(engine), storage, assignment_service, ledger=ledger)
 
     @asynccontextmanager
     async def lifespan(app: FastAPI):
         install_redaction()
         log = logging.getLogger("moim")
+        enforce_production(settings, engine)  # stage 7: production refuses to start on an unsafe DB role or config
         log.info("starting env=%s db=%s", settings.env, settings.safe_database_url)
         interrupted = store.fail_interrupted()  # work lost with the previous process becomes a retryable failure
         if interrupted:
@@ -169,6 +177,7 @@ def create_app(
     app.state.account = account_service
     app.state.lifecycle = lifecycle_service
     app.add_middleware(SecurityMiddleware, hsts=settings.secure_cookies)
+    app.add_middleware(RequestContextMiddleware)  # outermost: every response (413s included) carries X-Request-ID
     app.add_exception_handler(AuthError, auth_error_handler)
 
     @app.exception_handler(RequestValidationError)
@@ -177,7 +186,8 @@ def create_app(
             return auth_error_handler(request, AuthError(400, "BAD_REQUEST", "요청 형식이 올바르지 않아요."))
         return await request_validation_exception_handler(request, exc)
 
-    app.include_router(make_router(store, handlers))
+    if handlers:  # stage 7: the generic job API has no auth, so it is not exposed at all while no handler exists
+        app.include_router(make_router(store, handlers))
     app.include_router(make_auth_router(settings, session_factory, sessions, throttle, templates))
     app.include_router(make_group_router(settings, group_service, goal_service, candidate_service, throttle, templates))
     app.include_router(make_interview_router(
@@ -200,4 +210,7 @@ def create_app(
 
 
 def app_factory() -> FastAPI:  # uvicorn --factory moim.main:app_factory
-    return create_app()
+    settings = load_settings()
+    if settings.env == "production" or os.environ.get("MOIM_LOG_FORMAT") == "json":
+        configure_logging()  # stage 7: JSON lines with request_id; secrets masked first
+    return create_app(settings)
