@@ -23,7 +23,10 @@ every group (also groups left earlier), the sessions and the user row. The usern
 team keeps (the immutable assignment record, cohort history, ProjectBrief authorship, reassignment and audit metadata)
 is moved to a fresh "탈퇴한 사용자" tombstone row with a new id, so nothing kept points at the deleted account.
 
-Every leave and account deletion also writes its internal ids to the deletion ledger (stage 7, D-G1, `ledger.py`)
+Deleting a group (D-H1): only its leader, after confirming the impact; every row and file of the group goes at once
+for every member (the same purge as the last member leaving).
+
+Every leave, group deletion and account deletion also writes its internal ids to the deletion ledger (stage 7, D-G1, `ledger.py`)
 inside its transaction, just before the commit, so a backup restore can run it again (`replay`). The ledger fails
 closed: when the line cannot be written, the deletion is rolled back and reported as "try again later".
 """
@@ -75,6 +78,7 @@ from ..models import (
     users,
 )
 from ..roles.assignment import AssignmentService
+from ..execution.votes import settle_group
 from .ledger import DeletionLedger, LedgerUnavailable
 from ..timeutil import utcnow
 
@@ -84,6 +88,7 @@ TOMBSTONE_NAME = "탈퇴한 사용자"
 MSG_NOT_FOUND = "찾을 수 없어요."
 MSG_CONFIRM = "확인이 필요해요. 내용을 확인한 뒤 다시 시도해 주세요."
 MSG_UNAVAILABLE = "지금은 처리할 수 없어요. 잠시 후 다시 시도해 주세요."
+MSG_LEADER_ONLY = "그룹장만 그룹을 삭제할 수 있어요."
 ROOM_NAME = "초대방"  # a FORMING room has no ProjectBrief name yet
 
 # The transaction-scoped switch the 0012 trigger honours for confirmed todos. Only this module sets it.
@@ -231,6 +236,7 @@ class LifecycleService:
             self._purge_group(s, gid, out)
             _event(s, "GROUP_DELETED", None, gid, now, detail="LAST_MEMBER_LEFT")
             return
+        settle_group(s, gid, now)  # D-H1: open votes are counted again without the member who left
         if role == LEADER:
             heir = remaining[0].user_id
             s.execute(update(group_members).where(group_members.c.group_id == gid, group_members.c.user_id == heir)
@@ -281,6 +287,61 @@ class LifecycleService:
             s.execute(delete(t).where(by_group(t)))  # execution files and reviews go with their records (cascade)
         s.execute(delete(groups).where(groups.c.id == gid))
         out.purged_groups.append(gid)
+
+    # ---- D-H1: the leader deletes the whole group -----------------------------------------------------------------
+
+    def _group_impact(self, s: Session, g) -> dict:
+        n = lambda q: s.execute(q).scalar_one()  # noqa: E731
+        return {
+            "group_name": self._group_name(s, g),
+            "members": n(select(func.count()).select_from(group_members).where(group_members.c.group_id == g.id)),
+            "records": n(select(func.count()).select_from(execution_records).where(execution_records.c.group_id == g.id)),
+            "files": n(select(func.count()).select_from(execution_files).where(execution_files.c.group_id == g.id)),
+        }
+
+    def _leader(self, s: Session, group_id: str, user_id: str, lock: bool):
+        g, role = self._active_member(s, group_id, user_id, lock=lock)
+        if role != LEADER:
+            raise LifecycleError(403, "LEADER_ONLY", MSG_LEADER_ONLY)
+        return g
+
+    def delete_group_preview(self, user_id: str, group_id: str) -> dict:
+        with self._sf() as s:
+            return self._group_impact(s, self._leader(s, group_id, user_id, lock=False))
+
+    def delete_group(self, user_id: str, group_id: str, confirm: bool, record: bool = True) -> tuple[dict, Outcome]:
+        """(impact that was applied, outcome). Leader only. Without `confirm` nothing changes: 409 with the impact."""
+        out = Outcome()
+        entry: list[str | None] = []
+        with self._ledgered(entry):
+            with self._sf.begin() as s:
+                GroupService._lock_user(s, user_id)
+                g = self._leader(s, group_id, user_id, lock=True)
+                self._assignment.lock_group(s, group_id)
+                _execution_lock(s, group_id)
+                impact = self._group_impact(s, g)
+                if not confirm:
+                    raise LifecycleError(409, "CONFIRM_REQUIRED", MSG_CONFIRM, extra={"impact": impact})
+                self._purge_group(s, group_id, out)
+                _event(s, "GROUP_DELETED", user_id, group_id, self._clock(), detail="LEADER_DELETED")
+                if record:
+                    entry.append(self.ledger.record("GROUP_DELETED", user_id, group_id))  # last step before the commit
+        self._after_commit(out)
+        log.info("lifecycle_event kind=GROUP_DELETED group_id=%s user_id=%s files=%d", group_id, user_id, len(out.files))
+        return impact, out
+
+    def _replay_group_delete(self, group_id: str) -> Outcome:
+        """D-H1 group deletion again after a restore. The leader already confirmed it; roles are not checked again."""
+        out = Outcome()
+        with self._sf.begin() as s:
+            if s.execute(select(groups.c.id).where(groups.c.id == group_id).with_for_update()).first() is None:
+                raise not_found()
+            self._assignment.lock_group(s, group_id)
+            _execution_lock(s, group_id)
+            self._purge_group(s, group_id, out)
+            _event(s, "GROUP_DELETED", None, group_id, self._clock(), detail="REPLAYED")
+        self._after_commit(out)
+        return out
 
     # ---- D7: delete the account ---------------------------------------------------------------------------------------
 
@@ -458,6 +519,8 @@ class LifecycleService:
                     _, out = self.leave_group(e["user_id"], e["group_id"], confirm=True, record=False)
                 elif e["kind"] == "RECORD_UNDONE":
                     out = self._replay_undo(e["user_id"], e["group_id"], e["record_id"])
+                elif e["kind"] == "GROUP_DELETED":
+                    out = self._replay_group_delete(e["group_id"])
                 else:
                     out = self.delete_account(e["user_id"], record=False)
             except LifecycleError as exc:

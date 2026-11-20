@@ -3,7 +3,10 @@
    Data comes from GET /api/groups/{id}/execution only: confirmed role names, todo titles/due dates, done state and the
    records members posted. Hidden criteria never reach the browser. Everything is built with DOM nodes and textContent
    (never an HTML string). Nothing is stored in the browser. The M2 line is shown to the submitter only (the server sends it
-   only for the viewer's own records). */
+   only for the viewer's own records), except as the reason of a team vote (D-H1).
+
+   Completion (D-H1): a todo is completed only when the AI passes the attached material, or when more than half of the
+   other members agree after the AI held it. There is no checkbox completion. */
 (function () {
   var root = document.getElementById('exec');
   if (!root) return;
@@ -269,6 +272,9 @@
       tag.appendChild(document.createTextNode(m.name));
       btn.appendChild(tag);
       btn.appendChild(el('span', 'ft', f.title));
+      if (f.completion === 'VOTING') btn.appendChild(el('span', 'tag', '확인 요청'));
+      else if (f.completion === 'REVIEWING') btn.appendChild(el('span', 'tag', 'AI 확인 중'));
+      else if (f.completion === 'REJECTED') btn.appendChild(el('span', 'tag no', '반려'));
       btn.appendChild(el('time', null, f.label));
       row.appendChild(btn);
       var det = el('div', 'detail'); det.id = did;
@@ -286,7 +292,8 @@
       if (f.review) {
         det.appendChild(reviewLine(f.review, f.id));
         if (f.review.state === 'PENDING' || f.review.state === 'RUNNING') poll(f.id);
-      }
+      } else if (f.vote) det.appendChild(el('p', 'ai-line', f.vote.reason));
+      if (f.vote) det.appendChild(voteLine(f));
       row.appendChild(det);
       var key = f.id || (f.who + f.at);
       if (openRows[key]) { row.classList.add('open'); btn.setAttribute('aria-expanded', 'true'); }
@@ -298,6 +305,32 @@
       }
     });
     applyFilter();
+  }
+  // ---- 팀원 확인 요청 (D-H1): AI가 보류한 자료는 나를 뺀 팀원 과반이 동의하면 완료 ----
+  function voteLine(f) {
+    var v = f.vote, p = el('p', 'vote');
+    if (v.state === 'DONE') {
+      p.appendChild(el('span', null, v.by === 'SELF' ? '확인할 다른 팀원이 없어 완료로 처리됐어요.' : '팀원 과반이 동의해 완료됐어요.'));
+      return p;
+    }
+    if (v.state === 'REJECTED') { p.appendChild(el('span', null, '팀원 과반이 동의하지 않아 반려됐어요.')); return p; }
+    p.appendChild(el('span', null, '팀원 확인 중 · 동의 ' + v.agree + '/' + v.need + (v.reject ? ' · 거절 ' + v.reject : '')));
+    if (v.can_vote) {
+      [[true, '동의'], [false, '거절']].forEach(function (o) {
+        var b = el('button', 'goal-retry', o[1]); b.type = 'button';
+        b.setAttribute('aria-pressed', String(v.my_vote === o[0]));
+        b.addEventListener('click', function () { castVote(f.id, o[0], p); });
+        p.appendChild(b);
+      });
+    }
+    return p;
+  }
+  function castVote(recordId, agree, line) {
+    line.querySelectorAll('button').forEach(function (b) { b.disabled = true; });
+    request('POST', base + '/records/' + encodeURIComponent(recordId) + '/vote', { agree: agree }).then(function (r) {
+      if (!r.ok) window.alert(r.message);
+      load();
+    });
   }
   function applyFilter() {
     var shown = 0;
@@ -332,7 +365,7 @@
 
   // ---- 내 할 일 · 완료한 할 일 ----
   var todoList = document.getElementById('todoList'), doneList = document.getElementById('doneList');
-  var upTodo = document.getElementById('upTodo'), upDone = document.getElementById('upDone');
+  var upTodo = document.getElementById('upTodo'), upHint = document.getElementById('upHint');
   function dueLabel(t) {
     if (t.due_date === data.today) return { text: '오늘 마감', urgent: true };
     return { text: md(t.due_date) + ' 마감', urgent: t.due_date < data.today };
@@ -343,15 +376,31 @@
     var done = mine.filter(function (t) { return t.done_on; }).sort(function (a, b) { return a.done_on < b.done_on ? 1 : -1; });
     clear(todoList);
     open.forEach(function (t) {
-      var li = el('li', 'todo' + (t.task_id === fresh ? ' fresh' : ''));
+      // D-H1: 체크로 완료하지 않는다. AI 확인·팀원 확인 중이면 원본의 '대기 중' 모양, 아니면 누르면 올리기로 이어진다.
+      var st = t.attempt && t.attempt.completion;
+      var waiting = st === 'REVIEWING' || st === 'VOTING';
+      var li = el('li', 'todo' + (waiting ? ' waiting' : '') + (t.task_id === fresh ? ' fresh' : ''));
       li.setAttribute('data-id', t.task_id);
-      var cb = el('button', 'cb'); cb.type = 'button';
-      cb.setAttribute('aria-label', '완료하기: ' + t.title);
-      cb.appendChild(tick());
-      li.appendChild(cb);
+      if (waiting) {
+        var ic = el('span', 'wait-ic'); ic.setAttribute('aria-hidden', 'true');
+        ic.appendChild(svg(['M6 3h12M6 21h12M7 3c0 4.5 5 6.5 5 9s-5 4.5-5 9M17 3c0 4.5-5 6.5-5 9s5 4.5 5 9'], 13, 2));
+        li.appendChild(ic);
+      } else {
+        var cb = el('button', 'cb'); cb.type = 'button';
+        cb.setAttribute('aria-label', '자료 올리기: ' + t.title);
+        cb.title = '자료를 첨부하면 AI가 확인한 뒤 완료돼요';
+        cb.appendChild(tick());
+        li.appendChild(cb);
+      }
       var box = el('div', 't');
       box.appendChild(el('b', null, t.title));
-      var due = dueLabel(t), sm = el('small', due.urgent ? 'urgent' : null, due.text);
+      var due = dueLabel(t), sm;
+      if (st === 'REVIEWING') sm = el('small', null, 'AI가 올린 자료를 확인하고 있어요');
+      else if (st === 'VOTING') {
+        var v = myVote(t.attempt.record_id);
+        sm = el('small', null, '팀원 확인 중' + (v ? ' · 동의 ' + v.agree + '/' + v.need : '') + ' · ' + due.text);
+      } else if (st === 'REJECTED') sm = el('small', 'urgent', '반려됐어요 · 자료를 보완해 다시 올려 주세요 · ' + due.text);
+      else sm = el('small', due.urgent ? 'urgent' : null, due.text);
       box.appendChild(sm);
       li.appendChild(box);
       todoList.appendChild(li);
@@ -380,32 +429,27 @@
     // 올리기 폼의 할 일 목록
     var keep = upTodo.value;
     clear(upTodo);
-    open.forEach(function (t) { var o = el('option', null, t.title); o.value = t.task_id; upTodo.appendChild(o); });
+    open.forEach(function (t) {
+      if (t.attempt && t.attempt.completion === 'REVIEWING') return; // AI 확인이 끝난 뒤 다시 올릴 수 있다
+      var o = el('option', null, t.title); o.value = t.task_id; upTodo.appendChild(o);
+    });
     var etc = el('option', null, '기타'); etc.value = 'etc'; upTodo.appendChild(etc);
     if (keep && upTodo.querySelector('option[value="' + CSS.escape(keep) + '"]')) upTodo.value = keep;
     syncDoneOption();
   }
   function byTask(id) { for (var i = 0; i < data.my_todos.length; i++) if (data.my_todos[i].task_id === id) return data.my_todos[i]; }
+  function myVote(recordId) { for (var i = 0; i < data.feed.length; i++) if (data.feed[i].id === recordId) return data.feed[i].vote; }
 
+  // 할 일의 체크 칸은 완료 버튼이 아니다(D-H1): 누르면 그 할 일로 올리기 폼을 맞추고 안내한다.
   todoList.addEventListener('click', function (e) {
     var btn = e.target.closest('.cb');
-    if (!btn || btn.classList.contains('checked')) return;
+    if (!btn) return;
     var li = btn.closest('.todo'), t = byTask(li.getAttribute('data-id'));
     if (!t) return;
-    btn.classList.add('checked');
-    var fd = new FormData();
-    fd.append('action_id', action());
-    fd.append('task_id', t.task_id);
-    fd.append('confirmation_revision', String(t.confirmation_revision));
-    fd.append('marks_done', 'true');
-    var sent = request('POST', base + '/records', fd);
-    setTimeout(function () { li.classList.add('leaving'); }, 450);
-    setTimeout(function () {
-      sent.then(function (r) {
-        if (!r.ok) { showMsg(r.message); }
-        load(t.task_id);
-      });
-    }, 750);
+    if (upTodo.querySelector('option[value="' + CSS.escape(t.task_id) + '"]')) upTodo.value = t.task_id;
+    syncDoneOption();
+    drop.scrollIntoView({ behavior: calm ? 'auto' : 'smooth', block: 'center' });
+    showMsg('\'' + t.title + '\' 자료를 첨부해 주세요. AI가 확인한 뒤 완료돼요.');
   });
   doneList.addEventListener('click', function (e) {
     var btn = e.target.closest('.done-btn');
@@ -453,9 +497,7 @@
     renderStaged();
   }
   function syncDoneOption() {
-    var etc = upTodo.value === 'etc';
-    upDone.disabled = etc;
-    upDone.parentElement.style.opacity = etc ? .4 : 1;
+    upHint.style.opacity = upTodo.value === 'etc' ? .4 : 1;
   }
   upTodo.addEventListener('change', syncDoneOption);
   stagedBox.addEventListener('click', function (e) {
@@ -493,7 +535,6 @@
     if (todo) {
       fd.append('task_id', todo.task_id);
       fd.append('confirmation_revision', String(todo.confirmation_revision));
-      fd.append('marks_done', upDone.checked ? 'true' : 'false');
     }
     fd.append('title', upTitle.value.trim());
     fd.append('memo', upMemo.value.trim());
@@ -530,7 +571,10 @@
     syncBtn();
   }
   function finish(rec, todo) {
-    var base1 = todo && rec.marks_done ? '첨부했어요! \'' + todo.title + '\' 할 일도 완료로 표시했어요.' : '첨부했어요! 팀원 완료 기록에서 볼 수 있어요.';
+    var base1 = rec.completion === 'DONE' ? '첨부했어요! \'' + todo.title + '\' 할 일을 완료했어요.'
+      : rec.completion === 'REVIEWING' ? '첨부했어요! AI가 \'' + todo.title + '\' 자료를 확인한 뒤 완료돼요.'
+      : rec.completion === 'VOTING' ? '첨부했어요! 팀원에게 확인을 요청했어요. 과반이 동의하면 완료돼요.'
+      : '첨부했어요! 팀원 완료 기록에서 볼 수 있어요.';
     lastRecord = rec.id;
     if (rec.review) {
       showMsg(base1 + ' ' + rec.review.line, true);
@@ -551,7 +595,9 @@
         b = el('button', 'goal-retry', '다시 시도'); b.type = 'button';
         b.addEventListener('click', function () { retryReview(recordId, r.attempt, b); });
       }
-      showMsg(r.line, r.state === 'SUCCEEDED' && !b, b);
+      var after = r.completion === 'DONE' ? ' 할 일을 완료했어요.'
+        : r.completion === 'VOTING' ? ' 팀원에게 확인을 요청했어요. 과반이 동의하면 완료돼요.' : '';
+      showMsg(r.line + after, r.completion === 'DONE', b);
     }
   }
   function poll(recordId) {

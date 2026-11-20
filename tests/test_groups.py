@@ -1094,8 +1094,10 @@ def test_group_page_matches_the_original_structure(db, mk):
     dash = body_of(lead.c.get("/dashboard").text)
     for area in ("목표 진척도", "팀 활동", "내 할 일", "업로드", "완료한 할 일", "팀원 완료 기록"):
         assert area in body_of(html), area
-    for banned in ("목표 진척도", "팀 활동", "내 할 일", "업로드", "완료한 할 일", "최근 팀 소식", "오늘의 할 일"):
+    for banned in ("목표 진척도", "팀 활동", "내 할 일", "업로드", "완료한 할 일"):
         assert banned not in dash, banned
+    for area in ("최근 팀 소식", "오늘의 할 일", "그룹 마감"):  # D-H1: the original dashboard's news and right panel
+        assert area in dash, area
     member_html = m.c.get(f"/groups/{gid}").text
     assert "프로젝트 정보 수정" in html and "프로젝트 정보 수정" not in member_html
     assert "그룹장" in html and "팀원" in html

@@ -8,15 +8,17 @@ What the group sees (team artifact): member names (already on the page), each me
 titles/due dates (the confirmation `TodoService.shown_confirmations` picks), which of them are done, and the
 completion records (title, memo, attachments) the members chose to post. Never shown to anyone: `deliverable`,
 `completion_criteria`, evidence types, MemberState, conversations, rankings. The M2 result line is returned only to the
-record's own submitter (D-D1 D3).
+record's own submitter (D-D1 D3), except for an attempt the team votes on: then its one-line M2 result is shown to the
+voters as the reason (D-H1).
 
 A record that names a todo is bound to exactly one confirmed item of its submitter: `task_id` + the assignment and
 confirmation revision that were shown when it was made (DB foreign key to `todo_confirmed_items`). A request made
 against a confirmation that is no longer the shown one is a 409 conflict, never silently re-bound.
 
-The checkbox meaning stays the original's (D-D1 D2): `첨부하면 이 할 일을 완료로 표시` completes at once; the M2 result
-never completes or un-completes anything. `되돌리기` of a completion with files deletes the record, its files and its
-review permanently, only after the caller confirmed (D-D1 D5).
+Completion (D-H1, replaces D-D1 D2): a todo is never completed by a checkbox. A submission with files for one of the
+caller's own todos is a completion attempt: an M2 PASS completes it; any other outcome opens a vote of the other current
+members (`votes.py`). `되돌리기` of an attempt with files deletes the record, its files and its review permanently, only
+after the caller confirmed (D-D1 D5).
 """
 from __future__ import annotations
 
@@ -28,6 +30,7 @@ from datetime import date, datetime, timedelta
 from typing import Callable
 
 from sqlalchemy import delete, func, insert, select, text, update
+from sqlalchemy.dialects.postgresql import insert as pg_insert
 from sqlalchemy.orm import Session, sessionmaker
 
 from ..account.ledger import DeletionLedger, LedgerUnavailable
@@ -39,6 +42,7 @@ from ..models import (
     execution_files,
     execution_records,
     execution_reviews,
+    execution_votes,
     group_members,
     groups,
     project_briefs,
@@ -49,6 +53,7 @@ from ..roles.todos import TodoService
 from ..timeutil import DISPLAY_TZ, utcnow
 from . import files as F
 from . import review_ai as R
+from . import votes as V
 
 log = logging.getLogger("moim.execution")
 
@@ -56,11 +61,16 @@ ACTION_RE = re.compile(r"^[A-Za-z0-9_-]{8,64}$")
 UUID_RE = F.UUID_RE
 PENDING, RUNNING, SUCCEEDED, FAILED, SKIPPED = "PENDING", "RUNNING", "SUCCEEDED", "FAILED", "SKIPPED"
 FEED_LIMIT = 300
+NEWS_LIMIT = 8  # dashboard team news rows (D-H1)
 LEFT_KEY = "left"  # feed rows of members who left the group (D-D1 D6); the browser shows "나간 팀원"
 MSG_NOT_FOUND = "찾을 수 없어요."
 MSG_INVALID = "요청 형식이 올바르지 않아요."
 MSG_CONFLICT = "그 사이 할 일이 바뀌었어요. 새로고침한 뒤 다시 해 주세요."
-MSG_DONE = "이미 완료로 표시한 할 일이에요."
+MSG_DONE = "이미 완료된 할 일이에요."
+MSG_NEED_FILE = "자료를 첨부해야 완료할 수 있어요. 올린 자료를 AI가 확인한 뒤 완료돼요."
+MSG_REVIEWING = "AI가 앞서 올린 자료를 확인하고 있어요. 결과가 나온 뒤 다시 올려 주세요."
+MSG_NOT_VOTING = "이미 결정됐거나 확인 요청이 끝난 기록이에요."
+MSG_NO_REVIEW = "AI 확인 없이 올라온 자료예요. 팀원이 직접 확인해 주세요."
 MSG_EMPTY = "파일이나 제목·설명 중 하나는 있어야 해요."
 MSG_ETC_FILE = "파일은 할 일을 골라야 첨부할 수 있어요."
 MSG_FILES = "한 번에 파일은 5개까지 첨부할 수 있어요."
@@ -156,6 +166,13 @@ class ExecutionService:
                 select(execution_records.c.task_id, execution_records.c.id, execution_records.c.created_at,
                        execution_records.c.file_count, execution_records.c.user_id)
                 .where(execution_records.c.group_id == group_id, execution_records.c.marks_done)).all()}
+            attempts = {}
+            for a in s.execute(select(execution_records.c.task_id, execution_records.c.id, execution_records.c.completion,
+                                      execution_records.c.file_count)
+                               .where(execution_records.c.group_id == group_id, execution_records.c.user_id == user_id,
+                                      execution_records.c.completion.in_((V.REVIEWING, V.VOTING, V.REJECTED)))
+                               .order_by(execution_records.c.created_at.desc())).all():
+                attempts.setdefault(a.task_id, a)
             out_members, member_todos, my_todos = [], {}, []
             for m in members:
                 key = keys[m.user_id]
@@ -179,10 +196,14 @@ class ExecutionService:
                     n_done += d is not None
                     rows.append({"title": it.title, "due_date": it.due_date.isoformat(), "done_on": on})
                     if m.user_id == user_id:
+                        a = attempts.get(it.task_id) if d is None else None
                         my_todos.append({
                             "task_id": it.task_id, "confirmation_revision": shown[m.user_id][1], "title": it.title,
                             "due_date": it.due_date.isoformat(), "done_on": on,
                             "record_id": d.id if d is not None else None, "has_files": bool(d is not None and d.file_count),
+                            # D-H1: the newest attempt that is not done yet (AI checking, team vote, or rejected)
+                            "attempt": {"record_id": a.id, "completion": a.completion, "has_files": bool(a.file_count)}
+                            if a is not None else None,
                         })
                 member_todos[key] = rows
                 out_members.append({"key": key, "name": m.name, "shape": m.shape, "is_me": m.user_id == user_id,
@@ -207,10 +228,11 @@ class ExecutionService:
                                    .where(execution_files.c.record_id.in_(ids)).order_by(execution_files.c.position)).all():
                     files_by.setdefault(f.record_id, []).append({"id": f.id, "name": f.original_name, "kind": f.kind})
             mine = [r.id for r in recs if r.user_id == user_id]
+            voted = {r.id for r in recs if r.completion in (V.VOTING, V.REJECTED) or r.completed_by in ("TEAM", "SELF")}
             reviews = {}
-            if mine:
+            if mine or voted:
                 reviews = {v.record_id: v for v in s.execute(
-                    select(execution_reviews).where(execution_reviews.c.record_id.in_(mine))).all()}
+                    select(execution_reviews).where(execution_reviews.c.record_id.in_(set(mine) | voted))).all()}
             activity: dict[str, dict[str, int]] = {k: {} for k in keys.values()}
             for r in s.execute(select(execution_records.c.user_id, execution_records.c.created_at)
                                .where(execution_records.c.group_id == group_id)).all():
@@ -235,6 +257,20 @@ class ExecutionService:
                 }
                 if own and r.id in reviews:
                     item["review"] = self._review_view(reviews[r.id])
+                if r.completion:
+                    item["completion"] = r.completion
+                if r.id in voted:
+                    # D-H1: the team vote on this attempt; the M2 line is its reason (shown to the voters)
+                    t = V.tally(s, r)
+                    rv = reviews.get(r.id)
+                    item["vote"] = {
+                        "state": r.completion, "by": r.completed_by, "agree": t["agree"], "reject": t["reject"],
+                        "need": t["need"], "voters": t["voters"], "my_vote": t["votes"].get(user_id),
+                        "can_vote": r.completion == V.VOTING and not own and r.user_id in keys,
+                        "reason": self._review_view(rv)["line"] if rv is not None else MSG_NO_REVIEW,
+                    }
+                    if r.completion == V.VOTING:
+                        item["id"] = r.id  # needed to vote; only while the vote is open
                 feed.append(item)
         return {
             "today": today.isoformat(), "start_date": brief.start_date.isoformat(), "end_date": brief.end_date.isoformat(),
@@ -255,7 +291,10 @@ class ExecutionService:
         with self._sf() as s:
             self._member(s, group_id, user_id)
             v = self._own_review(s, group_id, user_id, record_id)
-            return self._review_view(v)
+            out = self._review_view(v)
+            out["completion"] = s.execute(select(execution_records.c.completion).where(
+                execution_records.c.id == record_id)).scalar_one()
+            return out
 
     @staticmethod
     def _own_review(s: Session, group_id: str, user_id: str, record_id: str, lock: bool = False):
@@ -289,8 +328,11 @@ class ExecutionService:
                 raise ExecutionError(422, "EMPTY", MSG_EMPTY)
         elif not UUID_RE.fullmatch(task_id) or not isinstance(confirmation_revision, int):
             raise ExecutionError(422, "INVALID", MSG_INVALID)
-        elif not marks_done and not checked and title is None and memo is None:
+        elif marks_done and not checked:  # D-H1: no completion without material for the AI or the team to check
+            raise ExecutionError(422, "NEED_FILE", MSG_NEED_FILE)
+        elif not checked and title is None and memo is None:
             raise ExecutionError(422, "EMPTY", MSG_EMPTY)
+        attempt = task_id is not None and bool(checked)
 
         written: list[str] = []
         now = self._clock()
@@ -316,19 +358,28 @@ class ExecutionService:
                         todo_confirmed_items.c.task_id == task_id)).first()
                     if item is None:  # someone else's todo, an old one, or a made-up id: indistinguishable
                         raise ExecutionError(409, "REVISION_CONFLICT", MSG_CONFLICT)
-                    if marks_done and s.execute(select(execution_records.c.id).where(
-                            execution_records.c.task_id == task_id, execution_records.c.marks_done)).first() is not None:
-                        raise ExecutionError(409, "ALREADY_DONE", MSG_DONE)
+                    if attempt:
+                        for o in s.execute(select(execution_records).where(
+                                execution_records.c.task_id == task_id, execution_records.c.completion.in_(V.OPEN))).all():
+                            if o.completion == V.DONE:
+                                raise ExecutionError(409, "ALREADY_DONE", MSG_DONE)
+                            if o.completion == V.REVIEWING:
+                                raise ExecutionError(409, "REVIEWING", MSG_REVIEWING)
+                            # a new attempt replaces the one the team was voting on
+                            s.execute(update(execution_records).where(execution_records.c.id == o.id)
+                                      .values(completion=V.WITHDRAWN))
                 if checked:
                     used = s.execute(select(func.coalesce(func.sum(execution_files.c.size_bytes), 0)).where(
                         execution_files.c.group_id == group_id)).scalar_one()
                     if used + sum(len(c.data) for c in checked) > F.GROUP_TOTAL_BYTES:
                         raise ExecutionError(413, "GROUP_FULL", MSG_GROUP_FULL)
                 rid = str(uuid.uuid4())
+                reviewable = [c for c in checked if c.review_kind] if attempt and self.review_enabled else []
                 s.execute(insert(execution_records).values(
                     id=rid, group_id=group_id, user_id=user_id, action_id=action_id, task_id=task_id,
                     source_assignment_revision=rev, confirmation_revision=confirmation_revision if task_id else None,
-                    title=title, memo=memo, marks_done=bool(marks_done), file_count=len(checked), created_at=now))
+                    title=title, memo=memo, marks_done=False, file_count=len(checked), created_at=now,
+                    completion=(V.REVIEWING if reviewable else V.VOTING) if attempt else None))
                 for pos, c in enumerate(checked):
                     fid = str(uuid.uuid4())
                     self.storage.write(group_id, fid, c.data)
@@ -338,10 +389,9 @@ class ExecutionService:
                         size_bytes=len(c.data), sha256=c.sha256, review_kind=c.review_kind,
                         embedded_images=c.embedded_images, created_at=now))
                 rec = s.execute(select(execution_records).where(execution_records.c.id == rid)).one()
-                kind = "NOTE" if task_id is None else "COMPLETE" if marks_done and not checked and not title and not memo else "SUBMIT"
-                self._event(s, group_id, user_id, kind, rec, detail="DONE" if marks_done else None, file_count=len(checked))
-                if task_id is not None and checked and self.review_enabled:
-                    reviewable = [c for c in checked if c.review_kind]
+                kind = "NOTE" if task_id is None else "SUBMIT"
+                self._event(s, group_id, user_id, kind, rec, detail="ATTEMPT" if attempt else None, file_count=len(checked))
+                if attempt and self.review_enabled:
                     if reviewable:
                         s.execute(insert(execution_reviews).values(record_id=rid, state=PENDING, created_at=now))
                         self._event(s, group_id, user_id, "REVIEW_START", rec, file_count=len(reviewable))
@@ -350,6 +400,9 @@ class ExecutionService:
                             record_id=rid, state=SKIPPED, skip_reason="UNSUPPORTED", excluded_files=len(checked),
                             created_at=now, finished_at=now))
                         self._event(s, group_id, user_id, "REVIEW_SKIPPED", rec, detail="UNSUPPORTED")
+                if attempt and not reviewable:  # nothing the AI can read: straight to the team (D-H1)
+                    V.settle(s, rec, now)
+                    rec = s.execute(select(execution_records).where(execution_records.c.id == rid)).one()
                 view = self._mine(s, rec)
         except Exception:
             for fid in written:
@@ -362,7 +415,7 @@ class ExecutionService:
     def _mine(self, s: Session, rec) -> dict:
         v = s.execute(select(execution_reviews).where(execution_reviews.c.record_id == rec.id)).one_or_none()
         return {"id": rec.id, "marks_done": bool(rec.marks_done), "file_count": rec.file_count,
-                "review": self._review_view(v) if v is not None else None}
+                "completion": rec.completion, "review": self._review_view(v) if v is not None else None}
 
     def undo(self, user_id: str, group_id: str, record_id: str, confirm_delete: bool) -> int:
         """Own completion only. With files, only after the caller confirmed; then the record, its files and its review
@@ -376,7 +429,7 @@ class ExecutionService:
                 self._lock(s, group_id)
                 rec = s.execute(select(execution_records).where(
                     execution_records.c.id == record_id, execution_records.c.group_id == group_id,
-                    execution_records.c.user_id == user_id, execution_records.c.marks_done)).one_or_none()
+                    execution_records.c.user_id == user_id, execution_records.c.completion.is_not(None))).one_or_none()
                 if rec is None:
                     raise not_found()
                 if rec.file_count and not confirm_delete:
@@ -416,9 +469,17 @@ class ExecutionService:
     def retry_review(self, user_id: str, group_id: str, record_id: str, expected_attempt: int) -> dict:
         with self._sf() as s, s.begin():
             self._member(s, group_id, user_id)
+            self._lock(s, group_id)
             v = self._own_review(s, group_id, user_id, record_id, lock=True)
             if v.state != FAILED or v.attempt != expected_attempt:
                 raise ExecutionError(409, "NOT_RETRYABLE", MSG_NOT_RETRYABLE)
+            rec = s.execute(select(execution_records).where(execution_records.c.id == record_id)).one()
+            if rec.completion in (V.REJECTED, V.WITHDRAWN):
+                raise ExecutionError(409, "NOT_RETRYABLE", MSG_NOT_RETRYABLE)
+            if rec.completion == V.VOTING:  # the AI gets another look; the vote starts over afterwards if needed
+                s.execute(delete(execution_votes).where(execution_votes.c.record_id == record_id))
+                s.execute(update(execution_records).where(execution_records.c.id == record_id)
+                          .values(completion=V.REVIEWING))
             s.execute(update(execution_reviews).where(execution_reviews.c.record_id == record_id).values(
                 state=PENDING, attempt=v.attempt + 1, error_code=None, decision=None, criteria_results=None,
                 guidance=None, model=None, request_id=None, latency_ms=None, prompt_tokens=None,
@@ -487,8 +548,10 @@ class ExecutionService:
                     evidence.append({"id": eid, "text": t or "(추출된 텍스트 없음)"})
             counts = dict(reviewed_files=len(evidence), excluded_files=len(excluded_kinds), embedded_images_skipped=embedded)
             if pages > F.REVIEW_MAX_PDF_PAGES or chars > F.REVIEW_MAX_TEXT:
-                self._cas(record_id, attempt, RUNNING, state=SKIPPED, skip_reason="OVER_LIMIT", finished_at=self._clock(), **counts)
+                ok = self._cas(record_id, attempt, RUNNING, state=SKIPPED, skip_reason="OVER_LIMIT", finished_at=self._clock(), **counts)
                 self._finish_event(record_id, "REVIEW_SKIPPED", "OVER_LIMIT")
+                if ok:
+                    self._decide(record_id, passed=False)
                 log.info("review_event record_id=%s attempt=%d state=SKIPPED reason=OVER_LIMIT", record_id, attempt)
                 return
             criteria = list(snap.completion_criteria)
@@ -498,8 +561,10 @@ class ExecutionService:
             del evidence  # data URLs live only for the call
         except Exception as exc:  # never the message: it may hold file content
             log.error("review_event record_id=%s attempt=%d state=FAILED error_type=%s", record_id, attempt, type(exc).__name__)
-            self._cas(record_id, attempt, RUNNING, state=FAILED, error_code="PREPARE_FAILED", finished_at=self._clock())
+            ok = self._cas(record_id, attempt, RUNNING, state=FAILED, error_code="PREPARE_FAILED", finished_at=self._clock())
             self._finish_event(record_id, "REVIEW_FAILED", "PREPARE_FAILED")
+            if ok:
+                self._decide(record_id, passed=False)
             return
 
         from wemeet_ai.m0.client import AIError
@@ -519,25 +584,114 @@ class ExecutionService:
             R.check(review, criteria, {f"e{i + 1}" for i in range(counts["reviewed_files"])},
                     bool((rec.title or "").strip() or (rec.memo or "").strip()))
         except AIError as exc:
-            self._cas(record_id, attempt, RUNNING, state=FAILED, error_code=exc.code[:64], finished_at=self._clock(), **counts, **usage)
+            ok = self._cas(record_id, attempt, RUNNING, state=FAILED, error_code=exc.code[:64], finished_at=self._clock(), **counts, **usage)
             self._finish_event(record_id, "REVIEW_FAILED", exc.code[:32])
+            if ok:
+                self._decide(record_id, passed=False)
             log.info("review_event record_id=%s attempt=%d state=FAILED error=%s", record_id, attempt, exc.code)
             return
         except Exception as exc:
             log.error("review_event record_id=%s attempt=%d state=FAILED error_type=%s", record_id, attempt, type(exc).__name__)
-            self._cas(record_id, attempt, RUNNING, state=FAILED, error_code="HANDLER_ERROR", finished_at=self._clock(), **counts, **usage)
+            ok = self._cas(record_id, attempt, RUNNING, state=FAILED, error_code="HANDLER_ERROR", finished_at=self._clock(), **counts, **usage)
             self._finish_event(record_id, "REVIEW_FAILED", "HANDLER_ERROR")
+            if ok:
+                self._decide(record_id, passed=False)
             return
         results = [{"criterion_index": r.criterion_index, "status": r.status, "reason": r.reason,
                     "evidence_refs": [e.evidence_id for e in r.evidence_refs]} for r in review.criteria_results]
         if self._cas(record_id, attempt, RUNNING, state=SUCCEEDED, decision=review.decision, criteria_results=results,
                      guidance=R.guidance(review), finished_at=self._clock(), **counts, **usage):
             self._finish_event(record_id, "REVIEW_DONE", review.decision)
+            self._decide(record_id, passed=review.decision == "PASS")
         log.info("review_event record_id=%s attempt=%d state=SUCCEEDED decision=%s reviewed=%d excluded=%d",
                  record_id, attempt, review.decision, counts["reviewed_files"], counts["excluded_files"])
 
-    def fail_interrupted(self) -> int:
-        """Reviews lost with the previous process become a retryable failure (no automatic re-run)."""
+    def _decide(self, record_id: str, passed: bool) -> None:
+        """D-H1: the M2 outcome decides the attempt: PASS completes it, anything else opens the team vote."""
         with self._sf() as s, s.begin():
-            return s.execute(update(execution_reviews).where(execution_reviews.c.state.in_((PENDING, RUNNING)))
-                             .values(state=FAILED, error_code="SERVER_RESTARTED", finished_at=self._clock())).rowcount
+            gid = s.execute(select(execution_records.c.group_id).where(execution_records.c.id == record_id)).scalar_one_or_none()
+            if gid is None:
+                return
+            self._lock(s, gid)
+            rec = s.execute(select(execution_records).where(execution_records.c.id == record_id)).one_or_none()
+            if rec is None:
+                return
+            (V.pass_review if passed else V.open_vote)(s, rec, self._clock())
+
+    def fail_interrupted(self) -> int:
+        """Reviews lost with the previous process become a retryable failure (no automatic re-run); their attempts go
+        to the team vote (D-H1), where a retry can still bring the AI back."""
+        with self._sf() as s, s.begin():
+            n = s.execute(update(execution_reviews).where(execution_reviews.c.state.in_((PENDING, RUNNING)))
+                          .values(state=FAILED, error_code="SERVER_RESTARTED", finished_at=self._clock())).rowcount
+            for rec in s.execute(select(execution_records).where(execution_records.c.completion == V.REVIEWING)).all():
+                V.open_vote(s, rec, self._clock())
+            return n
+
+    # ---- D-H1: team vote ----------------------------------------------------------------------------------------------
+
+    def vote(self, user_id: str, group_id: str, record_id: str, agree: bool) -> dict:
+        """One vote of a current member on another member's open attempt. Voting again changes the vote."""
+        if not UUID_RE.fullmatch(record_id or ""):
+            raise not_found()
+        now = self._clock()
+        with self._sf() as s, s.begin():
+            self._member(s, group_id, user_id)
+            self._lock(s, group_id)
+            rec = s.execute(select(execution_records).where(
+                execution_records.c.id == record_id, execution_records.c.group_id == group_id)).one_or_none()
+            if rec is None or rec.user_id == user_id or rec.completion is None:
+                raise not_found()
+            if rec.completion != V.VOTING:
+                raise ExecutionError(409, "NOT_VOTING", MSG_NOT_VOTING)
+            s.execute(pg_insert(execution_votes).values(record_id=record_id, user_id=user_id, agree=bool(agree),
+                                                        created_at=now)
+                      .on_conflict_do_update(index_elements=["record_id", "user_id"],
+                                             set_={"agree": bool(agree), "created_at": now}))
+            self._event(s, group_id, user_id, "VOTE", record_id, detail="AGREE" if agree else "REJECT")
+            state = V.settle(s, rec, now)
+            rec = s.execute(select(execution_records).where(execution_records.c.id == record_id)).one()
+            t = V.tally(s, rec)
+        log.info("execution_event group_id=%s user_id=%s record_id=%s kind=VOTE agree=%s state=%s",
+                 group_id, user_id, record_id, bool(agree), state)
+        return {"completion": state, "agree": t["agree"], "reject": t["reject"], "need": t["need"], "voters": t["voters"]}
+
+    # ---- dashboard (every active group of the caller) --------------------------------------------------------------
+
+    def dashboard(self, user_id: str) -> dict:
+        """What the original dashboard shows, built from the data each group screen already shows the caller: per group
+        the progress, my open todos (and whether the AI or the team is checking them), other members' attempts waiting
+        for my vote, the deadline, and the newest completion records across my groups (team news)."""
+        with self._sf() as s:
+            rows = s.execute(
+                select(groups.c.id, project_briefs.c.name)
+                .join(group_members, group_members.c.group_id == groups.c.id)
+                .join(project_briefs, (project_briefs.c.group_id == groups.c.id)
+                      & (project_briefs.c.revision == groups.c.brief_revision))
+                .where(group_members.c.user_id == user_id, groups.c.status == ACTIVE)
+                .order_by(group_members.c.joined_at, groups.c.id)).all()
+        out, news = [], []
+        for gid, name in rows:
+            try:
+                v = self.view(user_id, gid)
+            except ExecutionError:
+                continue  # left or deleted in between
+            by_key = {m["key"]: m for m in v["members"]}
+            requests = [{"title": f["title"], "who": by_key[f["who"]]["name"], "agree": f["vote"]["agree"],
+                         "need": f["vote"]["need"]}
+                        for f in v["feed"] if f.get("vote") and f["vote"]["can_vote"] and f["vote"]["my_vote"] is None]
+            out.append({
+                "id": gid, "name": name, "href": f"/groups/{gid}", "end_date": v["end_date"],
+                "total": sum(m["total"] for m in v["members"]), "done": sum(m["done"] for m in v["members"]),
+                "todos": [{"title": t["title"], "due_date": t["due_date"],
+                           "state": t["attempt"]["completion"] if t["attempt"] else "OPEN"}
+                          for t in v["my_todos"] if not t["done_on"]],
+                "requests": requests,
+            })
+            for f in v["feed"][:NEWS_LIMIT]:
+                m = by_key.get(f["who"])
+                news.append({"group_id": gid, "group": name, "who": m["name"] if m else "나간 팀원",
+                             "shape": m["shape"] if m else "", "title": f["title"], "at": f["at"], "label": f["label"],
+                             "kind": "VOTING" if f.get("completion") == V.VOTING else "DONE" if f["done"] else "POST"})
+        news.sort(key=lambda n: n["at"], reverse=True)
+        return {"today": today_kst(self._clock()).isoformat(), "groups": out, "news": news[:NEWS_LIMIT]}

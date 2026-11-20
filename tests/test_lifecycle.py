@@ -142,7 +142,7 @@ def test_mypage_needs_login_and_shows_only_my_info(app, mk, db):
 def test_mypage_groups_tab_shows_my_own_progress(app, mk, db):
     gid, (lead, m0) = confirmed_team(mk, 2)
     total = len(ex(lead, gid)["my_todos"])
-    with_record(lead, gid, files=0)
+    with_record(lead, gid, files=1)  # D-H1: completion needs material (the fixture AI passes it)
     g = lead.c.get("/api/account").json()["groups"]
     assert len(g) == 1 and g[0]["members"] == 2 and g[0]["done"] == 1 and g[0]["total"] == total
     html = lead.c.get("/mypage").text

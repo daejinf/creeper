@@ -21,6 +21,7 @@
 - **1~6단계 총괄 재검증(2026-11-19)**: 6단계 코드 커밋 `ea5884e`와 HANDOFF 마감 정리만 추가된 현재 `main` `385fd59`에서 프로젝트 가상환경과 로컬 PostgreSQL 테스트 DB로 전체 결정적 테스트 **522개 통과**(실패·건너뜀 0), 원본 HTML 해시 9/9, 프롬프트 14개, `git diff --check`, 개발 DB migration `0012`를 다시 확인했다. 6단계 프롬프트의 재인증·CSRF·IDOR·세션 폐기·그룹장 승계/마지막 구성원·보관 FK·부분 실패·범위 밖 팀 보존·마이그레이션·디자인 증거를 코드와 `tests/test_lifecycle.py`에 항목별로 대조했다. 제품 코드 결함이나 BLOCKED 항목은 발견하지 않았다.
 - **7단계 운영 준비(2026-11-19~20, 판정 CONDITIONAL PASS)**: 사용자가 7단계 진행을 지시했다("가보자"). 보안 점검에서 찾은 결함 셋(Pillow 디코더 형식 미지정+공개 취약점, 본문 상한 없는 경로, 인증 없는 `/api/jobs` 노출)을 고쳤고, 운영 시작 점검·요청 id JSON 로그·DB 역할 분리·암호화 백업/복원 도구를 만들어 복원 리허설·장애 훈련·부하 표본을 실제로 실행했다. 배포 대상(TLS·비밀 저장소·로그/경보 연결)은 BLOCKED. 백업 보관·삭제 전파는 사용자가 승인했고(D-G1, 2026-11-20) 삭제 기록·복원 뒤 재처리를 구현해 리허설까지 통과했다. LIVE 호출 0회. 아래 `7단계 운영 준비` 절, 절차서 `docs/OPERATIONS.md`.
 - GATE B 승인 완료(D-B1, 2026-11-18): 인터뷰 항목·턴, chat 네 상태 문구와 `N/M명 제출 완료` 집계, 공급자 입력 필드, 미제출·신규 합류(차단 유지)·재배정·중복 역할, 역할 후보 생성(revision당 1회), 이름·순위 비노출 안내 문구(원본과 다른 제품 차이), 투두 공개·재확정, STALE 규칙. 이번 작업은 문서만 바꿨고 코드·테스트·원본 HTML은 변경하지 않았다.
+- **D-H1(2026-11-20, 사용자 지시)**: 체크 완료를 없애고 할 일은 AI PASS 또는 요청자 뺀 팀원 과반 동의로만 완료(보류·미지원 형식·실패는 자동 투표), 그룹장 `그룹 삭제`, 대시보드 오른쪽 패널·최근 팀 소식·카드 진척도, 로그인 화면 로고 → `/dashboard`. migration `0013`. 아래 `D-H1 완료 방식·그룹 삭제·대시보드` 절.
 
 ## 환경 스냅샷 (2026-11-18, 확인한 사실만)
 
@@ -359,6 +360,14 @@ $env:MOIM_ENV='development'; .\.venv\Scripts\python.exe tools\capture_screens.py
 - 깨끗한 환경 1차(추적·새 파일만 복사한 폴더, 새 venv): 548 통과·2 실패. (1) `test_original_htmls_are_untouched_by_this_stage`는 복사 폴더가 Git 저장소가 아니라 `git status`가 128로 끝난 것(환경 원인, 해시 검사 자체는 9/9 통과). (2) `test_reassign.py::test_privacy_login_csrf_and_logs`는 새 `test_operations.py`의 로깅 테스트가 루트 로거 수준을 INFO로 바꾸고 되돌리지 않아, 뒤 테스트의 준비 단계 INFO 로그(정책상 허용된 `user_id`)가 잡힌 순서 의존 문제. 제품 누출이 아니며 테스트가 수준을 복원하게 고쳤다.
 - 최종: 같은 새 venv로 이 worktree(Git 저장소)에서 전체 결정적 테스트 **550개 통과**(실패·건너뜀 0, 10분 8초). 기존 522 + `test_operations.py` 17 + `test_ops_tools.py` 11.
 - D-G1 뒤(2026-11-20): 같은 venv로 이 worktree 전체 결정적 테스트 **565개 통과**(실패 0). 550 + `test_deletion_ledger.py` 14 + 운영 시작 점검 삭제 기록 1. 원본 HTML 해시 9/9(`tools/check_design_hashes.py`), `git diff --check` 깨끗함. 복원 리허설(재처리 포함) PASS.
+
+## D-H1 완료 방식·그룹 삭제·대시보드 (2026-11-20)
+
+- **결정**: `docs/PRODUCT.md` D-H1(D-D1 D2·D3 개정). 헌법 문장은 바꾸지 않았다(1절의 "PASS의 완료 반영 방식" 위임 범위).
+- **코드**: `migrations/versions/0013_completion_votes.py`(`execution_records.completion`·`completed_by`, `marks_done = completion='DONE'` 검사, 할 일당 열린 시도 하나 unique index, `execution_votes`, 이벤트 `VOTE`·`SETTLED`), `execution/votes.py`(집계·결정 규칙), `execution/service.py`(시도 생성·M2 결과 반영 `_decide`·투표·재시작 처리·`dashboard`), `execution/routes.py`(`POST …/records/{id}/vote`, `GET /api/dashboard`), `account/lifecycle.py`(나가기 뒤 `settle_group`, `delete_group`·미리보기·재실행), `account/routes.py`(`GET/POST /api/groups/{id}/delete`), `account/ledger.py`(`GROUP_DELETED`), `templates/group.html`(체크 칸 → 안내 문구, ⋯ `그룹 삭제`, 상태 배지·투표 줄 스타일), `static/group-exec.js`, `static/group-leave.js`, `templates/dashboard.html`·`static/dashboard.js`(오른쪽 패널·팀 소식·카드 줄), 로고 링크 3곳.
+- **화면**: 내 할 일의 체크 칸은 누르면 올리기 폼을 그 할 일로 맞추는 버튼이다. AI·팀원 확인 중인 할 일은 원본 `대기 중` 모양(`todo.waiting`). 팀원 완료 기록 줄에 `확인 요청`·`AI 확인 중`·`반려` 배지, 상세에 AI 사유 한 줄과 `동의`/`거절` 버튼(`goal-retry` 스타일). 새 디자인 시스템은 만들지 않았다.
+- **테스트**: `tests/test_completion_votes.py` 12개 추가, `tests/test_execution.py`의 D-D1 D2 전제 테스트를 D-H1 의미로 바꿨다(체크 완료 테스트 → 파일 없는 완료 거절·PASS 완료, 보류 → 투표 등).
+- **남은 것**: 원본과 다른 화면(체크 칸 대신 안내 문구, 투표 줄, `그룹 삭제` 메뉴, 패널의 `팀원 확인 요청`)의 사용자 눈 확인. M2 LIVE 호출은 하지 않았다(로직만 바뀜).
 
 ## 다음 한 단계
 

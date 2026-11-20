@@ -759,6 +759,9 @@ execution_records = Table(
     Column("marks_done", Boolean, nullable=False),
     Column("file_count", Integer, nullable=False, server_default="0"),
     Column("created_at", DateTime(timezone=True), nullable=False, server_default=func.now()),
+    # D-H1 (0013): completion attempt state; marks_done always equals completion = 'DONE'
+    Column("completion", String(10)),
+    Column("completed_by", String(6)),
     ForeignKeyConstraint(
         ["group_id", "user_id", "source_assignment_revision", "confirmation_revision", "task_id"],
         ["todo_confirmed_items.group_id", "todo_confirmed_items.user_id", "todo_confirmed_items.source_assignment_revision",
@@ -771,7 +774,15 @@ execution_records = Table(
     CheckConstraint("task_id is not null or (not marks_done and file_count = 0)", name="etc"),
     CheckConstraint("memo is null or char_length(memo) <= 1000", name="memo"),
     CheckConstraint("file_count between 0 and 5", name="file_count"),
+    CheckConstraint("completion is null or completion in ('REVIEWING','VOTING','DONE','REJECTED','WITHDRAWN')",
+                    name="completion"),
+    CheckConstraint("marks_done = coalesce(completion = 'DONE', false)", name="done_iff"),
+    CheckConstraint("(completed_by is not null) = coalesce(completion = 'DONE', false)"
+                    " and (completed_by is null or completed_by in ('AI','TEAM','SELF','MANUAL'))", name="completed_by"),
+    CheckConstraint("completion is null or task_id is not null", name="completion_task"),
     Index("uq_execution_records_done", "task_id", unique=True, postgresql_where=text("marks_done")),
+    Index("uq_execution_records_open", "task_id", unique=True,
+          postgresql_where=text("completion in ('REVIEWING','VOTING','DONE')")),
     Index("ix_execution_records_group", "group_id", "created_at"),
 )
 
@@ -826,6 +837,16 @@ execution_reviews = Table(
     CheckConstraint("(state = 'SUCCEEDED') = (decision is not null)", name="decision_iff"),
 )
 
+# D-H1 (0013): one vote per (record, member). Only current active members' votes count (computed, never stored).
+execution_votes = Table(
+    "execution_votes",
+    metadata,
+    Column("record_id", String(36), ForeignKey("execution_records.id", ondelete="CASCADE"), primary_key=True),
+    Column("user_id", String(36), ForeignKey("users.id", ondelete="CASCADE"), primary_key=True),
+    Column("agree", Boolean, nullable=False),
+    Column("created_at", DateTime(timezone=True), nullable=False, server_default=func.now()),
+)
+
 execution_events = Table(
     "execution_events",
     metadata,
@@ -841,7 +862,8 @@ execution_events = Table(
     Column("detail", String(32)),
     Column("created_at", DateTime(timezone=True), nullable=False, server_default=func.now()),
     CheckConstraint(
-        "kind in ('COMPLETE','SUBMIT','NOTE','UNDO','REVIEW_START','REVIEW_RETRY','REVIEW_DONE','REVIEW_FAILED','REVIEW_SKIPPED')",
+        "kind in ('COMPLETE','SUBMIT','NOTE','UNDO','REVIEW_START','REVIEW_RETRY','REVIEW_DONE','REVIEW_FAILED','REVIEW_SKIPPED',"
+        "'VOTE','SETTLED')",
         name="kind",
     ),
     Index("ix_execution_events_group", "group_id", "created_at"),

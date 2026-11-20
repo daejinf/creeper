@@ -1,5 +1,5 @@
 """Stage 5 API: the group execution screen data, completion records with attachments, `되돌리기`, downloads and the
-submitter's own M2 review status/retry.
+submitter's own M2 review status/retry, the team vote on a completion attempt (D-H1) and the dashboard data.
 
 All routes need a signed-in current active member of the group (404 otherwise, a missing group included). State
 changes are POSTs with CSRF. The upload is the only multipart route; its body cap is in `auth.middleware`.
@@ -11,7 +11,7 @@ from urllib.parse import quote
 
 from fastapi import APIRouter, BackgroundTasks, Depends, Request
 from fastapi.responses import FileResponse, JSONResponse
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, StrictBool
 from starlette.concurrency import run_in_threadpool
 from starlette.datastructures import UploadFile
 from starlette.exceptions import HTTPException
@@ -38,6 +38,10 @@ class UndoBody(_Body):
 
 class ReviewRetryBody(_Body):
     expected_attempt: int = Field(ge=1, le=1_000_000)
+
+
+class VoteBody(_Body):
+    agree: StrictBool
 
 
 def _bad() -> ExecutionError:
@@ -118,6 +122,14 @@ def make_router(execution: ExecutionService) -> APIRouter:
         v = execution.retry_review(user.user_id, group_id, record_id, body.expected_attempt)
         schedule(background, record_id)
         return json_ok(v, 202)
+
+    @router.post("/api/groups/{group_id}/records/{record_id}/vote", dependencies=[Depends(verify_csrf)])
+    def vote(group_id: str, record_id: str, body: VoteBody, user: SessionUser = Depends(require_user)):
+        return json_ok(execution.vote(user.user_id, group_id, record_id, body.agree))
+
+    @router.get("/api/dashboard")
+    def dashboard(user: SessionUser = Depends(require_user)):
+        return json_ok(execution.dashboard(user.user_id))
 
     @router.get("/api/groups/{group_id}/files/{file_id}")
     def download(group_id: str, file_id: str, user: SessionUser = Depends(require_user)):
