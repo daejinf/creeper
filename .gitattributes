@@ -1,2 +1,6 @@
 # Original design HTML must keep LF byte-for-byte (docs/PRODUCT.md hash table).
 moim-*.html text eol=lf
+
+# Windows launchers: CRLF for cmd.exe; PowerShell 5.1 scripts keep their UTF-8 BOM (Korean text).
+*.cmd text eol=crlf
+*.ps1 text eol=crlf
