@@ -5,7 +5,7 @@ group leave (D-D1 D6) and account deletion (D7) done after that moment would com
 record of those deletions (and of D5 `되돌리기`, which deletes a completion record and its files for good) kept OUTSIDE the database and outside the upload directory, so a restore never rolls it
 back; after a restore, `tools/ops_db.py replay-deletions` runs them again (`LifecycleService.replay`).
 
-What a line holds: an entry id, the time, the kind (`LEAVE` / `ACCOUNT_DELETED` / `RECORD_UNDONE`), the internal user
+What a line holds: an entry id, the time, the kind (`LEAVE` / `ACCOUNT_DELETED` / `RECORD_UNDONE` / `GROUP_DELETED`), the internal user
 id and, where it applies, the group id and the record id. No name, username, text, file name or anything a person wrote. One file per UTC day
 (`deletions-YYYYMMDD.jsonl`); files older than the retention are removed, so the ledger never holds more than the
 backups it exists for.
@@ -32,8 +32,8 @@ from ..timeutil import utcnow
 log = logging.getLogger("moim.lifecycle")
 
 RETENTION_DAYS = 7
-KINDS = ("LEAVE", "ACCOUNT_DELETED", "RECORD_UNDONE")
-NEEDS_GROUP = ("LEAVE", "RECORD_UNDONE")
+KINDS = ("LEAVE", "ACCOUNT_DELETED", "RECORD_UNDONE", "GROUP_DELETED")
+NEEDS_GROUP = ("LEAVE", "RECORD_UNDONE", "GROUP_DELETED")  # GROUP_DELETED: a leader deleted the group (D-H1)
 _FILE = re.compile(r"^deletions-(\d{8})\.jsonl$")
 _ID = re.compile(r"^[0-9a-f-]{36}$")
 _ENTRY = re.compile(r"^[0-9a-f]{32}$")

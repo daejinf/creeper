@@ -150,6 +150,17 @@ def make_router(settings: Settings, account: AccountService, lifecycle: Lifecycl
         schedule(background, out.assigned)
         return json_ok({"left": True, "group_deleted": bool(out.purged_groups), "redirect": "/dashboard"})
 
+    # ---- the leader deletes the group (D-H1) -----------------------------------------------------------------------
+
+    @router.get("/api/groups/{group_id}/delete")
+    def delete_group_preview(group_id: str, user: SessionUser = Depends(require_user)):
+        return json_ok({"impact": lifecycle.delete_group_preview(user.user_id, group_id)})
+
+    @router.post("/api/groups/{group_id}/delete", dependencies=[Depends(verify_csrf)])
+    def delete_group(group_id: str, body: LeaveBody, user: SessionUser = Depends(require_user)):
+        lifecycle.delete_group(user.user_id, group_id, body.confirm)
+        return json_ok({"deleted": True, "redirect": "/dashboard"})
+
     # ---- delete the account (D7) --------------------------------------------------------------------------------------
 
     @router.get("/api/account/delete")

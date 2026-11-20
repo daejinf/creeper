@@ -510,6 +510,14 @@ button.login{border:0;background:none;font-family:inherit;font-size:14px;font-we
 .notice{margin:0 0 16px}
 .up-msg .goal-retry,.detail .goal-retry{margin-left:auto;flex:0 0 auto}
 .detail .ai-line{color:var(--mute)}
+/* D-H1: 완료 확인 상태 · 팀원 확인 요청 (기존 배지·버튼 스타일 재사용) */
+.feed-item .tag{flex:0 0 auto;padding:3px 9px;border-radius:999px;font-size:11px;font-weight:700;background:#EEF2FF;color:#2447C4}
+.feed-item .tag.no{background:#FDECE8;color:#B5361C}
+.detail .vote{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:0;color:var(--ink)}
+.detail .vote .goal-retry[aria-pressed="true"]{border-color:var(--blue);background:#EEF2FF;color:#2447C4}
+.detail .vote .goal-retry + .goal-retry{margin-left:0}
+.mark-done{cursor:default;color:var(--mute);line-height:1.5}
+.todo .cb{color:transparent}
 /* 5단계: 팀원 막대 색은 원본의 팀원별 색(도형 색)과 같다 */
 .mem[data-shape="c"] .bar span{background:var(--coral)}
 .mem[data-shape="a"] .bar span{background:var(--blue)}
@@ -525,7 +533,7 @@ button.login{border:0;background:none;font-family:inherit;font-size:14px;font-we
       <button class="icon-btn menu-btn" id="menuBtn" type="button" aria-label="그룹 목록 열기" aria-controls="side" aria-expanded="false">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
       </button>
-      <a class="logo" href="/">
+      <a class="logo" href="/dashboard">
         <span class="mark" aria-hidden="true"><i class="c"></i><i class="a"></i><i class="q"></i></span>
         MOIM
       </a>
@@ -586,6 +594,7 @@ button.login{border:0;background:none;font-family:inherit;font-size:14px;font-we
             <div class="more-menu" role="menu">
               {% if is_leader %}<a role="menuitem" href="/groups/{{ group_id }}/brief/edit">프로젝트 정보 수정</a>{% endif %}
               <button type="button" role="menuitem" class="danger" id="leaveGroup" data-group="{{ group_id }}">그룹 나가기</button>
+              {% if is_leader %}<button type="button" role="menuitem" class="danger" id="deleteGroup" data-group="{{ group_id }}">그룹 삭제</button>{% endif %}
             </div>
           </div>
         </div>
@@ -667,7 +676,7 @@ button.login{border:0;background:none;font-family:inherit;font-size:14px;font-we
             <div class="todo-pick" id="todoPick">
               <label class="lbl" for="upTodo">어떤 할 일인가요?</label>
               <select id="upTodo"></select>
-              <label class="mark-done"><input type="checkbox" id="upDone" checked> 첨부하면 이 할 일을 완료로 표시</label>
+              <p class="mark-done" id="upHint">파일을 첨부하면 AI 확인을 거쳐 완료돼요. AI 확인에서 보류되면 팀원 과반이 동의할 때 완료돼요.</p>
             </div>
             <button class="up-btn" id="upBtn" type="button" disabled>첨부하기</button>
           </div>

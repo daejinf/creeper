@@ -260,7 +260,8 @@ def test_group_screen_shows_confirmed_roles_and_todos_but_no_hidden_criteria_or_
     assert None not in roles and len(data["members"]) == 2
     assert all(m["total"] >= 2 and m["done"] == 0 for m in data["members"])
     # my todos carry their task id + revision; the other member's todos carry only title, due date and done state
-    assert all(set(t) == {"task_id", "confirmation_revision", "title", "due_date", "done_on", "record_id", "has_files"} for t in data["my_todos"])
+    assert all(set(t) == {"task_id", "confirmation_revision", "title", "due_date", "done_on", "record_id", "has_files", "attempt"}
+               for t in data["my_todos"])
     other = next(m["key"] for m in data["members"] if not m["is_me"])
     assert all(set(t) == {"title", "due_date", "done_on"} for t in data["member_todos"][other])
     assert b.id not in blob and a.id not in json.dumps(data)
@@ -286,14 +287,18 @@ def test_outsiders_and_signed_out_users_get_nothing(db, mk, ai):
     assert a.c.get(f"/api/groups/{gid}/execution").status_code == 401
 
 
-# ---- checkbox, records, undo -------------------------------------------------------------------------------------------
+# ---- completion (D-H1), records, undo -------------------------------------------------------------------------------------
 
 
-def test_checkbox_completes_at_once_and_undo_reverts_with_an_audit_trail(db, mk, ai):
+def test_no_checkbox_completion_a_pass_completes_and_undo_reverts_with_an_audit_trail(db, mk, ai):
     gid, (a, b) = confirmed_team(mk, 2)
     t = mine(a, gid)
-    r = submit(a, gid, t, done=True)
-    assert r.status_code == 201 and r.json()["review"] is None and not ai.m2()
+    r = submit(a, gid, t, done=True)  # the old checkbox request: refused without material (D-H1)
+    assert r.status_code == 422 and r.json()["error"]["code"] == "NEED_FILE" and not ai.m2()
+    assert scalar(db, "select count(*) from execution_records") == 0
+    r = submit(a, gid, t, files=[("w.png", png())])
+    assert r.status_code == 201 and r.json()["completion"] == "REVIEWING" and len(ai.m2()) == 1
+    assert rows(db, "select completion, completed_by, marks_done from execution_records")[0] == ("DONE", "AI", True)
     data = ex(b, gid)
     me = next(m for m in data["members"] if not m["is_me"])
     assert me["done"] == 1
@@ -301,13 +306,14 @@ def test_checkbox_completes_at_once_and_undo_reverts_with_an_audit_trail(db, mk,
     t = mine(a, gid)
     assert t["done_on"] and t["record_id"]
     rid = t["record_id"]
-    u = jpost(a, f"/api/groups/{gid}/records/{rid}/undo", {"confirm_delete": False})
+    u = jpost(a, f"/api/groups/{gid}/records/{rid}/undo", {"confirm_delete": True})
     assert u.status_code == 200
     assert mine(a, gid)["done_on"] is None and ex(a, gid)["feed"] == []
     kinds = [r.kind for r in rows(db, "select kind from execution_events where group_id=:g order by id", g=gid)]
-    assert kinds == ["COMPLETE", "UNDO"]
+    assert kinds == ["SUBMIT", "REVIEW_START", "REVIEW_DONE", "SETTLED", "UNDO"]
     ev = rows(db, "select * from execution_events where group_id=:g", g=gid)
-    assert all(e.task_id == t["task_id"] and e.confirmation_revision == t["confirmation_revision"] and e.user_id == a.id for e in ev)
+    assert all(e.task_id == t["task_id"] and e.confirmation_revision == t["confirmation_revision"] and e.user_id == a.id
+               for e in ev if e.kind != "REVIEW_START")
 
 
 def test_a_record_is_bound_to_exactly_one_submitter_task_and_confirmation_revision(db, mk, ai):
@@ -321,7 +327,8 @@ def test_a_record_is_bound_to_exactly_one_submitter_task_and_confirmation_revisi
     # someone else's task id is refused, never re-bound
     tb = mine(b, gid)
     assert submit(a, gid, tb, files=[("w.png", png())]).status_code == 409
-    assert submit(a, gid, {"task_id": str(uuid.uuid4()), "confirmation_revision": t["confirmation_revision"]}, done=True).status_code == 409
+    assert submit(a, gid, {"task_id": str(uuid.uuid4()), "confirmation_revision": t["confirmation_revision"]},
+                  files=[("w.png", png())]).status_code == 409
 
 
 def test_replayed_submission_writes_once_and_a_done_todo_cannot_be_done_twice(db, mk, ai, uploads):
@@ -334,7 +341,7 @@ def test_replayed_submission_writes_once_and_a_done_todo_cannot_be_done_twice(db
     assert scalar(db, "select count(*) from execution_files") == 1
     assert len(list(uploads.rglob("*"))) == 2  # the group directory and one file
     assert len(ai.m2()) == 1
-    r3 = submit(a, gid, t, done=True)
+    r3 = submit(a, gid, t, files=[("w.png", png())])
     assert r3.status_code == 409 and r3.json()["error"]["code"] == "ALREADY_DONE"
 
 
@@ -343,11 +350,11 @@ def test_revision_conflict_after_reconfirm_and_refresh_recovers(db, mk, ai):
     old = mine(a, gid)
     assert unlock(a, gid).status_code in (200, 201)
     assert confirm(a, gid).status_code in (200, 201)
-    r = submit(a, gid, old, done=True)
+    r = submit(a, gid, old, files=[("w.png", png())])
     assert r.status_code == 409 and r.json()["error"]["code"] == "REVISION_CONFLICT"
     new = next(x for x in ex(a, gid)["my_todos"] if x["task_id"] == old["task_id"])  # task id survives re-confirming
     assert new["confirmation_revision"] == old["confirmation_revision"] + 1
-    assert submit(a, gid, new, done=True).status_code == 201
+    assert submit(a, gid, new, files=[("w.png", png())]).status_code == 201
     fresh = reconnect(a)
     assert ex(fresh, gid)["my_todos"][0]["done_on"] or any(x["done_on"] for x in ex(fresh, gid)["my_todos"])
 
@@ -367,12 +374,13 @@ def test_an_etc_note_is_text_only_and_empty_submissions_are_refused(db, mk, ai):
 def test_login_and_csrf_are_required_for_every_write(db, mk, ai):
     gid, (a, b) = confirmed_team(mk, 2)
     t = mine(a, gid)
-    assert submit(a, gid, t, done=True, token=None).status_code == 403
+    assert submit(a, gid, t, files=[("w.png", png())], token=None).status_code == 403
     assert scalar(db, "select count(*) from execution_records") == 0
-    rid = submit(a, gid, t, done=True).json()["id"]
+    rid = submit(a, gid, t, files=[("w.png", png())]).json()["id"]
     assert a.c.post(f"/api/groups/{gid}/records/{rid}/undo", json={"confirm_delete": False}).status_code == 403
+    assert a.c.post(f"/api/groups/{gid}/records/{rid}/vote", json={"agree": True}).status_code == 403
     a.c.cookies.delete("moim_session")
-    assert submit(a, gid, t, done=True).status_code == 401
+    assert submit(a, gid, t, files=[("w.png", png())]).status_code == 401
 
 
 # ---- attachments: validation and access ------------------------------------------------------------------------------
@@ -435,10 +443,10 @@ def test_eleven_formats_are_accepted_by_content(db, mk, ai):
     gid, (a, b) = confirmed_team(mk, 2)
     t = mine(a, gid)
     good = [("a.png", png(30, 30)), ("b.jpg", jpeg_with_exif(30, 30)), ("c.webp", webp()), ("d.pdf", pdf()), ("e.docx", docx())]
-    assert submit(a, gid, t, files=good).status_code == 201
+    assert submit(a, gid, t, files=good).status_code == 201  # a PASS: this todo is done now
     more = [("f.hwp", hwp()), ("g.hwpx", hwpx()), ("h.txt", "텍스트".encode()), ("i.md", b"# md"), ("j.pptx", pptx())]
-    assert submit(a, gid, t, files=more).status_code == 201
-    assert submit(a, gid, t, files=[("k.xlsx", xlsx())]).status_code == 201
+    assert submit(a, gid, mine(a, gid, 1), files=more).status_code == 201
+    assert submit(b, gid, mine(b, gid), files=[("k.xlsx", xlsx())]).status_code == 201
     kinds = {r.kind for r in rows(db, "select kind from execution_files")}
     assert kinds == {"PNG", "JPEG", "WEBP", "PDF", "DOCX", "HWP", "HWPX", "TXT", "MD", "PPTX", "XLSX"}
 
@@ -540,25 +548,28 @@ def test_m2_input_is_only_that_todo_snapshot_and_that_submission(db, mk, ai, cap
     assert "review_event" in logs
 
 
-def test_m2_never_changes_criteria_or_completion(db, mk, ai):
+def test_m2_never_changes_criteria_a_pass_completes_and_a_hold_goes_to_the_team(db, mk, ai):
     gid, (a, b) = confirmed_team(mk, 2)
     t = mine(a, gid)
     before = snapshot(db, t["task_id"])
     ai.scripts["CompletionReview"].append(lambda body: review_for(body, "NOT_MET", "화면 3장 중 1장만 보여요"))
-    r = submit(a, gid, t, files=[("w.png", png())], done=True)
-    line = rv(a, gid, r)["line"]
-    assert line == "AI 확인: 보완하면 좋은 점이 있어요 — 화면 3장 중 1장만 보여요"
-    assert mine(a, gid)["done_on"]  # REVIEW_NEEDED does not cancel a manual completion (D-D1 D2)
+    r = submit(a, gid, t, files=[("w.png", png())])
+    v = rv(a, gid, r)
+    assert v["line"] == "AI 확인: 보완하면 좋은 점이 있어요 — 화면 3장 중 1장만 보여요" and v["completion"] == "VOTING"
+    t = mine(a, gid)
+    assert t["done_on"] is None and t["attempt"]["completion"] == "VOTING"  # REVIEW_NEEDED does not complete (D-H1)
     assert snapshot(db, t["task_id"]) == before
-    # PASS on a submission that did not tick the box does not complete the todo
-    t2 = next(x for x in ex(a, gid)["my_todos"] if not x["done_on"])
-    r = submit(a, gid, t2, files=[("w.png", png())], done=False)
+    # a new attempt for the same todo replaces the open vote; this one passes and completes the todo
+    r = submit(a, gid, t, files=[("w2.png", png())])
     assert rv(a, gid, r)["line"] == "AI 확인: 기준을 모두 충족했어요."
-    assert next(x for x in ex(a, gid)["my_todos"] if x["task_id"] == t2["task_id"])["done_on"] is None
+    assert mine(a, gid)["done_on"]
+    assert sorted(x.completion for x in rows(db, "select completion from execution_records")) == ["DONE", "WITHDRAWN"]
+    t2 = next(x for x in ex(a, gid)["my_todos"] if not x["done_on"])
     ai.scripts["CompletionReview"].append(lambda body: review_for(body, "UNKNOWN", "완성본 파일을 올려 주세요"))
     r = submit(a, gid, t2, files=[("w.png", png())])
     assert rv(a, gid, r)["line"] == "AI 확인: 자료가 부족해요 — 완성본 파일을 올려 주세요"
-    assert set(rows(db, "select decision from execution_reviews")[i].decision for i in range(3)) == {"REVIEW_NEEDED", "PASS", "NEEDS_INPUT"}
+    assert {x.decision for x in rows(db, "select decision from execution_reviews")} == {"REVIEW_NEEDED", "PASS", "NEEDS_INPUT"}
+    assert snapshot(db, t["task_id"]) == before
 
 
 def test_an_inconsistent_or_unfounded_review_is_a_failure_with_a_user_retry(db, mk, ai):
@@ -571,10 +582,11 @@ def test_an_inconsistent_or_unfounded_review_is_a_failure_with_a_user_retry(db, 
         return out
 
     ai.scripts["CompletionReview"].append(lying)
-    r = submit(a, gid, t, files=[("w.png", png())], done=True)
+    r = submit(a, gid, t, files=[("w.png", png())])
     v1 = rv(a, gid, r)
     assert v1["state"] == "FAILED" and v1["can_retry"] and v1["line"] == "AI 확인을 하지 못했어요. 다시 시도해 주세요."
-    assert mine(a, gid)["done_on"]  # the failure does not block the manual completion
+    # a failure goes to the team (D-H1); a retry takes it back to the AI and clears the votes
+    assert mine(a, gid)["done_on"] is None and v1["completion"] == "VOTING"
     rid = r.json()["id"]
     ai.scripts["CompletionReview"].append(lambda body: {**review_for(body, "MET"), "criteria_results": [
         {**x, "evidence_refs": [{"evidence_id": "e99", "description": "x"}]} for x in review_for(body)["criteria_results"]]})
@@ -584,7 +596,8 @@ def test_an_inconsistent_or_unfounded_review_is_a_failure_with_a_user_retry(db, 
     assert jpost(a, f"/api/groups/{gid}/records/{rid}/review/retry", {"expected_attempt": 1}).status_code == 409  # stale attempt
     assert jpost(a, f"/api/groups/{gid}/records/{rid}/review/retry", {"expected_attempt": 2}).status_code == 202
     v = a.c.get(f"/api/groups/{gid}/records/{rid}/review").json()
-    assert v["state"] == "SUCCEEDED" and v["attempt"] == 3
+    assert v["state"] == "SUCCEEDED" and v["attempt"] == 3 and v["completion"] == "DONE"
+    assert mine(a, gid)["done_on"]
     assert len(ai.m2()) == 3  # one call per attempt, each started by the user
     assert jpost(a, f"/api/groups/{gid}/records/{rid}/review/retry", {"expected_attempt": 3}).status_code == 409
 
@@ -602,11 +615,13 @@ def test_provider_failures_are_shown_never_hidden(db, mk, ai):
 
 def test_unsupported_formats_are_shared_but_not_reviewed(db, mk, ai):
     gid, (a, b) = confirmed_team(mk, 2)
-    r = submit(a, gid, mine(a, gid), files=[("a.hwp", hwp()), ("b.hwpx", hwpx()), ("c.pptx", pptx()), ("d.xlsx", xlsx())], done=True)
-    assert r.status_code == 201
+    r = submit(a, gid, mine(a, gid), files=[("a.hwp", hwp()), ("b.hwpx", hwpx()), ("c.pptx", pptx()), ("d.xlsx", xlsx())])
+    assert r.status_code == 201 and r.json()["completion"] == "VOTING"  # nothing the AI can read: the team checks it
     assert rv(a, gid, r)["line"] == "이 파일 형식은 AI 확인을 지원하지 않아요. 파일은 정상적으로 공유됐어요."
     assert not ai.m2()
-    assert len(ex(b, gid)["feed"][0]["files"]) == 4 and mine(a, gid)["done_on"]
+    f = ex(b, gid)["feed"][0]
+    assert len(f["files"]) == 4 and mine(a, gid)["done_on"] is None
+    assert f["vote"]["can_vote"] and f["vote"]["reason"] == "이 파일 형식은 AI 확인을 지원하지 않아요. 파일은 정상적으로 공유됐어요."
 
 
 def test_mixed_submission_sends_a_fixed_phrase_instead_of_excluded_file_names(db, mk, ai):
@@ -643,12 +658,16 @@ def test_pdf_is_sent_as_a_metadata_free_file_part_and_docx_as_text(db, mk, ai):
     assert rv(a, gid, r)["line"].endswith("문서 속 이미지는 확인하지 않았어요.")
 
 
-def test_m2_disabled_keeps_the_manual_flow(db, app, mk, ai):
+def test_m2_disabled_sends_every_attempt_to_the_team(db, app, mk, ai):
     gid, (a, b) = confirmed_team(mk, 2)
     app.state.execution.review_enabled = False
-    r = submit(a, gid, mine(a, gid), files=[("w.png", png())], done=True)
-    assert r.status_code == 201 and r.json()["review"] is None and not ai.m2()
-    assert mine(a, gid)["done_on"] and ex(a, gid)["review_enabled"] is False
+    r = submit(a, gid, mine(a, gid), files=[("w.png", png())])
+    assert r.status_code == 201 and r.json()["review"] is None and not ai.m2() and r.json()["completion"] == "VOTING"
+    assert mine(a, gid)["done_on"] is None and ex(a, gid)["review_enabled"] is False
+    f = ex(b, gid)["feed"][0]
+    assert f["vote"]["reason"] == "AI 확인 없이 올라온 자료예요. 팀원이 직접 확인해 주세요." and f["vote"]["need"] == 1
+    assert jpost(b, f"/api/groups/{gid}/records/{f['id']}/vote", {"agree": True}).json()["completion"] == "DONE"
+    assert mine(a, gid)["done_on"]
 
 
 def test_an_interrupted_review_becomes_a_retryable_failure_after_restart_and_refresh_shows_it(db, app, mk, ai):
@@ -685,8 +704,8 @@ def test_undo_during_a_review_leaves_no_trace(db, app, mk, ai):
 
 def test_activity_and_progress_follow_the_records(db, mk, ai):
     gid, (a, b) = confirmed_team(mk, 2)
-    submit(a, gid, mine(a, gid), done=True)
-    submit(b, gid, mine(b, gid), files=[("w.png", png())], memo="메모", done=True)
+    submit(a, gid, mine(a, gid), files=[("w.png", png())])
+    submit(b, gid, mine(b, gid), files=[("w.png", png())], memo="메모")
     submit(b, gid, title="기타 메모")
     data = ex(a, gid)
     keys = {m["is_me"]: m["key"] for m in data["members"]}

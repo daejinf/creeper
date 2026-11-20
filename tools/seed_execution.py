@@ -66,9 +66,19 @@ def seed_execution(seed: dict) -> str:
         Image.new("RGB", (640, 400), color).save(out, format="PNG")
         return out.getvalue()
 
-    def post(u, task, files=(), title=None, memo=None, done=True):
+    def pptx():  # a format the AI cannot read: the attempt goes straight to the team vote (D-H1)
+        import zipfile
+
+        out = io.BytesIO()
+        with zipfile.ZipFile(out, "w") as z:
+            z.writestr("[Content_Types].xml", b"<Types/>")
+            z.writestr("ppt/presentation.xml", b"<p/>")
+        return out.getvalue()
+
+    def post(u, task, files=(), title=None, memo=None):
+        # D-H1: completion only through attached material (AI PASS here with the fixture AI, or the team vote)
         data = {"action_id": uuid.uuid4().hex, "task_id": task["task_id"],
-                "confirmation_revision": str(task["confirmation_revision"]), "marks_done": "true" if done else "false"}
+                "confirmation_revision": str(task["confirmation_revision"])}
         if title:
             data["title"] = title
         if memo:
@@ -82,9 +92,9 @@ def seed_execution(seed: dict) -> str:
     made = []
     for n, k, files, memo in (
         ("KIM", 0, [("wireframe_v2.png", png((47, 84, 235)), "image/png")], "대시보드·그룹 상세 와이어프레임 3장 정리했어요."),
-        ("KIM", 1, [], None),
+        ("KIM", 1, [("api_명세.md", "# API 명세 초안".encode(), "text/markdown")], None),
         ("CHOI", 0, [("인터뷰_질문지.txt", "질문 12개".encode(), "text/plain")], "팀플 경험, 불편했던 점 순서로 질문을 만들었어요."),
-        ("LEE", 0, [], None),
+        ("LEE", 0, [("경쟁서비스_비교.pptx", pptx(), "application/octet-stream")], "비교표를 슬라이드로 만들었어요."),
         ("PARK", 0, [("기능명세서_v1.png", png((242, 106, 79)), "image/png")], "대시보드부터 그룹 상세까지 기능 목록을 정리했어요."),
     ):
         u = people[n]

@@ -318,6 +318,13 @@ button.login:disabled{opacity:.6;cursor:default}
 .grid-empty{display:flex;flex-direction:column;align-items:center;gap:12px;padding:40px 16px;border:1.5px dashed #C9CEDB;border-radius:22px;color:var(--mute);font-size:14px;font-weight:600;text-align:center}
 .grid-empty a{color:var(--ink);font-weight:700;text-decoration:underline;text-underline-offset:3px}
 [hidden]{display:none!important}
+/* D-H1: 오른쪽 패널의 할 일은 체크로 완료하지 않는다. 누르면 그 그룹 화면에서 자료를 올린다. */
+.day-list a.ditem{color:inherit}
+.day-list a.ditem:hover{border-color:#C9CEDB}
+.ditem .cb{cursor:inherit}
+.ditem .cb:hover{border-color:#B9BECB}
+.ditem small .late{color:#C2391D;font-weight:600}
+.news-item.empty .txt{text-align:center;color:#8A90A0}
 </style>
 </head>
 <body>
@@ -328,7 +335,7 @@ button.login:disabled{opacity:.6;cursor:default}
       <button class="icon-btn menu-btn" id="menuBtn" type="button" aria-label="그룹 목록 열기" aria-controls="side" aria-expanded="false">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
       </button>
-      <a class="logo" href="/">
+      <a class="logo" href="/dashboard">
         <span class="mark" aria-hidden="true"><i class="c"></i><i class="a"></i><i class="q"></i></span>
         MOIM
       </a>
@@ -380,6 +387,7 @@ button.login:disabled{opacity:.6;cursor:default}
         </div>
         <div class="summary">
           <span class="pill">진행 중인 그룹 <b>{{ active_count }}</b></span>
+          <span class="pill" id="todayPillBox" hidden>오늘 마감 <b id="todayPill">0</b></span>
         </div>
       </div>
 
@@ -388,7 +396,7 @@ button.login:disabled{opacity:.6;cursor:default}
       {% if cards %}
       <div class="grid">
         {% for c in cards %}
-        <a class="card" href="{{ c.href }}">
+        <a class="card" href="{{ c.href }}"{% if c.active %} data-group="{{ c.id }}"{% endif %}>
           <div class="thumb {{ c.thumb }}">
             <span class="ring" aria-hidden="true"></span><span class="ring r2" aria-hidden="true"></span>
             <span class="dday">{{ c.badge }}</span>
@@ -399,6 +407,8 @@ button.login:disabled{opacity:.6;cursor:default}
           </div>
           <div class="card-body">
             <div class="card-title"><h3>{{ c.name }}</h3><span>{{ c.count }}명</span></div>
+            {% if c.active %}<div class="prog" hidden><div class="bar"><span style="width:0"></span></div><b>0%</b></div>
+            <p class="todo-line" hidden><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="5"/><path d="M8.5 12.5l2.5 2.5 4.5-5"/></svg>남은 할 일 <b data-left>0개</b><span class="sep" hidden>·</span><span class="hot" data-hot hidden></span></p>{% endif %}
           </div>
         </a>
         {% endfor %}
@@ -409,7 +419,42 @@ button.login:disabled{opacity:.6;cursor:default}
         <span>왼쪽의 <b>새 그룹 만들기</b>로 시작하거나 <a href="/invite">초대코드로 참여</a>해 보세요.</span>
       </div>
       {% endif %}
+
+      <section class="news" aria-labelledby="newsTitle">
+        <div class="sec-head"><h2 id="newsTitle">최근 팀 소식</h2></div>
+        <ul class="news-list" id="newsList"><li class="news-item"><span class="txt">불러오는 중…</span></li></ul>
+      </section>
     </main>
+
+    <aside class="panel" aria-label="나의 오늘" id="panel">
+      <div class="today-head">
+        <small id="todayDate"></small>
+        <h2>오늘의 할 일</h2>
+      </div>
+      <div class="week" id="week" role="group" aria-label="날짜 고르기"></div>
+
+      <section>
+        <div class="p-sec"><h3 id="dayTitle">오늘</h3><span class="count" id="dayCount"></span></div>
+        <ul class="day-list" id="dayList"></ul>
+      </section>
+
+      <section id="waitSec" hidden>
+        <div class="p-sec"><h3>대기 중</h3></div>
+        <ul class="day-list" id="waitList"></ul>
+      </section>
+
+      <section id="reqSec" hidden>
+        <div class="p-sec"><h3>팀원 확인 요청</h3><span class="count" id="reqCount"></span></div>
+        <ul class="day-list" id="reqList"></ul>
+      </section>
+
+      <div class="divider" role="presentation"></div>
+
+      <section>
+        <div class="p-sec"><h3>그룹 마감</h3></div>
+        <ul class="dl-list" id="deadlines"></ul>
+      </section>
+    </aside>
     </div>
   </div>
 </div>
