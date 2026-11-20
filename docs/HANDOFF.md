@@ -369,6 +369,13 @@ $env:MOIM_ENV='development'; .\.venv\Scripts\python.exe tools\capture_screens.py
 - **테스트**: `tests/test_completion_votes.py` 12개 추가, `tests/test_execution.py`의 D-D1 D2 전제 테스트를 D-H1 의미로 바꿨다(체크 완료 테스트 → 파일 없는 완료 거절·PASS 완료, 보류 → 투표 등).
 - **남은 것**: 원본과 다른 화면(체크 칸 대신 안내 문구, 투표 줄, `그룹 삭제` 메뉴, 패널의 `팀원 확인 요청`)의 사용자 눈 확인. M2 LIVE 호출은 하지 않았다(로직만 바뀜).
 
+## 더블클릭 로컬 실행기 (2026-11-20)
+
+- 결과: 루트 `start-moim.cmd`(설치·DB·마이그레이션·서버·브라우저)와 `setup-api-key.cmd`(Timely 키를 숨김 입력으로 `.env`에 저장), 사용 안내 `README.md`. 스크립트는 `tools/launcher/`(`start.ps1`, `set-api-key.ps1`, `common.ps1`, `ensure_db.py`). 제품 코드·원본 HTML 변경 없음. `.gitattributes`에 `*.cmd`·`*.ps1` CRLF 추가(PowerShell 5.1이 한글을 읽도록 `.ps1`은 UTF-8 BOM).
+- 에이전트가 정한 가역적 결정: 키는 `.env`(Git 제외)에 저장하고 실행기가 환경변수로 불러온다. 앱이 `.env`를 읽지 않는 방침은 그대로다. 로컬 DB는 폴더 안 `.local\pgdata`에 `initdb`(scram-sha-256, 무작위 비밀번호)로 만들고 127.0.0.1에서만 받는다. 포트는 `.env` URL의 값을 쓰고, 포트를 다른 PostgreSQL이 쓰고 저장소가 없으면 그 DB를 그대로 쓴다. 서버 포트는 8000부터 빈 곳.
+- 검증: `.git`·`.venv`·`.local`·`.env` 없는 새 복사본에서 실행 → venv·패키지 설치, `.env` 생성, initdb, PostgreSQL 시작, `moim_dev` 생성, `alembic upgrade head`, `/healthz` 200, `/` 200. `.env` 키 덮어쓰기 helper 확인. 숨김 입력 프롬프트 자체는 대화형이라 직접 실행하지 않았다.
+- 달랐던 사실: `pg_ctl start` 출력을 파이프로 받으면 PostgreSQL이 핸들을 물려받아 끝나지 않았다 → 별도 프로세스로 대기하도록 고침.
+
 ## 다음 한 단계
 
 **다음 한 단계: 사용자가 배포 대상(호스팅·도메인·비밀 저장소·로그/경보)을 정하면, 그 환경에서 `docs/OPERATIONS.md` 2·7절의 BLOCKED 항목과 삭제 기록 저장소(`MOIM_DELETION_LEDGER_DIR`, DB·첨부와 다른 내구성 저장소)를 검증한다.**
