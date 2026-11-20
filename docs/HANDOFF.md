@@ -4,6 +4,8 @@
 
 ## 현재 상태 (2026-11-20)
 
+- **Windows 로컬 실행기 포트 충돌 보정(2026-11-20)**: `Test-PortFree`를 TCP 연결 시도 대신 실제 loopback bind 검사로 바꿨다. `start-moim.cmd`가 만들었거나 실행기가 `CHANGE_ME`를 교체한 `.env.example` 복사본에서만 설정 포트를 쓸 수 없고 해당 클러스터가 실행 중이 아닐 때 다음 100개 포트 중 빈 포트를 찾아 `MOIM_DATABASE_URL`과 `MOIM_TEST_DATABASE_URL`을 함께 갱신한다. 사용자가 직접 지정한 DB 설정은 자동 변경하지 않는다. PowerShell 구문, 실제 점유 포트 판정, 두 URL 동시 갱신 helper는 통과했다. 이 Codex 실행 환경에서는 백그라운드 PostgreSQL이 명령 종료와 함께 격리·정리되어 end-to-end 접속 검증은 같은 원인 3회 뒤 중단했다. 로컬 검증용 신규 클러스터에는 사용자 데이터가 없으며 `global/pg_control`이 있고 실행 프로세스·`postmaster.pid`·임시 비밀번호 파일은 남아 있지 않다.
+
 - **GitHub 원격 연결(2026-11-20)**: `https://github.com/daejinf/creeper.git`을 `origin`으로 등록했다. 파일이 없는 원격 초기화 커밋(`a3cb8a4`)은 이력을 보존해 로컬 `main`에 병합했으며, 제품 코드·문서 결정·원본 HTML에는 내용 변경이 없다. 전체 결정적 테스트, 원본 HTML 해시 9/9와 프롬프트 검증 14개가 통과했다.
 
 - 0A-1·0A-2 완료, GATE A 승인 완료(D-A6 디자인 기준, D-A7 LIVE 허용). LIVE 호출 예산은 D-A8(2026-11-18)이 개정했다: 고정 호출 상한 없음, 모든 호출 기록, 단일 작업 100회 이상 대량·부하 호출만 사전 승인, 자동 재시도·backoff·자동 JSON 복구·숨기는 폴백은 계속 금지, 같은 원인의 실패 3회 반복 시 중단하고 분석. 기록은 `docs/PRODUCT.md`.
