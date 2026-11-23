@@ -45,6 +45,7 @@ from .jobs import Handler, JobStore
 from .logging_utils import install_redaction
 from .observability import RequestContextMiddleware, configure_logging
 from .portfolio.service import PortfolioService
+from .portfolio.understand import PortfolioAI
 from .preflight import enforce_production
 
 STATIC_DIR = Path(__file__).parent / "static"
@@ -78,6 +79,11 @@ class _BlockedClient:
 
         raise AIError("LIVE_CALLS_PAUSED", "no AI client injected in the test environment")
 
+    def embed(self, *args, **kwargs):
+        from wemeet_ai.m0.client import AIError
+
+        raise AIError("LIVE_CALLS_PAUSED", "no AI client injected in the test environment")
+
 
 def create_app(
     settings: Settings | None = None,
@@ -91,8 +97,8 @@ def create_app(
     portfolio_stages: Mapping[str, Callable] | None = None,
 ) -> FastAPI:
     """`goal_client_factory` and `ai_client_factory` (role candidates) exist for deterministic tests only;
-    the product always uses the Timely client. `portfolio_stages` (fake DESCRIBING/UNDERSTANDING/EMBEDDING handlers)
-    is for deterministic tests only too; stage 8A has no Timely portfolio stage yet."""
+    the product always uses the Timely client. `portfolio_stages` (fake DESCRIBING/UNDERSTANDING/EMBEDDING handlers
+    replacing the stage 8B Timely ones) is for deterministic tests only too."""
     settings = settings or load_settings()
     engine = make_engine(settings)
     handlers = dict(job_handlers or {})
@@ -113,8 +119,10 @@ def create_app(
     storage = Storage(upload_dir or os.environ.get("MOIM_UPLOAD_DIR") or DEFAULT_UPLOAD_DIR)
     # Stage 7 (D-G1): undo, leaves and account deletions are also written to the deletion ledger outside the database.
     ledger = DeletionLedger(deletion_ledger_dir or os.environ.get("MOIM_DELETION_LEDGER_DIR") or None)
-    # Stage 8A (D-I1): the private portfolio copy of each user's own completed attachments.
-    portfolio_service = PortfolioService(make_session_factory(engine), storage, stages=dict(portfolio_stages or {}),
+    # Stage 8A (D-I1): the private portfolio copy of each user's own completed attachments. Stage 8B: its Timely stages
+    # (vision, understanding, embeddings) use the same client factory as the other AI features.
+    portfolio_stages = {**PortfolioAI(ai_client_factory, storage).handlers(), **dict(portfolio_stages or {})}
+    portfolio_service = PortfolioService(make_session_factory(engine), storage, stages=portfolio_stages,
                                          ledger=ledger)
     execution_service = ExecutionService(make_session_factory(engine), ai_client_factory, storage,
                                          review_enabled=review_enabled, ledger=ledger, portfolio=portfolio_service)

@@ -567,14 +567,15 @@ def test_extraction_of_mixed_formats_through_a_real_submission(db, app, mk, ai):
 
 @pytest.fixture()
 def plain_app(db, fake, ai, seed, uploads):
-    """The product wiring of stage 8A: no portfolio AI stage exists yet."""
+    """The product wiring (since 8B with the Timely stage handlers; `tests/test_portfolio_understanding.py`)."""
     application = create_app(load_settings(), goal_client_factory=lambda: fake, ai_client_factory=lambda: ai,
                              rng_factory=lambda: random.Random(seed["value"]), upload_dir=uploads)
     yield application
     application.state.engine.dispose()
 
 
-def test_without_8b_stages_a_job_extracts_then_fails_honestly_at_describing(db, plain_app, fake, ai):
+def test_a_stage_without_a_handler_fails_honestly_after_extraction(db, plain_app, fake, ai):
+    plain_app.state.portfolio._stages.pop("DESCRIBING")
     mk2 = lambda username, display=None: user_row(db, plain_app, username, display)  # noqa: E731
     gid, (a, b) = confirmed_team(mk2, 2)
     submit(a, gid, mine(a, gid), files=[("메모.txt", KO_PROSE[1].encode())])

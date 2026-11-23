@@ -6,9 +6,10 @@ FAILED job back to QUEUED with `resume_stage = failed_stage` and a new revision;
 and keeps the earlier stages' results. There is no automatic retry. On server start, `fail_interrupted` turns every
 QUEUED or running job into FAILED(SERVER_RESTARTED) at the stage it was in (no automatic re-run).
 
-Stage 8A implements EXTRACTING only (deterministic: `extract`, `chunk`, `tokens`). DESCRIBING, UNDERSTANDING and
-EMBEDDING are the Timely stages of 8B; until they exist, a job stops at DESCRIBING as FAILED(STAGE_UNAVAILABLE), which
-is honest and resumable from there. Deterministic tests inject fake stage handlers (`stages=`); they are never LIVE.
+EXTRACTING is deterministic (stage 8A: `extract`, `chunk`, `tokens`). DESCRIBING, UNDERSTANDING and EMBEDDING are
+the Timely stages of 8B (`understand.PortfolioAI`, wired in `main.create_app`). A stage without a handler fails as
+FAILED(STAGE_UNAVAILABLE). A failing stage records its call counts and usage so far in `stage_meta`. Deterministic
+tests inject fake stage handlers or a FIXTURE client; they are never LIVE.
 
 A job runs like the other background work of the app (FastAPI `BackgroundTasks`, or the startup executor): `run`
 takes the owner and the job id, and every read and write goes through `repo` with that owner.
@@ -48,9 +49,10 @@ MSG_UNAVAILABLE = "지금은 처리할 수 없어요. 잠시 후 다시 시도�
 class StageError(Exception):
     """A stage failed with a fixed code (never a message that could hold file content)."""
 
-    def __init__(self, code: str):
+    def __init__(self, code: str, meta: dict | None = None):
         super().__init__(code)
         self.code = code
+        self.meta = meta or {}  # call counts and usage so far (stage 8B); never content
 
 
 class PortfolioError(AuthError):
@@ -108,12 +110,14 @@ class PortfolioService:
                     raise StageError("STAGE_UNAVAILABLE")
                 out = handler(inp) or {}
             except StageError as exc:
-                self._fail(user_id, job_id, rev, stage, exc.code)
+                meta[stage] = {"ms": int((time.perf_counter() - started) * 1000), **exc.meta}
+                self._fail(user_id, job_id, rev, stage, exc.code, meta)
                 return FAILED
             except Exception as exc:  # never the message: it may hold file content
                 log.error("portfolio_event job_id=%s stage=%s state=FAILED error_type=%s", job_id, stage,
                           type(exc).__name__)
-                self._fail(user_id, job_id, rev, stage, "HANDLER_ERROR")
+                meta[stage] = {"ms": int((time.perf_counter() - started) * 1000)}
+                self._fail(user_id, job_id, rev, stage, "HANDLER_ERROR", meta)
                 return FAILED
             meta[stage] = {"ms": int((time.perf_counter() - started) * 1000), **out}
             nxt = _next(stage)
@@ -131,11 +135,12 @@ class PortfolioService:
         for user_id, job_id in pairs:
             self.run(user_id, job_id)
 
-    def _fail(self, user_id: str, job_id: str, rev: int, stage: str, code: str) -> None:
+    def _fail(self, user_id: str, job_id: str, rev: int, stage: str, code: str, meta: dict | None = None) -> None:
+        extra = {"stage_meta": meta} if meta is not None else {}
         with self._sf.begin() as s:
             repo.update_job(s, user_id=user_id, job_id=job_id, revision=rev, from_state=stage, state=FAILED,
                             failed_stage=stage, error_code=code[:64], finished_at=self._clock(),
-                            updated_at=self._clock())
+                            updated_at=self._clock(), **extra)
         log.info("portfolio_event job_id=%s stage=%s state=FAILED error=%s", job_id, stage, code)
 
     def retry(self, user_id: str, job_id: str, expected_revision: int) -> dict:
@@ -178,9 +183,8 @@ class PortfolioService:
             files = repo.source_files(s, user_id=uid, record_id=item.source_record_id)
         if not files:
             raise StageError("SOURCE_GONE")  # the record was undone or its group deleted before the job ran
-        documents, nodes = [], []
+        documents = []
         left = MAX_SUBMISSION_CHARS
-        position = 0
         for pos, f in enumerate(files, start=1):
             try:
                 data = self.storage.read(f.group_id, f.id)
@@ -201,18 +205,7 @@ class PortfolioService:
                                   kind=ex.kind, status=ex.status, error_code=ex.error_code,
                                   truncated=ex.truncated_reason is not None, truncated_reason=ex.truncated_reason,
                                   char_count=ex.char_count, blocks=ex.blocks))
-            doc_nodes = []
-            for c in C.chunk_blocks(ex.blocks):
-                position += 1
-                head = _header(project.name, item.role_name, item.task_title, f.original_name, c.locator)
-                index_text = head + ("\n" + "열: " + c.header if c.header else "") + "\n" + c.text
-                doc_nodes.append(dict(id=str(uuid.uuid4()), document_id=doc_id, kind="chunk", position=position,
-                                      locator=c.locator, text=c.text, context=None, index_text=index_text,
-                                      bigrams=bm25_tokens(index_text), token_estimate=c.tokens,
-                                      source_block_ids=[c.block_id]))
-            for a, b in zip(doc_nodes, doc_nodes[1:]):
-                a["next_id"], b["prev_id"] = b["id"], a["id"]
-            nodes.extend(doc_nodes)
+        nodes = build_chunk_nodes(project.name, item.role_name, item.task_title, documents)
         with self._sf.begin() as s:
             job = repo.get_job(s, user_id=uid, job_id=inp.job_id, lock=True)
             if job is None or job.state != EXTRACTING:
@@ -251,12 +244,39 @@ class PortfolioService:
         return n
 
 
-def _header(project: str, role: str, title: str, file_name: str, loc: dict) -> str:
+def build_chunk_nodes(project_name: str, role: str, title: str, documents: list[dict]) -> list[dict]:
+    """The chunk nodes of a submission from its documents' blocks, in order, linked prev/next within one document.
+    The index text is the fixed header, a split table's header row, and the chunk; stage 8B UNDERSTANDING puts the
+    chunk's context right after the header line."""
+    nodes: list[dict] = []
+    position = 0
+    for d in documents:
+        doc_nodes = []
+        for c in C.chunk_blocks(d["blocks"]):
+            position += 1
+            head = header(project_name, role, title, d["file_name"], c.locator)
+            index_text = head + ("\n" + "열: " + c.header if c.header else "") + "\n" + c.text
+            doc_nodes.append(dict(id=str(uuid.uuid4()), document_id=d["id"], kind="chunk", position=position,
+                                  locator=c.locator, text=c.text, context=None, index_text=index_text,
+                                  bigrams=bm25_tokens(index_text), token_estimate=c.tokens,
+                                  source_block_ids=[c.block_id]))
+        for a, b in zip(doc_nodes, doc_nodes[1:]):
+            a["next_id"], b["prev_id"] = b["id"], a["id"]
+        nodes.extend(doc_nodes)
+    return nodes
+
+
+def header(project: str, role: str, title: str, file_name: str | None, loc: dict | None) -> str:
+    """The fixed metadata header of an index text. Without a file it is the submission summary's header."""
+    if file_name is None:
+        return f"[{project} / {role} / {title} / 제출물 요약]"
     return f"[{project} / {role} / {title} / {file_name} / {where(loc)}]"
 
 
 def where(loc: dict) -> str:
     """A short Korean label of a locator for headers and citations: `3쪽`, `슬라이드 2`, `시트 매출 2~40행`."""
+    if "summary" in loc:
+        return "제출물 요약"
     if "page" in loc:
         s = f"{loc['page']}쪽"
     elif "slide" in loc:

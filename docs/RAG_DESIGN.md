@@ -318,6 +318,13 @@
   - 블록 종류에 `meta`를 더했다: HWP·HWPX(`NAME_ONLY`)의 "파일: 이름 / 메모: …" 한 블록. 다시 검사에서 거절된 파일은 `REJECTED` 문서(검사 코드만, 텍스트 없음)로 남는다. `vision` 블록(이미지 파일·PDF 그림 쪽·PPTX 삽입 이미지)은 8A에서 조각을 만들지 않고 8B 설명과 함께 조각이 된다. PPTX 삽입 이미지는 `locator`에 슬라이드·순번·`sha1`을 남겨 8B가 같은 이미지를 다시 찾는다.
   - 4절 대비 추가 열: `portfolio_documents.status`·`error_code`·`truncated_reason`·`char_count`·`position`, `portfolio_nodes.position`·`token_estimate`, `portfolio_jobs.resume_stage`(다시 시도의 시작 단계), `portfolio_items.memo`·`role_name`·`file_count`·`review_decision`(판정 단어만). `portfolio_projects`에는 4절의 "상태" 열을 두지 않았다(8A에서 의미가 없음. 프로젝트 요약 상태는 8B에서 정한다).
   - 8B 단계가 없는 동안 실제 앱의 작업은 추출을 저장한 뒤 `FAILED(DESCRIBING, STAGE_UNAVAILABLE)`로 멈춘다(성공으로 꾸미지 않음). 8B 뒤에는 `다시 시도`로 그 단계부터 이어진다.
+- 2026-11-23: 8B 구현(`src/moim/portfolio/understand.py`, M0 `TimelyClient.embed`). 구현에서 정한 세부:
+  - **vision**: 대상 순서는 문서 순서 → 블록 순서. 앞 8개만 호출하고 나머지는 `vision_status=SKIPPED_LIMIT`, 블록 텍스트 끝에 "설명 생략(상한)"(조각은 만들지 않음). PPTX 삽입 이미지가 PNG·JPEG·WEBP가 아니거나(예: GIF·EMF) 업로드 이미지 한도를 넘으면 보내지 않고 `UNSUPPORTED` "설명 생략(지원하지 않는 이미지 형식)". PDF 그림 쪽은 PyMuPDF로 긴 변 약 2048px(배율 0.1~4)로 그린 뒤 `review_image` 사본을 보낸다. 출력 스키마 길이 상한: `visible_text` 1500자, `description` 1~600자, `elements` 20개×80자. 설명은 도착할 때마다 커밋하므로 중간 실패 뒤 `다시 시도`는 남은 대상만 부른다. 설명이 하나라도 생기면 조각 노드를 다시 만든다(설명 블록 = 원래 글자 + `[이미지 설명]`·`[보이는 글자]`·`[요소]`).
+  - **문서 이해**: 조각을 `<document id="cN" block=… file=… where=…>`로 한 번씩만 보낸다(블록 전체를 따로 보내지 않음). 프로젝트·역할·투두 제목·메모는 인용 불가 `<document id="meta">`. 창은 조각 본문 추정 12,000토큰. 출력: `document_summary` 1~12개 주장(측면 6종 중 하나, 문장 ≤200자, 근거 `block_ids` 1~8개), `chunk_contexts` 조각당 1개(≤200자). 서버 검사: 조각 id 중복·누락·초과, 창 밖 블록 인용, 빈 문장 → `SCHEMA_INVALID`(복구 호출 없음). 맥락 길이는 "50~100토큰(약 40~120자)"를 지시하고 200자를 상한으로 검사한다.
+  - **요약 노드**: `kind=doc_summary`, `document_id` 없음, `locator={"summary": "submission", "claims": [...]}`(주장별 근거 블록), `source_block_ids`는 모든 주장 근거의 합집합, 텍스트는 측면 순서로 정렬해 4,000자 상한. 같은 item의 이전 요약은 교체(다시 시도 때 중복 없음). 맥락을 바꿀 때 색인 텍스트의 이전 맥락 줄을 빼고 넣는다(중첩 없음).
+  - **임베딩**: 요청당 128개·추정 60,000토큰까지 묶는다. M0가 개수·`index`(중복·범위)·차원(모델별 알려진 값, `-small` 1536)·유한수·영벡터를 검사하고 L2 정규화해 `float32`로 돌려준다(오류 코드 `INVALID_EMBEDDING`). 단계가 다시 모양과 길이 1을 확인한 뒤 모든 노드를 한 트랜잭션에 저장한다. 모델은 `TIMELY_EMBEDDING_MODEL`(기본 `text-embedding-3-small`).
+  - **실패 기록**: 실패한 단계도 그때까지의 호출 수·usage를 `stage_meta`에 남긴다. 단계별 메타데이터: `calls`, `model`, `ai_ms`, `usage`, `ms`와 단계별 개수(vision `targets`·`described`·`skipped_limit`·`unsupported`, 이해 `windows`·`chunks`·`claims`, 임베딩 `nodes`·`batches`·`dim`).
+  - LIVE 측정(호출 215~221): 그림 3개 제출 5회 11,991토큰, 그림 없는 제출 2회 3,569토큰. `cl100k` 환산과 임베딩 `usage.prompt_tokens`의 표본 대조는 이번에 하지 않았다(색인 텍스트를 저장하지 않은 일회용 실행). 8C 측정에서 한다.
 
 ## 10. 화면 기준 (원본 `moim-mypage.html`에서 벗어나지 않기)
 

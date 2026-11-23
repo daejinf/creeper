@@ -3,6 +3,7 @@
 # Install for production:  pip install -c constraints.txt .
 # Refresh only together with a full test run and pip-audit (docs/OPERATIONS.md).
 # Stage 8A (2026-11-23): + python-pptx, openpyxl (runtime) and tiktoken (test extra) with their dependencies.
+# Stage 8B (2026-11-23): + numpy (runtime, portfolio embeddings).
 alembic==1.20.1
 annotated-doc==0.0.7
 annotated-types==0.8.0
@@ -27,6 +28,7 @@ Jinja2==3.1.6
 lxml==6.1.3
 Mako==1.4.3
 MarkupSafe==3.0.4
+numpy==2.5.5
 openpyxl==3.1.5
 opentelemetry-api==1.45.2
 packaging==26.3

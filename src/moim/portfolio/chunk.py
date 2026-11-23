@@ -7,7 +7,7 @@ at most MAX stays whole. A larger table is split between rows; its header row go
 the index text only), so the chunk texts themselves never repeat anything. The only cut inside a sentence is a single
 sentence longer than MAX on its own; it is split at whitespace (then at characters) and marked `forced`.
 
-Image blocks (`vision`) make no chunk here: their text arrives with the stage 8B description.
+Image blocks (`vision`) make a chunk only once stage 8B has described them (`vision_status == "DESCRIBED"`).
 """
 from __future__ import annotations
 
@@ -143,8 +143,8 @@ def chunk_blocks(blocks: list[dict]) -> list[Chunk]:
     out: list[Chunk] = []
     for block in blocks:
         text = (block.get("text") or "").strip()
-        if not text or block.get("vision"):
-            continue
+        if not text or (block.get("vision") and block.get("vision_status") != "DESCRIBED"):
+            continue  # an image without its stage 8B description (or one skipped by the cap) makes no chunk
         t = estimate(text)
         if block["kind"] in ("table", "slide", "meta") and t <= MAX:
             parts = [Chunk(block["block_id"], block["kind"], dict(block["locator"]), text, t)]

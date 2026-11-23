@@ -197,6 +197,19 @@ def replace_extraction(s: Session, *, user_id: str, item_id: str, project_id: st
         s.execute(insert(portfolio_nodes).values(user_id=uid, project_id=project_id, item_id=item_id, **n))
 
 
+def replace_nodes(s: Session, *, user_id: str, item_id: str, project_id: str, kind: str, nodes: list[dict]) -> None:
+    """Stage 8B: every node of one kind of the item is replaced (chunks rebuilt after DESCRIBING, the doc_summary)."""
+    uid = _uid(user_id)
+    if kind not in ("chunk", "doc_summary"):
+        raise ValueError("unknown node kind")
+    s.execute(delete(portfolio_nodes).where(portfolio_nodes.c.item_id == item_id, portfolio_nodes.c.user_id == uid,
+                                            portfolio_nodes.c.kind == kind))
+    for n in nodes:
+        if n.get("kind") != kind:
+            raise ValueError("node kind mismatch")
+        s.execute(insert(portfolio_nodes).values(user_id=uid, project_id=project_id, item_id=item_id, **n))
+
+
 def update_node(s: Session, *, user_id: str, node_id: str, **values) -> bool:
     """Later stages fill context, index text, tokens and the embedding. Other columns cannot be changed here."""
     uid = _uid(user_id)
