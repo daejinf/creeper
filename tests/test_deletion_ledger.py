@@ -198,7 +198,7 @@ def test_replay_runs_the_lost_deletions_again_and_is_safe_to_repeat(app, mk, db,
     led.record("ACCOUNT_DELETED", "9f9f9f9f-0000-4000-8000-000000000000")  # deleted before the backup: already gone
 
     dry = ops_db.replay_deletions(grp_db, str(uploads), str(ledger_dir), dry_run=True)
-    assert dry == {"entries": 3, "LEAVE": 1, "ACCOUNT_DELETED": 2, "RECORD_UNDONE": 0, "dry_run": True}
+    assert dry == {"entries": 3, "LEAVE": 1, "ACCOUNT_DELETED": 2, "RECORD_UNDONE": 0, "PORTFOLIO_DELETED": 0, "dry_run": True}
     assert scalar(db, "select count(*) from group_members where group_id=:g", g=gid) == 3  # dry run changed nothing
 
     first = ops_db.replay_deletions(grp_db, str(uploads), str(ledger_dir), dry_run=False)

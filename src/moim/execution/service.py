@@ -19,6 +19,11 @@ Completion (D-H1, replaces D-D1 D2): a todo is never completed by a checkbox. A 
 caller's own todos is a completion attempt: an M2 PASS completes it; any other outcome opens a vote of the other current
 members (`votes.py`). `되돌리기` of an attempt with files deletes the record, its files and its review permanently, only
 after the caller confirmed (D-D1 D5).
+
+Stage 8A (D-I1): a completion that reaches DONE with attachments also creates the submitter's portfolio job in the same
+transaction (`votes._set` → `portfolio.ingest.on_done`); `되돌리기` deletes that copy in its transaction. New jobs are
+handed out after the commit: `submit`/`vote` return them under `PORTFOLIO_JOBS` (the route pops the key and schedules
+them as background tasks; it never reaches the response), the M2 background task runs them itself.
 """
 from __future__ import annotations
 
@@ -36,6 +41,8 @@ from sqlalchemy.orm import Session, sessionmaker
 from ..account.ledger import DeletionLedger, LedgerUnavailable
 from ..auth.errors import AuthError
 from ..groups.service import ACTIVE, GroupService, is_group_id, today_kst
+from ..portfolio import ingest as portfolio_ingest
+from ..portfolio import repo as portfolio_repo
 from ..models import (
     cohort_members,
     execution_events,
@@ -78,6 +85,7 @@ MSG_GROUP_FULL = "그룹의 첨부 용량(500MB)이 가득 차서 첨부하지 �
 MSG_CONFIRM = "첨부 자료도 삭제되며 복구할 수 없어요. 되돌릴까요?"
 MSG_UNAVAILABLE = "지금은 처리할 수 없어요. 잠시 후 다시 시도해 주세요."
 MSG_NOT_RETRYABLE = "지금은 다시 시도할 수 없어요. 새로고침해서 상태를 확인해 주세요."
+PORTFOLIO_JOBS = "_portfolio_jobs"  # internal key of submit/vote results; popped by the route, never sent
 
 
 class ExecutionError(AuthError):
@@ -106,8 +114,10 @@ def time_label(at: datetime, today: date) -> str:
 
 class ExecutionService:
     def __init__(self, session_factory: sessionmaker[Session], client_factory: Callable[[], object], storage: F.Storage,
-                 review_enabled: bool = True, clock=utcnow, ledger: DeletionLedger | None = None):
+                 review_enabled: bool = True, clock=utcnow, ledger: DeletionLedger | None = None, portfolio=None):
         self._sf = session_factory
+        self.portfolio = portfolio  # stage 8A: PortfolioService (runs the jobs a completion created)
+        self.recovered_portfolio_jobs: list[tuple[str, str]] = []
         self._client_factory = client_factory
         self.storage = storage
         self.review_enabled = review_enabled
@@ -404,6 +414,7 @@ class ExecutionService:
                     V.settle(s, rec, now)
                     rec = s.execute(select(execution_records).where(execution_records.c.id == rid)).one()
                 view = self._mine(s, rec)
+            view[PORTFOLIO_JOBS] = portfolio_ingest.take_new(s)
         except Exception:
             for fid in written:
                 self.storage.delete(group_id, fid)
@@ -436,6 +447,7 @@ class ExecutionService:
                     raise ExecutionError(409, "CONFIRM_REQUIRED", MSG_CONFIRM)
                 fids = s.execute(select(execution_files.c.id).where(execution_files.c.record_id == record_id)).scalars().all()
                 s.execute(delete(execution_records).where(execution_records.c.id == record_id))  # files, review: cascade
+                portfolio_repo.delete_item_for_record(s, user_id=user_id, record_id=record_id)  # D-I1: the copy goes too
                 self._event(s, group_id, user_id, "UNDO", rec, file_count=len(fids))
                 # D-G1, fail closed: the last step before the commit; no undo commits without its ledger line
                 entry = self.ledger.record("RECORD_UNDONE", user_id, group_id, record_id)
@@ -617,6 +629,11 @@ class ExecutionService:
             if rec is None:
                 return
             (V.pass_review if passed else V.open_vote)(s, rec, self._clock())
+        self.run_portfolio(portfolio_ingest.take_new(s))  # already in a background task
+
+    def run_portfolio(self, pairs) -> None:
+        if self.portfolio is not None and pairs:
+            self.portfolio.run_many(pairs)
 
     def fail_interrupted(self) -> int:
         """Reviews lost with the previous process become a retryable failure (no automatic re-run); their attempts go
@@ -626,7 +643,9 @@ class ExecutionService:
                           .values(state=FAILED, error_code="SERVER_RESTARTED", finished_at=self._clock())).rowcount
             for rec in s.execute(select(execution_records).where(execution_records.c.completion == V.REVIEWING)).all():
                 V.open_vote(s, rec, self._clock())
-            return n
+        # a lone member's attempt completes here (SELF): its portfolio job is started by the app after startup
+        self.recovered_portfolio_jobs.extend(portfolio_ingest.take_new(s))
+        return n
 
     # ---- D-H1: team vote ----------------------------------------------------------------------------------------------
 
@@ -652,9 +671,11 @@ class ExecutionService:
             state = V.settle(s, rec, now)
             rec = s.execute(select(execution_records).where(execution_records.c.id == record_id)).one()
             t = V.tally(s, rec)
+        jobs = portfolio_ingest.take_new(s)
         log.info("execution_event group_id=%s user_id=%s record_id=%s kind=VOTE agree=%s state=%s",
                  group_id, user_id, record_id, bool(agree), state)
-        return {"completion": state, "agree": t["agree"], "reject": t["reject"], "need": t["need"], "voters": t["voters"]}
+        return {"completion": state, "agree": t["agree"], "reject": t["reject"], "need": t["need"], "voters": t["voters"],
+                PORTFOLIO_JOBS: jobs}
 
     # ---- dashboard (every active group of the caller) --------------------------------------------------------------
 

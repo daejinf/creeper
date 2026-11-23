@@ -55,7 +55,7 @@ class LeaveBody(_Body):
 
 
 def make_router(settings: Settings, account: AccountService, lifecycle: LifecycleService, sessions: SessionStore,
-                throttle: Throttle, templates: Jinja2Templates, on_assigned=None) -> APIRouter:
+                throttle: Throttle, templates: Jinja2Templates, on_assigned=None, on_portfolio_jobs=None) -> APIRouter:
     router = APIRouter()
     secure = settings.secure_cookies
     sess_cookie = session_cookie_name(secure)
@@ -85,10 +85,12 @@ def make_router(settings: Settings, account: AccountService, lifecycle: Lifecycl
         response.delete_cookie(sess_cookie, path="/", httponly=True, samesite="lax", secure=secure)
         csrf.set_cookie(response, csrf.new_token(), secure)
 
-    def schedule(background: BackgroundTasks, assigned) -> None:
+    def schedule(background: BackgroundTasks, assigned, portfolio_jobs=()) -> None:
         if on_assigned is not None:
             for gid, rev in assigned:
                 background.add_task(on_assigned, gid, rev)
+        if on_portfolio_jobs is not None and portfolio_jobs:  # stage 8A: another member's attempt completed by the vote
+            background.add_task(on_portfolio_jobs, list(portfolio_jobs))
 
     # ---- page ---------------------------------------------------------------------------------------------------------
 
@@ -147,7 +149,7 @@ def make_router(settings: Settings, account: AccountService, lifecycle: Lifecycl
     @router.post("/api/groups/{group_id}/leave", dependencies=[Depends(verify_csrf)])
     def leave(group_id: str, body: LeaveBody, background: BackgroundTasks, user: SessionUser = Depends(require_user)):
         impact, out = lifecycle.leave_group(user.user_id, group_id, body.confirm)
-        schedule(background, out.assigned)
+        schedule(background, out.assigned, out.portfolio_jobs)
         return json_ok({"left": True, "group_deleted": bool(out.purged_groups), "redirect": "/dashboard"})
 
     # ---- the leader deletes the group (D-H1) -----------------------------------------------------------------------
@@ -174,7 +176,7 @@ def make_router(settings: Settings, account: AccountService, lifecycle: Lifecycl
             raise LifecycleError(409, "CONFIRM_REQUIRED", "확인이 필요해요.",
                                  extra={"impact": lifecycle.delete_preview(user.user_id)})
         out = lifecycle.delete_account(user.user_id)
-        schedule(background, out.assigned)
+        schedule(background, out.assigned, out.portfolio_jobs)
         response = json_ok({"deleted": True, "redirect": "/"})
         end_session(response)
         return response

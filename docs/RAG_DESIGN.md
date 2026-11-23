@@ -10,7 +10,7 @@
 - OpenAI 문서 기준 `text-embedding-3-*`는 길이 1로 정규화되어 내적이 곧 코사인이다. 입력 상한은 8192토큰이다. `dimensions` 파라미터로 차원을 줄일 수 있다. 다만 Timely 프록시가 정규화를 유지하는지는 확인하지 않았으므로 수집 때 서버가 다시 L2 정규화한다.
 - 로컬 PostgreSQL 16에는 `pgvector`가 없고 `pg_trgm`만 있다.
 - `TimelyClient`는 `/chat/completions`만 안다. 공급자 HTTP 계약은 M0 한 곳에만 둔다(`docs/LIVE_TESTING.md`).
-- 현재 venv에는 `numpy`, `tiktoken`, `python-pptx`, `openpyxl`이 없다.
+- 현재 venv에는 `numpy`, `tiktoken`, `python-pptx`, `openpyxl`이 없다. (8A에서 `python-pptx`·`openpyxl`을 런타임, `tiktoken`을 테스트 extra로 추가했다. `numpy`는 8B.)
 - 백그라운드 처리는 서비스별 `BackgroundTasks.add_task` + 서버 시작 시 `fail_interrupted()` 패턴이다(`execution/service.py` `run_review`).
 
 ## 1. 전체 구조
@@ -46,7 +46,7 @@
 | PPTX | 슬라이드 | `python-pptx`: 제목·본문·표·노트. 슬라이드에 **삽입된 이미지 파일**은 2.2 대상(슬라이드 전체 화면이 아님) |
 | XLSX | 시트·표 | `openpyxl`(`read_only`, 값만): 시트별 머리행 + 행(행 수 상한) |
 | 이미지 | 파일 | 텍스트 없음 → 2.2 |
-| HWP·HWPX | — | 추출하지 않음. 파일명·메모만 색인 |
+| HWP·HWPX | — | 추출하지 않음. 파일명·메모만 색인(블록 종류 `meta`, 9절 8A) |
 
 - 모든 파일은 기존 `check_file`·`_zip_check`를 다시 거친다.
 - 파일당·제출당 상한(쪽·슬라이드·행·글자)을 상수로 둔다. 잘린 사실은 문서 메타데이터 `truncated`에 남긴다.
@@ -310,6 +310,14 @@
   - 주입 기준을 fixture 10/10으로 표현했다.
   - 코퍼스 본체가 첨부 파일임을 1절에 명시했다.
   - 화면 기준 10절을 추가했다.
+- 2026-11-23: 8A 구현(D-I1 승인 뒤). 측정값과 구현에서 정한 세부:
+  - **한국어 글자/토큰 측정**(`tiktoken` 0.14.0 `cl100k_base`, `tests/portfolio_fixtures.py` 한국어 산문 6문단 731자): **1.03자/토큰**(713토큰), 한글 음절당 **1.37토큰**. 영어 산문은 약 4.2자/토큰(공백 제외 156자당 37토큰).
+  - 런타임 환산(`portfolio/tokens.py`): 한글 음절 ×1.45 + 영문자 ×0.22 + 그 밖의 공백 아닌 글자(숫자·문장부호) ×1.2. 0.05/0.02/0.1 격자에서 모든 fixture(한국어·영어·혼합·표)의 실제 토큰 수 이상이 되는 가장 작은 값이다(추정/실제 1.00~1.34). 조각이 생각보다 커지는 일이 없도록 과대 추정 쪽을 골랐다. 8B에서 임베딩 응답 `usage.prompt_tokens`로 표본 대조한다.
+  - 분할 규칙의 구체값: 목표 250, 상한 400, 최소 100(이보다 작은 조각은 단락 경계를 넘어 다음 문장을 받는다). 문장 경계는 `.!?。！？…` 뒤 공백, 단락은 빈 줄. 줄바꿈이 있는 400토큰 초과 "문장"(목록·줄바꿈만 있는 글)은 줄 단위로 나눈다. 한 문장이 혼자 400을 넘을 때만 공백(없으면 글자)에서 자르고 `forced`로 표시한다. 큰 표는 행 사이에서만 나누고, 머리행은 둘째 조각부터 조각 본문이 아니라 색인 텍스트(`열: …`)에만 넣어 본문 겹침을 0으로 유지한다.
+  - 추출 상한: PDF 100쪽, 슬라이드 100장, 시트 10개·시트당 300행·30열, 셀 500자, 파일당 200,000자, 제출당 400,000자. 잘리면 문서의 `truncated_reason`(`PAGE_LIMIT`·`SLIDE_LIMIT`·`SHEET_LIMIT`·`ROW_LIMIT`·`COLUMN_LIMIT`·`CHAR_LIMIT`·`SUBMISSION_LIMIT`). PDF 그림 쪽 기준은 공백 아닌 글자 50자 미만.
+  - 블록 종류에 `meta`를 더했다: HWP·HWPX(`NAME_ONLY`)의 "파일: 이름 / 메모: …" 한 블록. 다시 검사에서 거절된 파일은 `REJECTED` 문서(검사 코드만, 텍스트 없음)로 남는다. `vision` 블록(이미지 파일·PDF 그림 쪽·PPTX 삽입 이미지)은 8A에서 조각을 만들지 않고 8B 설명과 함께 조각이 된다. PPTX 삽입 이미지는 `locator`에 슬라이드·순번·`sha1`을 남겨 8B가 같은 이미지를 다시 찾는다.
+  - 4절 대비 추가 열: `portfolio_documents.status`·`error_code`·`truncated_reason`·`char_count`·`position`, `portfolio_nodes.position`·`token_estimate`, `portfolio_jobs.resume_stage`(다시 시도의 시작 단계), `portfolio_items.memo`·`role_name`·`file_count`·`review_decision`(판정 단어만). `portfolio_projects`에는 4절의 "상태" 열을 두지 않았다(8A에서 의미가 없음. 프로젝트 요약 상태는 8B에서 정한다).
+  - 8B 단계가 없는 동안 실제 앱의 작업은 추출을 저장한 뒤 `FAILED(DESCRIBING, STAGE_UNAVAILABLE)`로 멈춘다(성공으로 꾸미지 않음). 8B 뒤에는 `다시 시도`로 그 단계부터 이어진다.
 
 ## 10. 화면 기준 (원본 `moim-mypage.html`에서 벗어나지 않기)
 

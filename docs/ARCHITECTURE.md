@@ -126,6 +126,14 @@ AI가 DB를 직접 임의 수정하지 않는다. 구조화된 변경안, 권한
 - 감사: `lifecycle_events`(kind·user_id·group_id·짧은 코드, FK 없음, 이름·아이디·본문 없음).
 - 삭제 기록(7단계, D-G1): `account/ledger.py`. 나가기·계정 삭제·실행 기록 `되돌리기`가 트랜잭션 안 커밋 직전에 DB·첨부 밖 `MOIM_DELETION_LEDGER_DIR`에 내부 id 한 줄을 쓴다(fail closed, 쓰기 실패면 롤백·503). 백업 복원 뒤 `LifecycleService.replay`(`tools/ops_db.py replay-deletions`)가 같은 코드로 다시 지운다. 절차는 `docs/OPERATIONS.md` 4절.
 
+### 8단계 포트폴리오 RAG (D-I1, 기술 기준 `docs/RAG_DESIGN.md`)
+
+- 8A(2026-11-23, AI 호출 없음). 코드 `src/moim/portfolio/`: `repo`(포트폴리오 테이블을 읽고 쓰는 유일한 곳. 모든 함수가 필수 키워드 `user_id`를 받아 WHERE에 넣고, 없거나 형식이 틀리면 SQL 전에 `ScopeError`), `ingest`(수집 트리거), `extract`(형식별 블록), `chunk`(분할), `tokens`(cl100k 환산·BM25 토큰), `service`(`PortfolioService`: 작업 상태 기계·추출 단계·다시 시도·직접 삭제). 마이그레이션 `0014_portfolio`.
+- 테이블: `portfolio_projects`(사용자×원 그룹 하나, 프로젝트명·과제 설명·역할명 사본) → `portfolio_items`(완료 기록 하나, `source_record_id` 유일 = 멱등 키, 투두 제목·마감일·역할명·메모·완료 방식·M2 판정 단어 사본) → `portfolio_documents`(첨부 하나, `status` EXTRACTED/NAME_ONLY/REJECTED, `truncated_reason`, `blocks` jsonb) → `portfolio_nodes`(조각, `locator`·`index_text`·`bigrams`·`prev_id`/`next_id`·`source_block_ids`, 8B용 `context`·`embedding` 열) / `portfolio_jobs`(item당 하나). 자식은 모두 `(parent_id, user_id)` 복합 FK라 다른 사용자의 부모 밑에 매달릴 수 없다. 원 그룹 쪽 열에는 FK가 없다(그룹을 나가거나 지워도 남음). 원본 파일 바이트·질문 테이블·DB 확장 없음.
+- 트리거: 완료가 DONE이 되는 모든 경로는 `execution/votes.py` `_set` 한 곳을 지난다(AI PASS·TEAM·SELF). 거기서 같은 트랜잭션에 `ingest.on_done`이 첨부가 있는 본인 기록일 때만 item·job을 만든다. `MANUAL`(D-H1 전 체크 완료)은 실행 중 생기지 않으므로 `ingest.enqueue_record`(8D `이전 기록 가져오기`가 쓸 경로)로 같은 복사를 한다. 새 작업 id는 세션에 모았다가 커밋 뒤 넘긴다: `submit`·`vote`는 라우트가 내부 키를 빼서 `BackgroundTasks`로, M2 백그라운드는 그 자리에서, 나가기·계정 삭제는 `Outcome.portfolio_jobs`로, 서버 시작 복구는 실행기로. `되돌리기`는 같은 트랜잭션에서 사본을 지운다.
+- 작업: `QUEUED → EXTRACTING → DESCRIBING → UNDERSTANDING → EMBEDDING → READY | FAILED(failed_stage, error_code)`. 단계마다 결과를 커밋하고 `(state, revision)` 비교로만 넘어간다(그사이 삭제·재시도되면 멈춤). `다시 시도`는 새 revision으로 `resume_stage = failed_stage`부터. 서버 시작 때 대기·실행 중 작업은 그 단계의 `FAILED(SERVER_RESTARTED)`. 8A에는 Timely 단계가 없으므로 실제 앱의 작업은 추출 뒤 `FAILED(DESCRIBING, STAGE_UNAVAILABLE)`에서 멈추고, 8B가 들어오면 그 단계부터 다시 시도할 수 있다. 결정적 테스트만 가짜 단계(`create_app(portfolio_stages=)`)를 넣는다.
+- 생명주기: 그룹 나가기·그룹 삭제는 사본을 건드리지 않는다. 계정 삭제는 `_delete_own_data`에서 전부 지운다. 직접 삭제(`delete_item`·`delete_project`)는 삭제 기록 `PORTFOLIO_*_DELETED`를 남기고 `replay`가 다시 지운다.
+
 ## 2. 모듈 판정표
 
 판정: KEEP(그대로) / ADAPT(어댑터 또는 내부 수정) / REPLACE(새로 구현) / DROP(사용 안 함). 줄 번호는 2026-11-18 기준 `src/wemeet_ai/` 아래 경로다. "테스트"는 크리퍼 `tests/`에 있는 파일이다. 0B-1에서 격리한 복사본으로 실행한 결과는 이 절 끝의 `0B-1 재확인 결과`에 있다(이 저장소의 `tests/`는 MOIM 자체 테스트다).

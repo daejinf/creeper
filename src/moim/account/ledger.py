@@ -5,8 +5,9 @@ group leave (D-D1 D6) and account deletion (D7) done after that moment would com
 record of those deletions (and of D5 `되돌리기`, which deletes a completion record and its files for good) kept OUTSIDE the database and outside the upload directory, so a restore never rolls it
 back; after a restore, `tools/ops_db.py replay-deletions` runs them again (`LifecycleService.replay`).
 
-What a line holds: an entry id, the time, the kind (`LEAVE` / `ACCOUNT_DELETED` / `RECORD_UNDONE` / `GROUP_DELETED`), the internal user
-id and, where it applies, the group id and the record id. No name, username, text, file name or anything a person wrote. One file per UTC day
+What a line holds: an entry id, the time, the kind (`LEAVE` / `ACCOUNT_DELETED` / `RECORD_UNDONE` / `GROUP_DELETED`, and
+from stage 8A the owner's own portfolio deletions `PORTFOLIO_ITEM_DELETED` / `PORTFOLIO_PROJECT_DELETED`, D-I1 I4), the internal user
+id and, where it applies, the group id, the record id or the portfolio item/project id (`target_id`). No name, username, text, file name or anything a person wrote. One file per UTC day
 (`deletions-YYYYMMDD.jsonl`); files older than the retention are removed, so the ledger never holds more than the
 backups it exists for.
 
@@ -32,7 +33,8 @@ from ..timeutil import utcnow
 log = logging.getLogger("moim.lifecycle")
 
 RETENTION_DAYS = 7
-KINDS = ("LEAVE", "ACCOUNT_DELETED", "RECORD_UNDONE", "GROUP_DELETED")
+KINDS = ("LEAVE", "ACCOUNT_DELETED", "RECORD_UNDONE", "GROUP_DELETED", "PORTFOLIO_ITEM_DELETED", "PORTFOLIO_PROJECT_DELETED")
+NEEDS_TARGET = ("PORTFOLIO_ITEM_DELETED", "PORTFOLIO_PROJECT_DELETED")  # D-I1 I4: the owner deleted a portfolio copy
 NEEDS_GROUP = ("LEAVE", "RECORD_UNDONE", "GROUP_DELETED")  # GROUP_DELETED: a leader deleted the group (D-H1)
 _FILE = re.compile(r"^deletions-(\d{8})\.jsonl$")
 _ID = re.compile(r"^[0-9a-f-]{36}$")
@@ -65,7 +67,8 @@ class DeletionLedger:
             f.flush()
             os.fsync(f.fileno())
 
-    def record(self, kind: str, user_id: str, group_id: str | None = None, record_id: str | None = None) -> str | None:
+    def record(self, kind: str, user_id: str, group_id: str | None = None, record_id: str | None = None,
+               target_id: str | None = None) -> str | None:
         """Append one line, flushed to disk; returns its entry id (None when disabled). Raises `LedgerUnavailable`
         (after an ERROR log with a fixed code and no ids) when it cannot be written."""
         if self.directory is None:
@@ -73,7 +76,9 @@ class DeletionLedger:
         if (kind not in KINDS or not _ID.match(user_id) or (group_id is not None and not _ID.match(group_id))
                 or (kind in NEEDS_GROUP) != (group_id is not None)
                 or (kind == "RECORD_UNDONE") != (record_id is not None)
-                or (record_id is not None and not _ID.match(record_id))):
+                or (record_id is not None and not _ID.match(record_id))
+                or (kind in NEEDS_TARGET) != (target_id is not None)
+                or (target_id is not None and not _ID.match(target_id))):
             raise ValueError("bad deletion ledger entry")
         entry = uuid.uuid4().hex
         now = self._clock().astimezone(timezone.utc)
@@ -81,6 +86,8 @@ class DeletionLedger:
             line = {"id": entry, "ts": now.isoformat(), "kind": kind, "user_id": user_id, "group_id": group_id}
             if record_id is not None:
                 line["record_id"] = record_id
+            if target_id is not None:
+                line["target_id"] = target_id
             self._append(line)
         except OSError:
             log.error("lifecycle_event kind=LEDGER_WRITE_FAILED entry_kind=%s", kind)
@@ -141,7 +148,10 @@ class DeletionLedger:
                     continue
                 if e["kind"] == "RECORD_UNDONE" and not _ID.match(str(e.get("record_id") or "")):
                     continue
+                if e["kind"] in NEEDS_TARGET and not _ID.match(str(e.get("target_id") or "")):
+                    continue
                 if since is None or ts >= since:
                     found.append({"id": e["id"], "ts": ts, "kind": e["kind"], "user_id": e["user_id"],
-                                  "group_id": e.get("group_id"), "record_id": e.get("record_id")})
+                                  "group_id": e.get("group_id"), "record_id": e.get("record_id"),
+                                  "target_id": e.get("target_id")})
         return sorted((e for e in found if e["id"] not in cancelled), key=lambda e: e["ts"])

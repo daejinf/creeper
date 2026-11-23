@@ -19,10 +19,13 @@ dependencies = [
     "Pillow>=13.0,<14",  # stage 7: 13.0.0 fixes 42 advisories in 12.x decoders
     "PyMuPDF>=1.25,<2",
     "python-docx>=1.1,<2",
+    # stage 8A (D-I1): portfolio extraction of PPTX slides and XLSX sheets
+    "python-pptx>=1.0,<2",
+    "openpyxl>=3.1,<4",
 ]
 
 [project.optional-dependencies]
-test = ["pytest>=8.3,<9", "httpx>=0.28,<1"]
+test = ["pytest>=8.3,<9", "httpx>=0.28,<1", "tiktoken>=0.8,<1"]  # tiktoken: stage 8A token measurement only
 visual = ["playwright>=1.49,<2"]  # tools/capture_screens.py only; not needed to run the app
 ops = ["cryptography>=48.0.1,<51"]  # tools/ops_db.py backup encryption only; not needed to run the app
 

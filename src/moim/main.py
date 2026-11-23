@@ -44,6 +44,7 @@ from .job_routes import make_router
 from .jobs import Handler, JobStore
 from .logging_utils import install_redaction
 from .observability import RequestContextMiddleware, configure_logging
+from .portfolio.service import PortfolioService
 from .preflight import enforce_production
 
 STATIC_DIR = Path(__file__).parent / "static"
@@ -87,9 +88,11 @@ def create_app(
     upload_dir: str | Path | None = None,
     review_enabled: bool = True,
     deletion_ledger_dir: str | Path | None = None,
+    portfolio_stages: Mapping[str, Callable] | None = None,
 ) -> FastAPI:
     """`goal_client_factory` and `ai_client_factory` (role candidates) exist for deterministic tests only;
-    the product always uses the Timely client."""
+    the product always uses the Timely client. `portfolio_stages` (fake DESCRIBING/UNDERSTANDING/EMBEDDING handlers)
+    is for deterministic tests only too; stage 8A has no Timely portfolio stage yet."""
     settings = settings or load_settings()
     engine = make_engine(settings)
     handlers = dict(job_handlers or {})
@@ -110,8 +113,11 @@ def create_app(
     storage = Storage(upload_dir or os.environ.get("MOIM_UPLOAD_DIR") or DEFAULT_UPLOAD_DIR)
     # Stage 7 (D-G1): undo, leaves and account deletions are also written to the deletion ledger outside the database.
     ledger = DeletionLedger(deletion_ledger_dir or os.environ.get("MOIM_DELETION_LEDGER_DIR") or None)
+    # Stage 8A (D-I1): the private portfolio copy of each user's own completed attachments.
+    portfolio_service = PortfolioService(make_session_factory(engine), storage, stages=dict(portfolio_stages or {}),
+                                         ledger=ledger)
     execution_service = ExecutionService(make_session_factory(engine), ai_client_factory, storage,
-                                         review_enabled=review_enabled, ledger=ledger)
+                                         review_enabled=review_enabled, ledger=ledger, portfolio=portfolio_service)
     # Stage 6: mypage and the account lifecycle (D-D1 D6/D7).
     account_service = AccountService(make_session_factory(engine))
     lifecycle_service = LifecycleService(make_session_factory(engine), storage, assignment_service, ledger=ledger)
@@ -122,6 +128,9 @@ def create_app(
         log = logging.getLogger("moim")
         enforce_production(settings, engine)  # stage 7: production refuses to start on an unsafe DB role or config
         log.info("starting env=%s db=%s", settings.env, settings.safe_database_url)
+        lost_portfolio = portfolio_service.fail_interrupted()  # before reviews: their SELF completions queue new jobs
+        if lost_portfolio:
+            log.warning("marked %d interrupted portfolio job(s) as FAILED (SERVER_RESTARTED)", lost_portfolio)
         interrupted = store.fail_interrupted()  # work lost with the previous process becomes a retryable failure
         if interrupted:
             log.warning("marked %d interrupted job(s) as FAILED (SERVER_RESTARTED)", interrupted)
@@ -140,6 +149,9 @@ def create_app(
         lost_reviews = execution_service.fail_interrupted()
         if lost_reviews:
             log.warning("marked %d interrupted attachment review(s) as FAILED (SERVER_RESTARTED)", lost_reviews)
+        if execution_service.recovered_portfolio_jobs:  # completions made by the recovery above (a lone member)
+            pairs, execution_service.recovered_portfolio_jobs = execution_service.recovered_portfolio_jobs, []
+            asyncio.get_running_loop().run_in_executor(None, portfolio_service.run_many, pairs)
         lost_todo_steps = todo_service.fail_interrupted()
         if lost_todo_steps:
             log.warning("marked %d interrupted todo step(s) as FAILED (SERVER_RESTARTED)", lost_todo_steps)
@@ -176,6 +188,7 @@ def create_app(
     app.state.execution = execution_service
     app.state.account = account_service
     app.state.lifecycle = lifecycle_service
+    app.state.portfolio = portfolio_service
     app.add_middleware(SecurityMiddleware, hsts=settings.secure_cookies)
     app.add_middleware(RequestContextMiddleware)  # outermost: every response (413s included) carries X-Request-ID
     app.add_exception_handler(AuthError, auth_error_handler)
@@ -197,7 +210,7 @@ def create_app(
     app.include_router(make_execution_router(execution_service))
     # A member leaving can complete a cohort's rankings: that assignment's team coverage starts like any other.
     app.include_router(make_account_router(settings, account_service, lifecycle_service, sessions, throttle, templates,
-                                           on_assigned=coverage_service.run))
+                                           on_assigned=coverage_service.run, on_portfolio_jobs=portfolio_service.run_many))
     app.mount("/static", RevalidatedStaticFiles(directory=STATIC_DIR), name="static")
 
     @app.get("/healthz")

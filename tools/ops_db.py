@@ -392,6 +392,7 @@ def replay_deletions(url: str, upload_dir: str, ledger_dir: str, dry_run: bool) 
     ledger = DeletionLedger(ledger_dir)
     entries = ledger.entries()
     kinds = {k: sum(1 for e in entries if e["kind"] == k) for k in ("LEAVE", "ACCOUNT_DELETED", "RECORD_UNDONE")}
+    kinds["PORTFOLIO_DELETED"] = sum(1 for e in entries if e["kind"].startswith("PORTFOLIO_"))  # stage 8A, D-I1 I4
     if dry_run:
         result = {"entries": len(entries), **kinds, "dry_run": True}
     else:

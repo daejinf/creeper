@@ -26,6 +26,11 @@ is moved to a fresh "탈퇴한 사용자" tombstone row with a new id, so nothin
 Deleting a group (D-H1): only its leader, after confirming the impact; every row and file of the group goes at once
 for every member (the same purge as the last member leaving).
 
+Portfolio copies (stage 8A, D-I1 I4) belong to their owner, not to the group: leaving a group or deleting it leaves
+them alone (they have no foreign key to group tables), deleting an account deletes them all in the same transaction,
+and a replayed `되돌리기` deletes that record's copy again. A vote settled by someone leaving can complete another
+member's attempt; its portfolio job is returned in `Outcome.portfolio_jobs` for the route to start.
+
 Every leave, group deletion and account deletion also writes its internal ids to the deletion ledger (stage 7, D-G1, `ledger.py`)
 inside its transaction, just before the commit, so a backup restore can run it again (`replay`). The ledger fails
 closed: when the line cannot be written, the deletion is rolled back and reported as "try again later".
@@ -77,6 +82,8 @@ from ..models import (
     todo_items,
     users,
 )
+from ..portfolio import ingest as portfolio_ingest
+from ..portfolio import repo as portfolio_repo
 from ..roles.assignment import AssignmentService
 from ..execution.votes import settle_group
 from .ledger import DeletionLedger, LedgerUnavailable
@@ -113,6 +120,7 @@ class Outcome:
     handed_over: int = 0
     left: int = 0
     tombstone: bool = False
+    portfolio_jobs: list[tuple[str, str]] = field(default_factory=list)  # (user_id, job_id) created by a settled vote
 
 
 class LifecycleService:
@@ -215,6 +223,7 @@ class LifecycleService:
                 self._leave(s, g, user_id, role, now, out)
                 if record:
                     entry.append(self.ledger.record("LEAVE", user_id, group_id))  # last step before the commit
+            out.portfolio_jobs = portfolio_ingest.take_new(s)
         self._after_commit(out)
         log.info("lifecycle_event kind=LEAVE group_id=%s user_id=%s group_deleted=%s handed_over=%d",
                  group_id, user_id, bool(out.purged_groups), out.handed_over)
@@ -407,6 +416,7 @@ class LifecycleService:
             s.execute(delete(users).where(users.c.id == user_id))  # sessions go with it (ON DELETE CASCADE)
             if record:
                 entry.append(self.ledger.record("ACCOUNT_DELETED", user_id))  # last step before the commit
+        out.portfolio_jobs = [p for p in portfolio_ingest.take_new(s) if p[0] != user_id]
         self._after_commit(out)
         log.info("lifecycle_event kind=ACCOUNT_DELETED user_id=%s groups_left=%d groups_deleted=%d files=%d",
                  user_id, out.left, len(out.purged_groups), len(out.files))
@@ -422,6 +432,7 @@ class LifecycleService:
             .join(execution_records, execution_records.c.id == execution_files.c.record_id)
             .where(execution_records.c.user_id == uid)).all())
         s.execute(delete(execution_records).where(execution_records.c.user_id == uid))  # files, reviews: cascade
+        portfolio_repo.delete_all(s, user_id=uid)  # D-I1 I4: every portfolio copy (also of groups left or deleted)
         for t in (todo_confirmed_items, todo_confirmations, todo_actions, todo_ai_steps, todo_items, todo_drafts,
                   role_interview_snapshots, role_member_states, role_interview_turns, role_interviews, member_progress,
                   member_states, interview_turns):
@@ -488,9 +499,20 @@ class LifecycleService:
             out.files.extend((group_id, f) for f in s.execute(
                 select(execution_files.c.id).where(execution_files.c.record_id == record_id)).scalars())
             s.execute(delete(execution_records).where(mine))
+            portfolio_repo.delete_item_for_record(s, user_id=user_id, record_id=record_id)  # its copy (D-I1)
         self._after_commit(out)
         log.info("lifecycle_event kind=UNDO_REPLAYED group_id=%s user_id=%s files=%d", group_id, user_id, len(out.files))
         return out
+
+    def _replay_portfolio(self, kind: str, user_id: str, target_id: str) -> Outcome:
+        """D-I1 I4: the owner's own portfolio deletion again (the item or project came back with a restore)."""
+        with self._sf.begin() as s:
+            fn = portfolio_repo.delete_item if kind == "PORTFOLIO_ITEM_DELETED" else portfolio_repo.delete_project
+            arg = "item_id" if kind == "PORTFOLIO_ITEM_DELETED" else "project_id"
+            if not fn(s, user_id=user_id, **{arg: target_id}):
+                raise not_found()
+        log.info("lifecycle_event kind=%s_REPLAYED user_id=%s", kind, user_id)
+        return Outcome()
 
     @contextmanager
     def _ledgered(self, entry: list):
@@ -521,6 +543,8 @@ class LifecycleService:
                     out = self._replay_undo(e["user_id"], e["group_id"], e["record_id"])
                 elif e["kind"] == "GROUP_DELETED":
                     out = self._replay_group_delete(e["group_id"])
+                elif e["kind"] in ("PORTFOLIO_ITEM_DELETED", "PORTFOLIO_PROJECT_DELETED"):
+                    out = self._replay_portfolio(e["kind"], e["user_id"], e["target_id"])
                 else:
                     out = self.delete_account(e["user_id"], record=False)
             except LifecycleError as exc:

@@ -20,7 +20,7 @@ from starlette.formparsers import MultiPartException
 from ..auth.deps import require_user, verify_csrf
 from ..auth.sessions import SessionUser
 from . import files as F
-from .service import ExecutionError, ExecutionService
+from .service import PORTFOLIO_JOBS, ExecutionError, ExecutionService
 
 log = logging.getLogger("moim.execution.routes")
 
@@ -53,6 +53,13 @@ def make_router(execution: ExecutionService) -> APIRouter:
 
     def json_ok(payload: dict, status: int = 200) -> JSONResponse:
         return JSONResponse(payload, status_code=status, headers=NO_STORE)
+
+    def portfolio_jobs(background: BackgroundTasks, payload: dict) -> dict:
+        """Stage 8A: portfolio jobs a completion created run after the response; their ids are never sent."""
+        pairs = payload.pop(PORTFOLIO_JOBS, None)
+        if pairs:
+            background.add_task(execution.run_portfolio, pairs)
+        return payload
 
     def schedule(background: BackgroundTasks, record_id: str) -> None:
         attempt = execution.pending_attempt(record_id)
@@ -103,6 +110,7 @@ def make_router(execution: ExecutionService) -> APIRouter:
                 marks == "true", checked)
         finally:
             await form.close()
+        portfolio_jobs(background, view)
         if view.get("review") and view["review"]["state"] == "PENDING":
             schedule(background, view["id"])
         return json_ok(view, 201 if created else 200)
@@ -124,8 +132,9 @@ def make_router(execution: ExecutionService) -> APIRouter:
         return json_ok(v, 202)
 
     @router.post("/api/groups/{group_id}/records/{record_id}/vote", dependencies=[Depends(verify_csrf)])
-    def vote(group_id: str, record_id: str, body: VoteBody, user: SessionUser = Depends(require_user)):
-        return json_ok(execution.vote(user.user_id, group_id, record_id, body.agree))
+    def vote(group_id: str, record_id: str, body: VoteBody, background: BackgroundTasks,
+             user: SessionUser = Depends(require_user)):
+        return json_ok(portfolio_jobs(background, execution.vote(user.user_id, group_id, record_id, body.agree)))
 
     @router.get("/api/dashboard")
     def dashboard(user: SessionUser = Depends(require_user)):

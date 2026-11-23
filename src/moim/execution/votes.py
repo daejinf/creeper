@@ -34,8 +34,14 @@ def tally(s: Session, rec) -> dict:
 
 
 def _set(s: Session, rec, completion: str, by: str | None, now: datetime) -> None:
+    """Every completion path ends here. A DONE with attachments also creates the submitter's portfolio job in this
+    same transaction (stage 8A, D-I1 I1); idempotent per record."""
     s.execute(update(execution_records).where(execution_records.c.id == rec.id).values(
         completion=completion, completed_by=by, marks_done=completion == DONE))
+    if completion == DONE:
+        from ..portfolio.ingest import on_done
+
+        on_done(s, rec, by, now)
     s.execute(insert(execution_events).values(
         group_id=rec.group_id, user_id=rec.user_id, kind="SETTLED", record_id=rec.id, task_id=rec.task_id,
         source_assignment_revision=rec.source_assignment_revision, confirmation_revision=rec.confirmation_revision,

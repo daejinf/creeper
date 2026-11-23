@@ -2,7 +2,11 @@
 
 날짜가 있는 환경 스냅샷, 현재 상태와 다음 한 단계. 단계 작업이 끝날 때마다 갱신한다. 우선순위가 가장 낮은 문서이므로 헌법·승인 결정과 충돌하면 그쪽을 따른다.
 
-## 현재 상태 (2026-11-20)
+## 현재 상태 (2026-11-23)
+
+- **8A 포트폴리오 RAG 수집 기반(2026-11-23, AI 호출 없음)**: 사용자가 D-I1을 초안 그대로 승인했다("초안 그대로 승인 (Recommended)", `docs/PRODUCT.md`). ROADMAP 8단계·SECURITY `portfolio` 분류를 맞췄다. 구현: 마이그레이션 `0014_portfolio`(테이블 5개, 모든 행 `user_id` CASCADE, 자식은 `(id, user_id)` 복합 FK, 그룹 테이블 FK 없음, 원본 바이트·질문 테이블·DB 확장 없음), `src/moim/portfolio/`(`repo`는 모든 함수가 필수 키워드 `user_id`, `ingest` 트리거, `extract` 형식별 블록, `chunk` 분할, `tokens` 환산·BM25 토큰, `service` 작업 상태 기계·다시 시도·직접 삭제). 완료 트리거는 `votes._set` 한 곳(AI·TEAM·SELF)에서 같은 트랜잭션, MANUAL은 `ingest.enqueue_record`. `되돌리기`·계정 삭제·삭제 기록 재처리(`PORTFOLIO_ITEM_DELETED`/`PORTFOLIO_PROJECT_DELETED` 새 종류)를 연결했다. 한국어 측정: 1.03자/토큰, 음절당 1.37토큰(RAG_DESIGN 9). 의존성: `python-pptx`·`openpyxl`(런타임), `tiktoken`(test extra), `constraints.txt` 고정. 8B 단계가 없는 지금 실제 앱의 작업은 추출 저장 뒤 `FAILED(DESCRIBING, STAGE_UNAVAILABLE)`에서 멈춘다(정상, 8B 뒤 그 단계부터 `다시 시도`). 테스트 `tests/test_portfolio_ingest.py` 31개. 이 worktree는 공용 `.venv`를 건드리지 않으려고 자체 `.venv`(Git 제외)를 만들어 검증했다. 병합 뒤 공용 venv는 `pip install -e ".[test,visual,ops]" -c constraints.txt`로 맞춘다.
+
+## 이전 상태 (2026-11-20)
 
 - **RAG 포트폴리오 사전 확인(2026-11-23, 설계 논의만, 단계 미시작)**: 사용자가 마이페이지에서 본인 제출물 기반 RAG(포트폴리오)를 원한다. Timely 직접 API의 `/embeddings`가 동작함을 LIVE 2회(호출 213~214, 누적 214회, `docs/LIVE_TESTING.md`)로 확인했다(`text-embedding-3-small` 1536차원, `-large`도 목록에 있음). 로컬 PostgreSQL 16에는 `pgvector`가 없고 `pg_trgm`만 있다. 결정 초안 D-I1(I1~I8, PROPOSED)을 `docs/PRODUCT.md`에 썼고 5절 OPEN 표에 올렸다. 승인 전이라 구현·ROADMAP 단계 추가는 하지 않았다. 단계 프롬프트(선행 게이트: D-I1 승인)를 쓰고 `prompts/README.md` 순서표와 `validate-prompts.ps1`에 넣었다. 이어서 RAG 원 논문(RAG·RRF·Contextual Retrieval·HyDE·RAPTOR·Lost in the Middle·Self-RAG·CRAG·RAGAS·ARES·ALCE·Chroma 분할 평가·Late Chunking·간접 프롬프트 주입·RAG survey·OpenAI 임베딩 문서)을 확인해 기술 설계 `docs/RAG_DESIGN.md`를 썼고(`AGENTS.md` 문서 표에 추가), 8단계 프롬프트를 세션 8A~8D로 나눠 다시 썼다. 외부 검토 의견도 반영했다: 질문·답변 비저장, 합격 기준을 LIVE 전에 고정, DB 확장 없음(앱 측 BM25), 마이그레이션 소유 역할과 런타임 역할 구분. 코드 변경 없음. 다음 한 단계: 사용자의 D-I1 승인 또는 보정 → 새 세션에서 `08A-rag-ingest.md`부터 실행. 추가 보정(2026-11-23): 프롬프트를 `08A`(모델·트리거·추출)·`08B`(이해·임베딩)·`08C`(검색·답변)·`08D`(화면·평가) 네 파일로 나누고 README 16~18번·검증 스크립트에 넣었다. 코퍼스 본체가 사용자 첨부 파일임을 D-I1 I1·설계 1절에 명시했고, 화면은 원본 마이페이지의 기존 마크업만 쓰도록 설계 10절 대응표를 만들었다. 검토 보정: ARES 수치를 참고값으로 낮추고 사람 라벨 150개 미만이면 LLM 판정 지표는 참고값, Wilson/질문 단위 bootstrap 구분, PPTX는 슬라이드 내 삽입 이미지 설명으로 한정, 작은 코퍼스 우회는 최종 프롬프트 전체 기준, 주입 기준은 fixture 10/10.
 
@@ -384,7 +388,9 @@ $env:MOIM_ENV='development'; .\.venv\Scripts\python.exe tools\capture_screens.py
 
 ## 다음 한 단계
 
-**다음 한 단계: 사용자가 배포 대상(호스팅·도메인·비밀 저장소·로그/경보)을 정하면, 그 환경에서 `docs/OPERATIONS.md` 2·7절의 BLOCKED 항목과 삭제 기록 저장소(`MOIM_DELETION_LEDGER_DIR`, DB·첨부와 다른 내구성 저장소)를 검증한다.**
+**다음 한 단계(8단계): 새 세션에서 `prompts/08B-rag-understanding.md`(Timely 시각 설명·문서 이해·임베딩)를 실행한다.** 8A의 실패 상태 `STAGE_UNAVAILABLE` 작업은 8B 뒤 `다시 시도`로 DESCRIBING부터 이어진다.
+
+이전 메모(7단계): 사용자가 배포 대상(호스팅·도메인·비밀 저장소·로그/경보)을 정하면, 그 환경에서 `docs/OPERATIONS.md` 2·7절의 BLOCKED 항목과 삭제 기록 저장소(`MOIM_DELETION_LEDGER_DIR`, DB·첨부와 다른 내구성 저장소)를 검증한다.
 
 이전 메모: 1~6단계 MVP 범위가 끝났다. 7단계(`prompts/07-production-readiness.md`)는 실제 배포를 결정할 때만 진행한다(MVP 완료 조건 아님).
 

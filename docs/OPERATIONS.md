@@ -94,6 +94,7 @@ python tools/ops_db.py prune --backup-dir <백업 경로> --ledger-dir <삭제 �
 ### 삭제 기록 (D-G1, `src/moim/account/ledger.py`)
 
 - 그룹 나가기(D6)와 계정 삭제(D7)는 같은 DB 트랜잭션 안에서, 커밋 **직전 마지막 단계로** `MOIM_DELETION_LEDGER_DIR/deletions-YYYYMMDD.jsonl`에 한 줄을 붙이고 디스크에 바로 쓴다(fsync). 한 줄에는 항목 id, 시각, 종류(`LEAVE`/`ACCOUNT_DELETED`), 내부 사용자 id, 나가기면 그룹 id만 있다. 이름·아이디·글·파일명은 없다.
+- 8A(D-I1 I4)부터 본인의 포트폴리오 직접 삭제도 같은 방식으로 남긴다: 종류 `PORTFOLIO_ITEM_DELETED`/`PORTFOLIO_PROJECT_DELETED`, 내부 사용자 id와 대상 id(`target_id`)만. `RECORD_UNDONE` 재처리는 그 기록의 포트폴리오 사본도 다시 지우고, `ACCOUNT_DELETED` 재처리는 포트폴리오 전부를 지운다. `replay-deletions --dry-run` 출력에 `PORTFOLIO_DELETED` 개수가 붙는다.
 - 하루 파일 하나, 7일이 지난 파일은 쓸 때마다 지운다(백업 보관 기간과 같다). DB·첨부 경로 밖에 두므로 복원해도 되돌아가지 않는다.
 - **기록 없이 확정되는 삭제는 없다(fail closed).** 기록을 쓸 수 없으면 트랜잭션을 되돌리고 사용자에게 기존 오류 자리로 "지금은 처리할 수 없어요. 잠시 후 다시 시도해 주세요."(503 `DELETION_UNAVAILABLE`)를 보인다. `lifecycle_event kind=LEDGER_WRITE_FAILED` ERROR 로그로 알린다(7절 경보).
 - 기록 뒤 DB 커밋이 실패하면 그 항목 id의 취소 줄을 붙이고 재처리는 그 항목을 건너뛴다. 남는 경우는 커밋 도중 프로세스가 죽는 것뿐이며, 그때는 사용자가 비밀번호·확인까지 마친 삭제가 복원 뒤 재처리로 실행될 수 있다.
