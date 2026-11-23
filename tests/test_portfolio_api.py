@@ -291,6 +291,8 @@ def test_portfolio_summary_intro_and_skills_counted_by_the_server(world, ai):
     assert r.status_code == 202
     prompt = ai.of("PortfolioSummaryOut")[0][-1]["content"]
     assert re.search(r'<document id="p\d+" project="캠퍼스 길찾기 앱"', prompt)  # its project summary is the input
+    # every document offered is citable: no project-header documents the model could cite by mistake (dev tuning)
+    assert set(re.findall(r'<document id="([a-z]+)\d*"', prompt)) <= {"p", "c"}
     s = world.a.c.get("/api/portfolio").json()["portfolio_summary"]
     assert s["state"] == "READY" and s["intro"] and s["intro"][0]["citations"]
     names = [k["name"] for k in s["skills"]]
@@ -311,6 +313,10 @@ def test_portfolio_summary_checks():
             {"intro": [{"text": "문장", "sources": ["p1"]}], "skills": [{"name": "조사", "sources": ["zz"]}]}), ids)
     SM.check_portfolio(SM.PortfolioSummaryOut.model_validate(
         {"intro": [{"text": "문장", "sources": ["p1"]}], "skills": [{"name": "조사", "sources": ["p1", "p2"]}]}), ids)
+    with pytest.raises(SM.SummaryError) as e:  # the reason names the kind of id, never the text
+        SM.check_portfolio(SM.PortfolioSummaryOut.model_validate(
+            {"intro": [{"text": "문장", "sources": ["m1", "meta"]}], "skills": []}), ids)
+    assert e.value.reason == "NOT_INPUT:m+meta"
 
 
 # ---- deletions prune derived text (D-I1 I4) ---------------------------------------------------------------------------------

@@ -160,11 +160,13 @@ def run(set_name: str, live: bool, approved: bool, summaries: bool, out_dir: Pat
     from moim.db import make_session_factory
     from moim.portfolio.ask import AskError, PortfolioAsk
 
-    questions = ES.DEV if set_name == "dev" else ES.TEST
+    questions = ES.DEV + ES.DEV_EXTRA if set_name == "dev" else ES.TEST
     if only:  # a tuning re-run of some dev questions (the test set always runs whole)
         if set_name == "test":
             raise SystemExit("the test set runs whole, once")
         questions = [q for q in questions if q.id in set(only)]
+    elif set_name == "dev":
+        questions = ES.DEV  # the extra tuning questions run only when named
     users = sorted({q.user for q in questions})
     estimate = estimate_calls(questions, len(users)) + (12 if summaries else 0)
     if live and (set_name == "test" or estimate >= LIVE_LIMIT) and not approved:
@@ -266,7 +268,7 @@ def run_summaries(sf, client, corpora, items_of) -> list[dict]:
                 row.update(state="SKIPPED", error=r.error_code)
                 out.append(row)
                 continue
-            row.update(state=r.state, error=r.error_code, mix=sum(1 for item, _ in refs if item not in items_of[u]),
+            row.update(state=r.state, error=r.error_code, reason=(r.stage_meta or {}).get("reason"), mix=sum(1 for item, _ in refs if item not in items_of[u]),
                        content=r.content)
             out.append(row)
     return out

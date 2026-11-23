@@ -19,6 +19,7 @@ regenerated automatically. Every Timely failure is FAILED(M0 code); no retry, no
 from __future__ import annotations
 
 import logging
+import re
 import time
 import uuid
 from typing import Annotated, Callable
@@ -57,6 +58,7 @@ PROJECT_POLICY = (
     "당신은 한 사람이 한 프로젝트에서 과제 투두를 끝내며 올린 첨부 자료의 요약 주장들을 읽고, 그 사람의 포트폴리오용 "
     "프로젝트 정리를 쓰는 도구입니다. " + DATA_RULE + "\n"
     "- did(맡은 일), made(만든 결과), learned(배운 점) 세 묶음으로 씁니다. 묶음마다 0~4문장, 모두 합쳐 1~10문장입니다.\n"
+    "- id가 meta인 문서는 배경 정보라 sources에 쓰지 않습니다.\n"
     "- 모든 문장에 그 문장을 뒷받침하는 주장 id(cN)를 sources로 1~3개 답니다. 자료에 없는 사실, 수치, 평가, 추측을 쓰지 "
     "마세요. 근거가 없는 묶음은 빈 목록으로 둡니다.\n"
     "- 본인이 한 일과 팀이 한 일을 구분합니다. 자료가 팀의 결정이라고 하면 본인 일로 바꿔 쓰지 마세요.\n"
@@ -68,7 +70,7 @@ PORTFOLIO_POLICY = (
     + DATA_RULE + "\n"
     "- intro: 이 사람을 소개하는 문장 1~3개. 여러 프로젝트에 공통으로 드러나는 일을 우선합니다.\n"
     "- skills: 자료로 확인되는 역량 0~8개. 이름은 20자 이내의 짧은 명사구(예: 사용자 조사, 데이터 시각화)입니다.\n"
-    "- 모든 intro 문장에 근거 id를 sources로 1~3개, 모든 skill에 1~8개 답니다. 근거 id는 주어진 <document id>만 씁니다.\n"
+    "- 모든 intro 문장에 근거 id를 sources로 1~3개, 모든 skill에 1~8개 답니다. 근거 id는 주어진 <document id>(cN·pN)만 씁니다.\n"
     "- 자료에 없는 사실, 수치, 평가, 추측, 칭찬을 쓰지 마세요. 역량은 자료에 그 일을 한 기록이 있을 때만 씁니다.\n"
     "- 한국어로, 한 문장 200자 이내, 해요체로 씁니다. 링크, 마크다운, 코드를 쓰지 마세요."
 )
@@ -120,8 +122,10 @@ def _check_sources(sources: list[str], ids: set[str], low: int, high: int) -> No
         raise SummaryError("CITATION_INVALID", "REPEATED")
     if not low <= len(cited) <= high:
         raise SummaryError("CITATION_INVALID", "UNCITED" if not cited else "TOO_MANY")
-    if not set(cited) <= ids:
-        raise SummaryError("CITATION_INVALID", "NOT_INPUT")
+    bad = [c for c in cited if c not in ids]
+    if bad:  # which kind of id it was (letters only, never text) so that a repeat can be diagnosed
+        kinds = sorted({"meta" if c == "meta" else re.sub(r"[^a-z]", "", c.lower())[:4] or "other" for c in bad})
+        raise SummaryError("CITATION_INVALID", "NOT_INPUT:" + "+".join(kinds))
 
 
 def check_project(out: ProjectSummaryOut, ids: set[str]) -> None:
@@ -337,7 +341,6 @@ class SummaryService:
         basis_projects = {}
         for pid in ready_pids:
             p = projects[pid]
-            parts.append(document(f"m{len(basis_projects) + 1}", f"프로젝트: {p.name}\n역할: {p.role_name}"))
             row = summaries.get(pid)
             content = row.content if row is not None and row.content else None
             basis_projects[pid] = row.generated_at.isoformat() if content and row.generated_at else None
@@ -346,13 +349,13 @@ class SummaryService:
                     for e in content.get(g, []):
                         sid = f"p{len(sources) + 1}"
                         sources[sid] = e
-                        parts.append(document(sid, e["text"], project=p.name, part=GROUP_LABELS[g]))
+                        parts.append(document(sid, e["text"], project=p.name, role=p.role_name, part=GROUP_LABELS[g]))
             else:
                 for c, item in claims:
                     if item.project_id == pid:
                         sid = f"c{len(sources) + 1}"
                         sources[sid] = c
-                        parts.append(document(sid, c["text"], project=p.name, aspect=c["aspect"]))
+                        parts.append(document(sid, c["text"], project=p.name, role=p.role_name, aspect=c["aspect"]))
         if not sources:
             raise SummaryError("NOTHING_TO_SUMMARIZE")
         messages = [{"role": "system", "content": PORTFOLIO_POLICY}, {"role": "user", "content": "\n\n".join(parts)}]

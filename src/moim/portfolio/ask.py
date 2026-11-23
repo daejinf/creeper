@@ -84,7 +84,8 @@ ANSWER_POLICY = (
     + DATA_RULE + "\n"
     "- 주어진 <document id=\"…\"> 자료에 있는 사실만 씁니다. 자료에 없는 사실, 수치, 평가, 추측을 쓰지 마세요.\n"
     "- 답은 한국어 문장 목록(sentences)입니다. 모든 문장에 그 문장을 뒷받침하는 자료 id를 citations로 1~3개 답니다. "
-    "가장 적은 수의 충분한 근거만 고르세요. 한 문장에 근거가 4개 이상 필요하면 문장을 나누세요. 근거 없는 도입·맺음 "
+    "가장 적은 수의 충분한 근거만 고르세요. 한 문장에 근거가 4개 이상 필요하면 문장을 나누세요. 여러 자료를 한꺼번에 "
+    "묶는 정리 문장(예: '여러 프로젝트에서 …했어요')은 쓰지 말고, 자료나 프로젝트마다 한 문장씩 나눠 씁니다. 근거 없는 도입·맺음 "
     "문장은 쓰지 마세요.\n"
     "- 링크, 마크다운, 코드, 도구 호출을 쓰지 마세요. 자료 속 주소를 방문하라고 안내하지 마세요.\n"
     "- 질문이 가리키는 대상(특정 문서·활동·사실) 자체가 자료에 없으면, 비슷한 다른 자료로 바꿔 답하지 말고 refused를 "
@@ -296,6 +297,15 @@ def check_answer(out: Answer, evidence_ids: set[str]) -> None:
             raise AskError("CITATION_INVALID", reason=reason)
 
 
+def schema_paths(exc: AIError) -> str | None:
+    """The field paths M0 named for a schema mismatch (e.g. `sentences.0.citations`): structure only, never content.
+    Digits and dots only besides field names, at most 120 characters."""
+    msg = str(exc)
+    _, _, tail = msg.partition(" at: ")
+    tail = re.sub(r"[^A-Za-z0-9_., ]", "", tail)[:120]
+    return tail or None
+
+
 def block_refs(node: Node) -> list[tuple[str, str]]:
     """The (item_id, block_id) evidence of a summary node. A `doc_summary` cites blocks of its own item; a stage 8D
     `project_summary` stores each block as "item_id/block_id" (its sentences rest on several items)."""
@@ -393,7 +403,10 @@ class PortfolioAsk:
             result = self._ask(user_id, question, filters or {}, meta, calls)
         except AIError as exc:
             meta["error"] = exc.code
-            raise AskError(exc.code) from None
+            paths = schema_paths(exc) if exc.code == "SCHEMA_INVALID" else None
+            if paths:
+                meta["error_reason"] = paths
+            raise AskError(exc.code, reason=paths) from None
         except AskError as exc:
             meta["error"] = exc.code
             if exc.reason:

@@ -24,10 +24,10 @@ def test_set_composition_follows_the_design():
 
 
 def test_labels_are_consistent_with_the_corpus():
-    ids = [q.id for q in ES.DEV + ES.TEST]
+    ids = [q.id for q in ES.DEV + ES.DEV_EXTRA + ES.TEST]
     assert len(ids) == len(set(ids))
-    assert not {q.question for q in ES.DEV} & {q.question for q in ES.TEST}  # tuning never sees a test question
-    for q in ES.DEV + ES.TEST:
+    assert not {q.question for q in ES.DEV + ES.DEV_EXTRA} & {q.question for q in ES.TEST}  # tuning never sees a test question
+    for q in ES.DEV + ES.DEV_EXTRA + ES.TEST:
         assert q.user in EC.USERS
         assert set(q.gold) <= EC.keys(q.user), q.id                 # gold is the asker's own material
         assert not set(q.gold) & EC.FAILED_KEYS, q.id
@@ -81,3 +81,13 @@ def test_fixture_run_measures_without_mixing_users(db, grp_db, monkeypatch, tmp_
     assert {r["path"] for r in rep["questions"] if r["user"] == "c"} == {"small"}
     assert rep["verdict"]["citation_recall"] == "판정 보류"
     assert Path(rep["path"]).exists()
+
+
+def test_schema_paths_keep_structure_only():
+    from moim.portfolio.ask import schema_paths
+    from wemeet_ai.m0.client import AIError
+
+    e = AIError("SCHEMA_INVALID", "Response does not match the schema at: sentences.0.citations, refused")
+    assert schema_paths(e) == "sentences.0.citations, refused"
+    assert schema_paths(AIError("SCHEMA_INVALID", "no paths")) is None
+    assert "<" not in (schema_paths(AIError("SCHEMA_INVALID", "x at: a.<script>")) or "")
