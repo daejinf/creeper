@@ -494,3 +494,13 @@ GATE D vision 사전 확인 LIVE 기록(2026-11-19, 호출 191~205, 15회, 누�
 - `TimelyClient`는 이제 `file` 파트 거절도 `VISION_NOT_SUPPORTED`로 분류한다(GATE D에서 넘긴 항목).
 
 7단계 운영 준비(2026-11-19): **LIVE 호출 0회**(누적 212회 그대로). 장애 훈련(`tools/drill_ai_failure.py`)은 실제 M0 `TimelyClient`가 로컬 가짜 엔드포인트를 HTTP로 부르는 방식이며 LIVE가 아니다(가짜 엔드포인트 호출뿐이며 실제 공급자에 닿지 않았다. 키도 가짜 값). 복원 리허설·부하 표본은 fixture AI 또는 오프라인 스위치를 썼다. 토큰 기준 비용 추정은 위 표에서 계산해 `docs/OPERATIONS.md` 8절에 적었다. 운영 로그에서 `provider_call` 줄은 이제 그 호출을 시작한 HTTP 요청의 `request_id`를 함께 갖는다(JSON 로그, `docs/OPERATIONS.md` 7절).
+
+RAG 임베딩 지원 확인 LIVE 기록(2026-11-23, 호출 213~214, 2회, 누적 214회. D-A8 범위·단일 작업 100회 미만이라 사전 승인 대상 아님. 사용자가 채팅에서 확인을 요청했다. 제품 코드는 바꾸지 않았고 저장소 밖 일회용 스크립트가 `requests`로 직접 불렀다. 키는 사용자 환경 변수에서 읽었고 출력·기록하지 않았다):
+
+| 호출 | 요청 | 결과 | 소요 | 비고 |
+|---|---|---|---|---|
+| 213 | `GET {TIMELY_BASE_URL}/models` | 200 | 1546ms | 모델 27개. 임베딩 모델 `text-embedding-3-small`, `text-embedding-3-large` 포함 |
+| 214 | `POST {TIMELY_BASE_URL}/embeddings` (`text-embedding-3-small`, 비민감 한국어 문장 1개) | 200 | 1015ms | 1536차원, prompt_tokens 24, `req_af44713a8567445f9296b8aedb168a1f` |
+
+- 같은 직접 API 주소(`.../chat/direct/openai/v1`)에서 OpenAI 호환 `/embeddings`가 동작한다(VERIFIED). RAG 임베딩도 Timely로 처리할 수 있어 헌법의 "실제 AI 기능은 Timely" 원칙과 충돌하지 않는다.
+- 로컬 PostgreSQL 16 설치(`C:\Program Files\PostgreSQL\16`)에는 `pg_trgm`만 있고 `pgvector`(`vector.control`)는 없다(VERIFIED, 파일 확인).

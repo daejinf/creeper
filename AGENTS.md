@@ -163,4 +163,5 @@ AI 공급자:
 | `docs/LIVE_TESTING.md` | AI 로그·실패 처리, LIVE 예산과 기록 |
 | `docs/ROADMAP.md` | 단계 게이트, 로드맵, 완료 조건, OPEN 결정 |
 | `docs/OPERATIONS.md` | 운영 구성, 설정·비밀, DB 역할·백업·복원, 장애 대응, 로그·경보, 부하·비용 (7단계) |
+| `docs/RAG_DESIGN.md` | 포트폴리오 RAG 기술 설계: 논문 근거, 수집·검색·답변 시작값, 평가 합격 기준 (8단계) |
 | `docs/HANDOFF.md` | 날짜가 있는 환경 스냅샷, 현재 상태, 다음 한 단계 |

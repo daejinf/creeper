@@ -14,6 +14,10 @@ $requiredFiles = @(
     '05-execution-review.md',
     '06-account-lifecycle.md',
     '07-production-readiness.md',
+    '08A-rag-ingest.md',
+    '08B-rag-understanding.md',
+    '08C-rag-retrieval.md',
+    '08D-rag-screen-eval.md',
     'GATE-B.md',
     'GATE-D.md'
 )
@@ -70,6 +74,10 @@ $liveFiles = @(
     '03-interview.md',
     '04-role-todos.md',
     '05-execution-review.md',
+    '08A-rag-ingest.md',
+    '08B-rag-understanding.md',
+    '08C-rag-retrieval.md',
+    '08D-rag-screen-eval.md',
     'GATE-D.md'
 )
 
