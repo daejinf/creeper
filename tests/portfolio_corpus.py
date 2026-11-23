@@ -165,6 +165,7 @@ class Corpus:
     projects: dict[str, str] = field(default_factory=dict)        # project name → id
     items: dict[str, str] = field(default_factory=dict)           # item title → id
     texts: dict[str, str] = field(default_factory=dict)           # node id → index text
+    blocks: dict[tuple, str] = field(default_factory=dict)        # (item id, block id) → block key
 
     def node(self, key: str, part: int = 0) -> str:
         return self.nodes[key][part]
@@ -228,6 +229,7 @@ def build(engine, spec: dict, embed=fixture_embed, user_id: str | None = None) -
                     for n, (key, bkind, loc, body) in enumerate(blocks, start=1):
                         bid = f"d{pos}b{n}"
                         block_of[key] = bid
+                        corpus.blocks[(iid, bid)] = key
                         bl.append({"block_id": bid, "kind": bkind, "locator": {"file": fname, **loc}, "text": body,
                                    "vision": False})
                     docs.append({"id": did, "position": pos, "source_file_id": str(uuid.uuid4()), "file_name": fname,

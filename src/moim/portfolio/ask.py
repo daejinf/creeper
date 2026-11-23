@@ -441,11 +441,13 @@ class PortfolioAsk:
         meta["small_estimate"] = prompt_estimate(messages, Answer)
         if meta["small_estimate"] <= SMALL_CORPUS_TOKENS:
             meta["path"] = "small"
+            meta["candidate_ids"] = meta["evidence_ids"] = [n.id for n in nodes]  # ids only, for the 8D evaluation
             return self._answer(calls, messages, ids_all, places, meta)
 
         meta["path"] = "search"
         client = self._client_factory()
         order = self._candidates(calls, client, q, nodes, meta)
+        meta["candidate_ids"] = list(order)  # node ids only (never text, never logged): the 8D evaluation's recall@25
 
         # 3.5 rerank + gate
         ids = {str(i + 1): x for i, x in enumerate(order)}
@@ -460,6 +462,7 @@ class PortfolioAsk:
             return AskResult("REFUSED", REFUSAL)
         groups = u_order(select_evidence(order, rel, by_id))
         meta["evidence"] = len(groups)
+        meta["evidence_ids"] = [x for g in groups for x in g]  # node ids only: the 8D evaluation's Recall@6
         meta["evidence_nodes"] = sum(len(g) for g in groups)
         # one evidence document (one citable id) per group: a chosen node with its attached neighbours
         evidence = {str(i + 1): [by_id[x] for x in g] for i, g in enumerate(groups)}
