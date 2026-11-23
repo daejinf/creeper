@@ -233,6 +233,10 @@ main{flex:1;width:100%;max-width:1040px;margin:0 auto;padding:20px clamp(16px,3.
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
             계정 관리
           </button>
+          <button type="button" role="tab" aria-selected="false" aria-controls="tab-pf" id="t-pf">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="7.5" width="17" height="12.5" rx="3"/><path d="M9 7.5V6a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v1.5M3.5 13h17"/></svg>
+            포트폴리오
+          </button>
         </nav>
       </aside>
 
@@ -327,6 +331,15 @@ main{flex:1;width:100%;max-width:1040px;margin:0 auto;padding:20px clamp(16px,3.
             </div>
           </div>
         </section>
+
+        <!-- 포트폴리오 (8단계, D-I1·D-I2): 내용은 static/portfolio.js가 textContent로 채워요 -->
+        <section class="card deco" id="tab-pf" role="tabpanel" aria-labelledby="t-pf" hidden>
+          <span class="ring" aria-hidden="true"></span><span class="ring r2" aria-hidden="true"></span>
+          <div class="crew" aria-hidden="true"><span class="m c"><i></i><i></i></span><span class="m a"><i></i><i></i></span><span class="m q"><i></i><i></i></span></div>
+          <h2 id="pfTitle">포트폴리오</h2>
+          <p class="sub" id="pfSub">투두에 첨부한 자료만 근거로 AI가 정리했어요. 모든 문장에 출처가 붙어요.</p>
+          <ul class="groups"><li class="grp"><div class="t"><b>포트폴리오를 불러오는 중이에요…</b></div></li></ul>
+        </section>
       </div>
     </div>
   </main>
@@ -344,6 +357,7 @@ main{flex:1;width:100%;max-width:1040px;margin:0 auto;padding:20px clamp(16px,3.
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script src="/static/auth-common.js"></script>
+<script src="/static/portfolio.js"></script>
 <script src="/static/mypage.js"></script>
 </body>
 </html>

@@ -33,6 +33,8 @@
     });
     // 비밀번호 변경을 열면 캐릭터가 눈을 감아요
     $('sideFace').classList.toggle('shut', btn.id === 't-pw');
+    // 포트폴리오는 탭을 처음 열 때 불러와요 (static/portfolio.js)
+    if (window.MoimPortfolio) window.MoimPortfolio.shown(btn.id === 't-pf');
   }
   tabs.forEach(function (b, i) {
     b.addEventListener('click', function () { openTab(b); });
@@ -44,7 +46,7 @@
     });
   });
   // 주소 끝에 #pw, #grp, #acc를 붙이면 그 메뉴로 바로 열려요
-  var startTab = /^#(info|pw|grp|acc)$/.test(location.hash) ? $('t-' + location.hash.slice(1)) : null;
+  var startTab = /^#(info|pw|grp|acc|pf)$/.test(location.hash) ? $('t-' + location.hash.slice(1)) : null;
   if (startTab) openTab(startTab);
 
   function setHint(box, hint, msg, bad, base) {

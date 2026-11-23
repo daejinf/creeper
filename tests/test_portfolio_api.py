@@ -408,3 +408,28 @@ def test_import_with_nothing_to_import(world):
     r = post(world.a, "/api/portfolio/import", {"action_id": act()})
     assert r.status_code == 409 and r.json()["error"]["code"] == "NOTHING_TO_IMPORT"
     assert world.a.c.get("/api/portfolio").json()["import"] == {"records": 0, "estimated_calls": 0, "allowed": False}
+
+
+def test_portfolio_screen_reuses_only_existing_classes():
+    """RAG_DESIGN 10 / D-I2: the tab is built from the mypage CSS that already exists; no new class, no inline style
+    other than the original spacing and the progress width, no HTML sinks."""
+    import re as _re
+
+    from moim.main import STATIC_DIR, TEMPLATES_DIR
+
+    html = (TEMPLATES_DIR / "mypage.html").read_text(encoding="utf-8")
+    css = html[html.index("<style>"):html.index("</style>")]
+    js = (STATIC_DIR / "portfolio.js").read_text(encoding="utf-8")
+    used = set()
+    for m in _re.finditer(r"el\('[a-z]+', '([^']+)'", js):
+        used.update(m.group(1).split())
+    for m in _re.finditer(r"button\('([^']+)'", js):
+        used.update(m.group(1).split())
+    used.update(c for m in _re.finditer(r"'dot ' \+|el\('li', 'ok'\)", js) for c in ["dot", "ok"])
+    used.update(m.group(1) for m in _re.finditer(r"classList\.(?:toggle|remove|add)\('([a-z]+)'", js))
+    assert used >= {"row", "dd", "rules", "groups", "grp", "flabel", "field", "box", "hint", "actions", "lock"}
+    for c in sorted(used):
+        assert _re.search(r"\." + _re.escape(c) + r"\b", css), c
+    styles = set(_re.findall(r"setAttribute\('style', '([^']+)'", js))
+    assert styles <= {"margin-top:12px", "width:"}, styles
+    assert 'id="t-pf"' in html and 'id="tab-pf"' in html and '<script src="/static/portfolio.js"></script>' in html

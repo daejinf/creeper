@@ -495,7 +495,7 @@ def test_confirmed_todos_stay_immutable_outside_the_lifecycle_purge(app, mk, db)
 def test_static_scripts_and_template_render_only_text(app):
     from moim.main import STATIC_DIR, TEMPLATES_DIR
 
-    for name in ("mypage.js", "group-leave.js"):
+    for name in ("mypage.js", "group-leave.js", "portfolio.js"):
         js = (STATIC_DIR / name).read_text(encoding="utf-8")
         for bad in ("innerHTML", "outerHTML", "insertAdjacentHTML", "document.write", "eval(", "localStorage",
                     "sessionStorage", "document.cookie"):
