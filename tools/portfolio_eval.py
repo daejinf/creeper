@@ -150,7 +150,7 @@ def node_keys(engine, corpora: dict) -> dict:
     return out
 
 
-def run(set_name: str, live: bool, approved: bool, summaries: bool, out_dir: Path) -> dict:
+def run(set_name: str, live: bool, approved: bool, summaries: bool, out_dir: Path, only: list[str] | None = None) -> dict:
     os.environ.setdefault("MOIM_ENV", "test")
     from sqlalchemy import create_engine, text
 
@@ -161,6 +161,10 @@ def run(set_name: str, live: bool, approved: bool, summaries: bool, out_dir: Pat
     from moim.portfolio.ask import AskError, PortfolioAsk
 
     questions = ES.DEV if set_name == "dev" else ES.TEST
+    if only:  # a tuning re-run of some dev questions (the test set always runs whole)
+        if set_name == "test":
+            raise SystemExit("the test set runs whole, once")
+        questions = [q for q in questions if q.id in set(only)]
     users = sorted({q.user for q in questions})
     estimate = estimate_calls(questions, len(users)) + (12 if summaries else 0)
     if live and (set_name == "test" or estimate >= LIVE_LIMIT) and not approved:
@@ -225,12 +229,12 @@ def run(set_name: str, live: bool, approved: bool, summaries: bool, out_dir: Pat
 
     summary_rows = run_summaries(sf, client, corpora, items_of) if summaries else []
     report = metrics(rows, summary_rows, set_name)
-    report.update(set=set_name, mode="LIVE" if live else "FIXTURE", model=client.model,
+    report.update(subset=sorted(only) if only else None, set=set_name, mode="LIVE" if live else "FIXTURE", model=client.model,
                   at=datetime.now(timezone.utc).isoformat(timespec="seconds"), calls_estimate=estimate,
                   calls={"corpus_embed": build_calls["embed"], "total": dict(client.calls)},
                   questions=rows, summaries=summary_rows)
     out_dir.mkdir(parents=True, exist_ok=True)
-    path = out_dir / f"{set_name}-{report['mode'].lower()}-{datetime.now().strftime('%Y%m%d-%H%M%S')}.json"
+    path = out_dir / f"{set_name}{'-subset' if only else ''}-{report['mode'].lower()}-{datetime.now().strftime('%Y%m%d-%H%M%S')}.json"
     path.write_text(json.dumps(report, ensure_ascii=False, indent=1), encoding="utf-8")
     report["path"] = str(path)
     return report
@@ -316,13 +320,14 @@ def main(argv=None) -> int:
     ap.add_argument("--live", action="store_true", help="call the real Timely API (counts toward the LIVE budget)")
     ap.add_argument("--approved", action="store_true", help="the user approved this LIVE run in advance (D-A8)")
     ap.add_argument("--summaries", action="store_true", help="also make the D-I2 summaries (test set, ~10 calls)")
+    ap.add_argument("--only", default="", help="comma-separated dev question ids (tuning re-run)")
     ap.add_argument("--out", default=str(ROOT / "artifacts" / "portfolio_eval"))
     a = ap.parse_args(argv)
     for line in (ROOT / ".env").read_text(encoding="utf-8").splitlines() if (ROOT / ".env").exists() else []:
         if "=" in line and not line.lstrip().startswith("#"):
             k, v = line.split("=", 1)
             os.environ.setdefault(k.strip(), v.strip().strip('"'))
-    rep = run(a.set, a.live, a.approved, a.summaries, Path(a.out))
+    rep = run(a.set, a.live, a.approved, a.summaries, Path(a.out), [x for x in a.only.split(",") if x])
     m = rep["metrics"]
     print(f"{rep['mode']} {a.set}: calls={rep['calls']['total']} estimate={rep['calls_estimate']} report={rep['path']}")
     for k in CRITERIA:
