@@ -152,6 +152,46 @@ def list_nodes(s: Session, *, user_id: str, item_id: str | None = None) -> list:
     return s.execute(q.order_by(portfolio_nodes.c.item_id, portfolio_nodes.c.position)).all()
 
 
+def search_scope(s: Session, *, user_id: str, project_id: str | None = None, since: datetime | None = None,
+                 until: datetime | None = None) -> list:
+    """Stage 8C (RAG_DESIGN 3.1): every node of the owner's READY items, the scope of one question. The owner and
+    `READY` are fixed here first; a project or completion-time filter only narrows inside that. Rows carry the
+    node, its file name (no file for a summary node) and the item's completion time, in submission order."""
+    uid = _uid(user_id)
+    n, i, d, j = portfolio_nodes, portfolio_items, portfolio_documents, portfolio_jobs
+    q = (select(n.c.id, n.c.project_id, n.c.item_id, n.c.document_id, n.c.kind, n.c.position, n.c.locator,
+                n.c.index_text, n.c.bigrams, n.c.token_estimate, n.c.prev_id, n.c.next_id, n.c.source_block_ids,
+                n.c.embedding, n.c.embed_model, n.c.embed_dim, d.c.file_name, i.c.completed_at)
+         .join(i, and_(i.c.id == n.c.item_id, i.c.user_id == uid))
+         .join(j, and_(j.c.item_id == i.c.id, j.c.user_id == uid, j.c.state == "READY"))
+         .outerjoin(d, and_(d.c.id == n.c.document_id, d.c.user_id == uid))
+         .where(n.c.user_id == uid))
+    if project_id is not None:
+        q = q.where(n.c.project_id == project_id)
+    if since is not None:
+        q = q.where(i.c.completed_at >= since)
+    if until is not None:
+        q = q.where(i.c.completed_at < until)
+    return s.execute(q.order_by(i.c.completed_at, i.c.id, n.c.kind != "doc_summary", n.c.position)).all()
+
+
+def block_places(s: Session, *, user_id: str, item_ids: list[str]) -> dict:
+    """`{(item_id, block_id): (document_id, file_name, locator)}` of the given items of the owner: where a summary
+    node's evidence blocks are in the attachments (citations resolve to `file · place`)."""
+    uid = _uid(user_id)
+    ids = [x for x in item_ids if _id(x)]
+    if not ids:
+        return {}
+    rows = s.execute(select(portfolio_documents.c.id, portfolio_documents.c.item_id, portfolio_documents.c.file_name,
+                            portfolio_documents.c.blocks)
+                     .where(portfolio_documents.c.user_id == uid, portfolio_documents.c.item_id.in_(ids))).all()
+    out: dict = {}
+    for r in rows:
+        for b in r.blocks or []:
+            out[(r.item_id, b.get("block_id"))] = (r.id, r.file_name, b.get("locator") or {})
+    return out
+
+
 def get_job(s: Session, *, user_id: str, job_id: str, lock: bool = False):
     uid = _uid(user_id)
     if not _id(job_id):

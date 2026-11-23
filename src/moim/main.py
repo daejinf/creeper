@@ -44,6 +44,7 @@ from .job_routes import make_router
 from .jobs import Handler, JobStore
 from .logging_utils import install_redaction
 from .observability import RequestContextMiddleware, configure_logging
+from .portfolio.ask import PortfolioAsk
 from .portfolio.service import PortfolioService
 from .portfolio.understand import PortfolioAI
 from .preflight import enforce_production
@@ -197,6 +198,8 @@ def create_app(
     app.state.account = account_service
     app.state.lifecycle = lifecycle_service
     app.state.portfolio = portfolio_service
+    # Stage 8C: `ask(user_id, question, filters)` for the 8D API (no route yet). Questions and answers are not stored.
+    app.state.portfolio_ask = PortfolioAsk(session_factory, ai_client_factory, throttle)
     app.add_middleware(SecurityMiddleware, hsts=settings.secure_cookies)
     app.add_middleware(RequestContextMiddleware)  # outermost: every response (413s included) carries X-Request-ID
     app.add_exception_handler(AuthError, auth_error_handler)

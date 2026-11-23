@@ -61,6 +61,12 @@ class RunStats:
     actual_model: str | None = None
 
 
+def schema_instruction(output_schema: type[BaseModel]) -> str:
+    """The system message `complete_json` puts first. Callers that size a whole prompt (RAG_DESIGN 3.2) count it."""
+    return ("Return only a JSON object conforming to this schema. Example shape is described by the properties and types. "
+            "Do not add Markdown. JSON Schema: " + json.dumps(output_schema.model_json_schema(), ensure_ascii=False))
+
+
 class TimelyClient:
     """One `complete_*` call is one HTTP request. No retry, no backoff, no JSON repair call.
 
@@ -85,7 +91,7 @@ class TimelyClient:
 
     def complete_json(self, messages: list[dict], output_schema: type[BaseModel], options: dict | None = None, *, stats: RunStats | None = None) -> Completion:
         stats = stats or RunStats()
-        schema_prompt = {"role": "system", "content": "Return only a JSON object conforming to this schema. Example shape is described by the properties and types. Do not add Markdown. JSON Schema: " + json.dumps(output_schema.model_json_schema(), ensure_ascii=False)}
+        schema_prompt = {"role": "system", "content": schema_instruction(output_schema)}
 
         def parse(content: str):
             try:
