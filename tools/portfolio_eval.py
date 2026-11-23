@@ -208,7 +208,7 @@ def run(set_name: str, live: bool, approved: bool, summaries: bool, out_dir: Pat
         try:
             r = asker.ask(uid, q.question, filters)
         except AskError as exc:
-            row.update(status="ERROR", error=exc.code, ms=int((time.perf_counter() - t0) * 1000))
+            row.update(status="ERROR", error=exc.code, reason=getattr(exc, "reason", None), ms=int((time.perf_counter() - t0) * 1000))
             rows.append(row)
             continue
         cand, evid = r.meta.get("candidate_ids", []), r.meta.get("evidence_ids", [])
