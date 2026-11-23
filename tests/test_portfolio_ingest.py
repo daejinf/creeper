@@ -41,8 +41,9 @@ from test_execution import (  # noqa: F401
 from test_groups import db, fake, grp_db, scalar, user_row  # noqa: F401
 from test_role_assignment import ROOT, SECRET_CONSTRAINT, rows, seed  # noqa: F401
 
-PORTFOLIO_TABLES = ("portfolio_projects", "portfolio_items", "portfolio_documents", "portfolio_nodes", "portfolio_jobs")
-EMPTY = {"projects": 0, "items": 0, "documents": 0, "nodes": 0, "jobs": 0}
+PORTFOLIO_TABLES = ("portfolio_projects", "portfolio_items", "portfolio_documents", "portfolio_nodes", "portfolio_jobs",
+                    "portfolio_summaries")
+EMPTY = {"projects": 0, "items": 0, "documents": 0, "nodes": 0, "jobs": 0, "summaries": 0}
 
 
 # ---- file fixtures --------------------------------------------------------------------------------------------------

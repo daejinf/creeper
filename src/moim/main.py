@@ -45,7 +45,9 @@ from .jobs import Handler, JobStore
 from .logging_utils import install_redaction
 from .observability import RequestContextMiddleware, configure_logging
 from .portfolio.ask import PortfolioAsk
+from .portfolio.routes import make_router as make_portfolio_router
 from .portfolio.service import PortfolioService
+from .portfolio.summary import SummaryService
 from .portfolio.understand import PortfolioAI
 from .preflight import enforce_production
 
@@ -137,6 +139,9 @@ def create_app(
         log = logging.getLogger("moim")
         enforce_production(settings, engine)  # stage 7: production refuses to start on an unsafe DB role or config
         log.info("starting env=%s db=%s", settings.env, settings.safe_database_url)
+        lost_summaries = app.state.portfolio_summaries.fail_interrupted()
+        if lost_summaries:
+            log.warning("marked %d interrupted portfolio summary run(s) as FAILED (SERVER_RESTARTED)", lost_summaries)
         lost_portfolio = portfolio_service.fail_interrupted()  # before reviews: their SELF completions queue new jobs
         if lost_portfolio:
             log.warning("marked %d interrupted portfolio job(s) as FAILED (SERVER_RESTARTED)", lost_portfolio)
@@ -198,15 +203,17 @@ def create_app(
     app.state.account = account_service
     app.state.lifecycle = lifecycle_service
     app.state.portfolio = portfolio_service
-    # Stage 8C: `ask(user_id, question, filters)` for the 8D API (no route yet). Questions and answers are not stored.
+    # Stage 8C: `ask(user_id, question, filters)`. Questions and answers are not stored. Stage 8D: the summaries and
+    # the portfolio API (D-I2).
     app.state.portfolio_ask = PortfolioAsk(session_factory, ai_client_factory, throttle)
+    app.state.portfolio_summaries = SummaryService(session_factory, ai_client_factory, throttle)
     app.add_middleware(SecurityMiddleware, hsts=settings.secure_cookies)
     app.add_middleware(RequestContextMiddleware)  # outermost: every response (413s included) carries X-Request-ID
     app.add_exception_handler(AuthError, auth_error_handler)
 
     @app.exception_handler(RequestValidationError)
     async def validation_error(request: Request, exc: RequestValidationError):
-        if request.url.path.startswith(("/api/auth/", "/api/groups", "/api/account")):  # malformed auth bodies get the auth error shape; no echo of input
+        if request.url.path.startswith(("/api/auth/", "/api/groups", "/api/account", "/api/portfolio")):  # malformed auth bodies get the auth error shape; no echo of input
             return auth_error_handler(request, AuthError(400, "BAD_REQUEST", "요청 형식이 올바르지 않아요."))
         return await request_validation_exception_handler(request, exc)
 
@@ -222,6 +229,8 @@ def create_app(
     # A member leaving can complete a cohort's rankings: that assignment's team coverage starts like any other.
     app.include_router(make_account_router(settings, account_service, lifecycle_service, sessions, throttle, templates,
                                            on_assigned=coverage_service.run, on_portfolio_jobs=portfolio_service.run_many))
+    app.include_router(make_portfolio_router(portfolio_service, app.state.portfolio_summaries, app.state.portfolio_ask,
+                                             session_factory))
     app.mount("/static", RevalidatedStaticFiles(directory=STATIC_DIR), name="static")
 
     @app.get("/healthz")

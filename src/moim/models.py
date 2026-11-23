@@ -1039,3 +1039,35 @@ portfolio_jobs = Table(
     CheckConstraint("revision >= 1", name="revision"),
     Index("ix_portfolio_jobs_state", "state"),
 )
+
+# ---- stage 8D: portfolio summaries (D-I2) ---------------------------------------------------------------------------
+
+portfolio_summaries = Table(
+    "portfolio_summaries",
+    metadata,
+    Column("id", String(36), primary_key=True),
+    Column("user_id", String(36), ForeignKey("users.id", ondelete="CASCADE"), nullable=False),
+    Column("project_id", String(36)),
+    Column("scope", String(9), nullable=False),
+    Column("state", String(7), nullable=False),
+    Column("content", JSONB),
+    Column("basis", JSONB, nullable=False, server_default=text("'{}'::jsonb")),
+    Column("error_code", String(64)),
+    Column("revision", Integer, nullable=False, server_default="1"),
+    Column("last_action_id", String(64)),
+    Column("stage_meta", JSONB, nullable=False, server_default=text("'{}'::jsonb")),
+    Column("generated_at", DateTime(timezone=True)),
+    Column("created_at", DateTime(timezone=True), nullable=False, server_default=func.now()),
+    Column("updated_at", DateTime(timezone=True), nullable=False, server_default=func.now()),
+    ForeignKeyConstraint(["project_id", "user_id"], ["portfolio_projects.id", "portfolio_projects.user_id"],
+                         ondelete="CASCADE", name="fk_portfolio_summaries_project"),
+    CheckConstraint("scope in ('PROJECT','PORTFOLIO')", name="scope"),
+    CheckConstraint("(scope = 'PROJECT') = (project_id is not null)", name="project"),
+    CheckConstraint("state in ('RUNNING','READY','FAILED')", name="state"),
+    CheckConstraint("(state = 'FAILED') = (error_code is not null)", name="failed_iff"),
+    CheckConstraint("revision >= 1", name="revision"),
+    Index("uq_portfolio_summaries_project", "user_id", "project_id", unique=True,
+          postgresql_where=text("scope = 'PROJECT'")),
+    Index("uq_portfolio_summaries_portfolio", "user_id", unique=True, postgresql_where=text("scope = 'PORTFOLIO'")),
+    Index("ix_portfolio_summaries_state", "state"),
+)

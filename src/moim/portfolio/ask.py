@@ -63,6 +63,7 @@ NEIGHBOR_SMALL_TOKENS = 150
 MAX_CITATIONS = 3
 
 MAX_QUESTION_CHARS = 300
+EXCERPT_CHARS = 200  # stage 8D (RAG_DESIGN 3.6): the evidence excerpt the server cuts from the owner's own text
 REFUSAL = "포트폴리오 기록에서 찾지 못했어요"
 
 # Questions per user (RAG_DESIGN 3.7: the counters are the only thing kept). One question is up to 3 Timely calls.
@@ -139,6 +140,7 @@ class Node:
     document_id: str | None
     kind: str
     locator: dict
+    text: str
     index_text: str
     tokens: list[str]
     token_estimate: int
@@ -159,6 +161,7 @@ class Citation:
     project_id: str
     item_id: str
     document_id: str | None
+    excerpt: str = field(default="", compare=False)   # stage 8D: server-cut from the attachment text, never AI output
 
 
 @dataclass
@@ -174,7 +177,8 @@ class AskResult:
         return {"status": self.status, "message": self.message, "missing": self.missing,
                 "sentences": [{"text": s["text"], "citations": [
                     {"label": c.label, "file_name": c.file_name, "where": c.where, "project_id": c.project_id,
-                     "item_id": c.item_id, "document_id": c.document_id} for c in s["citations"]]}
+                     "item_id": c.item_id, "document_id": c.document_id, "excerpt": c.excerpt}
+                    for c in s["citations"]]}
                     for s in self.sentences]}
 
 
@@ -290,17 +294,38 @@ def check_answer(out: Answer, evidence_ids: set[str]) -> None:
             raise AskError("CITATION_INVALID", reason=reason)
 
 
-def resolve(node: Node, places: dict) -> list[Citation]:
-    """Where a cited node is in the attachments. A chunk is its own place; a summary node is the places of the blocks
-    its claims rest on (in claim order, each place once)."""
-    if node.kind != "doc_summary":
+def block_refs(node: Node) -> list[tuple[str, str]]:
+    """The (item_id, block_id) evidence of a summary node. A `doc_summary` cites blocks of its own item; a stage 8D
+    `project_summary` stores each block as "item_id/block_id" (its sentences rest on several items)."""
+    if node.kind == "doc_summary":
+        return [(node.item_id, b) for b in node.source_block_ids]
+    out = []
+    for ref in node.source_block_ids:
+        item_id, _, block_id = str(ref).partition("/")
+        if item_id and block_id:
+            out.append((item_id, block_id))
+    return out
+
+
+def excerpt(text: str) -> str:
+    t = " ".join((text or "").split())
+    return t if len(t) <= EXCERPT_CHARS else t[:EXCERPT_CHARS - 1] + "…"
+
+
+def resolve(node: Node, places: dict, texts: dict | None = None) -> list[Citation]:
+    """Where a cited node is in the attachments. A chunk is its own place (its excerpt is its own text); a summary node
+    is the places of the blocks its claims rest on (in claim order, each place once; the excerpt is that block's
+    text)."""
+    texts = texts or {}
+    if node.kind == "chunk":
         name = node.file_name or str(node.locator.get("file") or "")
         w = where(node.locator)
-        return [Citation(f"{name} · {w}", name, w, node.project_id, node.item_id, node.document_id)]
+        return [Citation(f"{name} · {w}", name, w, node.project_id, node.item_id, node.document_id,
+                         excerpt(node.text))]
     out: list[Citation] = []
     seen = set()
-    for block_id in node.source_block_ids:
-        place = places.get((node.item_id, block_id))
+    for key in block_refs(node):
+        place = places.get(key)
         if place is None:
             continue
         doc_id, name, loc = place
@@ -308,7 +333,7 @@ def resolve(node: Node, places: dict) -> list[Citation]:
         if (doc_id, w) in seen:
             continue
         seen.add((doc_id, w))
-        out.append(Citation(f"{name} · {w}", name, w, node.project_id, node.item_id, doc_id))
+        out.append(Citation(f"{name} · {w}", name, w, node.project_id, key[0], doc_id, excerpt(texts.get(key, ""))))
     return out
 
 
@@ -396,11 +421,13 @@ class PortfolioAsk:
                 raise AskError("NOT_FOUND")
             lo, hi = kst_range(since, until)
             rows = repo.search_scope(s, user_id=user_id, project_id=project_id, since=lo, until=hi)
-            nodes = [Node(r.id, r.project_id, r.item_id, r.document_id, r.kind, r.locator or {}, r.index_text,
-                          list(r.bigrams or []), r.token_estimate, r.prev_id, r.next_id, list(r.source_block_ids or []),
-                          r.file_name, r.embedding, r.embed_model, r.embed_dim) for r in rows]
-            places = repo.block_places(s, user_id=user_id,
-                                       item_ids=sorted({n.item_id for n in nodes if n.kind == "doc_summary"}))
+            nodes = [Node(r.id, r.project_id, r.item_id, r.document_id, r.kind, r.locator or {}, r.text or "",
+                          r.index_text, list(r.bigrams or []), r.token_estimate, r.prev_id, r.next_id,
+                          list(r.source_block_ids or []), r.file_name, r.embedding, r.embed_model, r.embed_dim)
+                     for r in rows]
+            refs = sorted({k for n in nodes if n.kind != "chunk" for k in block_refs(n)})
+            places = repo.block_places(s, user_id=user_id, item_ids=sorted({k[0] for k in refs}))
+            places = {"places": places, "texts": repo.block_texts(s, user_id=user_id, keys=refs)}
         meta["load_ms"] = int((time.perf_counter() - t0) * 1000)
         meta["nodes"] = len(nodes)
         if not nodes:
@@ -491,7 +518,7 @@ class PortfolioAsk:
             cites: list[Citation] = []
             for cid in s.citations:
                 for node in evidence[cid]:  # a group resolves to every place in it, in document order
-                    for c in resolve(node, places):
+                    for c in resolve(node, places["places"], places["texts"]):
                         if c not in cites:
                             cites.append(c)
             sentences.append({"text": " ".join(s.text.split()), "citations": cites})

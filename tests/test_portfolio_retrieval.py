@@ -175,7 +175,7 @@ def test_rrf_uses_k_60_one_entry_per_id_and_keeps_the_top_25():
 
 
 def _n(i, tokens=200, prev=None, nxt=None, kind="chunk"):
-    return A.Node(i, "p", "it", "d", kind, {"page": 1}, i, [], tokens, prev, nxt, ["b1"], "f.pdf", None, None, None)
+    return A.Node(i, "p", "it", "d", kind, {"page": 1}, "", i, [], tokens, prev, nxt, ["b1"], "f.pdf", None, None, None)
 
 
 def test_gate_three_branches_and_evidence_selection():
