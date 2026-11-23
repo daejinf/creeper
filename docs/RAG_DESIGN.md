@@ -96,11 +96,27 @@
 근거: RAPTOR는 모든 계층 노드를 한 풀에 넣고 코사인 순으로 2,000토큰까지 채우는 collapsed-tree가 층별 순회보다 일관되게 나았다. 요약은 자식 길이의 약 0.28로 압축됐다.
 
 - 클러스터링(UMAP+GMM)은 하지 않는다. 구조가 이미 프로젝트 → 제출물 → 조각으로 나뉘어 있어서다[추론].
-- 노드는 세 종류다.
+- 노드는 네 종류다(D-I2로 `portfolio_summary` 추가).
   - `chunk`
   - `doc_summary`: 2.4의 요약
-  - `project_summary`: 프로젝트별, 3.5의 카드 생성 때 만든다
-- 세 종류를 **같은 검색 풀**에 넣는다. 요약 노드는 근거 `block_id` 목록을 가지므로, 인용될 때 원 위치로 풀린다.
+  - `project_summary`: 프로젝트별. 2.5.1
+  - `portfolio_summary`: 사용자당 하나. 2.5.2
+- 네 종류를 **같은 검색 풀**에 넣는다. 요약 노드는 근거 `block_id` 목록을 가지므로, 인용될 때 원 위치로 풀린다.
+
+#### 2.5.1 프로젝트 요약 (LLM 1회/프로젝트, 사용자가 누를 때만)
+
+- 입력: 그 프로젝트의 READY 항목들의 `doc_summary` 주장(근거 `block_id` 포함)과 공개 메타데이터(프로젝트명·역할명·투두 제목·기간). 숨겨진 기준·개인 대화는 넣지 않는다(D-I1 I2).
+- 출력 스키마: `{did: [S], made: [S], learned: [S]}`, `S = {text ≤200자, block_ids: [1~3]}`. 세 묶음은 화면의 **맡은 일 / 만든 결과 / 배운 점**이다. 묶음마다 0~4문장, 합계 1~10문장. 근거가 없는 묶음은 빈 배열로 두고 화면에서 그 줄을 숨긴다.
+- 서버 검사: 모든 `block_ids`가 입력 주장의 근거 합집합의 부분집합, 문장마다 1~3개, 빈 문장 없음. 실패는 `CITATION_INVALID`(복구 호출 없음, 이전 요약이 있으면 그대로 두고 오류 표시).
+- 생성 시점: 처음은 `만들기`, 이후 `다시 만들기`(D-I1 I8). 새 항목이 READY가 되면 `stale`로 표시만 하고 자동 재생성하지 않는다.
+
+#### 2.5.2 포트폴리오 정리 (LLM 1회/사용자, 사용자가 누를 때만)
+
+- 입력: 사용자의 모든 `project_summary` 문장(근거 포함)과, 요약이 없는 프로젝트는 `doc_summary` 주장. 프로젝트명·역할명은 메타데이터로만.
+- 출력 스키마: `{intro: [S](정확히 1~3), skills: [{name ≤20자, block_ids: [1~8]}](0~8개)}`. `intro`가 화면의 **나를 소개하는 세 문장**, `skills`가 **근거로 확인된 역량** 칩이다.
+- 서버 검사: 2.5.1과 같다. 역량 칩의 숫자는 `block_ids`가 속한 **서로 다른 문서 수**로 서버가 센다(AI가 쓴 숫자를 쓰지 않음). 같은 이름(공백·대소문자 무시) 역량은 합친다.
+- 생성 시점: `만들기`/`다시 만들기`만. 프로젝트 요약이 바뀌거나 프로젝트가 삭제되면 `stale`. 프로젝트 삭제로 근거 블록이 사라진 문장·칩은 즉시 숨긴다(사라진 근거를 인용한 채 보여 주지 않음).
+- 이 출력은 답변이 아니라 "본인 자료에 근거한 정리"이며, 역량 칩은 근거 존재를 보일 뿐 실력 인증이 아니다(D-I2).
 
 ### 2.6 임베딩
 
@@ -130,7 +146,7 @@
 - 판단 기준은 조각 합이 아니라 **실제 생성 호출의 예상 입력 전체**다. 다음을 모두 더해 계산한다.
   - 시스템 지시와 JSON 스키마 지시
   - 범위 안 모든 노드의 색인 텍스트(고정 머리말 + LLM 맥락 + 원문)
-  - 요약 노드(`doc_summary`·`project_summary`)
+  - 요약 노드(`doc_summary`·`project_summary`·`portfolio_summary`)
   - `<document id>` 구분자
   - 앞뒤 두 번 넣는 질문
 - 이 합이 **6k cl100k 토큰 환산 이하**면 1단계 검색과 재정렬을 건너뛴다. 이때는 질문 임베딩 호출도 하지 않는다. 계산은 2.3의 글자/토큰 환산 상수로 하고, 표본 호출의 `usage.prompt_tokens`와 대조해 오차를 기록한다.
@@ -192,6 +208,8 @@
   3. 인용 없는 문장이 있으면 답 전체를 `CITATION_INVALID`로 실패 처리한다(일부만 지우지 않는다).
   4. `refused=true`면 고정 문구로 바꾼다.
 - 화면: 문장은 textContent로 그린다. 인용은 `파일명 · 쪽/슬라이드` 링크로 보여 주고, 포트폴리오 상세 안으로만 이동한다. 자료 속 URL은 클릭할 수 있게 만들지 않는다.
+- **근거 원문(D-I2)**: 답변 응답에 인용된 근거마다 `{n, file_name, locator_label, kind, excerpt}`를 함께 돌려준다. `excerpt`는 서버가 그 조각 원문에서 자른 최대 200자다(AI 출력이 아님). 인용된 노드가 요약 노드면 `source_block_ids`의 첫 블록 원문을 쓴다. 본인 READY 노드만 대상이고, 색인 머리말·LLM 맥락·임베딩·서버 경로는 넣지 않는다.
+- **추천 질문(D-I2)**: 개요·상세·답변·거절 화면의 추천 질문은 서버 상수의 고정 문구다(AI 호출 없음). 거절 화면의 "이 프로젝트 자료" 줄은 그 프로젝트 READY 항목의 투두 제목 최대 3개를 결정적으로 보여 준다.
 
 ### 3.7 질문 기록
 
@@ -214,7 +232,7 @@
 | `portfolio_projects` | id, user_id, source_group_id(FK 없음), 프로젝트명·과제 설명·역할명 사본, 상태 |
 | `portfolio_items` | id, user_id, project_id, source_record_id(유일), source_task_id, 투두 제목·마감일 사본, completed_by, completed_at |
 | `portfolio_documents` | id, item_id, user_id, source_file_id, 파일명, kind, truncated, blocks(jsonb) |
-| `portfolio_nodes` | id, user_id, project_id, item_id, document_id, kind(chunk/doc_summary/project_summary), locator, text, context, index_text, bigrams, prev_id, next_id, source_block_ids, embedding(bytea), embed_model, embed_dim |
+| `portfolio_nodes` | id, user_id, project_id(`portfolio_summary`는 없음), item_id, document_id, kind(chunk/doc_summary/project_summary/portfolio_summary), stale(요약 노드만), generated_at, locator(요약은 묶음·문장별 근거),  text, context, index_text, bigrams, prev_id, next_id, source_block_ids, embedding(bytea), embed_model, embed_dim |
 | `portfolio_jobs` | id, user_id, item_id, state, failed_stage, error_code, revision, timestamps, AI 단계 메타데이터(모델·소요·usage) |
 
 - 모든 테이블에 `user_id`가 있고, 모든 조회 함수가 `user_id`를 필수 인자로 받는다.
@@ -238,6 +256,9 @@
 | 수집 | vision 0~8 + 문서 이해 1(긴 문서는 창 수만큼) + 임베딩 1 |
 | 질문(작은 코퍼스) | 생성 1 |
 | 질문(일반) | 질문 임베딩 1 + 재정렬 1 + 생성 0~1(Incorrect면 0) |
+| 프로젝트 요약 만들기·다시 만들기 | 생성 1 + 임베딩 1 (사용자가 누를 때만) |
+| 포트폴리오 정리 만들기·다시 만들기 (D-I2) | 생성 1 + 임베딩 1 (사용자가 누를 때만) |
+| 추천 질문·근거 원문·거절 대안 | 0 (결정적) |
 
 금액 기준 비용은 OPEN이다(`docs/ROADMAP.md` 5절). 호출 로그 줄로 실제 usage를 모은다.
 
@@ -286,6 +307,7 @@
   - 질문 단위 성공률(Recall, 1단계 실패율, 올바른·잘못된 거절률, 주입 통과)은 95% Wilson 구간을 쓴다.
   - 한 질문에 여러 문장·인용이 겹치는 지표(인용 재현율·정밀도, 충실도)는 문장이 독립이 아니다. 그래서 **질문 단위로 재표집하는 bootstrap**(2,000회, 백분위 95% 구간)을 쓴다.
   - p95 지연은 주장하지 않는다.
+- **요약 출력(D-I2)**: 시험 세트 LIVE 때 fixture 사용자 3명 각각의 프로젝트 요약(프로젝트 수만큼)과 포트폴리오 정리(1회)도 한 번씩 만든다(약 10회 추가). 이 출력은 **인용 형식 1.00**과 **사용자 간 혼입 0건** 행에 함께 센다. 문항 단위 지표(Recall·거절률 등)에는 넣지 않는다. 위 기준값은 바꾸지 않는다.
 - 기준 미달 시 조정 순서: (1) 분할 길이 (2) 맥락 머리말 지시문 (3) 후보 수·RRF 입력 (4) `-large` 모델 (5) HyDE 실험. 조정은 개발 세트로만 하고, 시험 세트는 마지막에 한 번 돌린다.
 
 ### 7.3 결정적 테스트 (LIVE 없음)
@@ -293,6 +315,7 @@
 - 고정 임베딩 fixture: 조각별 벡터를 시드로 생성하고 질문 벡터를 의도적으로 정답 근처에 둔다. 이걸로 범위 고정·RRF·BM25·게이트 분기·인용 검사·작은 코퍼스 우회를 검증한다.
 - BM25와 2-gram 토큰화 단위 테스트(한글·영문·숫자 혼합).
 - 주입·XSS·교차 사용자 404·rate limit.
+- 요약 검사(D-I2): 프로젝트 요약·포트폴리오 정리의 인용 범위 밖 `block_id`·문장당 개수·빈 문장 → `CITATION_INVALID`, 역량 숫자는 서버가 센 문서 수, 같은 이름 역량 합치기, 새 READY·프로젝트 삭제 뒤 `stale`과 사라진 근거 문장 숨김, 근거 원문 발췌가 본인 READY 노드의 원문에서만 나오고 200자 이하·머리말/맥락 미포함.
 
 ## 8. 재검토 조건
 
@@ -325,28 +348,52 @@
   - **임베딩**: 요청당 128개·추정 60,000토큰까지 묶는다. M0가 개수·`index`(중복·범위)·차원(모델별 알려진 값, `-small` 1536)·유한수·영벡터를 검사하고 L2 정규화해 `float32`로 돌려준다(오류 코드 `INVALID_EMBEDDING`). 단계가 다시 모양과 길이 1을 확인한 뒤 모든 노드를 한 트랜잭션에 저장한다. 모델은 `TIMELY_EMBEDDING_MODEL`(기본 `text-embedding-3-small`).
   - **실패 기록**: 실패한 단계도 그때까지의 호출 수·usage를 `stage_meta`에 남긴다. 단계별 메타데이터: `calls`, `model`, `ai_ms`, `usage`, `ms`와 단계별 개수(vision `targets`·`described`·`skipped_limit`·`unsupported`, 이해 `windows`·`chunks`·`claims`, 임베딩 `nodes`·`batches`·`dim`).
   - LIVE 측정(호출 215~221): 그림 3개 제출 5회 11,991토큰, 그림 없는 제출 2회 3,569토큰. `cl100k` 환산과 임베딩 `usage.prompt_tokens`의 표본 대조는 이번에 하지 않았다(색인 텍스트를 저장하지 않은 일회용 실행). 8C 측정에서 한다.
+- 2026-11-23: 화면 v2(D-I2, 사용자 승인 "Adopt v2"). 08D 실행 전 미리보기에서 v1 대응표의 문제(`.grp` 밖 `span.meta` 무스타일, 긴 `p.sub`와 `crew` 겹침)를 확인했고, 사용자가 RAG 중심 포트폴리오를 요청했다.
+  - 2.5에 `portfolio_summary` 노드와 2.5.1(프로젝트 요약 스키마: 맡은 일·만든 결과·배운 점)·2.5.2(포트폴리오 정리: 소개 문장 1~3·역량 칩 0~8, 역량 숫자는 서버가 센 문서 수)를 추가했다. 둘 다 사용자가 누를 때만 만들고 자동 재생성하지 않는다.
+  - 3.6에 근거 원문(서버가 자른 200자 발췌)과 고정 추천 질문·거절 대안(결정적)을 추가했다.
+  - 4절 노드 열에 `stale`·`generated_at`, 6절에 요약 호출 행, 7.2에 요약 출력의 인용 형식·혼입 집계(기준값 변경 없음), 7.3에 요약 검사를 더했다.
+  - 10절을 v2 대응표로 바꾸고 원본 CSS 제약(10.1)을 적었다.
 
-## 10. 화면 기준 (원본 `moim-mypage.html`에서 벗어나지 않기)
+## 10. 화면 기준 (원본 `moim-mypage.html`에서 벗어나지 않기, v2 — D-I2)
 
 포트폴리오 탭은 **이미 있는 마이페이지 마크업과 CSS 클래스만** 조합해 만든다.
 - 새 CSS 클래스, 새 색, 새 글꼴 크기, 새 카드 모양, 새 레이아웃 그리드를 만들지 않는다.
-- 원본에 이미 있는 인라인 간격 표기(`style="margin-top:12px"`, `style="margin-bottom:16px"`)만 같은 방식으로 쓸 수 있다.
+- 인라인 스타일은 원본에 이미 있는 간격 표기(`style="margin-top:12px"`, `style="margin-bottom:16px"`)와 진행 막대 너비(`.bar > span`의 `width:N%`, 구현본 `참여 중인 그룹`과 같은 방식)만 쓴다.
 - 원본 HTML 파일은 수정하지 않고, 구현본 `templates/mypage.html`·`static/mypage.js`(또는 새 `static/portfolio.js`)만 바꾼다.
+- 참고 미리보기(디자인 기준이 아닌 시안): `docs/design/portfolio-v2/index.html`(주소 해시 `#overview`·`#detail`·`#answer`·`#refuse`·`#empty`·`#error`로 상태 전환). 구현본 CSS를 그대로 복사해 만들었고, 쓴 클래스가 모두 그 CSS에 있음을 확인했다.
+
+### 10.1 원본 CSS에서 확인한 제약 (v1 미리보기에서 발견)
+
+- `.grp .meta`처럼 **`.grp` 안에서만 스타일이 있는 클래스**는 다른 곳에서 쓰지 않는다(`.row` 안 `span.meta`는 일반 글자로 보였다).
+- `.row b{display:block;font-size:14.5px}` 때문에 `.row` 안 출처 표기에 `<b>`를 넣으면 줄이 깨진다. `.row` 안 `.dd`는 굵은 글씨 없이 쓴다(`.grp` 안 `.dd`는 원본처럼 `<b>` 사용).
+- `.row`는 좌우 flex라 왼쪽 글이 길면 오른쪽 버튼이 두 줄로 접힌다. 버튼이 있는 줄은 설명을 한 줄로 두고, 긴 AI 문장 줄에는 버튼을 두지 않는다.
+- `card deco`의 `crew` 장식은 오른쪽 위에 겹쳐 그려진다. `h2` 아래 `p.sub`는 한 줄(메타·설명)만 쓰고 긴 요약을 넣지 않는다.
+- `.lock`은 어디서나 스타일이 있는 알약이지만 `display:flex`라 문장 안에 넣으면 줄이 바뀐다. 줄 오른쪽 배지로만 쓴다.
+
+### 10.2 대응표
 
 | 화면 요소 | 재사용할 기존 마크업 | 원본에서의 쓰임 |
 |---|---|---|
-| 탭 버튼 `포트폴리오` | 사이드 `nav`의 `<button role="tab">` + 18px stroke SVG 아이콘(기존 아이콘과 같은 `stroke-width="2"` 선 스타일) | 내 정보·비밀번호 변경·참여 중인 그룹·계정 관리 탭 |
-| 탭 본문 | `<section class="card deco" role="tabpanel">` + `ring`·`crew` 장식 + `h2` + `p.sub` | 모든 탭 본문 |
-| 프로젝트 목록 | `ul.groups > li.grp`: `span.dot`(그룹과 같은 모양), `.t > b` 프로젝트명, `span.meta`(완료 투두 수), `span.dd`(역할명) | 참여 중인 그룹 목록 |
-| 빈 상태 | `li.grp > .t > b` 한 줄("아직 포트폴리오에 담긴 첨부가 없어요.") | 그룹 없음 줄 |
-| 프로젝트 상세: 요약 | `h2`(프로젝트명) + `p.sub` 문단 | 탭 머리 설명 |
-| 프로젝트 상세: 첨부·투두 목록 | `.row` > `div` > `b`(투두 제목) + `small`(파일명 · 형식 · 작업 상태) + 오른쪽 `btn ghost`(`다시 시도`·`삭제`) | 계정 관리의 로그아웃·탈퇴 줄 |
-| 질문 입력 | `.box > input` + `p.hint`(오류·글자 수) + `.actions > button.btn.sm`(`질문하기`) | 이름 입력·저장하기 |
-| 답변 | `.row` > `div` > `b`("답변") + 문장마다 `small` 한 줄, 문장 끝 인용은 `span.meta` 배지(`파일명 · 3쪽`) | 계정 관리 줄, 그룹 메타 배지 |
-| 거절·실패 | `p.hint`에 고정 문구("포트폴리오 기록에서 찾지 못했어요" / 오류와 `다시 시도`) | 입력 힌트 |
+| 탭 버튼 `포트폴리오` | 사이드 `nav`의 `<button role="tab">` + 18px `stroke-width="2"` 선 SVG(서류 가방) | 네 탭 버튼 |
+| 탭 본문 | `<section class="card deco" role="tabpanel">` + `ring`·`crew` + `h2` + 한 줄 `p.sub` | 모든 탭 본문 |
+| `AI 정리` 상태와 `만들기`/`다시 만들기` | `.row` > `div` > `b` + `small`(정리 시각·반영 안 된 자료 수) + 오른쪽 `btn ghost` | 계정 관리 줄 |
+| 나를 소개하는 세 문장 / 맡은 일·만든 결과·배운 점 | `.row` > `div` > `b`(묶음 이름) + 문장마다 `small` 한 줄, 문장 끝 출처 `span.dd`(`파일명 · 3쪽`, `<b>` 없음) | 계정 관리 줄, 그룹 마감 표기 |
+| 근거로 확인된 역량 | `span.flabel` + `ul.rules > li.ok`(11px 체크 SVG + `역량명 · 근거 N`) | 비밀번호 규칙 칩 |
+| 프로젝트 목록 | `ul.groups > li.grp`: `span.dot`, `.t > b` 프로젝트명, `.prog`(`.bar` 정리된 자료 비율, `.cnt` `자료 3/4 정리됨`, `.hot` `요약 오래됨`/`실패 1`), `span.meta`(`근거 N곳`), `span.dd`(`역할 <b>…</b>`) | 참여 중인 그룹 목록 |
+| 근거 자료 목록(상세) | `ul.groups > li.grp`: `span.dot`, `.t > b` 투두 제목, `.prog > .cnt`(파일명 · 형식 · 쪽/시트 수), `.hot`(`정리 중`/`정리 실패`), `span.meta`(`인용 N곳`), `btn sm ghost`(`삭제`/`다시 시도`) | 참여 중인 그룹 목록, 확인 팝업의 작은 버튼 |
+| 질문 입력(전체·프로젝트) | `.field` > `label.flabel` + `.box > input` + `p.hint`(안내·글자 수·오류) | 비밀번호 입력 칸 |
+| 질문 버튼과 추천 질문 | `.actions` > `button.btn.sm`(`질문하기`) + `button.btn.sm.ghost`(고정 추천 질문) | 저장하기, 확인 팝업 버튼 |
+| 답변 | `.row` > `div` > `b`("답변") + 문장마다 `small`, 문장 끝 `span.dd`(`근거 n`) | 계정 관리 줄 |
+| 근거 확인 표시 | `ul.rules > li.ok`(`N문장 모두 근거 확인`, `내 자료 N개에서 찾음`) | 비밀번호 규칙 칩 |
+| 근거 원문 | `span.flabel` + `.row` > `div` > `b`(`n · 파일명 · 위치`) + `small`(서버가 자른 발췌) + 오른쪽 `span.lock`(형식) | 계정 관리 줄, 읽기 전용 알약 |
+| 거절 | `p.hint`(고정 문구) + `.row`(`대신 이런 질문에는 답할 수 있어요` + 자료 제목) + 추천 질문 `btn sm ghost` | 입력 안내, 계정 관리 줄 |
+| 오류 | `.field > p.hint.err` + `btn ghost`(`다시 시도`) | 입력 오류 힌트 |
+| 빈 상태 | `li.grp > .t > b` 한 줄 + `.row`(`이전 기록 가져오기`, `앞으로 쌓이는 방식`) | 그룹 없음 줄, 계정 관리 줄 |
+| 로딩 | `li.grp > .t > b`(`포트폴리오를 불러오는 중이에요…`) | 그룹 없음 줄 |
+| 이전 기록 가져오기 | `.row` + 오른쪽 `btn ghost`(`가져오기`) | 계정 관리 줄 |
 | 위험 동작 확인 | 브라우저 기본 확인창(D-D1 D5와 같은 방식) | 되돌리기 재확인 |
 | 상세에서 목록으로 | `button.btn.ghost`(`목록으로`) | 취소 버튼 |
 
-- 사용자 문자열(파일명·투두 제목·프로젝트명)과 AI 문자열(요약·답변)은 모두 textContent로 넣는다.
+- 사용자 문자열(파일명·투두 제목·프로젝트명)과 AI 문자열(요약·소개 문장·역량명·답변)은 모두 textContent로 넣는다. 근거 원문 발췌도 textContent이며, 속 URL은 링크로 만들지 않는다.
 - 이 표에 없는 요소가 필요해지면 구현하지 말고 제품 차이로 보고한다.
-- 1440×900 캡처는 포트폴리오 탭 목록·상세·답변·거절·빈 상태·오류를 원본 `moim-mypage.html`의 `참여 중인 그룹`·`계정 관리` 탭과 나란히 찍는다.
+- 1440×900 캡처: 포트폴리오 개요·상세·답변(근거 원문 포함)·거절·빈 상태·오류를 원본 `moim-mypage.html`의 `참여 중인 그룹`·`계정 관리` 탭과 나란히 찍는다. 화면이 900px보다 길면 같은 폭으로 아래까지 이어 찍는다.

@@ -1,0 +1,453 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="csrf-token" content="preview">
+<title>MOIM · 포트폴리오 화면 시안 v2 (D-I2)</title>
+<!-- 시안 전용: 구현본 templates/mypage.html의 CSS를 그대로 복사했다. 문장·숫자는 예시다. 주소 해시로 상태 전환: overview, detail, answer, refuse, empty, error -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1A1D29;--coral:#F26A4F;--blue:#2F54EB;--sun:#FFC53D;
+  --mute:#555B6B;--line:#ECEEF3;--soft:#F6F7FA;--err:#D2492C;--ok:#1E8E5A;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:'Noto Sans KR',system-ui,-apple-system,'Apple SD Gothic Neo',sans-serif;font-size:15px;color:var(--ink);background:#fff;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+button,input{font-family:inherit;color:inherit}
+a:focus-visible,button:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+.app{min-height:100vh;display:flex;flex-direction:column}
+
+/* header (대시보드와 동일) */
+.top{position:sticky;top:0;z-index:20;height:68px;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:0 clamp(16px,3vw,32px);background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.logo{display:flex;align-items:center;gap:10px;font-size:22px;font-weight:800;letter-spacing:-0.02em}
+.mark{display:flex;align-items:flex-end;gap:3px}
+.mark i{display:block;width:11px;height:11px}
+.mark .c{border-radius:50%;background:var(--coral)}
+.mark .a{border-radius:6px 6px 0 0;background:var(--blue)}
+.mark .q{border-radius:3px;background:var(--sun)}
+
+main{flex:1;width:100%;max-width:1040px;margin:0 auto;padding:20px clamp(16px,3.5vw,40px) 48px}
+.head{margin-bottom:14px}
+.head h1{margin:0;font-size:22px;line-height:1.4;font-weight:800;letter-spacing:-0.03em}
+.head p{margin:2px 0 0;font-size:13px;color:var(--mute)}
+
+.layout{display:grid;grid-template-columns:260px minmax(0,1fr);gap:20px;align-items:start}
+.layout > *{min-width:0}
+
+/* 왼쪽: 프로필 + 메뉴 */
+.side{display:flex;flex-direction:column;gap:14px;padding:20px 16px 16px;border:1px solid var(--line);border-radius:22px;background:#FBFBFD}
+.prof{display:flex;flex-direction:column;align-items:center;gap:8px;padding:6px 0 14px;border-bottom:1px solid var(--line);text-align:center}
+.prof b{font-size:17px;font-weight:800;letter-spacing:-0.02em}
+.prof small{display:block;margin-top:2px;font-size:12.5px;color:var(--mute)}
+
+/* 캐릭터 (대시보드와 같은 모양) */
+.face{flex:0 0 auto;width:72px;height:72px;display:flex;align-items:center;justify-content:center;gap:12px}
+.face i{width:6px;height:6px;border-radius:50%;background:var(--ink);transition:transform .12s ease-out,width .18s,height .18s,border-radius .18s;will-change:transform}
+/* 비밀번호 변경 화면에서는 눈을 감아요 */
+.face.shut i{width:10px;height:2px;border-radius:2px;transform:none!important}
+.face.g{border-radius:50%;background:#C9CEDB}
+.face.c{border-radius:50%;background:var(--coral)}
+.face.a{border-radius:36px 36px 0 0;background:var(--blue);padding-top:8px}
+.face.a i,.face.t i{background:#fff}
+.face.q{border-radius:20px;background:var(--sun)}
+.face.t{background:var(--ink);clip-path:polygon(50% 0,100% 100%,0 100%);align-items:flex-end;padding-bottom:16px;gap:9px}
+
+.menu{display:flex;flex-direction:column;gap:4px}
+.menu button{display:flex;align-items:center;gap:10px;min-height:44px;padding:0 12px;border:0;border-radius:12px;background:transparent;font-size:14px;font-weight:600;color:var(--mute);text-align:left;cursor:pointer;transition:background .15s,color .15s}
+.menu button:hover{background:#EEF0F5;color:var(--ink)}
+.menu button[aria-selected="true"]{background:#EEF0F5;color:var(--ink)}
+.menu svg{flex:0 0 auto;opacity:.8}
+
+/* 오른쪽: 내용 카드 */
+.card{border:1px solid var(--line);border-radius:22px;background:#fff;padding:20px clamp(18px,3vw,32px) 22px}
+.card[hidden]{display:none}
+.card h2{margin:0;font-size:17px;font-weight:800;letter-spacing:-0.02em}
+.card .sub{margin:4px 0 16px;font-size:13px;color:var(--mute)}
+
+
+/* 입력 */
+.fields{display:flex;flex-direction:column;gap:12px}
+.card h2 + .fields{margin-top:18px}
+.field label,.flabel{display:block;margin-bottom:6px;font-size:13px;font-weight:700}
+.idv{margin:0 0 4px;padding:0 2px;font-size:15px;font-weight:500;color:var(--mute)}
+/* 내 정보: 왼쪽 라벨, 오른쪽 값. 값 글자는 이름 입력칸 안 글자와 같은 위치에서 시작해요 */
+.info{display:grid;grid-template-columns:64px minmax(0,360px);column-gap:16px;row-gap:8px;align-items:center}
+.info .flabel{margin:0;align-self:start;line-height:46px}
+.info .idv{margin:0;padding:0 15px;line-height:46px;color:var(--ink)}
+.info .hint:empty{display:none}
+.field .hint.ok,.info .hint.ok{color:var(--ok)}
+.info + .actions{margin-left:80px}
+.field .hint{margin:6px 2px 0;font-size:12px;color:#8A90A0}
+.field .hint.err{color:var(--err)}
+.box{display:flex;align-items:center;gap:8px;height:46px;padding:0 6px 0 14px;border:1px solid #E1E4EC;border-radius:12px;background:#fff;transition:border-color .15s,background .15s}
+.box:focus-within{border-color:#C9CEDB}
+.box.bad{border-color:var(--err)}
+.box input{flex:1;min-width:0;height:100%;border:0;outline:0;background:transparent;font-size:15px;font-weight:500}
+.box input::placeholder{color:#A4AABA}
+.box.ro{background:var(--soft);border-color:var(--line)}
+.box.ro input{color:var(--mute)}
+.lock{display:flex;align-items:center;gap:4px;padding:3px 9px;margin-right:4px;border-radius:999px;background:#EEF0F5;font-size:11px;font-weight:700;color:var(--mute);white-space:nowrap}
+.eye{width:36px;height:36px;display:flex;align-items:center;justify-content:center;border:0;border-radius:8px;background:transparent;color:#A4AABA;cursor:pointer;transition:background .15s,color .15s}
+.eye:hover{background:#EEF0F5;color:var(--ink)}
+
+.rules{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 0;padding:0;list-style:none}
+.rules{gap:4px 14px!important}
+.rules li{display:flex;align-items:center;gap:5px;padding:0 2px;font-size:12px;font-weight:500;color:#A3A9B6;transition:color .15s}
+.rules li svg{opacity:.5}
+.rules li.ok{color:var(--ok);font-weight:600}
+.rules li.ok svg{opacity:1}
+
+.actions{display:flex;align-items:center;gap:12px;margin-top:20px}
+/* 버튼: 투두 페이지의 "투두 확정하기"와 같은 모양 */
+.btn{min-height:48px;padding:0 24px;border:0;border-radius:12px;background:#ECEEF3;color:var(--ink);font-size:15px;font-weight:700;cursor:pointer;transition:background .15s,color .15s,border-color .15s}
+.btn:hover:not(:disabled){background:#E3E6EC}
+.btn.sm{min-height:40px;padding:0 18px;border-radius:10px;font-size:14px}
+.btn:disabled{background:#F1F3F7;color:#C9CEDB;cursor:not-allowed}
+.btn.ghost{background:#fff;border:1px solid #E1E4EC}
+.btn.ghost:hover:not(:disabled){background:var(--soft);border-color:#C9CEDB}
+.btn.danger{background:#FDECE8;color:#B5361C}
+.btn.danger:hover:not(:disabled){background:#FBDCD4}
+.btn.danger:disabled{background:#FDF3F0;color:#E9B5A8}
+.note{font-size:13px;font-weight:600;color:var(--mute)}
+.note.err{color:var(--err)}
+
+/* 내 그룹 목록 */
+.groups{position:relative;margin:0;padding:0;list-style:none;border:1px solid var(--line);border-radius:16px;overflow:hidden;background:#fff}
+.grp{display:flex;align-items:center;gap:14px;min-height:68px;padding:10px 18px;border-top:1px solid var(--line)}
+.grp:first-child{border-top:0}
+.dot{flex:0 0 auto;width:14px;height:14px}
+.dot.c{border-radius:50%;background:var(--coral)}
+.dot.a{border-radius:7px 7px 0 0;background:var(--blue)}
+.dot.q{border-radius:4px;background:var(--sun)}
+.grp .t{flex:1;min-width:0}
+.grp .t b{display:block;font-size:14.5px;font-weight:700}
+.prog{display:flex;align-items:center;gap:10px;margin-top:7px}
+.bar{flex:0 0 150px;height:6px;border-radius:999px;background:#ECEEF3}
+.bar span{display:block;height:6px;border-radius:999px;background:var(--ink)}
+.prog .cnt{font-size:12px;color:#8A90A0;white-space:nowrap}
+.grp .prog .cnt b{display:inline;font-size:12px;color:var(--ink);font-weight:700}
+.prog .hot{flex:0 0 auto;font-size:12px;font-weight:500;color:var(--mute);white-space:nowrap}
+.prog .hot::before{content:"·";margin-right:6px;color:#C9CEDB;font-weight:400}
+.grp .prog .hot b{display:inline;font-size:12px;font-weight:700;color:#D14B30}
+.grp .meta{font-size:12px;color:#8A90A0;white-space:nowrap}
+.dd{flex:0 0 auto;white-space:nowrap;font-size:12px;font-weight:500;color:var(--mute);font-variant-numeric:tabular-nums}
+.dd::before{content:"·";margin-right:6px;color:#C9CEDB;font-weight:400}
+.dd b{font-weight:700;color:var(--ink)}
+.dd.near b{color:#D14B30}
+.grp .meta + .dd{margin-left:-8px}
+
+/* 참여 중인 그룹 창: 투두 페이지의 그룹 목표 카드처럼 고리 선과 캐릭터 (배경은 흰색) */
+.card.deco{position:relative;overflow:hidden}
+.card.deco > *{position:relative}
+.card.deco .ring{position:absolute;right:-70px;top:-90px;width:260px;height:260px;border-radius:50%;border:1px solid rgba(26,29,41,.08);pointer-events:none}
+.card.deco .ring.r2{right:-20px;top:-40px;width:160px;height:160px}
+.card.deco .crew{position:absolute;right:28px;top:26px;display:flex;align-items:flex-end;gap:5px}
+.m{width:26px;height:26px;display:flex;align-items:center;justify-content:center;gap:5px}
+.m i{width:3px;height:3px;border-radius:50%;background:var(--ink)}
+.m.c{border-radius:50%;background:var(--coral)}
+.m.a{border-radius:13px 13px 0 0;background:var(--blue);padding-top:3px}
+.m.a i{background:#fff}
+.m.q{border-radius:8px;background:var(--sun)}
+
+/* 계정 관리 */
+.row{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px 0;border-top:1px solid var(--line)}
+.row:first-of-type{border-top:0;padding-top:0}
+.row b{display:block;font-size:14.5px}
+.row small{display:block;margin-top:2px;font-size:12.5px;color:var(--mute)}
+.leave{margin-top:4px;padding:16px;border-radius:16px;background:#FDF3F0}
+.leave[hidden]{display:none}
+.leave p{margin:0 0 10px;font-size:13px;line-height:1.6;color:#8A3A28}
+.leave .box{max-width:320px;background:#fff}
+
+/* 확인 팝업 (투두 페이지의 완료 창과 같은 모양) */
+.modal{position:fixed;inset:0;z-index:70;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(255,255,255,.72);backdrop-filter:blur(6px);opacity:0;visibility:hidden;transition:opacity .2s,visibility .2s}
+.modal.show{opacity:1;visibility:visible}
+.modal-card{width:100%;max-width:340px;padding:28px 24px 22px;text-align:center;border:1px solid var(--line);border-radius:22px;background:#fff;box-shadow:0 20px 48px rgba(26,29,41,.10);transform:translateY(8px) scale(.98);transition:transform .25s cubic-bezier(.2,.8,.3,1)}
+.modal.show .modal-card{transform:none}
+.modal h3{margin:0;font-size:18px;font-weight:800;letter-spacing:-0.03em}
+.modal p{margin:6px 0 0;font-size:13px;color:var(--mute)}
+.modal .actions{justify-content:center;gap:8px;margin-top:20px}
+.modal .btn{flex:1}
+
+/* 토스트 */
+.toast{position:fixed;left:50%;bottom:32px;z-index:60;transform:translate(-50%,20px);padding:12px 20px;border-radius:12px;background:#fff;border:1px solid var(--line);box-shadow:0 16px 40px rgba(26,29,41,.14);font-size:14px;font-weight:600;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+
+@media (max-width:760px){
+  .layout{grid-template-columns:1fr}
+  .side{padding:14px}
+  .prof{flex-direction:row;text-align:left;padding:0 0 12px}
+  .prof .face{width:52px;height:52px;gap:9px}
+  .prof .face i{width:5px;height:5px}
+  .prof .face.shut i{width:8px;height:2px}
+  .prof small{margin-top:2px}
+  .menu{flex-direction:row;overflow-x:auto;scrollbar-width:none}
+  .menu button{flex:0 0 auto}
+  .menu svg{display:none}
+  .row{flex-wrap:wrap}
+  .grp .meta{display:none}
+  .card.deco .crew{display:none}
+}
+@media (prefers-reduced-motion:reduce){.toast,.menu button,.btn,.box,.modal,.modal-card{transition:none}}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <a class="logo" href="#">
+      <span class="mark" aria-hidden="true"><i class="c"></i><i class="a"></i><i class="q"></i></span>
+      MOIM
+    </a>
+  </header>
+
+  <main>
+    <div class="head">
+      <h1>마이페이지</h1>
+      <p>내 계정 정보를 확인하고 바꿀 수 있어요.</p>
+    </div>
+
+    <div class="layout">
+      <aside class="side">
+        <div class="prof">
+          <span class="face g" aria-hidden="true"><i></i><i></i></span>
+          <div><b>김모임</b><small>moim01</small></div>
+        </div>
+        <nav class="menu" role="tablist" aria-label="마이페이지 메뉴">
+          <button type="button" role="tab" aria-selected="false">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="3.8"/><path d="M5 20.5c.6-3.7 3.6-5.9 7-5.9s6.4 2.2 7 5.9"/></svg>
+            내 정보
+          </button>
+          <button type="button" role="tab" aria-selected="false">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4.5" y="10.5" width="15" height="10" rx="3"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/></svg>
+            비밀번호 변경
+          </button>
+          <button type="button" role="tab" aria-selected="false">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="9" r="3"/><circle cx="16.5" cy="9" r="3"/><path d="M2.5 19c.5-3 2.8-4.6 5.5-4.6s5 1.6 5.5 4.6M13 14.6c.9-.3 2.3-.2 3.5-.2 2.7 0 5 1.6 5.5 4.6"/></svg>
+            참여 중인 그룹
+          </button>
+          <button type="button" role="tab" aria-selected="false">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
+            계정 관리
+          </button>
+          <button type="button" role="tab" aria-selected="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="7.5" width="17" height="12.5" rx="3"/><path d="M9 7.5V6a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v1.5M3.5 13h17"/></svg>
+            포트폴리오
+          </button>
+        </nav>
+      </aside>
+
+      <div>
+        <!-- ① 개요: RAG가 쓴 나의 포트폴리오 -->
+        <section class="card deco" data-state="overview" role="tabpanel">
+          <span class="ring" aria-hidden="true"></span><span class="ring r2" aria-hidden="true"></span>
+          <div class="crew" aria-hidden="true"><span class="m c"><i></i><i></i></span><span class="m a"><i></i><i></i></span><span class="m q"><i></i><i></i></span></div>
+          <h2>포트폴리오</h2>
+          <p class="sub">투두에 첨부한 자료만 근거로 AI가 정리했어요. 모든 문장에 출처가 붙어요.</p>
+
+          <div class="row">
+            <div><b>AI 정리</b><small>프로젝트 3개, 자료 8개를 읽고 11월 20일에 정리했어요.</small></div>
+            <button class="btn ghost" type="button">다시 만들기</button>
+          </div>
+          <div class="row">
+            <div><b>나를 소개하는 세 문장</b>
+              <small>사용자 조사로 문제를 찾고, 화면 설계로 풀어내는 프론트엔드 역할을 주로 맡았어요. <span class="dd">usability_test.xlsx · 시트 2</span></small>
+              <small>세 프로젝트 모두에서 설문·인터뷰 결과를 정리해 팀이 방향을 정하는 근거로 썼어요. <span class="dd">survey_summary.docx · 2쪽</span> <span class="dd">report_final.pdf · 7쪽</span></small>
+              <small>공모전에서는 매출 데이터를 시각화한 대시보드로 본선에 올랐어요. <span class="dd">dashboard.pptx · 슬라이드 4</span></small>
+            </div>
+          </div>
+
+          <span class="flabel">근거로 확인된 역량</span>
+          <ul class="rules">
+            <li class="ok"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>사용자 조사 · 근거 5</li>
+            <li class="ok"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>와이어프레임 · 근거 4</li>
+            <li class="ok"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>데이터 시각화 · 근거 3</li>
+            <li class="ok"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>발표 자료 구성 · 근거 3</li>
+            <li class="ok"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>문헌 조사 · 근거 2</li>
+          </ul>
+
+          <span class="flabel" style="margin-top:12px">프로젝트</span>
+          <ul class="groups">
+            <li class="grp"><span class="dot c" aria-hidden="true"></span><div class="t"><b>캡스톤 디자인 — 캠퍼스 식단 추천 앱</b><div class="prog"><div class="bar" role="img" aria-label="첨부 4개 중 3개 정리 완료"><span style="width:75%"></span></div><span class="cnt">자료 <b>3/4</b> 정리됨</span><span class="hot">요약 오래됨</span></div></div><span class="meta">근거 21곳</span><span class="dd">역할 <b>프론트엔드</b></span></li>
+            <li class="grp"><span class="dot a" aria-hidden="true"></span><div class="t"><b>마케팅원론 팀 리포트</b><div class="prog"><div class="bar" role="img" aria-label="첨부 3개 중 3개 정리 완료"><span style="width:100%"></span></div><span class="cnt">자료 <b>3/3</b> 정리됨</span></div></div><span class="meta">근거 12곳</span><span class="dd">역할 <b>자료 조사</b></span></li>
+            <li class="grp"><span class="dot q" aria-hidden="true"></span><div class="t"><b>데이터분석 공모전</b><div class="prog"><div class="bar" role="img" aria-label="첨부 3개 중 2개 정리 완료"><span style="width:67%"></span></div><span class="cnt">자료 <b>2/3</b> 정리됨</span><span class="hot">실패 <b>1</b></span></div></div><span class="meta">근거 9곳</span><span class="dd">역할 <b>시각화</b></span></li>
+          </ul>
+
+          <div class="field" style="margin-top:12px">
+            <label class="flabel" for="qa">내 포트폴리오 전체에 질문하기</label>
+            <div class="box"><input id="qa" type="text" maxlength="300" placeholder="예: 데이터로 결정을 바꾼 경험이 있나요?"></div>
+            <p class="hint">세 프로젝트의 자료를 모두 찾아보고, 찾은 곳을 함께 보여 드려요.</p>
+          </div>
+          <div class="actions" style="margin-top:12px">
+            <button class="btn sm" type="button">질문하기</button>
+            <button class="btn sm ghost" type="button">가장 큰 성과는?</button>
+            <button class="btn sm ghost" type="button">협업에서 맡은 일은?</button>
+            <button class="btn sm ghost" type="button">사용한 도구는?</button>
+          </div>
+
+          <div class="row" style="margin-top:12px">
+            <div><b>이전 기록 가져오기</b><small>첨부가 남아 있는 지난 완료 기록 9건을 포트폴리오에 담을 수 있어요.</small></div>
+            <button class="btn ghost" type="button">가져오기</button>
+          </div>
+        </section>
+
+        <!-- ② 프로젝트 상세: AI 정리 + 근거 자료 -->
+        <section class="card deco" data-state="detail" role="tabpanel" hidden>
+          <span class="ring" aria-hidden="true"></span><span class="ring r2" aria-hidden="true"></span>
+          <div class="crew" aria-hidden="true"><span class="m c"><i></i><i></i></span><span class="m a"><i></i><i></i></span><span class="m q"><i></i><i></i></span></div>
+          <h2>캡스톤 디자인 — 캠퍼스 식단 추천 앱</h2>
+          <p class="sub">프론트엔드 · 2026년 3월 – 6월 · 완료 투두 6개</p>
+
+          <div class="row">
+            <div><b>AI 정리</b><small>새 첨부 1개가 아직 반영되지 않았어요. 다시 만들면 반영돼요.</small></div>
+            <button class="btn ghost" type="button">다시 만들기</button>
+          </div>
+          <div class="row">
+            <div><b>맡은 일</b>
+              <small>식단 추천 화면과 첫 사용 설문 흐름을 설계하고 구현했어요. <span class="dd">wireframe_v2.pdf · 1쪽</span></small>
+              <small>12명을 대상으로 사용성 테스트를 진행하고 결과를 표로 정리했어요. <span class="dd">usability_test.xlsx · 시트 1</span></small>
+            </div>
+          </div>
+          <div class="row">
+            <div><b>만든 결과</b>
+              <small>영양 정보를 카드 앞면으로 옮긴 두 번째 와이어프레임을 만들었어요. <span class="dd">wireframe_v2.pdf · 3쪽</span></small>
+              <small>정보를 찾는 데 걸린 시간이 평균 14초에서 6초로 줄었어요. <span class="dd">usability_test.xlsx · 시트 3</span></small>
+            </div>
+          </div>
+          <div class="row">
+            <div><b>배운 점</b>
+              <small>첫 시안에서 놓친 문제를 테스트 응답에서 찾았다고 회고에 적었어요. <span class="dd">retro_notes.md · 2번째 문단</span></small>
+            </div>
+          </div>
+
+          <span class="flabel" style="margin-top:12px">근거 자료 4개</span>
+          <ul class="groups">
+            <li class="grp"><span class="dot c" aria-hidden="true"></span><div class="t"><b>추천 화면 와이어프레임</b><div class="prog"><span class="cnt">wireframe_v2.pdf · PDF · 12쪽</span></div></div><span class="meta">인용 4곳</span><button class="btn sm ghost" type="button">삭제</button></li>
+            <li class="grp"><span class="dot c" aria-hidden="true"></span><div class="t"><b>사용성 테스트 결과 정리</b><div class="prog"><span class="cnt">usability_test.xlsx · XLSX · 시트 3개</span></div></div><span class="meta">인용 6곳</span><button class="btn sm ghost" type="button">삭제</button></li>
+            <li class="grp"><span class="dot c" aria-hidden="true"></span><div class="t"><b>회고 정리</b><div class="prog"><span class="cnt">retro_notes.md · MD</span><span class="hot">정리 중</span></div></div><span class="meta">인용 1곳</span><button class="btn sm ghost" type="button" disabled>삭제</button></li>
+            <li class="grp"><span class="dot c" aria-hidden="true"></span><div class="t"><b>최종 발표 자료</b><div class="prog"><span class="cnt">final_presentation.pptx · PPTX</span><span class="hot">정리 <b>실패</b></span></div></div><button class="btn sm ghost" type="button">다시 시도</button></li>
+          </ul>
+
+          <div class="field" style="margin-top:12px">
+            <label class="flabel" for="qd">이 프로젝트에 질문하기</label>
+            <div class="box"><input id="qd" type="text" maxlength="300" placeholder="예: 사용성 테스트에서 무엇을 고쳤나요?"></div>
+            <p class="hint">0/300</p>
+          </div>
+          <div class="actions" style="margin-top:12px">
+            <button class="btn sm" type="button">질문하기</button>
+            <button class="btn sm ghost" type="button">가장 어려웠던 점은?</button>
+            <button class="btn sm ghost" type="button">숫자로 보인 성과는?</button>
+          </div>
+          <div class="actions">
+            <button class="btn ghost" type="button">목록으로</button>
+          </div>
+        </section>
+
+        <!-- ③ 답변: 문장마다 근거 번호 + 근거 원문 -->
+        <section class="card deco" data-state="answer" role="tabpanel" hidden>
+          <span class="ring" aria-hidden="true"></span><span class="ring r2" aria-hidden="true"></span>
+          <div class="crew" aria-hidden="true"><span class="m c"><i></i><i></i></span><span class="m a"><i></i><i></i></span><span class="m q"><i></i><i></i></span></div>
+          <h2>캡스톤 디자인 — 캠퍼스 식단 추천 앱</h2>
+          <p class="sub">프론트엔드 · 2026년 3월 – 6월 · 완료 투두 6개</p>
+          <div class="field">
+            <label class="flabel" for="qn">이 프로젝트에 질문하기</label>
+            <div class="box"><input id="qn" type="text" maxlength="300" value="사용성 테스트에서 무엇을 고쳤나요?"></div>
+            <p class="hint">20/300</p>
+          </div>
+          <div class="actions" style="margin-top:12px">
+            <button class="btn sm" type="button">질문하기</button>
+          </div>
+
+          <div class="row" style="margin-top:12px">
+            <div><b>답변</b>
+              <small>참여자 12명 중 9명이 추천 카드의 영양 정보를 찾기 어렵다고 답했어요. <span class="dd">근거 1</span></small>
+              <small>그래서 영양 정보를 카드 앞면 아래쪽으로 옮긴 두 번째 와이어프레임을 만들었어요. <span class="dd">근거 2</span></small>
+              <small>재시험에서 정보를 찾는 시간이 평균 14초에서 6초로 줄었어요. <span class="dd">근거 3</span></small>
+            </div>
+          </div>
+          <ul class="rules">
+            <li class="ok"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>3문장 모두 근거 확인</li>
+            <li class="ok"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>내 자료 2개에서 찾음</li>
+          </ul>
+
+          <span class="flabel" style="margin-top:12px">근거 원문</span>
+          <div class="row">
+            <div><b>1 · usability_test.xlsx · 시트 2</b><small>“Q4 영양 정보를 찾기 어려웠다: 예 9 / 아니오 3 (n=12)”</small></div>
+            <span class="lock">XLSX</span>
+          </div>
+          <div class="row">
+            <div><b>2 · wireframe_v2.pdf · 3쪽</b><small>“v2 변경점 — 칼로리·단백질 표기를 카드 앞면 하단으로 이동, 상세 진입 없이 확인”</small></div>
+            <span class="lock">PDF</span>
+          </div>
+          <div class="row">
+            <div><b>3 · usability_test.xlsx · 시트 3</b><small>“정보 탐색 시간 평균: 1차 14.2초 → 2차 6.1초”</small></div>
+            <span class="lock">XLSX</span>
+          </div>
+          <div class="actions" style="margin-top:12px">
+            <button class="btn sm ghost" type="button">왜 영양 정보를 옮겼나요?</button>
+            <button class="btn sm ghost" type="button">다음엔 무엇을 고칠까요?</button>
+            <button class="btn ghost" type="button">목록으로</button>
+          </div>
+        </section>
+
+        <!-- ④ 거절: 근거가 없으면 지어내지 않음 -->
+        <section class="card deco" data-state="refuse" role="tabpanel" hidden>
+          <span class="ring" aria-hidden="true"></span><span class="ring r2" aria-hidden="true"></span>
+          <div class="crew" aria-hidden="true"><span class="m c"><i></i><i></i></span><span class="m a"><i></i><i></i></span><span class="m q"><i></i><i></i></span></div>
+          <h2>캡스톤 디자인 — 캠퍼스 식단 추천 앱</h2>
+          <p class="sub">프론트엔드 · 2026년 3월 – 6월 · 완료 투두 6개</p>
+          <div class="field">
+            <label class="flabel" for="qr">이 프로젝트에 질문하기</label>
+            <div class="box"><input id="qr" type="text" maxlength="300" value="서버 배포는 어떻게 했나요?"></div>
+            <p class="hint">포트폴리오 기록에서 찾지 못했어요. 첨부한 자료에 있는 내용만 답하고, 없는 내용은 지어내지 않아요.</p>
+          </div>
+          <div class="row" style="margin-top:12px">
+            <div><b>대신 이런 질문에는 답할 수 있어요</b><small>이 프로젝트 자료에는 화면 설계와 사용성 테스트 기록이 있어요.</small></div>
+          </div>
+          <div class="actions" style="margin-top:12px">
+            <button class="btn sm ghost" type="button">화면을 어떻게 설계했나요?</button>
+            <button class="btn sm ghost" type="button">테스트 결과는 어땠나요?</button>
+          </div>
+        </section>
+
+        <!-- ⑤ 빈 상태 -->
+        <section class="card deco" data-state="empty" role="tabpanel" hidden>
+          <span class="ring" aria-hidden="true"></span><span class="ring r2" aria-hidden="true"></span>
+          <div class="crew" aria-hidden="true"><span class="m c"><i></i><i></i></span><span class="m a"><i></i><i></i></span><span class="m q"><i></i><i></i></span></div>
+          <h2>포트폴리오</h2>
+          <p class="sub">투두에 첨부한 자료만 근거로 AI가 정리했어요. 모든 문장에 출처가 붙어요.</p>
+          <ul class="groups">
+            <li class="grp"><div class="t"><b>아직 포트폴리오에 담긴 첨부가 없어요.</b></div></li>
+          </ul>
+          <div class="row" style="margin-top:12px">
+            <div><b>이전 기록 가져오기</b><small>첨부가 남아 있는 지난 완료 기록 9건을 포트폴리오에 담을 수 있어요.</small></div>
+            <button class="btn ghost" type="button">가져오기</button>
+          </div>
+          <div class="row">
+            <div><b>앞으로 쌓이는 방식</b><small>투두를 완료할 때 자료를 첨부하면, AI가 읽고 정리해 여기에 자동으로 담아요.</small></div>
+          </div>
+        </section>
+
+        <!-- ⑥ 오류 -->
+        <section class="card deco" data-state="error" role="tabpanel" hidden>
+          <span class="ring" aria-hidden="true"></span><span class="ring r2" aria-hidden="true"></span>
+          <div class="crew" aria-hidden="true"><span class="m c"><i></i><i></i></span><span class="m a"><i></i><i></i></span><span class="m q"><i></i><i></i></span></div>
+          <h2>포트폴리오</h2>
+          <p class="sub">투두에 첨부한 자료만 근거로 AI가 정리했어요. 모든 문장에 출처가 붙어요.</p>
+          <div class="field">
+            <p class="hint err">포트폴리오를 불러오지 못했어요. 잠시 뒤 다시 시도해 주세요.</p>
+          </div>
+          <div class="actions">
+            <button class="btn ghost" type="button">다시 시도</button>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+</div>
+<script src="preview-switch.js"></script>
+</body>
+</html>

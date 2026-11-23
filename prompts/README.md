@@ -75,7 +75,7 @@
 | 15 | `08A-rag-ingest.md` | D-I1 사용자 승인 기록, 5·6단계 완료. 7단계(배포 BLOCKED)와 무관하게 진행 가능 |
 | 16 | `08B-rag-understanding.md` | 8A 완료 |
 | 17 | `08C-rag-retrieval.md` | 8B 완료 |
-| 18 | `08D-rag-screen-eval.md` | 8C 완료. 시험 세트 LIVE는 사전 승인 |
+| 18 | `08D-rag-screen-eval.md` | 8C 완료, D-I2(화면 v2) 승인. 시험 세트 LIVE는 사전 승인 |
 
 ## 검증 실행
 
