@@ -152,7 +152,7 @@ DRAFT_POLICY = f"""너는 MOIM의 개인 투두 설계자다. 이 사람이 my_r
 (b) my_parts의 모든 부분을 빠짐없이 덮는다(각 part id마다 투두가 하나 이상). part에는 그 투두가 만드는 my_parts의 id를 적는다. 다른 자리의 parts는 건드리지 않는다.
 (c) phase는 RESEARCH(조사·구조) → DRAFT(초안) → REVIEW(검토·수정) → SUBMIT(제출) 중 하나이고, 같은 part 안에서는 이 순서대로 마감일이 늦어진다. 마감일(due_date, YYYY-MM-DD)은 period.first_day~project.end_date 안에서 간격을 두고 퍼지게 하고, 같은 날 마감은 최대 2개다. project.milestones(id: m1…)를 위한 투두는 milestone에 그 id를 적고 그 날짜 이전(같은 날 포함)으로 잡는다. milestone 날짜가 기간 안에 있으면 적어도 하나의 투두는 그 날짜 이전에 끝나게 한다.
 (d) member의 current_level·weekly_available_minutes·tools·preferred_times를 분량·난이도·순서에 반영한다. 처음이거나 시간이 적으면 범위를 줄이고 작은 단계로 쪼개며 익히는 단계를 앞에 둔다. 숙련되고 시간이 많으면 더 완성도 높은 작업(여러 안 비교, 테스트, 리허설 등)을 넣는다. tools가 있으면 그 도구로 하는 일로 쓴다. UNKNOWN인 값은 반영한 척하지 않고 보수적인 기본 분량으로 만든다.
-(e) 투두는 {AI_MIN_TODOS}~{AI_MAX_TODOS}개이고 하나는 1~2일 안에 끝낼 크기다. estimated_minutes(30~480)는 그 투두에 드는 실제 작업 시간이다. workload.windows의 각 기간(from~to)에 마감이 있는 투두의 estimated_minutes 합은 그 기간의 max_minutes 이하여야 한다(서버가 그대로 계산해 넘으면 저장하지 않는다). 이를 지키는 가장 쉬운 방법: 모든 투두의 estimated_minutes를 workload.max_minutes_per_todo 이하로 잡고, 한 기간에 마감이 있는 투두를 workload.max_todos_per_window개 이하로 둔다. 시간이 적으면 투두 수와 범위를 줄인다.
+(e) 투두는 workload.min_todos~workload.max_todos개(서버가 이 범위 밖이면 저장하지 않는다)이고 하나는 1~2일 안에 끝낼 크기다. estimated_minutes(30~480)는 그 투두에 드는 실제 작업 시간이다. workload.windows의 각 기간(from~to)에 마감이 있는 투두의 estimated_minutes 합은 그 기간의 max_minutes 이하여야 한다(서버가 그대로 계산해 넘으면 저장하지 않는다). 이를 지키는 가장 쉬운 방법: 모든 투두의 estimated_minutes를 workload.max_minutes_per_todo 이하로 잡고, 한 기간에 마감이 있는 투두를 workload.max_todos_per_window개 이하로 둔다. 시간이 적으면 투두 하나의 범위와 시간을 줄이되 투두 수는 workload.min_todos보다 적게 만들지 않는다.
 각 투두의 숨은 평가 정보(화면에 안 보임): deliverable(이 투두로 생기는 구체적인 결과물 한 문장), completion_criteria(1~4개, 남이 보고 확인할 수 있는 구체적 완료 조건, 날짜를 쓰지 않음), evidence_types(1~3개, 다음 중에서만: {', '.join(EVIDENCE_VALUES)}).
 {_EXAMPLES}
 JSON {{"todos": [{{"title","due_date","part","phase","milestone","deliverable","completion_criteria":[...],"evidence_types":[...],"estimated_minutes"}}]}} 하나만 반환한다. 설명 필드를 만들지 않는다."""
@@ -204,6 +204,10 @@ def base_payload(project: dict, my_role: dict, team: list[dict], my_parts: list[
         to = min(w + timedelta(days=6), end)
         windows.append({"from": w.isoformat(), "to": to.isoformat(), "max_minutes": budget})
         w = to + timedelta(days=1)
+    # The per-window guidance must leave room for the server minimum: a project of 7 days or less has one window, and a
+    # cap of MAX_PER_WINDOW (3) there contradicted the 4 todos `check_draft` requires (every draft was refused).
+    lo = min_todos(first, end, budget)
+    per_window = max(MAX_PER_WINDOW, math.ceil(lo / max(1, len(windows))))
     return {
         "project": p,
         "my_role": {"role": my_role["role"], "description": my_role.get("description", "")},
@@ -217,9 +221,9 @@ def base_payload(project: dict, my_role: dict, team: list[dict], my_parts: list[
             "scope": [x["name"] for x in my_parts],
         },
         "period": {"first_day": first.isoformat(), "days": (end - first).days + 1},
-        "workload": {"weekly_budget_minutes": budget, "max_todos": MAX_TODOS, "windows": windows,
-                     "max_todos_per_window": MAX_PER_WINDOW,
-                     "max_minutes_per_todo": max(EST_MIN, min(EST_MAX, budget // MAX_PER_WINDOW))},
+        "workload": {"weekly_budget_minutes": budget, "min_todos": lo, "max_todos": MAX_TODOS, "windows": windows,
+                     "max_todos_per_window": per_window,
+                     "max_minutes_per_todo": max(EST_MIN, min(EST_MAX, budget // per_window))},
     }
 
 
