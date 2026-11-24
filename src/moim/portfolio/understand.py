@@ -499,5 +499,3 @@ def _embed(self: PortfolioAI, inp: StageInput) -> dict:
         for node_id, blob in stored:
             repo.update_node(s, user_id=uid, node_id=node_id, embedding=blob, embed_model=model[:64], embed_dim=dim)
     return meter.meta(nodes=len(nodes), batches=len(batches), dim=dim)
-
-
