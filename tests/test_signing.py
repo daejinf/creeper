@@ -53,9 +53,10 @@ def integrity(db, gid, uid, rev=None, conf=None):
 
 
 def tamper(db, sql, **params):
-    """What an owner / DB-host attacker can do: the trigger's purge switch is a plain setting (0012)."""
+    """What an owner / DB-host attacker can do: skip every trigger for one transaction (needs more than the app role;
+    since 0017 the app-settable purge switch no longer lets an UPDATE through, see test_lifecycle)."""
     with db.begin() as c:
-        c.execute(text("set local moim.lifecycle_purge = 'on'"))
+        c.execute(text("set local session_replication_role = replica"))
         c.execute(text(sql), params)
 
 
