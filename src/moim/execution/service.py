@@ -32,6 +32,7 @@ import re
 import time
 import uuid
 from datetime import date, datetime, timedelta
+from types import SimpleNamespace
 from typing import Callable
 
 from sqlalchemy import delete, func, insert, select, text, update
@@ -57,7 +58,7 @@ from ..models import (
     todo_confirmed_items,
 )
 from .. import signing
-from ..roles.todos import TodoService, confirmation_integrity
+from ..roles.todos import TodoService, confirmation_check, confirmation_integrity
 from ..timeutil import DISPLAY_TZ, utcnow
 from . import files as F
 from . import review_ai as R
@@ -487,7 +488,8 @@ class ExecutionService:
             self._member(s, group_id, user_id)
             self._lock(s, group_id)
             v = self._own_review(s, group_id, user_id, record_id, lock=True)
-            if v.state != FAILED or v.attempt != expected_attempt:
+            if v.state != FAILED or v.attempt != expected_attempt or v.error_code == INTEGRITY_FAILED:
+                # SECURITY.md 6: an integrity failure fails the same way again; a retry would only reset the team vote
                 raise ExecutionError(409, "NOT_RETRYABLE", MSG_NOT_RETRYABLE)
             rec = s.execute(select(execution_records).where(execution_records.c.id == record_id)).one()
             if rec.completion in (V.REJECTED, V.WITHDRAWN):
@@ -533,16 +535,15 @@ class ExecutionService:
                 rec = s.execute(select(execution_records).where(execution_records.c.id == record_id)).one_or_none()
                 if rec is None or rec.task_id is None:
                     return
-                snap = s.execute(select(todo_confirmed_items.c.title, todo_confirmed_items.c.deliverable,
-                                        todo_confirmed_items.c.completion_criteria, todo_confirmed_items.c.evidence_types)
-                                 .where(todo_confirmed_items.c.group_id == rec.group_id,
-                                        todo_confirmed_items.c.user_id == rec.user_id,
-                                        todo_confirmed_items.c.source_assignment_revision == rec.source_assignment_revision,
-                                        todo_confirmed_items.c.confirmation_revision == rec.confirmation_revision,
-                                        todo_confirmed_items.c.task_id == rec.task_id)).one()
                 # SECURITY.md 6: the criteria must be exactly what was signed at `투두 확정하기`, or M2 never sees them.
-                integrity = confirmation_integrity(s, self._verifier, rec.group_id, rec.user_id,
-                                                   rec.source_assignment_revision, rec.confirmation_revision)
+                # M2's input is built from the very rows the signature was checked on (no second read).
+                integrity, checked = confirmation_check(s, self._verifier, rec.group_id, rec.user_id,
+                                                        rec.source_assignment_revision, rec.confirmation_revision)
+                snap = checked.get(rec.task_id)
+                if snap is None:
+                    integrity = signing.INVALID  # the todo is not part of the signed confirmation any more
+                else:
+                    snap = SimpleNamespace(**snap)
                 if integrity != signing.VALID:
                     self._integrity_event(rec, integrity, "REVIEW")
                 if integrity == signing.INVALID:
@@ -647,7 +648,7 @@ class ExecutionService:
             if passed:  # SECURITY.md 6: checked again right before a PASS completes the todo without a human
                 integrity = confirmation_integrity(s, self._verifier, rec.group_id, rec.user_id,
                                                    rec.source_assignment_revision, rec.confirmation_revision)
-                if integrity == signing.INVALID:
+                if integrity != signing.VALID:  # INVALID, and also UNSIGNED: stripping a signature must not help
                     self._integrity_event(rec, integrity, "PASS")
                     passed = False
             (V.pass_review if passed else V.open_vote)(s, rec, self._clock())

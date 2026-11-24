@@ -139,6 +139,8 @@ def load_signer(env: str, environ: Mapping[str, str] | None = None) -> Signer:
         seed = TEST_SEED
     else:
         seed = _b64_32(raw, "MOIM_SIGNING_KEY")
+        if seed == TEST_SEED and env != "test":  # the test key is public: anyone could sign with it
+            raise ConfigError("MOIM_SIGNING_KEY is the public test key; make a real one (python -m moim.signing new-key)")
     old = [k for k in (environ.get("MOIM_SIGNING_OLD_PUBLIC_KEYS") or "").split(",") if k.strip()]
     return Signer(seed, Verifier.from_b64(old).public_keys.values())
 

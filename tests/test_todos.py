@@ -748,7 +748,7 @@ def test_confirmed_revisions_are_immutable_in_the_database(db, mk, ai):
     sa = __import__("sqlalchemy")
     for sql in ("update todo_confirmed_items set title='바꿈'", "delete from todo_confirmed_items",
                 "update todo_confirmations set draft_revision=9", "delete from todo_confirmations"):
-        with pytest.raises(Exception):
+        with pytest.raises(Exception, match="confirmed todo revisions are immutable"):  # the trigger, not any error
             with db.begin() as cx:
                 cx.execute(sa.text(sql))
     with db.begin() as cx:  # session C may mark a revision STALE

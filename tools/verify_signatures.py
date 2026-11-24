@@ -7,7 +7,9 @@ MOIM_SIGNING_OLD_PUBLIC_KEYS). Only public keys are needed: whoever runs this ca
 Run it after a backup restore (OPERATIONS.md 4) or whenever a confirmation is suspected of having changed.
 
 Output (JSON, ids only, never a title, criterion or key): counts of VALID / UNSIGNED / INVALID and the ids of every
-INVALID confirmation. Exit code 0 = no INVALID, 1 = at least one INVALID, 2 = usage or connection error.
+INVALID confirmation. Exit code 0 = every confirmation VALID, 1 = at least one INVALID, 3 = no INVALID but some
+UNSIGNED (normal only for confirmations made before migration 0016; check the count against what you expect),
+2 = usage or connection error.
 """
 from __future__ import annotations
 
@@ -76,7 +78,9 @@ def main(argv: list[str] | None = None) -> int:
         print(f"error: {type(exc).__name__}", file=sys.stderr)
         return 2
     print(json.dumps(result, ensure_ascii=False, indent=2))
-    return 1 if result["counts"][signing.INVALID] else 0
+    if result["counts"][signing.INVALID]:
+        return 1
+    return 3 if result["counts"][signing.UNSIGNED] else 0
 
 
 if __name__ == "__main__":

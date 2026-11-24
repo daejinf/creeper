@@ -90,21 +90,27 @@ class _StepFailed(Exception):
         self.code, self.done = code, done
 
 
-def confirmation_integrity(s: Session, verifier, group_id: str, user_id: str, rev: int, conf: int) -> str:
+def confirmation_check(s: Session, verifier, group_id: str, user_id: str, rev: int, conf: int) -> tuple[str, dict]:
     """SECURITY.md 6: re-read one confirmation and all of its todos and check the signature written at `투두 확정하기`.
-    VALID | UNSIGNED (confirmed before 0016) | INVALID (changed after confirming, unknown key, or rows missing)."""
+    Returns (VALID | UNSIGNED | INVALID, {task_id: the very rows that were checked}). Callers that hand criteria to
+    M2 must use these rows, never a separate read (a separate statement could see different data)."""
     head = s.execute(select(todo_confirmations).where(
         todo_confirmations.c.group_id == group_id, todo_confirmations.c.user_id == user_id,
         todo_confirmations.c.source_assignment_revision == rev, todo_confirmations.c.revision == conf)).one_or_none()
     if head is None:
-        return signing.INVALID
+        return signing.INVALID, {}
     items = s.execute(select(todo_confirmed_items).where(
         todo_confirmed_items.c.group_id == group_id, todo_confirmed_items.c.user_id == user_id,
         todo_confirmed_items.c.source_assignment_revision == rev,
         todo_confirmed_items.c.confirmation_revision == conf)).mappings().all()
     payload = signing.canonical_confirmation(group_id, user_id, rev, conf, head.draft_revision,
                                              head.member_state_revision, items)
-    return verifier.verify(payload, head.signature, head.signing_kid)
+    return verifier.verify(payload, head.signature, head.signing_kid), {i["task_id"]: i for i in items}
+
+
+def confirmation_integrity(s: Session, verifier, group_id: str, user_id: str, rev: int, conf: int) -> str:
+    """VALID | UNSIGNED (confirmed before 0016) | INVALID (changed after confirming, unknown key, or rows missing)."""
+    return confirmation_check(s, verifier, group_id, user_id, rev, conf)[0]
 
 
 class TodoService:

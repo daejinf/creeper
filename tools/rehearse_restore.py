@@ -99,6 +99,44 @@ def privilege_probe(app_url: str) -> dict:
     return out
 
 
+def integrity_probe(app_url: str) -> dict:
+    """SECURITY.md 6-7, on SEEDED confirmed todos (a row trigger only fires on real rows), as the app role: the purge
+    switch must not let an UPDATE through, and skipping triggers must need more than the app role."""
+    probes = {
+        "purge_switch_update_criteria": ["set local moim.lifecycle_purge = 'on'",
+                                         "update todo_confirmed_items set deliverable = deliverable || 'x'"],
+        "purge_switch_update_signature": ["set local moim.lifecycle_purge = 'on'",
+                                          "update todo_confirmations set signing_kid = '0000000000000000'"],
+        "update_criteria": ["update todo_confirmed_items set deliverable = deliverable || 'x'"],
+        "skip_triggers": ["set local session_replication_role = replica"],
+    }
+    out = {}
+    with psycopg.connect(**ops_db._conninfo(app_url)) as c:
+        rows_ = c.execute("select count(*) from todo_confirmed_items").fetchone()[0]
+        out["confirmed_items"] = rows_
+        for name, stmts in probes.items():
+            try:
+                for stmt in stmts:
+                    c.execute(stmt)
+                out[name] = "ALLOWED"
+            except (psycopg.errors.InsufficientPrivilege, psycopg.errors.RaiseException) as exc:
+                out[name] = "denied:" + type(exc).__name__  # RaiseException = the immutability trigger refused it
+            except psycopg.Error as exc:
+                out[name] = "error:" + type(exc).__name__
+            c.rollback()
+    return out
+
+
+def signatures(app_url: str) -> dict:
+    """tools/verify_signatures.py with public keys only (derived from this run's MOIM_SIGNING_KEY)."""
+    sys.path.insert(0, str(ROOT))
+    from moim.signing import Verifier, public_key_b64
+    from tools import verify_signatures
+
+    result = verify_signatures.run(app_url, Verifier.from_b64([public_key_b64(os.environ["MOIM_SIGNING_KEY"])]))
+    return result["counts"]
+
+
 def run(cmd: list[str], env: dict) -> None:
     subprocess.run(cmd, env=env, check=True, capture_output=True)
 
@@ -134,6 +172,8 @@ def main() -> int:
         os.environ.update({"MOIM_ENV": "development", "MOIM_DATABASE_URL": app_url, "MOIM_UPLOAD_DIR": str(up_a)})
         gid = seed_all()
         evidence["seed"] = "fixture team seeded (fixture AI, not LIVE)"
+        evidence["integrity_probe"] = integrity_probe(app_url)
+        evidence["signatures_original"] = signatures(app_url)
 
         # ---- production app on the original database ----
         prod_env = {"MOIM_ENV": "production", "MOIM_DATABASE_URL": app_url, "MOIM_UPLOAD_DIR": str(up_a),
@@ -158,6 +198,8 @@ def main() -> int:
         evidence["restore_seconds"] = round(time.perf_counter() - t0, 1)
         evidence["verify"] = ops_db.verify(r_owner, str(up_b), str(backup_file))
         evidence["restored_app_role_probe"] = privilege_probe(r_app)
+        evidence["signatures_restored"] = signatures(r_app)
+        evidence["restored_integrity_probe"] = integrity_probe(r_app)
 
         # ---- production app on the RESTORED database ----
         os.environ.update({**prod_env, "MOIM_DATABASE_URL": r_app, "MOIM_UPLOAD_DIR": str(up_b)})
@@ -181,6 +223,12 @@ def main() -> int:
               and not evidence["verify"]["missing_files"] and not evidence["verify"]["hash_mismatch"]
               and not evidence["verify"]["count_differences"] and evidence["verify"]["schema_matches"]
               and evidence["backup_is_encrypted"] and after["all_passed"] and before["all_passed"]
+              and all(str(v).startswith("denied") for p in ("integrity_probe", "restored_integrity_probe")
+                      for k, v in evidence[p].items() if k != "confirmed_items")
+              and evidence["integrity_probe"]["confirmed_items"] > 0
+              and evidence["signatures_original"]["VALID"] > 0 and evidence["signatures_original"]["INVALID"] == 0
+              and evidence["signatures_original"]["UNSIGNED"] == 0
+              and evidence["signatures_restored"] == evidence["signatures_original"]
               and evidence["deletions_after_backup"]["ledger_lines"] == 2 and replay_ok)
         evidence["result"] = "PASS" if ok else "FAIL"
     finally:

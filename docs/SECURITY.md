@@ -312,6 +312,7 @@ MOIM 데이터 중 서명할 가치가 가장 큰 것을 아래 두 질문으로
 - **확정 순간 이전의 조작**: 서명은 "확정된 그대로인가"만 증명한다. 확정 전에 AI가 만든 기준이 이상한지는 판단하지 않는다.
 - **확정 기록 통째 삭제**: 서명이 확정 1건 전체(모든 투두)를 덮으므로 투두 한 개 삭제·추가는 잡지만, 확정 행 자체를 지우는 것은 서명만으로 못 잡는다. 이는 다음 단계 후보인 감사 기록 해시 체인이 맡는다.
 - **조작을 되돌리지는 않는다**: 탐지하고 평가를 멈출 뿐이다. 원래 기준 복원은 백업으로 한다.
+- **혼자인 그룹**: D-H1에 따라 투표할 다른 구성원이 없으면 AI가 아닌 결과는 곧바로 본인 완료(`SELF`)가 된다. 검증 실패도 마찬가지다. 기록은 `AI`가 아니라 `SELF`로 정직하게 남는다(서명은 "AI가 확인했다"는 기록이 거짓이 되지 않게 할 뿐, 혼자인 사람의 자기 완료를 막는 장치가 아니다).
 
 ### 6-6. 구현 (2026-11-24)
 
@@ -319,17 +320,17 @@ MOIM 데이터 중 서명할 가치가 가장 큰 것을 아래 두 질문으로
 |---|---|---|
 | 서명 대상 | 확정 1건의 정규화 JSON(키 정렬, UTF-8, 공백 없음, 투두는 확정 순서): `group_id`, `user_id`, assignment·confirmation·draft·MemberState revision, 각 투두의 `task_id`·순서·제목·기한·`part_id`·`deliverable`·`completion_criteria`·`evidence_types`·`estimated_minutes`. 앞에 용도 문자열 `moim.todo-confirmation.v1`을 붙여 다른 서명과 섞이지 않게 한다 | `src/moim/signing.py` `canonical_confirmation` |
 | 서명 | `투두 확정하기`의 같은 INSERT에서 `todo_confirmations.signature`(64바이트)와 `signing_kid`(공개키 SHA-256 앞 16자)를 쓴다. 서명 없는 확정은 생기지 않는다 | `roles/todos.py` `_confirm_now`, 마이그레이션 0016 |
-| 서명 자체 보호 | 불변 트리거가 `signature`·`signing_kid`도 얼린다. 둘은 함께 있거나 함께 없고 길이는 64(CHECK) | 0016 |
-| 검증 ① M2 전 | 확정과 모든 투두를 다시 읽어 검증. `INVALID`면 M2를 부르지 않고 검토를 `FAILED(INTEGRITY_FAILED)`로 끝낸 뒤 팀 투표로 넘긴다(D-H1의 다른 실패와 같음). 화면 문구 "확정된 할 일 기준을 확인하지 못해 AI 확인을 하지 않았어요. 팀원이 직접 확인해 주세요.", 다시 시도 버튼 없음(같은 결과) | `execution/service.py` `run_review`, `review_ai.LINE_INTEGRITY` |
+| 서명 자체 보호 | 불변 트리거가 `signature`·`signing_kid`도 얼린다. 둘은 함께 있거나 함께 없고 길이는 64(CHECK). 그리고 0016 실행 시각을 기준으로 그 뒤에 만든 확정은 서명이 반드시 있어야 한다(CHECK `ck_todo_confirmations_signed`). 트리거를 건너뛰는 세션도 CHECK는 못 건너뛰므로, ALTER TABLE 권한 없이는 서명 없는 새 확정을 넣거나 서명을 떼어 낼 수 없다 | 0016 |
+| 검증 ① M2 전 | 확정과 모든 투두를 다시 읽어 검증하고, **M2 입력은 검증한 바로 그 행으로 만든다**(따로 읽으면 그 사이 바뀐 내용이 들어갈 수 있다). `INVALID`면 M2를 부르지 않고 검토를 `FAILED(INTEGRITY_FAILED)`로 끝낸 뒤 팀 투표로 넘긴다(D-H1의 다른 실패와 같음). 화면 문구 "확정된 할 일 기준을 확인하지 못해 AI 확인을 하지 않았어요. 팀원이 직접 확인해 주세요.", 다시 시도는 화면과 API 모두 막음(같은 결과이고, 다시 시도하면 팀 투표가 지워진다) | `execution/service.py` `run_review`·`retry_review`, `review_ai.LINE_INTEGRITY` |
 | 검증 ② PASS 반영 전 | PASS를 완료로 반영하는 트랜잭션 안에서 다시 검증. `INVALID`면 완료 대신 팀 투표 | `execution/service.py` `_decide` |
 | 경보 로그 | `integrity_event group_id user_id assignment_revision confirmation_revision at=REVIEW\|PASS result=INVALID\|UNSIGNED`. id와 결과만, 기준·제목·키 없음. `INVALID`는 error 수준 | `_integrity_event` |
-| 0016 이전 확정 | `UNSIGNED`: 검토는 그대로 하고 로그로 따로 남긴다. 소급 서명하지 않는다(이미 바뀌었을 수 있는 내용에 서명하면 거짓 보증) | `signing.Verifier.verify` |
-| 키 | `MOIM_SIGNING_KEY`(32바이트 seed의 base64). 개발·운영에서 없거나 형식이 틀리면 `create_app`이 시작을 거절한다(오류에 값 없음). 테스트 프로세스만 공개된 고정 테스트 키. 키 교체 때 옛 공개키는 `MOIM_SIGNING_OLD_PUBLIC_KEYS`. 새 키: `python -m moim.signing new-key`, 공개키: `python -m moim.signing public-key`. `start-moim.cmd`는 `.env`에 키가 없을 때 한 번 만들어 저장한다 | `signing.load_signer`, `main.create_app`, `tools/launcher/start.ps1` |
+| 0016 이전 확정 | `UNSIGNED`: M2 검토는 하지만 **PASS여도 AI 완료로 반영하지 않고 팀 투표**로 넘긴다. 서명을 떼어 내는 공격이 "서명 없음"으로 통과하지 못하게 하기 위해서다. 로그로 따로 남긴다. 소급 서명하지 않는다(이미 바뀌었을 수 있는 내용에 서명하면 거짓 보증) | `signing.Verifier.verify`, `_decide` |
+| 키 | `MOIM_SIGNING_KEY`(32바이트 seed의 base64). 개발·운영에서 없거나 형식이 틀리면 `create_app`이 시작을 거절한다(오류에 값 없음). 테스트 프로세스만 공개된 고정 테스트 키를 쓰고, 개발·운영에서 그 테스트 키를 넣으면 시작을 거절한다. 키 교체 때 옛 공개키는 `MOIM_SIGNING_OLD_PUBLIC_KEYS`. 새 키: `python -m moim.signing new-key`, 공개키: `python -m moim.signing public-key`. `start-moim.cmd`는 `.env`에 키가 없을 때 한 번 만들어 저장한다 | `signing.load_signer`, `main.create_app`, `tools/launcher/start.ps1` |
 | 검증 권한 분리 | 실행 서비스(`ExecutionService`)는 공개키 검증기만 받는다. 서명은 투두 서비스만 한다 | `main.create_app` |
-| 검증 도구 | `python tools/verify_signatures.py --url <DB> [--public-keys ...]`: 공개키만으로 모든 확정을 검사, 결과는 개수와 `INVALID` id만(JSON), `INVALID`가 있으면 종료 코드 1. 복원 뒤 실행(OPERATIONS 4절) | `tools/verify_signatures.py` |
+| 검증 도구 | `python tools/verify_signatures.py --url <DB> [--public-keys ...]`: 공개키만으로 모든 확정을 검사, 결과는 개수와 `INVALID` id만(JSON), `INVALID`가 있으면 종료 코드 1, `INVALID` 없이 `UNSIGNED`만 있으면 3(0016 이전 확정 수와 맞는지 확인), 모두 `VALID`면 0. 복원 뒤 실행(OPERATIONS 4절) | `tools/verify_signatures.py` |
 | 의존성 | `cryptography`를 `ops` extra에서 런타임 의존성으로 옮김(같은 고정 버전 50.0.2, 새 인프라 아님) | `pyproject.toml` |
 
-테스트 `tests/test_signing.py`(12개): 정규화·변경 탐지(기준·결과물·revision·투두 하나 삭제), 다른 키·모르는 kid·반쪽 서명 거절, 키 교체 뒤 옛 공개키 검증, 공개키로는 서명 불가, 키 없음·잘못된 키의 시작 거절과 값 비노출, 확정 행의 서명·kid, 트리거가 서명 변경 거절, **트리거를 건너뛰는 권한(owner·DB 서버 역할)으로 기준을 고친 뒤 첨부하면 M2 호출 0회·`FAILED(INTEGRITY_FAILED)`·완료 아님·로그에 기준 문장 없음**, **M2 검토 도중 기준이 바뀌면 PASS가 와도 완료하지 않음**, `UNSIGNED` 확정은 그대로 검토, 검증 도구의 개수·`INVALID` id·잘못된 공개키 거절.
+테스트 `tests/test_signing.py`(15개): 정규화·변경 탐지(기준·결과물·revision·투두 하나 삭제), 다른 키·모르는 kid·반쪽 서명 거절, 키 교체 뒤 옛 공개키 검증, 공개키로는 서명 불가, 키 없음·잘못된 키·공개 테스트 키의 시작 거절과 값 비노출, 확정 행의 서명·kid, 트리거가 서명 변경 거절, **트리거를 건너뛰는 권한으로 기준을 고친 뒤 첨부하면 M2 호출 0회·`FAILED(INTEGRITY_FAILED)`·완료 아님·로그에 기준 문장 없음**, **M2 검토 도중 기준이 바뀌면 PASS가 와도 완료하지 않음**, `UNSIGNED` 확정은 PASS여도 팀 투표, 서명 떼어 내기·서명 없는 새 확정 넣기를 CHECK가 거절, `INTEGRITY_FAILED`의 API 다시 시도 거절, 검증 도구의 종료 코드 0·1·3과 `INVALID` id, 0016·0017 down/up(데이터 유지, 다시 올리면 `UNSIGNED`, STALE 표시 가능).
 
 결정 상태: 내부 기술 결정(가역)이라 PROPOSED로 적용했다. 개인정보 공개 범위·비용 변화는 없고, 화면 변화는 검증 실패 때 기존 `up-msg` 줄에 나오는 문구 하나다(기존 표시 재사용).
 
@@ -340,6 +341,7 @@ MOIM 데이터 중 서명할 가치가 가장 큰 것을 아래 두 질문으로
 - 문제: 0012의 `moim.lifecycle_purge`는 탈퇴·그룹 삭제 때 확정 투두를 지우려고 만든 스위치인데, 켜면 DELETE뿐 아니라 UPDATE도 통과했다. 이 스위치는 평범한 세션 설정이라 앱 역할도 켤 수 있다. 그래서 여러 문장을 실행할 수 있는 SQL 주입이 생기면 앱 역할만으로 숨겨진 기준을 제자리에서 고칠 수 있었다. 서명(6-6)은 이것을 **탐지**했지만 막지는 못했다.
 - 근거: 스위치를 켜는 곳은 `LifecycleService._purge_group`과 `_delete_own_data` 두 곳뿐이고, 둘 다 DELETE만 한다.
 - 변경: 스위치가 켜져 있어도 **DELETE만** 통과시킨다. UPDATE는 스위치와 상관없이 거절한다(`stale_at`만 바꿀 수 있는 규칙은 그대로). 앱 코드는 바뀌지 않았다.
-- 결과: 앱 역할로는 확정 기준을 고칠 길이 없어졌다(**예방**). DB 소유자·DB 서버처럼 트리거 자체를 건너뛸 수 있는 권한이 있어야만 고칠 수 있고, 그 경우는 서명이 잡는다(**탐지**). 두 겹이다.
-- 남은 것: 스위치로 지울 수는 있다. 확정 안의 투두 하나를 지우면 서명이 잡고, 확정 한 건을 통째로 지우는 것은 감사 기록 해시 체인(다음 후보)이 맡는다.
+- 함께 고친 오래된 결함: 0009부터 트리거 조건이 "표가 `todo_confirmations`인가"와 열 비교를 한 IF에 AND로 묶었는데, PL/pgSQL은 조건 전체를 평가하므로 `todo_confirmed_items`의 UPDATE는 "그런 열이 없다" 오류로 실패했다. 막히기는 했지만 의도한 거절 문구가 아니었고, 테스트가 함수 이름의 "immutable"에 맞아 통과해 가려져 있었다. 0017에서 IF를 중첩했고 테스트는 트리거 문구 전체를 요구하도록 바꿨다. 이 결함은 실제 앱 역할로 돌린 복원 리허설에서 드러났다.
+- 결과: 앱 역할로는 확정 기준을 **제자리에서 고칠** 길이 없어졌다(예방). 트리거를 건너뛸 수 있는 권한이 있어야만 고칠 수 있고, 그 경우는 서명이 잡는다(탐지).
+- 남은 것(정직한 한계): 스위치는 앱 역할도 켤 수 있으므로 **삭제**는 여전히 된다. 확정 안의 투두 하나를 지우면 서명이 잡는다. 하지만 구성원의 **최신 확정 한 건을 통째로 지우면** 바로 앞 확정이 다시 보이는 확정이 되고, 그 확정은 정상 서명이라 `VALID`다. 즉 "예전 기준으로 되돌리기"는 서명만으로 못 잡는다(독립 검토에서 확인). 이것과 확정 통째 삭제는 감사 기록 해시 체인(다음 후보)이 맡는다.
 - 테스트: `tests/test_lifecycle.py`가 스위치를 켠 채 기준·확정 행 UPDATE가 거절되고 DELETE는 되는 것을 확인한다. 탈퇴·그룹 삭제 테스트는 그대로 통과한다. `tests/test_signing.py`의 공격 재현은 이제 트리거를 건너뛰는 권한(`session_replication_role`, superuser 전용)으로 한다.

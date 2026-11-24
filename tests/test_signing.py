@@ -119,6 +119,10 @@ def test_key_loading_fails_fast_outside_tests_and_never_echoes_the_value():
     assert "SECRETVALUE" not in str(e.value)
     with pytest.raises(ConfigError, match="32 bytes"):
         signing.load_signer("production", {"MOIM_SIGNING_KEY": base64.b64encode(b"short").decode()})
+    test_key = base64.b64encode(signing.TEST_SEED).decode()  # public: must never sign outside tests
+    for env in ("production", "development"):
+        with pytest.raises(ConfigError, match="public test key"):
+            signing.load_signer(env, {"MOIM_SIGNING_KEY": test_key})
     t = signing.load_signer("test", {})
     assert t.kid == signing.Signer(signing.TEST_SEED).kid
     key = signing.new_private_key_b64()
@@ -148,7 +152,7 @@ def test_confirm_writes_a_valid_signature_in_the_same_row(db, mk, ai):
 
 def test_trigger_freezes_the_signature_itself(db, mk, ai):
     gid, (a, _) = confirmed_team(mk, 2)
-    with pytest.raises(Exception, match="immutable"):
+    with pytest.raises(Exception, match="confirmed todo revisions are immutable"):
         with db.begin() as c:
             c.execute(text("update todo_confirmations set signing_kid='0000000000000000' where user_id=:u"), dict(u=a.id))
 
@@ -192,16 +196,46 @@ def test_a_pass_is_not_applied_when_the_criteria_change_during_the_review(db, mk
     assert "at=PASS" in logs and "result=INVALID" in logs
 
 
-def test_unsigned_legacy_confirmation_is_reviewed_and_reported_apart(db, mk, ai, caplog):
+def test_unsigned_legacy_confirmation_is_reviewed_but_never_ai_completed(db, mk, ai, caplog):
+    """A confirmation made before 0016 (created before the migration's cutoff) has no signature. M2 may still look at
+    it, but an unsigned confirmation never lets an AI PASS complete the todo: people decide (team vote)."""
     caplog.set_level(logging.INFO)
     gid, (a, _) = confirmed_team(mk, 2)
-    tamper(db, "update todo_confirmations set signature=null, signing_kid=null where user_id=:u", u=a.id)  # pre-0016 row
+    tamper(db, "update todo_confirmations set signature=null, signing_kid=null, created_at='2026-01-01T00:00:00+09:00'"
+               " where user_id=:u", u=a.id)  # what a pre-0016 row looks like
     assert integrity(db, gid, a.id) == signing.UNSIGNED
     t = mine(a, gid)
-    r = submit(a, gid, t, files=[("w.png", png())])
+    r = submit(a, gid, t, files=[("w.png", png())])  # the fixture M2 answers PASS
     assert r.status_code == 201 and len(ai.m2()) == 1
-    assert rows(db, "select completion, completed_by from execution_records")[0] == ("DONE", "AI")
-    assert "result=UNSIGNED" in "\n".join(x.getMessage() for x in caplog.records)
+    assert rows(db, "select completion, completed_by from execution_records")[0] == ("VOTING", None)
+    logs = "\n".join(x.getMessage() for x in caplog.records)
+    assert "at=REVIEW result=UNSIGNED" in logs and "at=PASS result=UNSIGNED" in logs
+
+
+def test_a_signature_cannot_be_stripped_or_left_out_of_a_new_confirmation(db, mk, ai):
+    """Even with every trigger skipped, the database refuses an unsigned confirmation made after 0016."""
+    gid, (a, _) = confirmed_team(mk, 2)
+    with pytest.raises(Exception, match="ck_todo_confirmations_signed"):
+        tamper(db, "update todo_confirmations set signature=null, signing_kid=null where user_id=:u", u=a.id)
+    with pytest.raises(Exception, match="ck_todo_confirmations_signed"):  # a forged newer revision without a signature
+        tamper(db, "insert into todo_confirmations (group_id, user_id, source_assignment_revision, revision,"
+                   " draft_revision, member_state_revision, action_id) select group_id, user_id,"
+                   " source_assignment_revision, revision + 1, draft_revision, member_state_revision, 'forged-action'"
+                   " from todo_confirmations where user_id=:u", u=a.id)
+    assert integrity(db, gid, a.id) == signing.VALID
+
+
+def test_an_integrity_failure_cannot_be_retried_through_the_api(db, mk, ai):
+    from test_execution import jpost
+
+    gid, (a, _) = confirmed_team(mk, 2)
+    t = mine(a, gid)
+    tamper(db, "update todo_confirmed_items set deliverable = :d where task_id=:t", d="아무거나", t=t["task_id"])
+    r = submit(a, gid, t, files=[("w.png", png())])
+    assert rv(a, gid, r)["state"] == "FAILED"
+    retry = jpost(a, f"/api/groups/{gid}/records/{r.json()['id']}/review/retry", {"expected_attempt": 1})
+    assert retry.status_code == 409 and retry.json()["error"]["code"] == "NOT_RETRYABLE"
+    assert rows(db, "select completion from execution_records")[0].completion == "VOTING"  # the team vote stays
 
 
 def test_removing_one_todo_from_a_confirmation_is_detected(db, mk, ai):
@@ -222,6 +256,10 @@ def test_verify_tool_counts_and_lists_only_ids(db, mk, ai, capsys, test_database
     assert verify_signatures.main(["--url", test_database_url, "--public-keys", pub]) == 0
     out = json.loads(capsys.readouterr().out)
     assert out["counts"] == {"VALID": 2, "UNSIGNED": 0, "INVALID": 0}
+    tamper(db, "update todo_confirmations set signature=null, signing_kid=null, created_at='2026-01-01T00:00:00+09:00'"
+               " where user_id=:u", u=a.id)  # a pre-0016 row: exit code 3, not 0
+    assert verify_signatures.main(["--url", test_database_url, "--public-keys", pub]) == 3
+    assert json.loads(capsys.readouterr().out)["counts"] == {"VALID": 1, "UNSIGNED": 1, "INVALID": 0}
     tamper(db, "update todo_confirmed_items set completion_criteria = cast(:c as jsonb) where user_id=:u",
            c=json.dumps([TAMPERED], ensure_ascii=False), u=b.id)
     assert verify_signatures.main(["--url", test_database_url, "--public-keys", pub]) == 1
@@ -232,3 +270,35 @@ def test_verify_tool_counts_and_lists_only_ids(db, mk, ai, capsys, test_database
     # a wrong public key vouches for nothing
     other = signing.public_key_b64(base64.b64encode(b"\x09" * 32).decode())
     assert verify_signatures.main(["--url", test_database_url, "--public-keys", other]) == 1
+
+
+# ---- migrations 0016 / 0017 with data ---------------------------------------------------------------------------------
+
+
+def test_migrations_0016_0017_down_and_up_with_confirmed_todos(db, mk, ai):
+    from alembic import command
+    from alembic.config import Config
+    from test_role_assignment import ROOT
+
+    gid, (a, b) = confirmed_team(mk, 2)
+    cfg = Config(str(ROOT / "alembic.ini"))
+    try:
+        command.downgrade(cfg, "0016")  # 0017 off: the 0016 switch still let an UPDATE through
+        with db.begin() as c:
+            c.execute(text("set local moim.lifecycle_purge = 'on'"))
+            c.execute(text("update todo_confirmations set action_id = action_id where user_id=:u"), dict(u=a.id))
+        assert integrity(db, gid, a.id) == signing.VALID
+        command.downgrade(cfg, "0015")  # signatures gone, confirmations kept
+        assert scalar(db, "select count(*) from todo_confirmations where group_id=:g", g=gid) == 2
+        assert scalar(db, "select count(*) from information_schema.columns where table_name='todo_confirmations'"
+                          " and column_name='signature'") == 0
+        command.upgrade(cfg, "head")  # rows from before 0016 come back UNSIGNED, and stay allowed to be
+        assert integrity(db, gid, a.id) == signing.UNSIGNED and integrity(db, gid, b.id) == signing.UNSIGNED
+        with db.begin() as c:  # an old unsigned confirmation can still be marked STALE (reassignment)
+            c.execute(text("update todo_confirmations set stale_at = now() where user_id=:u"), dict(u=a.id))
+        with pytest.raises(Exception, match="confirmed todo revisions are immutable"):
+            with db.begin() as c:
+                c.execute(text("set local moim.lifecycle_purge = 'on'"))
+                c.execute(text("update todo_confirmed_items set title = title where user_id=:u"), dict(u=a.id))
+    finally:
+        command.upgrade(cfg, "head")

@@ -476,10 +476,10 @@ def test_a_failure_in_the_middle_changes_nothing_and_is_not_reported_as_done(app
 
 def test_confirmed_todos_stay_immutable_outside_the_lifecycle_purge(app, mk, db):
     gid, _ = confirmed_team(mk, 2, leader="immut")
-    with pytest.raises(Exception, match="immutable"):
+    with pytest.raises(Exception, match="confirmed todo revisions are immutable"):
         with db.begin() as c:
             c.execute(text("delete from todo_confirmed_items where group_id=:g"), {"g": gid})
-    with pytest.raises(Exception, match="immutable"):
+    with pytest.raises(Exception, match="confirmed todo revisions are immutable"):
         with db.begin() as c:
             c.execute(text("update todo_confirmations set action_id='x' where group_id=:g"), {"g": gid})
     with db.connect() as c:  # the switch is transaction-scoped: it works inside one transaction and is gone after it
@@ -489,11 +489,11 @@ def test_confirmed_todos_stay_immutable_outside_the_lifecycle_purge(app, mk, db)
         tx.rollback()
     for sql in ("update todo_confirmed_items set completion_criteria='[\"x\"]'::jsonb where group_id=:g",
                 "update todo_confirmations set action_id='x' where group_id=:g"):
-        with pytest.raises(Exception, match="immutable"):  # 0017: the switch opens DELETE only, never an UPDATE
+        with pytest.raises(Exception, match="confirmed todo revisions are immutable"):  # 0017: the switch opens DELETE only, never an UPDATE
             with db.begin() as c:
                 c.execute(text("set local moim.lifecycle_purge = 'on'"))
                 c.execute(text(sql), {"g": gid})
-    with pytest.raises(Exception, match="immutable"):
+    with pytest.raises(Exception, match="confirmed todo revisions are immutable"):
         with db.begin() as c:
             c.execute(text("delete from todo_confirmed_items where group_id=:g"), {"g": gid})
 

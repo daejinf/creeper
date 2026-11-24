@@ -110,7 +110,7 @@ python tools/ops_db.py restore --in moim-YYYYMMDD.bak --url <빈 DB owner URL> -
 python tools/ops_db.py grant --url <owner URL> --app moim_app
 python tools/ops_db.py verify --url <owner URL> --upload-dir <디렉터리> --manifest-from moim-YYYYMMDD.bak
 python tools/ops_db.py replay-deletions --url <앱 역할 URL> --upload-dir <디렉터리> --ledger-dir <삭제 기록 경로>
-python tools/verify_signatures.py --url <앱 역할 URL> --public-keys <운영 공개키들>   # 확정 투두 서명(SECURITY 6). INVALID면 종료 코드 1
+python tools/verify_signatures.py --url <앱 역할 URL> --public-keys <운영 공개키들>   # 확정 투두 서명(SECURITY 6). 0 모두 VALID, 1 INVALID, 3 UNSIGNED만
 # 그 다음에만 앱 서버를 시작한다
 ```
 
@@ -119,7 +119,7 @@ python tools/verify_signatures.py --url <앱 역할 URL> --public-keys <운영 �
 
 - 표가 이미 있는 DB, 비어 있지 않은 첨부 디렉터리에는 복원하지 않는다(덮어쓰기 방지). 첨부는 sha256이 manifest와 다르면 중단한다.
 - `verify`는 첨부 행마다 파일 존재·크기·sha256, 고아 파일 수, manifest와 테이블별 행 수 차이, 스키마 버전 일치를 확인한다. 누락·불일치가 있으면 종료 코드 2.
-- `verify_signatures.py`가 `INVALID`를 내면 백업 또는 복원 경로가 확정 기록을 바꾼 것이다. 앱을 열지 말고 다른 백업으로 다시 복원한다. `UNSIGNED`는 0016 이전 확정이라 정상이다.
+- `verify_signatures.py`가 `INVALID`를 내면 백업 또는 복원 경로가 확정 기록을 바꾼 것이다. 앱을 열지 말고 다른 백업으로 다시 복원한다. `UNSIGNED`(종료 코드 3)는 0016 이전 확정이면 정상이다. 그 수가 0016 이전 확정 수보다 많으면 누군가 테이블 권한으로 서명 검사를 풀었다는 뜻이니 INVALID처럼 다룬다. 리허설(`tools/rehearse_restore.py`)은 원본·복원본 모두에서 이 도구와 앱 역할 변조 시도(스위치+UPDATE, 트리거 건너뛰기)를 확인한다.
 
 ### 고아 첨부 정리
 
