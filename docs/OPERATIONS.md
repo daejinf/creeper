@@ -32,9 +32,12 @@ uvicorn --factory moim.main:app_factory --host 127.0.0.1 --port 8000 --workers 1
 | `MOIM_LOG_FORMAT` | (운영은 자동 JSON) | 개발에서 `json`으로 켤 수 있다 |
 | `MOIM_BACKUP_KEY` | 32바이트 base64 | 백업 도구만. 앱 서버에 두지 않는다 |
 | `MOIM_OWNER_PASSWORD` | 마이그레이션 역할 비밀번호 | 마이그레이션·백업 작업에만 |
+| `MOIM_SIGNING_KEY` | Ed25519 개인키 seed 32바이트 base64 | 확정 투두 서명(SECURITY 6). 앱 서버에만. **DB·백업·`MOIM_BACKUP_KEY`·owner 비밀번호와 다른 권한의 비밀로 둔다**(같은 사람이 다 가지면 서명의 의미가 줄어든다). 없거나 틀리면 시작 거절. 만들기 `python -m moim.signing new-key` |
+| `MOIM_SIGNING_OLD_PUBLIC_KEYS` | 옛 공개키 base64, 쉼표 구분(선택) | 키 교체 뒤 옛 확정 기록 검증용. 공개키라 비밀이 아니다 |
 
 - 비밀은 배포 플랫폼의 비밀 저장소(환경변수 주입)로 넣는다. 앱은 `.env`를 읽지 않는다(1단계부터의 방침). 플랫폼이 정해지면 저장소 이름과 교체 주기를 여기 적는다(BLOCKED).
 - 키 교체: Timely 키는 새 키 주입 → 재시작으로 끝난다(저장된 값 없음). 백업 키를 바꾸면 이전 키로 만든 백업은 이전 키로만 열 수 있으므로, 이전 키는 보관 기간(4절)이 끝날 때까지 별도로 보관한다.
+- 서명 키 교체: 옛 키의 공개키(`MOIM_SIGNING_KEY=<옛 키> python -m moim.signing public-key`)를 `MOIM_SIGNING_OLD_PUBLIC_KEYS`에 넣고 새 `MOIM_SIGNING_KEY`로 재시작한다. 새 확정은 새 키로 서명되고 옛 확정은 옛 공개키로 계속 검증된다. 옛 개인키는 버린다(더는 서명할 일이 없다). **개인키를 잃고 공개키도 남기지 않으면 그 전 확정은 모두 `INVALID`가 되어 M2 확인이 멈춘다**(완료는 팀 투표로 계속 가능).
 
 ## 3. 운영 시작 점검 (`src/moim/preflight.py`)
 
@@ -107,6 +110,7 @@ python tools/ops_db.py restore --in moim-YYYYMMDD.bak --url <빈 DB owner URL> -
 python tools/ops_db.py grant --url <owner URL> --app moim_app
 python tools/ops_db.py verify --url <owner URL> --upload-dir <디렉터리> --manifest-from moim-YYYYMMDD.bak
 python tools/ops_db.py replay-deletions --url <앱 역할 URL> --upload-dir <디렉터리> --ledger-dir <삭제 기록 경로>
+python tools/verify_signatures.py --url <앱 역할 URL> --public-keys <운영 공개키들>   # 확정 투두 서명(SECURITY 6). INVALID면 종료 코드 1
 # 그 다음에만 앱 서버를 시작한다
 ```
 
@@ -115,6 +119,7 @@ python tools/ops_db.py replay-deletions --url <앱 역할 URL> --upload-dir <디
 
 - 표가 이미 있는 DB, 비어 있지 않은 첨부 디렉터리에는 복원하지 않는다(덮어쓰기 방지). 첨부는 sha256이 manifest와 다르면 중단한다.
 - `verify`는 첨부 행마다 파일 존재·크기·sha256, 고아 파일 수, manifest와 테이블별 행 수 차이, 스키마 버전 일치를 확인한다. 누락·불일치가 있으면 종료 코드 2.
+- `verify_signatures.py`가 `INVALID`를 내면 백업 또는 복원 경로가 확정 기록을 바꾼 것이다. 앱을 열지 말고 다른 백업으로 다시 복원한다. `UNSIGNED`는 0016 이전 확정이라 정상이다.
 
 ### 고아 첨부 정리
 
@@ -193,6 +198,7 @@ ehearsal-replay-2026-11-20.txt`, 저장소 밖)
 | DB | `/healthz` 실패 2회 연속 |
 | 백업 | 26시간 동안 성공한 `backup` 없음 |
 | 삭제 기록 | `LEDGER_WRITE_FAILED` 또는 `LEDGER_CANCEL_FAILED` 1건 (삭제 기록 저장소 상태 확인. 나가기·탈퇴가 503으로 막혀 있다) |
+| 확정 기록 무결성 | `integrity_event result=INVALID` 1건 (확정 투두가 서명과 다르다: 누군가 DB를 직접 바꿨다. `verify_signatures.py`로 범위를 확인하고 DB 접근 기록·비밀을 점검한다) |
 
 ## 8. 부하 표본과 비용
 

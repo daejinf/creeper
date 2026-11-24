@@ -110,6 +110,9 @@ def main() -> int:
         print("error: MOIM_ADMIN_URL must point to the local cluster", file=sys.stderr)
         return 1
     ops_db._key()  # fail early without a backup key
+    if not os.environ.get("MOIM_SIGNING_KEY"):  # SECURITY.md 6: one random key per run, for the original and the restore
+        from moim.signing import new_private_key_b64
+        os.environ["MOIM_SIGNING_KEY"] = new_private_key_b64()
     evidence: dict = {"started": time.strftime("%Y-%m-%dT%H:%M:%S%z")}
     owner_pw, app_pw = secrets.token_urlsafe(18), secrets.token_urlsafe(18)
     work = Path(tempfile.mkdtemp(prefix="moim-rh-"))

@@ -56,7 +56,8 @@ from ..models import (
     role_assignment_members,
     todo_confirmed_items,
 )
-from ..roles.todos import TodoService
+from .. import signing
+from ..roles.todos import TodoService, confirmation_integrity
 from ..timeutil import DISPLAY_TZ, utcnow
 from . import files as F
 from . import review_ai as R
@@ -67,6 +68,7 @@ log = logging.getLogger("moim.execution")
 ACTION_RE = re.compile(r"^[A-Za-z0-9_-]{8,64}$")
 UUID_RE = F.UUID_RE
 PENDING, RUNNING, SUCCEEDED, FAILED, SKIPPED = "PENDING", "RUNNING", "SUCCEEDED", "FAILED", "SKIPPED"
+INTEGRITY_FAILED = "INTEGRITY_FAILED"  # SECURITY.md 6: the confirmation no longer matches its signature
 FEED_LIMIT = 300
 NEWS_LIMIT = 8  # dashboard team news rows (D-H1)
 LEFT_KEY = "left"  # feed rows of members who left the group (D-D1 D6); the browser shows "나간 팀원"
@@ -114,8 +116,10 @@ def time_label(at: datetime, today: date) -> str:
 
 class ExecutionService:
     def __init__(self, session_factory: sessionmaker[Session], client_factory: Callable[[], object], storage: F.Storage,
-                 review_enabled: bool = True, clock=utcnow, ledger: DeletionLedger | None = None, portfolio=None):
+                 review_enabled: bool = True, clock=utcnow, ledger: DeletionLedger | None = None, portfolio=None,
+                 *, verifier: signing.Verifier | signing.Signer):
         self._sf = session_factory
+        self._verifier = verifier  # SECURITY.md 6: public keys only; this service never signs
         self.portfolio = portfolio  # stage 8A: PortfolioService (runs the jobs a completion created)
         self.recovered_portfolio_jobs: list[tuple[str, str]] = []
         self._client_factory = client_factory
@@ -294,7 +298,7 @@ class ExecutionService:
             "state": v.state, "attempt": v.attempt,
             "line": R.line(v.state, v.decision, v.guidance, v.skip_reason, v.error_code, v.reviewed_files,
                            v.excluded_files, v.embedded_images_skipped),
-            "can_retry": v.state == FAILED,
+            "can_retry": v.state == FAILED and v.error_code != INTEGRITY_FAILED,  # a retry would fail the same way
         }
 
     def review_status(self, user_id: str, group_id: str, record_id: str) -> dict:
@@ -536,6 +540,18 @@ class ExecutionService:
                                         todo_confirmed_items.c.source_assignment_revision == rec.source_assignment_revision,
                                         todo_confirmed_items.c.confirmation_revision == rec.confirmation_revision,
                                         todo_confirmed_items.c.task_id == rec.task_id)).one()
+                # SECURITY.md 6: the criteria must be exactly what was signed at `투두 확정하기`, or M2 never sees them.
+                integrity = confirmation_integrity(s, self._verifier, rec.group_id, rec.user_id,
+                                                   rec.source_assignment_revision, rec.confirmation_revision)
+                if integrity != signing.VALID:
+                    self._integrity_event(rec, integrity, "REVIEW")
+                if integrity == signing.INVALID:
+                    ok = self._cas(record_id, attempt, RUNNING, state=FAILED, error_code=INTEGRITY_FAILED,
+                                   finished_at=self._clock())
+                    self._finish_event(record_id, "REVIEW_FAILED", INTEGRITY_FAILED)
+                    if ok:
+                        self._decide(record_id, passed=False)  # people decide, as for any other failed review (D-H1)
+                    return
                 fs = s.execute(select(execution_files).where(execution_files.c.record_id == record_id)
                                .order_by(execution_files.c.position)).all()
             evidence, excluded_kinds = [], []
@@ -628,8 +644,21 @@ class ExecutionService:
             rec = s.execute(select(execution_records).where(execution_records.c.id == record_id)).one_or_none()
             if rec is None:
                 return
+            if passed:  # SECURITY.md 6: checked again right before a PASS completes the todo without a human
+                integrity = confirmation_integrity(s, self._verifier, rec.group_id, rec.user_id,
+                                                   rec.source_assignment_revision, rec.confirmation_revision)
+                if integrity == signing.INVALID:
+                    self._integrity_event(rec, integrity, "PASS")
+                    passed = False
             (V.pass_review if passed else V.open_vote)(s, rec, self._clock())
         self.run_portfolio(portfolio_ingest.take_new(s))  # already in a background task
+
+    @staticmethod
+    def _integrity_event(rec, result: str, at: str) -> None:
+        """Ids and the result only: never a criterion, a title or a key. INVALID is an alert for the operator."""
+        (log.error if result == signing.INVALID else log.info)(
+            "integrity_event group_id=%s user_id=%s assignment_revision=%s confirmation_revision=%s at=%s result=%s",
+            rec.group_id, rec.user_id, rec.source_assignment_revision, rec.confirmation_revision, at, result)
 
     def run_portfolio(self, pairs) -> None:
         if self.portfolio is not None and pairs:

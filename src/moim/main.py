@@ -50,6 +50,7 @@ from .portfolio.service import PortfolioService
 from .portfolio.summary import SummaryService
 from .portfolio.understand import PortfolioAI
 from .preflight import enforce_production
+from .signing import Signer, load_signer
 
 STATIC_DIR = Path(__file__).parent / "static"
 # Attachments live outside the repository's tracked files (`.local/` is git-ignored). MOIM_UPLOAD_DIR overrides it.
@@ -98,11 +99,14 @@ def create_app(
     review_enabled: bool = True,
     deletion_ledger_dir: str | Path | None = None,
     portfolio_stages: Mapping[str, Callable] | None = None,
+    signer: Signer | None = None,
 ) -> FastAPI:
     """`goal_client_factory` and `ai_client_factory` (role candidates) exist for deterministic tests only;
     the product always uses the Timely client. `portfolio_stages` (fake DESCRIBING/UNDERSTANDING/EMBEDDING handlers
     replacing the stage 8B Timely ones) is for deterministic tests only too."""
     settings = settings or load_settings()
+    # SECURITY.md 6: confirmations are signed with MOIM_SIGNING_KEY (required outside tests; never logged).
+    signer = signer or load_signer(settings.env)
     engine = make_engine(settings)
     handlers = dict(job_handlers or {})
     store = JobStore(make_session_factory(engine))
@@ -115,7 +119,7 @@ def create_app(
     assignment_service = AssignmentService(rng_factory) if rng_factory is not None else AssignmentService()
     ranking_service = RankingService(make_session_factory(engine), assignment=assignment_service)
     coverage_service = CoverageService(make_session_factory(engine), ai_client_factory)
-    todo_service = TodoService(make_session_factory(engine), ai_client_factory)
+    todo_service = TodoService(make_session_factory(engine), ai_client_factory, signer=signer)
     role_interview_service = RoleInterviewService(make_session_factory(engine), ai_client_factory, todos=todo_service)
     reassign_service = ReassignmentService(make_session_factory(engine), assignment_service)
     # Stage 5: M2.review is enabled by D-D1 (GATE D). `review_enabled=False` keeps manual completion only.
@@ -128,7 +132,8 @@ def create_app(
     portfolio_service = PortfolioService(make_session_factory(engine), storage, stages=portfolio_stages,
                                          ledger=ledger)
     execution_service = ExecutionService(make_session_factory(engine), ai_client_factory, storage,
-                                         review_enabled=review_enabled, ledger=ledger, portfolio=portfolio_service)
+                                         review_enabled=review_enabled, ledger=ledger, portfolio=portfolio_service,
+                                         verifier=signer.verifier)
     # Stage 6: mypage and the account lifecycle (D-D1 D6/D7).
     account_service = AccountService(make_session_factory(engine))
     lifecycle_service = LifecycleService(make_session_factory(engine), storage, assignment_service, ledger=ledger)

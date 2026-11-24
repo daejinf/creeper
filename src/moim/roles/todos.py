@@ -43,6 +43,7 @@ from ..models import (
     todo_drafts,
     todo_items,
 )
+from .. import signing
 from ..timeutil import utcnow
 from . import interview_ai
 from . import todo_ai as ai
@@ -89,10 +90,29 @@ class _StepFailed(Exception):
         self.code, self.done = code, done
 
 
+def confirmation_integrity(s: Session, verifier, group_id: str, user_id: str, rev: int, conf: int) -> str:
+    """SECURITY.md 6: re-read one confirmation and all of its todos and check the signature written at `투두 확정하기`.
+    VALID | UNSIGNED (confirmed before 0016) | INVALID (changed after confirming, unknown key, or rows missing)."""
+    head = s.execute(select(todo_confirmations).where(
+        todo_confirmations.c.group_id == group_id, todo_confirmations.c.user_id == user_id,
+        todo_confirmations.c.source_assignment_revision == rev, todo_confirmations.c.revision == conf)).one_or_none()
+    if head is None:
+        return signing.INVALID
+    items = s.execute(select(todo_confirmed_items).where(
+        todo_confirmed_items.c.group_id == group_id, todo_confirmed_items.c.user_id == user_id,
+        todo_confirmed_items.c.source_assignment_revision == rev,
+        todo_confirmed_items.c.confirmation_revision == conf)).mappings().all()
+    payload = signing.canonical_confirmation(group_id, user_id, rev, conf, head.draft_revision,
+                                             head.member_state_revision, items)
+    return verifier.verify(payload, head.signature, head.signing_kid)
+
+
 class TodoService:
-    def __init__(self, session_factory: sessionmaker[Session], client_factory: Callable[[], object], clock=utcnow):
+    def __init__(self, session_factory: sessionmaker[Session], client_factory: Callable[[], object], *,
+                 signer: signing.Signer, clock=utcnow):
         self._sf = session_factory
         self._client_factory = client_factory
+        self._signer = signer
         self._clock = clock
 
     # ---- shared reads -----------------------------------------------------------------------------------------------
@@ -431,17 +451,22 @@ class TodoService:
         k = self._key(group_id, user_id, rev)
         number = s.execute(select(func.coalesce(func.max(todo_confirmations.c.revision), 0)).where(k(todo_confirmations))).scalar_one() + 1
         now = self._clock()
+        rows = [dict(task_id=it.task_id, position=pos, title=it.title, due_date=it.due_date, part_id=it.part_id,
+                     deliverable=it.deliverable, completion_criteria=it.completion_criteria,
+                     evidence_types=it.evidence_types, estimated_minutes=it.estimated_minutes)
+                for pos, it in enumerate(sorted(items, key=lambda i: (i.due_date, i.position)), 1)]
+        # SECURITY.md 6: the signature covers every todo of this confirmation, hidden criteria included, and is written
+        # in the same INSERT (same transaction), so no confirmation ever exists without it.
+        payload = signing.canonical_confirmation(group_id, user_id, rev, number, draft.draft_revision,
+                                                 draft.member_state_revision, rows)
         s.execute(insert(todo_confirmations).values(group_id=group_id, user_id=user_id, source_assignment_revision=rev,
                                                     revision=number, draft_revision=draft.draft_revision,
                                                     member_state_revision=draft.member_state_revision, action_id=action_id,
-                                                    created_at=now))
-        for pos, it in enumerate(sorted(items, key=lambda i: (i.due_date, i.position)), 1):
+                                                    created_at=now, signature=self._signer.sign(payload),
+                                                    signing_kid=self._signer.kid))
+        for row in rows:
             s.execute(insert(todo_confirmed_items).values(
-                group_id=group_id, user_id=user_id, source_assignment_revision=rev, confirmation_revision=number,
-                task_id=it.task_id, position=pos, title=it.title, due_date=it.due_date, part_id=it.part_id,
-                deliverable=it.deliverable, completion_criteria=it.completion_criteria, evidence_types=it.evidence_types,
-                estimated_minutes=it.estimated_minutes,
-            ))
+                group_id=group_id, user_id=user_id, source_assignment_revision=rev, confirmation_revision=number, **row))
         s.execute(update(todo_drafts).where(k(todo_drafts)).values(mode=CONFIRMED, confirmed_revision=number, updated_at=now))
         log.info("todo_event group_id=%s user_id=%s revision=%d state=CONFIRMED confirmation=%d todos=%d",
                  group_id, user_id, rev, number, len(items))

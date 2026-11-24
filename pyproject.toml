@@ -24,6 +24,8 @@ dependencies = [
     "openpyxl>=3.1,<4",
     # stage 8B: portfolio embeddings (float32 vectors, L2 normalization)
     "numpy>=2.1,<3",
+    # SECURITY.md 6: Ed25519 signatures on confirmed todos (was the ops extra only; same pinned version)
+    "cryptography>=48.0.1,<51",
 ]
 
 [project.optional-dependencies]

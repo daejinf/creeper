@@ -63,6 +63,14 @@ Write-Step '2/4 설정(.env)과 Timely API 키 확인'
 Initialize-EnvFile
 Import-EnvFile
 if (-not $env:MOIM_ENV) { $env:MOIM_ENV = 'development' }
+# 확정 투두 서명 키(docs/SECURITY.md 6). 없을 때 한 번만 만들어 .env에 저장한다. 값은 표시하지 않는다.
+if (-not $env:MOIM_SIGNING_KEY) {
+    $newKey = (& $venvPy -m moim.signing new-key).Trim()
+    if ($LASTEXITCODE -ne 0 -or -not $newKey) { Stop-Moim '서명 키를 만들지 못했습니다.' }
+    Set-EnvValue 'MOIM_SIGNING_KEY' $newKey
+    $env:MOIM_SIGNING_KEY = $newKey
+    Write-Ok '확정 투두 서명 키를 만들어 .env에 저장했습니다 (값은 표시하지 않음). 이 키를 바꾸거나 지우면 기존 확정 기록을 검증할 수 없습니다.'
+}
 if (-not $env:TIMELY_API_KEY) {
     Write-Warn 'TIMELY_API_KEY가 없습니다. 키가 없어도 서버는 켜지지만 AI 기능(역할 후보·인터뷰·투두·검토)은 실패합니다.'
     $answer = Read-Host '    지금 키를 입력할까요? (Y/N)'

@@ -680,8 +680,13 @@ todo_confirmations = Table(
     Column("action_id", String(64), nullable=False),
     Column("stale_at", DateTime(timezone=True)),
     Column("created_at", DateTime(timezone=True), nullable=False, server_default=func.now()),
+    # 0016 (SECURITY.md 6): Ed25519 signature over the whole confirmation (moim.signing). Null = confirmed before 0016.
+    Column("signature", LargeBinary),
+    Column("signing_kid", String(16)),
     ForeignKeyConstraint(_DRAFT_KEY, _DRAFT_REF),
     CheckConstraint("revision >= 1", name="revision"),
+    CheckConstraint("(signature is null) = (signing_kid is null) and (signature is null or octet_length(signature) = 64)",
+                    name="signature"),
 )
 
 # The todos of one confirmation: visible fields and hidden criteria fixed together. Immutable (trigger: no UPDATE, no

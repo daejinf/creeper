@@ -35,6 +35,7 @@ LINE_OVER = "자료가 AI 확인 한도를 넘어 AI 확인은 하지 않았어�
 LINE_FAILED = "AI 확인을 하지 못했어요. 다시 시도해 주세요."
 LINE_SLOW = "AI 응답이 늦어 확인하지 못했어요. 다시 시도해 주세요."
 LINE_RESTART = "서버가 다시 시작되어 AI 확인이 중단됐어요. 다시 시도해 주세요."
+LINE_INTEGRITY = "확정된 할 일 기준을 확인하지 못해 AI 확인을 하지 않았어요. 팀원이 직접 확인해 주세요."
 SLOW_CODES = {"TIMEOUT", "NETWORK_ERROR", "UPSTREAM_ERROR", "RATE_LIMITED"}
 
 
@@ -110,6 +111,8 @@ def line(state: str, decision: str | None, guidance_text: str | None, skip_reaso
     if state == "FAILED":
         if error_code == "SERVER_RESTARTED":
             return LINE_RESTART
+        if error_code == "INTEGRITY_FAILED":  # SECURITY.md 6: a retry would fail the same way
+            return LINE_INTEGRITY
         return LINE_SLOW if error_code in SLOW_CODES else LINE_FAILED
     if decision == "PASS":
         text = LINE_PASS

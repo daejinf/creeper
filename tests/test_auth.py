@@ -289,7 +289,10 @@ def test_session_cookie_attributes_in_development(app):
     assert "Secure" not in cookie  # local HTTP development is the only exception
 
 
-def test_session_cookie_attributes_in_production(db, auth_db):
+def test_session_cookie_attributes_in_production(db, auth_db, monkeypatch):
+    from moim.signing import new_private_key_b64
+
+    monkeypatch.setenv("MOIM_SIGNING_KEY", new_private_key_b64())  # production refuses to start without it (SECURITY 6)
     prod = create_app(Settings(env="production", database_url=auth_db))
     try:
         c = TestClient(prod, follow_redirects=False, base_url="https://testserver")

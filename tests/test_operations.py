@@ -212,6 +212,9 @@ def test_preflight_detects_a_schema_behind_head(db, grp_db):
 def test_production_app_does_not_start_on_the_superuser_role(db, grp_db, monkeypatch, tmp_path):
     monkeypatch.setenv("MOIM_UPLOAD_DIR", str(tmp_path))
     monkeypatch.setenv("TIMELY_API_KEY", "x")
+    from moim.signing import new_private_key_b64
+
+    monkeypatch.setenv("MOIM_SIGNING_KEY", new_private_key_b64())  # production refuses to start without it (SECURITY 6)
     application = create_app(_prod(grp_db))
     with pytest.raises(ConfigError, match="DB_ROLE_IS_SUPERUSER"):
         with TestClient(application):
