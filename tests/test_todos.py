@@ -855,3 +855,23 @@ def test_migration_0009_down_and_up_keeps_the_stage_4_interview_data(db, grp_db,
         assert scalar(db, "select count(*) from role_interview_snapshots where group_id=:g", g=gid) == 1
     finally:
         command.upgrade(cfg, "head")
+
+
+def test_short_project_guidance_fits_the_server_minimum():
+    """A project of 7 days or less has one workload window. The per-window guidance used to cap it at 3 todos while
+    `check_draft` requires 4, so every draft for such a project was refused (INVALID_TODO_COUNT)."""
+    for days, weekly in ((7, 480), (5, 180), (3, 60), (13, 180), (30, 120)):
+        p = _payload(weekly=weekly, days=days, milestone_day=min(6, days - 1))
+        w = p["workload"]
+        first = date.fromisoformat(p["period"]["first_day"])
+        end = date.fromisoformat(p["project"]["end_date"])
+        assert w["min_todos"] == tai.min_todos(first, end, w["weekly_budget_minutes"])
+        assert w["max_todos_per_window"] * len(w["windows"]) >= w["min_todos"], (days, weekly)
+        assert w["max_todos_per_window"] * w["max_minutes_per_todo"] <= w["weekly_budget_minutes"] or \
+            w["max_minutes_per_todo"] == tai.EST_MIN, (days, weekly)
+    p = _payload(weekly=480, days=7, parts=1, milestone_day=3)  # the reported case: 7 days, 8 hours a week
+    assert p["workload"]["min_todos"] == 4 and p["workload"]["max_todos_per_window"] == 4
+    d = default_draft(p, minutes=p["workload"]["max_minutes_per_todo"])  # what following the guidance looks like
+    assert len(d["todos"]) == 4
+    tai.check_draft(tai.DraftOutput.model_validate(d), p, {}, date(2026, 12, 1))
+    assert "workload.min_todos" in tai.DRAFT_POLICY
